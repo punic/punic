@@ -262,6 +262,25 @@ class Calendar
     }
 
     /**
+     * Returns true if a locale has a 12-hour clock, false if 24-hour clock
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return bool
+     * @throws \Exception Throws an exception in case of problems
+     */
+    public static function has12HoursClock($locale = '')
+    {
+        static $cache = array();
+        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        if (!array_key_exists($locale, $cache)) {
+            $format = static::getTimeFormat('short', $locale);
+            $format = str_replace("''", '', $format);
+            $cache[$locale] = (strpos($format, 'a') === false) ? false : true;
+        }
+
+        return  $cache[$locale];
+    }
+
+    /**
      * Get the ISO format for a date
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
