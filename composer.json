@@ -1,0 +1,28 @@
+{
+    "name": "punic/calendar",
+    "description": "PHP-Unicode CLDR - Calendar and date/time",
+    "keywords": [
+        "localization",
+        "l10n",
+        "internationalization",
+        "i18n",
+        "unicode",
+        "cldr",
+        "php",
+        "calendar",
+        "date/time",
+        "date",
+        "time"
+    ],
+    "homepage": "https://github.com/punic/calendar",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3",
+        "punic/common": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Punic\\": "code/"
+        }
+    }
+}
