@@ -47,6 +47,74 @@ class Calendar
     }
 
     /**
+     * Converts a format string from PHP's date format to ISO format
+     * Remember that Zend Date always returns localized string, so a month name which returns the english
+     * month in php's date() will return the translated month name with this function... use 'en' as locale
+     * if you are in need of the original english names
+     *
+     * The conversion has the following restrictions:
+     * 'a', 'A' - Meridiem is not explicit upper/lowercase, you have to upper/lowercase the translated value yourself
+     *
+     * @param string $format Format string in PHP's date format
+     * @return string Format string in ISO format
+     */
+    public static function convertPhpToIsoFormat($format)
+    {
+        if ($format === null) {
+            return null;
+        }
+
+        $convert = array(
+            'd' => 'dd'  , 'D' => 'EE'  , 'j' => 'd'   , 'l' => 'EEEE',
+            'N' => 'eee' , 'S' => 'SS'  , 'w' => 'e'   , 'z' => 'D'   ,
+            'W' => 'ww'  , 'F' => 'MMMM', 'm' => 'MM'  , 'M' => 'MMM' ,
+            'n' => 'M'   , 't' => 'ddd' , 'L' => 'l'   , 'o' => 'YYYY',
+            'Y' => 'yyyy', 'y' => 'yy'  , 'a' => 'a'   , 'A' => 'a'   ,
+            'B' => 'B'   , 'g' => 'h'   , 'G' => 'H'   , 'h' => 'hh'  ,
+            'H' => 'HH'  , 'i' => 'mm'  , 's' => 'ss'  , 'e' => 'zzzz',
+            'I' => 'I'   , 'O' => 'Z'   , 'P' => 'ZZZZ', 'T' => 'z'   ,
+            'Z' => 'X'   , 'c' => 'yyyy-MM-ddTHH:mm:ssZZZZ', 'r' => 'r',
+            'U' => 'U',
+        );
+        $escaped = false;
+        $inEscapedString = false;
+        $converted = array();
+        foreach (str_split($format) as $char) {
+            if (!$escaped && $char == '\\') {
+                // Next char will be escaped: let's remember it
+                $escaped = true;
+            } elseif ($escaped) {
+                if (!$inEscapedString) {
+                    // First escaped string: start the quoted chunk
+                    $converted[] = "'";
+                    $inEscapedString = true;
+                }
+                // Since the previous char was a \ and we are in the quoted
+                // chunk, let's simply add $char as it is
+                $converted[] = $char;
+                $escaped = false;
+            } elseif ($char == "'") {
+                // Single quotes need to be escaped like this
+                $converted[] = "''";
+            } else {
+                if ($inEscapedString) {
+                    // Close the single-quoted chunk
+                    $converted[] = "'";
+                    $inEscapedString = false;
+                }
+                // Convert the unescaped char if needed
+                if (isset($convert[$char])) {
+                    $converted[] = $convert[$char];
+                } else {
+                    $converted[] = $char;
+                }
+            }
+        }
+
+        return implode($converted);
+    }
+
+    /**
      * Get the name of an era
      * @param mixed $value A year or a \DateTime instance
      * @param string $width = 'abbreviated' The format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B')
