@@ -1,0 +1,23 @@
+{
+    "name": "punic/common",
+    "description": "PHP-Unicode CLDR - CLDR Data",
+    "keywords": [
+        "localization",
+        "l10n",
+        "internationalization",
+        "i18n",
+        "unicode",
+        "cldr",
+        "php"
+    ],
+    "homepage": "https://github.com/punic/common",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Punic\\": "code/"
+        }
+    }
+}
