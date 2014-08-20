@@ -60,11 +60,8 @@ class Calendar
      */
     public static function convertPhpToIsoFormat($format)
     {
-        if ($format === null) {
-            return null;
-        }
-
-        $convert = array(
+        static $cache = array();
+        static $convert = array(
             'd' => 'dd'  , 'D' => 'EE'  , 'j' => 'd'   , 'l' => 'EEEE',
             'N' => 'eee' , 'S' => 'SS'  , 'w' => 'e'   , 'z' => 'D'   ,
             'W' => 'ww'  , 'F' => 'MMMM', 'm' => 'MM'  , 'M' => 'MMM' ,
@@ -76,42 +73,48 @@ class Calendar
             'Z' => 'X'   , 'c' => 'yyyy-MM-ddTHH:mm:ssZZZZ', 'r' => 'r',
             'U' => 'U',
         );
-        $escaped = false;
-        $inEscapedString = false;
-        $converted = array();
-        foreach (str_split($format) as $char) {
-            if (!$escaped && $char == '\\') {
-                // Next char will be escaped: let's remember it
-                $escaped = true;
-            } elseif ($escaped) {
-                if (!$inEscapedString) {
-                    // First escaped string: start the quoted chunk
-                    $converted[] = "'";
-                    $inEscapedString = true;
-                }
-                // Since the previous char was a \ and we are in the quoted
-                // chunk, let's simply add $char as it is
-                $converted[] = $char;
-                $escaped = false;
-            } elseif ($char == "'") {
-                // Single quotes need to be escaped like this
-                $converted[] = "''";
-            } else {
-                if ($inEscapedString) {
-                    // Close the single-quoted chunk
-                    $converted[] = "'";
-                    $inEscapedString = false;
-                }
-                // Convert the unescaped char if needed
-                if (isset($convert[$char])) {
-                    $converted[] = $convert[$char];
-                } else {
+        if (!is_string($format)) {
+            return null;
+        }
+        if (!array_key_exists($format, $cache)) {
+            $escaped = false;
+            $inEscapedString = false;
+            $converted = array();
+            foreach (str_split($format) as $char) {
+                if (!$escaped && $char == '\\') {
+                    // Next char will be escaped: let's remember it
+                    $escaped = true;
+                } elseif ($escaped) {
+                    if (!$inEscapedString) {
+                        // First escaped string: start the quoted chunk
+                        $converted[] = "'";
+                        $inEscapedString = true;
+                    }
+                    // Since the previous char was a \ and we are in the quoted
+                    // chunk, let's simply add $char as it is
                     $converted[] = $char;
+                    $escaped = false;
+                } elseif ($char == "'") {
+                    // Single quotes need to be escaped like this
+                    $converted[] = "''";
+                } else {
+                    if ($inEscapedString) {
+                        // Close the single-quoted chunk
+                        $converted[] = "'";
+                        $inEscapedString = false;
+                    }
+                    // Convert the unescaped char if needed
+                    if (isset($convert[$char])) {
+                        $converted[] = $convert[$char];
+                    } else {
+                        $converted[] = $char;
+                    }
                 }
             }
+            $cache[$format] = implode($converted);
         }
 
-        return implode($converted);
+        return $cache[$format];
     }
 
     /**
