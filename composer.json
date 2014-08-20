@@ -24,5 +24,11 @@
         "psr-4": {
             "Punic\\": "code/"
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Michele Locati",
+            "email": "mlocati@gmail.com"
+        }
+    ]
 }
