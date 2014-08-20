@@ -10,7 +10,7 @@
         "cldr",
         "php",
         "calendar",
-        "date/time",
+        "date-time",
         "date",
         "time"
     ],
