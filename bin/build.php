@@ -337,6 +337,13 @@ function copyDataFile($srcFile, $info, $dstFile)
                 $data['metazoneInfo'][$id0] = $info0;
             }
             break;
+        case 'timeZoneNames.json':
+            foreach(array('gmtFormat', 'gmtZeroFormat', 'regionFormat', 'regionFormat-type-standard', 'regionFormat-type-daylight', 'fallbackFormat') as $k) {
+                if(array_key_exists($k, $data)) {
+                    $data[$k] = toPhpSprintf($data[$k]);
+                }
+            }
+            break;
     }
     $flags = JSON_FORCE_OBJECT;
     if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
