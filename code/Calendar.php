@@ -707,41 +707,41 @@ class Calendar
     {
         static $decodeCache = array();
         static $decoderFunctions = array(
-            'G' => 'getEra',
-            'y' => 'getYear',
-            'Y' => 'getYearWeekOfYear',
-            'u' => 'getYearExtended',
-            'U' => 'getYearCyclicName',
-            'r' => 'getYearRelatedGregorian',
-            'Q' => 'getQuarter',
-            'q' => 'getQuarterAlone',
-            'M' => 'getMonth',
-            'L' => 'getMonthAlone',
-            'w' => 'getWeekOfYear',
-            'W' => 'getWeekOfMonth',
-            'd' => 'getDayOfMonth',
-            'D' => 'getDayOfYear',
-            'F' => 'getWeekdayInMonth',
-            'g' => 'getModifiedGiulianDay',
-            'E' => 'getDayOfWeek',
-            'e' => 'getDayOfWeekLocal',
-            'c' => 'getDayOfWeekLocalAlone',
-            'a' => 'getDayperiod',
-            'h' => 'getHour12',
-            'H' => 'getHour24',
-            'k' => 'getHour24From1',
-            'K' => 'getHour12From0',
-            'm' => 'getMinute',
-            's' => 'getSecond',
-            'S' => 'getFranctionsOfSeconds',
-            'A' => 'getMsecInDay',
-            'z' => 'getTimezoneNoLocationSpecific',
-            'Z' => 'getTimezoneDelta',
-            'O' => 'getTimezoneShortGMT',
-            'v' => 'getTimezoneNoLocationGeneric',
-            'V' => 'getTimezoneID',
-            'X' => 'getTimezoneWithTimeZ',
-            'x' => 'getTimezoneWithTime',
+            'G' => 'decodeEra',
+            'y' => 'decodeYear',
+            'Y' => 'decodeYearWeekOfYear',
+            'u' => 'decodeYearExtended',
+            'U' => 'decodeYearCyclicName',
+            'r' => 'decodeYearRelatedGregorian',
+            'Q' => 'decodeQuarter',
+            'q' => 'decodeQuarterAlone',
+            'M' => 'decodeMonth',
+            'L' => 'decodeMonthAlone',
+            'w' => 'decodeWeekOfYear',
+            'W' => 'decodeWeekOfMonth',
+            'd' => 'decodeDayOfMonth',
+            'D' => 'decodeDayOfYear',
+            'F' => 'decodeWeekdayInMonth',
+            'g' => 'decodeModifiedGiulianDay',
+            'E' => 'decodeDayOfWeek',
+            'e' => 'decodeDayOfWeekLocal',
+            'c' => 'decodeDayOfWeekLocalAlone',
+            'a' => 'decodeDayperiod',
+            'h' => 'decodeHour12',
+            'H' => 'decodeHour24',
+            'k' => 'decodeHour24From1',
+            'K' => 'decodeHour12From0',
+            'm' => 'decodeMinute',
+            's' => 'decodeSecond',
+            'S' => 'decodeFranctionsOfSeconds',
+            'A' => 'decodeMsecInDay',
+            'z' => 'decodeTimezoneNoLocationSpecific',
+            'Z' => 'decodeTimezoneDelta',
+            'O' => 'decodeTimezoneShortGMT',
+            'v' => 'decodeTimezoneNoLocationGeneric',
+            'V' => 'decodeTimezoneID',
+            'X' => 'decodeTimezoneWithTimeZ',
+            'x' => 'decodeTimezoneWithTime',
         );
         $result = '';
         if (!empty($value)) {
@@ -824,7 +824,7 @@ class Calendar
         );
     }
 
-    protected static function getDayOfWeek(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeDayOfWeek(\DateTime $value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -842,7 +842,7 @@ class Calendar
         }
     }
 
-    protected static function getDayOfWeekLocal(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeDayOfWeekLocal(\DateTime $value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -853,16 +853,16 @@ class Calendar
 
                 return str_pad(strval($localWeekday), $count, '0', STR_PAD_LEFT);
             default:
-                return static::getDayOfWeek($value, $count, $locale, $standAlone);
+                return static::decodeDayOfWeek($value, $count, $locale, $standAlone);
         }
     }
 
-    protected static function getDayOfWeekLocalAlone(\DateTime $value, $count, $locale)
+    protected static function decodeDayOfWeekLocalAlone(\DateTime $value, $count, $locale)
     {
-        return static::getDayOfWeekLocal($value, $count, $locale, true);
+        return static::decodeDayOfWeekLocal($value, $count, $locale, true);
     }
 
-    protected static function getDayOfMonth(\DateTime $value, $count, $locale)
+    protected static function decodeDayOfMonth(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -874,7 +874,7 @@ class Calendar
         }
     }
 
-    protected static function getMonth(\DateTime $value, $count, $locale)
+    protected static function decodeMonth(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -892,7 +892,7 @@ class Calendar
         }
     }
 
-    protected static function getYear(\DateTime $value, $count, $locale)
+    protected static function decodeYear(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -909,7 +909,7 @@ class Calendar
         }
     }
 
-    protected static function getHour12(\DateTime $value, $count, $locale)
+    protected static function decodeHour12(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -921,7 +921,7 @@ class Calendar
         }
     }
 
-    protected static function getDayperiod(\DateTime $value, $count, $locale)
+    protected static function decodeDayperiod(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -931,7 +931,7 @@ class Calendar
         }
     }
 
-    protected static function getHour24(\DateTime $value, $count, $locale)
+    protected static function decodeHour24(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -943,7 +943,7 @@ class Calendar
         }
     }
 
-    protected static function getMinute(\DateTime $value, $count, $locale)
+    protected static function decodeMinute(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -955,7 +955,7 @@ class Calendar
         }
     }
 
-    protected static function getSecond(\DateTime $value, $count, $locale)
+    protected static function decodeSecond(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -967,7 +967,7 @@ class Calendar
         }
     }
 
-    protected static function getTimezoneNoLocationSpecific(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneNoLocationSpecific(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -975,13 +975,13 @@ class Calendar
             case 3:
                 $tz = self::getTimezoneNameNoLocationSpecific($value, 'short', '', $locale);
                 if (!strlen($tz)) {
-                    $tz = static::getTimezoneShortGMT($value, 1, $locale);
+                    $tz = static::decodeTimezoneShortGMT($value, 1, $locale);
                 }
                 break;
             case 4:
                 $tz = self::getTimezoneNameNoLocationSpecific($value, 'long', '', $locale);
                 if (!strlen($tz)) {
-                    $tz = static::getTimezoneShortGMT($value, 4, $locale);
+                    $tz = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
                 break;
             default:
@@ -991,7 +991,7 @@ class Calendar
         return $tz;
     }
 
-    protected static function getTimezoneShortGMT(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneShortGMT(\DateTime $value, $count, $locale)
     {
 
         $offset = $value->getOffset();
@@ -1011,7 +1011,7 @@ class Calendar
         }
     }
 
-    protected static function getEra(\DateTime $value, $count, $locale)
+    protected static function decodeEra(\DateTime $value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1027,7 +1027,7 @@ class Calendar
         }
     }
 
-    protected static function getYearWeekOfYear(\DateTime $value, $count, $locale)
+    protected static function decodeYearWeekOfYear(\DateTime $value, $count, $locale)
     {
         if ($count <= 0) {
             throw new Exception('Invalid count for ' . __METHOD__);
@@ -1047,47 +1047,47 @@ class Calendar
     /**
      * Note: we assume Gregorian calendar here
      */
-    protected static function getYearExtended(\DateTime $value, $count, $locale)
+    protected static function decodeYearExtended(\DateTime $value, $count, $locale)
     {
-        return static::getYear($value, $count, $locale);
+        return static::decodeYear($value, $count, $locale);
     }
 
     /** @todo */
-    protected static function getYearCyclicName() { throw new \Exception('Not implemented'); }
+    protected static function decodeYearCyclicName() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getYearRelatedGregorian() { throw new \Exception('Not implemented'); }
+    protected static function decodeYearRelatedGregorian() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getQuarter() { throw new \Exception('Not implemented'); }
+    protected static function decodeQuarter() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getQuarterAlone() { throw new \Exception('Not implemented'); }
+    protected static function decodeQuarterAlone() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getMonthAlone() { throw new \Exception('Not implemented'); }
+    protected static function decodeMonthAlone() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getWeekOfYear() { throw new \Exception('Not implemented'); }
+    protected static function decodeWeekOfYear() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getWeekOfMonth() { throw new \Exception('Not implemented'); }
+    protected static function decodeWeekOfMonth() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getDayOfYear() { throw new \Exception('Not implemented'); }
+    protected static function decodeDayOfYear() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getWeekdayInMonth() { throw new \Exception('Not implemented'); }
+    protected static function decodeWeekdayInMonth() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getModifiedGiulianDay() { throw new \Exception('Not implemented'); }
+    protected static function decodeModifiedGiulianDay() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getHour24From1() { throw new \Exception('Not implemented'); }
+    protected static function decodeHour24From1() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getHour12From0() { throw new \Exception('Not implemented'); }
+    protected static function decodeHour12From0() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getFranctionsOfSeconds() { throw new \Exception('Not implemented'); }
+    protected static function decodeFranctionsOfSeconds() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getMsecInDay() { throw new \Exception('Not implemented'); }
+    protected static function decodeMsecInDay() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getTimezoneDelta() { throw new \Exception('Not implemented'); }
+    protected static function decodeTimezoneDelta() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getTimezoneNoLocationGeneric() { throw new \Exception('Not implemented'); }
+    protected static function decodeTimezoneNoLocationGeneric() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getTimezoneID() { throw new \Exception('Not implemented'); }
+    protected static function decodeTimezoneID() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getTimezoneWithTimeZ() { throw new \Exception('Not implemented'); }
+    protected static function decodeTimezoneWithTimeZ() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function getTimezoneWithTime() { throw new \Exception('Not implemented'); }
+    protected static function decodeTimezoneWithTime() { throw new \Exception('Not implemented'); }
 }
