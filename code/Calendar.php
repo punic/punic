@@ -423,8 +423,54 @@ class Calendar
     /** @todo */
     public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '',  $locale = '') { throw new \Exception('Not implemented'); }
 
-    /** @todo */
-    public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '') { throw new \Exception('Not implemented'); }
+    /**
+     * Returns the localized name of an exemplar city for a specific timezone
+     * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance
+     * @param bool $returnUnknownIfNotFound true If the exemplar city is not found, shall we return the translation of 'Unknown City'?
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string Returns an empty string if the exemplar city hasn't been found and $returnUnknownIfNotFound is false
+     */
+    public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '')
+    {
+        $result = '';
+        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        if (!empty($value)) {
+            $phpName = '';
+            $date = '';
+            if (is_string($value)) {
+                $phpName = $value;
+            } elseif (is_a($value, '\\DateTime')) {
+                $phpName = $value->getTimezone()->getName();
+            } elseif (is_a($value, '\\DateTimeZone')) {
+                $phpName = $value->getName();
+            }
+            if (strlen($phpName)) {
+                $chunks = array_merge(array('zone'), explode('/', $phpName));
+                $data = \Punic\Data::get('timeZoneNames', $locale);
+                foreach ($chunks as $chunk) {
+                    if (array_key_exists($chunk, $data)) {
+                        $data = $data[$chunk];
+                    } else {
+                        $data = null;
+                    }
+                    if (!is_array($data)) {
+                        break;
+                    }
+                }
+                if (is_array($data) && array_key_exists('exemplarCity', $data)) {
+                    $result = $data['exemplarCity'];
+                }
+            }
+        }
+        if ((!strlen($result)) && $returnUnknownIfNotFound) {
+            $result = static::getTimezoneExemplarCity('Etc/Unknown', false, $locale);
+            if (!strlen($result)) {
+                $result = 'Unknown City';
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * Returns true if a locale has a 12-hour clock, false if 24-hour clock
