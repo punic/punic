@@ -763,7 +763,7 @@ class Calendar
                 $firstWeekdayForCountry = static::getFirstWeekday($locale);
                 $localWeekday = 1 + ((7 + $weekDay - $firstWeekdayForCountry) % 7);
 
-                return str_pad(strval($localWeekday), $count, '0');
+                return str_pad(strval($localWeekday), $count, '0', STR_PAD_LEFT);
             default:
                 return static::getDayOfWeek($value, $count, $locale, $standAlone);
         }
