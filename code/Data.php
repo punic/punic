@@ -171,9 +171,10 @@ class Data
 
     /**
      * Return a list of available locale identifiers
+     * @param bool $allowGroups = false Set to true if you want to retrieve locale groups (eg. 'en-001'), false otherwise
      * @return array
      */
-    public static function getAvailableLocales()
+    public static function getAvailableLocales($allowGroups = false)
     {
         $locales = array();
         $dir = __DIR__ . '/data';
@@ -185,7 +186,21 @@ class Data
                         if ($item === 'root') {
                             $item = 'en-US';
                         }
-                        $locales[] = $item;
+                        $info = static::explodeLocale($item);
+                        if (is_array($info)) {
+                            if ((!$allowGroups) && preg_match('/^[0-9]{3}$/', $info['territory'])) {
+                                foreach (static::expandTerritoryGroup($info['territory']) as $territory) {
+                                    if (strlen($info['script'])) {
+                                        $locales[] = "{$info['language']}-{$info['script']}-$territory";
+                                    } else {
+                                        $locales[] = "{$info['language']}-$territory";
+                                    }
+                                }
+                                $locales[] = $item;
+                            } else {
+                                $locales[] = $item;
+                            }
+                        }
                     }
                 }
             }
@@ -246,7 +261,7 @@ class Data
             if (strlen($info['territory'])) {
                 $result = $info['territory'];
             } elseif ($checkFallbackLocale) {
-                $result = self::getTerritory(self::$fallbackLocale, false);
+                $result = static::getTerritory(static::$fallbackLocale, false);
             }
         }
 
@@ -266,6 +281,29 @@ class Data
                 if (in_array($territory, $info['contains'], true)) {
                     $result = $parent;
                     break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieves all the atomic territories belonging to a group.
+     * @param string $parentTerritory The parent territory (eg '001')
+     * @return array
+     */
+    protected static function expandTerritoryGroup($parentTerritory)
+    {
+        $result = array();
+        $data = static::getGeneric('territoryContainment');
+        if (array_key_exists($parentTerritory, $data)) {
+            foreach ($data[$parentTerritory]['contains'] as $child) {
+                $grandchildren = static::expandTerritoryGroup($child);
+                if (empty($grandchildren)) {
+                    $result[] = $child;
+                } else {
+                    $result = array_merge($result, $grandchildren);
                 }
             }
         }
@@ -424,13 +462,20 @@ class Data
                     extract(static::explodeLocale($fullLocale));
                 }
             }
-            if (strlen($script) && strlen($territory)) {
-                $result[] = "{$language}-{$script}-{$territory}";
+            $territories = array();
+            while (strlen($territory) > 0) {
+                $territories[] = $territory;
+                $territory = static::getParentTerritory($territory);
+            }
+            if (strlen($script)) {
+                foreach ($territories as $territory) {
+                    $result[] = "{$language}-{$script}-{$territory}";
+                }
             }
             if (strlen($script)) {
                 $result[] = "{$language}-{$script}";
             }
-            if (strlen($territory)) {
+            foreach ($territories as $territory) {
                 $result[] = "{$language}-{$territory}";
                 if ("{$language}-{$territory}" === 'en-US') {
                     $result[] = 'root';
