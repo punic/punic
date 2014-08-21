@@ -133,6 +133,7 @@ function copyData()
 {
     $copy = array(
         'ca-gregorian.json' => array('kind' => 'main', 'save-as' => 'calendar.json', 'roots' => array('dates', 'calendars', 'gregorian')),
+        'timeZoneNames.json' => array('kind' => 'main', 'roots' => array('dates', 'timeZoneNames')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
@@ -147,7 +148,6 @@ function copyData()
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'territories.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'territories')),
-        'timeZoneNames.json' => array('kind' => 'main', 'roots' => array('dates', 'timeZoneNames')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'units.json' => array('kind' => 'main', 'roots' => array('units')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
@@ -156,6 +156,7 @@ function copyData()
         'parentLocales.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'parentLocales', 'parentLocale')),
         'likelySubtags.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'likelySubtags')),
         'territoryContainment.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryContainment')),
+        'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
     );
     $src = SOURCE_DIR_DATA . DIRECTORY_SEPARATOR . 'main';
     $locales = scandir($src);
@@ -304,6 +305,38 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
             }
             break;
+        case 'metaZones.json':
+            if ((count($data['metazoneInfo']) !== 1) || (!array_key_exists('timezone', $data['metazoneInfo']))) {
+                throw new Exception('Invalid metazoneInfo node');
+            }
+            $data['metazoneInfo'] = $data['metazoneInfo']['timezone'];
+            foreach ($data['metazoneInfo'] as $id0 => $info0) {
+                $values1 = null;
+                foreach ($info0 as $id1 => $info1) {
+                    if (is_int($id1)) {
+                        $info1 = fixMetazoneInfo($info1);
+                    } else {
+                        foreach ($info1 as $id2 => $info2) {
+                            if (is_int($id2)) {
+                                $info2 = fixMetazoneInfo($info2);
+                            } else {
+                                foreach ($info2 as $id3 => $info3) {
+                                    if (is_int($id3)) {
+                                        $info3 = fixMetazoneInfo($info3);
+                                    } else {
+                                        throw new Exception('Invalid metazoneInfo node');
+                                    }
+                                    $info2[$id3] = $info3;
+                                }
+                            }
+                            $info1[$id2] = $info2;
+                        }
+                    }
+                    $info0[$id1] = $info1;
+                }
+                $data['metazoneInfo'][$id0] = $info0;
+            }
+            break;
     }
     $flags = JSON_FORCE_OBJECT;
     if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
@@ -359,4 +392,26 @@ function toPhpSprintf($fmt)
     }
 
     return $result;
+}
+
+function fixMetazoneInfo($a)
+{
+    if ((count(array_keys($a)) !== 1) || (!array_key_exists('usesMetazone', $a))) {
+        throw new Exception('Invalid metazoneInfo node');
+    }
+    $a = $a['usesMetazone'];
+    foreach (array_keys($a) as $key) {
+        switch ($key) {
+            case '_mzone':
+            case '_from':
+            case '_to':
+                $a[substr($key, 1)] = $a[$key];
+                unset($a[$key]);
+                break;
+            default:
+                throw new Exception('Invalid metazoneInfo node');
+        }
+    }
+
+    return $a;
 }
