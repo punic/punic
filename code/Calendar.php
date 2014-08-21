@@ -352,6 +352,27 @@ class Calendar
     }
 
     /**
+     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturnday)
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return int Returns a number from 0 (Sunday) to 7 (Saturnday)
+     */
+    public static function getFirstWeekday($locale = '')
+    {
+        static $cache = array();
+        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        if (!array_key_exists($locale, $cache)) {
+            $data = \Punic\Data::getGeneric('weekData');
+            $result = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
+            if (!is_int($result)) {
+                $result = 0;
+            }
+            $cache[$locale] = $result;
+        }
+
+        return  $cache[$locale];
+    }
+
+    /**
      * Get the ISO format for a date
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -733,15 +754,16 @@ class Calendar
         }
     }
 
-    /**
-     * @todo Need to implement result when $count is 1 or 2
-     */
     protected static function getDayOfWeekLocal(\DateTime $value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
             case 2:
-                throw new \Exception('Not implemented');
+                $weekDay = intval($value->format('w'));
+                $firstWeekdayForCountry = static::getFirstWeekday($locale);
+                $localWeekday = 1 + ((7 + $weekDay - $firstWeekdayForCountry) % 7);
+
+                return str_pad(strval($localWeekday), $count, '0');
             default:
                 return static::getDayOfWeek($value, $count, $locale, $standAlone);
         }
