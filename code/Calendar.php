@@ -967,9 +967,6 @@ class Calendar
         }
     }
 
-    /**
-     * @todo According to the standard, this can fall back to getTimezoneShortGMT, but we need a better implementation
-     */
     protected static function getTimezoneNoLocationSpecific(\DateTime $value, $count, $locale)
     {
         switch ($count) {
