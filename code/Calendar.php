@@ -932,10 +932,31 @@ class Calendar
         }
     }
 
-    /** @todo */
-    protected static function getYearWeekOfYear() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function getYearExtended() { throw new \Exception('Not implemented'); }
+    protected static function getYearWeekOfYear(\DateTime $value, $count, $locale)
+    {
+        if ($count <= 0) {
+            throw new Exception('Invalid count for ' . __METHOD__);
+        }
+        $y = $value->format('o');
+        if ($count === 2) {
+            $y = substr('0' . $y, -2);
+        } else {
+            if ($count > strlen($y)) {
+                $y = str_pad($y, $count, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return $y;
+    }
+
+    /**
+     * Note: we assume Gregorian calendar here
+     */
+    protected static function getYearExtended(\DateTime $value, $count, $locale)
+    {
+        return static::getYear($value, $count, $locale);
+    }
+
     /** @todo */
     protected static function getYearCyclicName() { throw new \Exception('Not implemented'); }
     /** @todo */
