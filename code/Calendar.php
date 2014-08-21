@@ -420,8 +420,11 @@ class Calendar
         return $result;
     }
 
-    /** @todo */
-    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '',  $locale = '') { throw new \Exception('Not implemented'); }
+    /** @todo I can't find data for this */
+    public static function getTimezoneNameLocationSpecific()
+    {
+        return '';
+    }
 
     /**
      * Returns the localized name of an exemplar city for a specific timezone
@@ -1299,7 +1302,7 @@ class Calendar
                 $result = static::getTimezoneExemplarCity($value, true, $locale);
                 break;
             case 4:
-                $result = static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
+                $result = ''; // @todo static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
                 if (!strlen($result)) {
                     $result = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
