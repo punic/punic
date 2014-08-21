@@ -333,6 +333,94 @@ class Calendar
     }
 
     /**
+     * Returns the localized name of a timezone
+     * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance
+     * @param string $width = 'long' The format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT')
+     * @param string $kind = '' Set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise)
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string Returns an empty string if the timezone has not been found (maybe we don't have the data in the specified $width), the timezone name otherwise
+     */
+    public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '',  $locale = '')
+    {
+        $result = '';
+        if (!empty($value)) {
+            $phpName = '';
+            $date = '';
+            if (is_string($value)) {
+                $phpName = $value;
+            } elseif (is_a($value, '\\DateTime')) {
+                $phpName = $value->getTimezone()->getName();
+                $date = $value->format('Y-m-d H:i');
+                if (empty($kind)) {
+                    if (intval($value->format('I')) === 1) {
+                        $kind = 'dst';
+                    } else {
+                        $kind = 'std';
+                    }
+                }
+            } elseif (is_a($value, '\\DateTimeZone')) {
+                $phpName = $value->getName();
+            }
+            if (strlen($phpName)) {
+                $chunks = array_merge(array('metazoneInfo'), explode('/', $phpName));
+                $tzInfo = \Punic\Data::getGeneric('metaZones');
+                foreach ($chunks as $chunk) {
+                    if (array_key_exists($chunk, $tzInfo)) {
+                        $tzInfo = $tzInfo[$chunk];
+                    } else {
+                        $tzInfo = null;
+                        break;
+                    }
+                }
+                $isoName = '';
+                if (is_array($tzInfo)) {
+                    foreach ($tzInfo as $tz) {
+                        if (is_array($tz) && array_key_exists('mzone', $tz)) {
+                            if (strlen($date)) {
+                                if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
+                                    continue;
+                                }
+                                if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
+                                    continue;
+                                }
+                            }
+                            $isoName = $tz['mzone'];
+                            break;
+                        }
+                    }
+                }
+                if (strlen($isoName)) {
+                    $data = \Punic\Data::get('timeZoneNames', $locale);
+                    if (array_key_exists('metazone', $data)) {
+                        $data = $data['metazone'];
+                        if (array_key_exists($isoName, $data)) {
+                            $data = $data[$isoName];
+                            if (array_key_exists($width, $data)) {
+                                $data = $data[$width];
+                                $lookFor = array();
+                                if (!empty($kind)) {
+                                    $lookFor[] = $kind;
+                                }
+                                $lookFor[] = 'generic';
+                                $lookFor[] = 'standard';
+                                $lookFor[] = 'daylight';
+                                foreach ($lookFor as $lf) {
+                                    if (array_key_exists($lf, $data)) {
+                                        $result = $data[$lf];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns true if a locale has a 12-hour clock, false if 24-hour clock
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return bool
@@ -888,12 +976,22 @@ class Calendar
             case 1:
             case 2:
             case 3:
-                return static::getTimezoneShortGMT($value, 1, $locale);
+                $tz = self::getTimezoneNameNoLocationSpecific($value, 'short', '', $locale);
+                if (!strlen($tz)) {
+                    $tz = static::getTimezoneShortGMT($value, 1, $locale);
+                }
+                break;
             case 4:
-                return static::getTimezoneShortGMT($value, 4, $locale);
+                $tz = self::getTimezoneNameNoLocationSpecific($value, 'long', '', $locale);
+                if (!strlen($tz)) {
+                    $tz = static::getTimezoneShortGMT($value, 4, $locale);
+                }
+                break;
             default:
                 throw new Exception('Invalid count for ' . __METHOD__);
         }
+
+        return $tz;
     }
 
     protected static function getTimezoneShortGMT(\DateTime $value, $count, $locale)
