@@ -264,7 +264,7 @@ class Calendar
                     $quarter = intval($value);
                 }
             } elseif (is_a($value, '\DateTime')) {
-                $quarter = 1 + floor((intval($value->format('n')) - 1) / 3);
+                $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
             }
             if (is_null($quarter)) {
                 throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a quarter number");
@@ -419,6 +419,12 @@ class Calendar
 
         return $result;
     }
+
+    /** @todo */
+    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '',  $locale = '') { throw new \Exception('Not implemented'); }
+
+    /** @todo */
+    public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '') { throw new \Exception('Not implemented'); }
 
     /**
      * Returns true if a locale has a 12-hour clock, false if 24-hour clock
@@ -729,8 +735,8 @@ class Calendar
             'a' => 'decodeDayperiod',
             'h' => 'decodeHour12',
             'H' => 'decodeHour24',
-            'k' => 'decodeHour24From1',
             'K' => 'decodeHour12From0',
+            'k' => 'decodeHour24From1',
             'm' => 'decodeMinute',
             's' => 'decodeSecond',
             'S' => 'decodeFranctionsOfSeconds',
@@ -817,7 +823,7 @@ class Calendar
      */
     public static function formatEx($value, $format, $toTimezone = '', $locale = '')
     {
-        return self::format(
+        return static::format(
             static::toDateTime($value, $toTimezone),
             $format,
             $locale
@@ -874,7 +880,7 @@ class Calendar
         }
     }
 
-    protected static function decodeMonth(\DateTime $value, $count, $locale)
+    protected static function decodeMonth(\DateTime $value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -882,14 +888,19 @@ class Calendar
             case 2:
                 return $value->format('m');
             case 3:
-                return static::getMonthName($value, 'abbreviated', $locale);
+                return static::getMonthName($value, 'abbreviated', $locale, $standAlone);
             case 4:
-                return static::getMonthName($value, 'wide', $locale);
+                return static::getMonthName($value, 'wide', $locale, $standAlone);
             case 5:
-                return static::getMonthName($value, 'narrow', $locale);
+                return static::getMonthName($value, 'narrow', $locale, $standAlone);
             default:
                 throw new Exception('Invalid count for ' . __METHOD__);
         }
+    }
+
+    protected static function decodeMonthAlone(\DateTime $value, $count, $locale)
+    {
+        return static::decodeMonth($value, $count, $locale, true);
     }
 
     protected static function decodeYear(\DateTime $value, $count, $locale)
@@ -943,6 +954,28 @@ class Calendar
         }
     }
 
+    protected static function decodeHour12From0(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+            case 2:
+                return str_pad(strval(intval($value->format('G')) % 12), $count, '0', STR_PAD_LEFT);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeHour24From1(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+            case 2:
+                return str_pad(strval(1 + intval($value->format('G'))), $count, '0', STR_PAD_LEFT);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
     protected static function decodeMinute(\DateTime $value, $count, $locale)
     {
         switch ($count) {
@@ -973,13 +1006,13 @@ class Calendar
             case 1:
             case 2:
             case 3:
-                $tz = self::getTimezoneNameNoLocationSpecific($value, 'short', '', $locale);
+                $tz = static::getTimezoneNameNoLocationSpecific($value, 'short', '', $locale);
                 if (!strlen($tz)) {
                     $tz = static::decodeTimezoneShortGMT($value, 1, $locale);
                 }
                 break;
             case 4:
-                $tz = self::getTimezoneNameNoLocationSpecific($value, 'long', '', $locale);
+                $tz = static::getTimezoneNameNoLocationSpecific($value, 'long', '', $locale);
                 if (!strlen($tz)) {
                     $tz = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
@@ -993,19 +1026,19 @@ class Calendar
 
     protected static function decodeTimezoneShortGMT(\DateTime $value, $count, $locale)
     {
-
         $offset = $value->getOffset();
         $sign = ($offset < 0) ? '-' : '+';
         $seconds = abs($offset);
-        $hours = floor($seconds / 3600);
+        $hours = intval(floor($seconds / 3600));
         $seconds -= $hours * 3600;
-        $minutes = floor($seconds / 60);
-        $seconds -= $minutes * 60;
+        $minutes = intval(floor($seconds / 60));
+        $data = \Punic\Data::get('timeZoneNames', $locale);
+        $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
-                return 'GMT' . $sign . $hours . (($minutes === 0) ? '' :  (':' . substr('0' . $minutes, -2)));
+                return sprintf($format, $sign . $hours . (($minutes === 0) ? '' :  (':' . substr('0' . $minutes, -2))));
             case 4:
-                return 'GMT' . $sign . $hours . ':' . substr('0' . $minutes, -2);
+                return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
             default:
                 throw new Exception('Invalid count for ' . __METHOD__);
         }
@@ -1052,42 +1085,237 @@ class Calendar
         return static::decodeYear($value, $count, $locale);
     }
 
+    /**
+     * Note: we assume Gregorian calendar here
+     */
+    protected static function decodeYearRelatedGregorian(\DateTime $value, $count, $locale)
+    {
+        return static::decodeYearExtended($value, $count, $locale);
+    }
+
+    protected static function decodeQuarter(\DateTime $value, $count, $locale, $standAlone = false)
+    {
+        $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
+        switch ($count) {
+            case 1:
+                return strval($quarter);
+            case 2:
+                return '0' . strval($quarter);
+            case 3:
+                return static::getQuarterName($quarter, 'abbreviated', $locale, $standAlone);
+            case 4:
+                return static::getQuarterName($quarter, 'wide', $locale, $standAlone);
+            case 5:
+                return static::getQuarterName($quarter, 'narrow', $locale, $standAlone);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeQuarterAlone(\DateTime $value, $count, $locale)
+    {
+        return static::decodeQuarter($value, $count, $locale, true);
+    }
+
+    protected static function decodeWeekOfYear(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+                return strval(intval($value->format('W')));
+            case 2:
+                return $value->format('W');
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeDayOfYear(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+            case 2:
+            case 3:
+                return str_pad(strval(1 + $value->format('z')), $count, '0', STR_PAD_LEFT);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeWeekdayInMonth(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+            case 2:
+            case 3:
+                $dom = intval($value->format('j'));
+                $wim = 1 + intval(floor(($dom - 1) / 7));
+
+                return str_pad(strval($wim), $count, '0', STR_PAD_LEFT);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeFranctionsOfSeconds(\DateTime $value, $count, $locale)
+    {
+        $us = $value->format('u');
+        if ($count >= 6) {
+            $result = str_pad(strval($us), $count, '0', STR_PAD_LEFT);
+        } elseif ($count >= 1) {
+            $v = intval(floor($us / pow(10, 6 - $count)));
+            $result = str_pad(strval($us), $count, '0', STR_PAD_LEFT);
+        } else {
+            throw new Exception('Invalid count for ' . __METHOD__);
+        }
+
+        return $result;
+    }
+
+    protected static function decodeMsecInDay(\DateTime $value, $count, $locale)
+    {
+        if ($count < 1) {
+            throw new Exception('Invalid count for ' . __METHOD__);
+        }
+        $hours = intval($value->format('G'));
+        $minutes = $hours * 60 + intval($value->format('i'));
+        $seconds = $minutes * 60 + intval($value->format('s'));
+        $milliseconds = $seconds * 60 + intval(floor(intval($value->format('u')) / 1000));
+
+        return str_pad(strval($milliseconds), $count, '0', STR_PAD_LEFT);
+    }
+
+    protected static function decodeTimezoneDelta(\DateTime $value, $count, $locale)
+    {
+        $offset = $value->getOffset();
+        $sign = ($offset < 0) ? '-' : '+';
+        $seconds = abs($offset);
+        $hours = intval(floor($seconds / 3600));
+        $seconds -= $hours * 3600;
+        $minutes = intval(floor($seconds / 60));
+        $seconds -= $minutes * 60;
+        $partsWithoutSeconds = array();
+        $partsWithoutSeconds[] = $sign . substr('0' . strval($hours), -2);
+        $partsWithoutSeconds[] = substr('0' . strval($minutes), -2);
+        $partsMaybeWithSeconds = $partsWithoutSeconds;
+        if ($seconds > 0) {
+            $partsMaybeWithSeconds[] = substr('0' . strval($seconds), -2);
+        }
+        switch ($count) {
+            case 1:
+            case 2:
+            case 3:
+                return implode('', $partsMaybeWithSeconds);
+            case 4:
+                $data = \Punic\Data::get('timeZoneNames', $locale);
+                $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
+
+                return sprintf($format, $sign . implode(':', $partsWithoutSeconds));
+            case 5:
+                return implode(':', $partsMaybeWithSeconds);
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeTimezoneNoLocationGeneric(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+                $tz = static::getTimezoneNameNoLocationSpecific($value, 'short', 'generic', $locale);
+                if (!strlen($tz)) {
+                    $tz = static::decodeTimezoneID($value, 4, $locale);
+                }
+                break;
+            case 4:
+                $tz = static::getTimezoneNameNoLocationSpecific($value, 'long', 'generic', $locale);
+                if (!strlen($tz)) {
+                    $tz = static::decodeTimezoneID($value, 4, $locale);
+                }
+                break;
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+
+        return $tz;
+    }
+
+    protected static function decodeTimezoneID(\DateTime $value, $count, $locale)
+    {
+        $result = '';
+        switch ($count) {
+            case 1:
+                $result = 'unk';
+                break;
+            case 2:
+                $result = $value->getTimezone()->getName();
+                break;
+            case 3:
+                $result = static::getTimezoneExemplarCity($value, true, $locale);
+                break;
+            case 4:
+                $result = static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
+                if (!strlen($result)) {
+                    $result = static::decodeTimezoneShortGMT($value, 4, $locale);
+                }
+                break;
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+
+        return $result;
+    }
+
+    protected static function decodeTimezoneWithTime(\DateTime $value, $count, $locale, $zForZero = false)
+    {
+        $offset = $value->getOffset();
+        $useZ = ($zForZero && ($offset === 0)) ? true : false;
+        $sign = ($offset < 0) ? '-' : '+';
+        $seconds = abs($offset);
+        $hours = intval(floor($seconds / 3600));
+        $seconds -= $hours * 3600;
+        $minutes = intval(floor($seconds / 60));
+        $seconds -= $minutes * 60;
+        $hours2 = $sign . substr('0' . strval($hours), -2);
+        $minutes2 = substr('0' . strval($minutes), -2);
+        $seconds2 = substr('0' . strval($seconds), -2);
+        $hmMaybe = array($sign . $hours2);
+        if ($minutes > 0) {
+            $hmMaybe[] = $minutes2;
+        }
+        $hmsMaybe = array($sign . $hours2, $minutes2);
+        if ($seconds > 0) {
+            $hmsMaybe[] = $seconds2;
+        }
+        switch ($count) {
+            case 1:
+                $result = $useZ ? 'Z' : implode('', $hmMaybe);
+                break;
+            case 2:
+                $result = $useZ ? 'Z' : "$hours2$minutes2";
+                break;
+            case 3:
+                $result = $useZ ? 'Z' : "$hours2:$minutes2";
+                break;
+            case 4:
+                $result = $useZ ? 'Z' : implode('', $hmsMaybe);
+                break;
+            case 5:
+                $result = $useZ ? 'Z' : implode(':', $hmsMaybe);
+                break;
+            default:
+                throw new Exception('Invalid count for ' . __METHOD__);
+        }
+    }
+
+    protected static function decodeTimezoneWithTimeZ(\DateTime $value, $count, $locale)
+    {
+        return static::decodeTimezoneWithTime($value, $count, $locale, true);
+    }
+
+    /** @todo */
+    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new \Exception('Not implemented'); }
     /** @todo */
     protected static function decodeYearCyclicName() { throw new \Exception('Not implemented'); }
     /** @todo */
-    protected static function decodeYearRelatedGregorian() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeQuarter() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeQuarterAlone() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeMonthAlone() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeWeekOfYear() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeWeekOfMonth() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeDayOfYear() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeWeekdayInMonth() { throw new \Exception('Not implemented'); }
-    /** @todo */
     protected static function decodeModifiedGiulianDay() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeHour24From1() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeHour12From0() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeFranctionsOfSeconds() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeMsecInDay() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeTimezoneDelta() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeTimezoneNoLocationGeneric() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeTimezoneID() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeTimezoneWithTimeZ() { throw new \Exception('Not implemented'); }
-    /** @todo */
-    protected static function decodeTimezoneWithTime() { throw new \Exception('Not implemented'); }
 }
