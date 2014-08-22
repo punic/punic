@@ -1212,7 +1212,7 @@ class Calendar
     {
         $us = intval($value->format('u'));
         if ($count >= 6) {
-            $result = str_pad(strval($us), $count, '0', STR_PAD_LEFT);
+            $result = str_pad(strval($us), $count, '0', STR_PAD_RIGHT);
         } elseif ($count >= 1) {
             $v = intval(floor($us / pow(10, 6 - $count)));
             $result = str_pad(strval($v), $count, '0', STR_PAD_LEFT);
@@ -1305,7 +1305,7 @@ class Calendar
                 $result = static::getTimezoneExemplarCity($value, true, $locale);
                 break;
             case 4:
-                $result = ''; // @todo static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
+                $result = static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
                 if (!strlen($result)) {
                     $result = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
