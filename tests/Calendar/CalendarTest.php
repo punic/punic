@@ -313,6 +313,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getDayperiodName', array('test'), 'Exception'),
             array('getDayperiodName', array('am', 'invalid-width'), 'Exception'),
             array('toDateTime', array(true), 'Exception'),
+            array('getEraName', array('test'), 'Exception'),
+            array('getEraName', array(1, 'invalid-width'), 'Exception'),
+            array('getMonthName', array('test'), 'Exception'),
+            array('getMonthName', array(13), 'Exception'),
+            array('getMonthName', array(12, 'invalid-width'), 'Exception'),
         );
     }
 
