@@ -503,4 +503,312 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneExemplarCity('Europe/Vatican', false, 'it')
         );
     }
+
+    public function testHas12HoursClock()
+    {
+        $this->assertSame(
+            true,
+            Calendar::has12HoursClock('en')
+        );
+        $this->assertSame(
+            false,
+            Calendar::has12HoursClock('it')
+        );
+    }
+
+    public function testGetFirstWeekday()
+    {
+        $this->assertSame(
+            0, // Sunday
+            Calendar::getFirstWeekday('en')
+        );
+        $this->assertSame(
+            0, // Sunday
+            Calendar::getFirstWeekday('en_US')
+        );
+        $this->assertSame(
+            1, // Monday
+            Calendar::getFirstWeekday('en_IT')
+        );
+        $this->assertSame(
+            1, // Monday
+            Calendar::getFirstWeekday('it')
+        );
+        $this->assertSame(
+            1, // Monday
+            Calendar::getFirstWeekday('it_IT')
+        );
+    }
+
+    public function testGetDateFormat()
+    {
+        $this->assertSame(
+            'EEEE, MMMM d, y',
+            Calendar::getDateFormat('full')
+        );
+        $this->assertSame(
+            'EEEE, MMMM d, y',
+            Calendar::getDateFormat('full', 'en_US')
+        );
+        $this->assertSame(
+            'MMMM d, y',
+            Calendar::getDateFormat('long', 'en_US')
+        );
+        $this->assertSame(
+            'MMM d, y',
+            Calendar::getDateFormat('medium', 'en_US')
+        );
+        $this->assertSame(
+            'M/d/yy',
+            Calendar::getDateFormat('short', 'en_US')
+        );
+        $this->assertSame(
+            'EEEE d MMMM y',
+            Calendar::getDateFormat('full', 'it')
+        );
+        $this->assertSame(
+            'dd MMMM y',
+            Calendar::getDateFormat('long', 'it')
+        );
+        $this->assertSame(
+            'dd/MMM/y',
+            Calendar::getDateFormat('medium', 'it_IT')
+        );
+        $this->assertSame(
+            'dd/MM/yy',
+            Calendar::getDateFormat('short', 'it_IT')
+        );
+    }
+
+    public function testGetTimeFormat()
+    {
+        $this->assertSame(
+            'h:mm:ss a zzzz',
+            Calendar::getTimeFormat('full')
+        );
+        $this->assertSame(
+            'h:mm:ss a zzzz',
+            Calendar::getTimeFormat('full', 'en_US')
+        );
+        $this->assertSame(
+            'h:mm:ss a z',
+            Calendar::getTimeFormat('long', 'en_US')
+        );
+        $this->assertSame(
+            'h:mm:ss a',
+            Calendar::getTimeFormat('medium', 'en_US')
+        );
+        $this->assertSame(
+            'h:mm a',
+            Calendar::getTimeFormat('short', 'en_US')
+        );
+        $this->assertSame(
+            'HH:mm:ss zzzz',
+            Calendar::getTimeFormat('full', 'it')
+        );
+        $this->assertSame(
+            'HH:mm:ss z',
+            Calendar::getTimeFormat('long', 'it')
+        );
+        $this->assertSame(
+            'HH:mm:ss',
+            Calendar::getTimeFormat('medium', 'it_IT')
+        );
+        $this->assertSame(
+            'HH:mm',
+            Calendar::getTimeFormat('short', 'it_IT')
+        );
+    }
+
+    public function testGetDatetimeFormat()
+    {
+        $this->assertSame(
+            "EEEE, MMMM d, y 'at' h:mm:ss a zzzz",
+            Calendar::getDatetimeFormat('full')
+        );
+        $this->assertSame(
+            "MMMM d, y 'at' h:mm:ss a z",
+            Calendar::getDatetimeFormat('long')
+        );
+        $this->assertSame(
+            "MMM d, y, h:mm:ss a",
+            Calendar::getDatetimeFormat('medium')
+        );
+        $this->assertSame(
+            "M/d/yy, h:mm a",
+            Calendar::getDatetimeFormat('short')
+        );
+        $this->assertSame(
+            "EEEE, MMMM d, y 'at' h:mm a",
+            Calendar::getDatetimeFormat('full|short')
+        );
+        $this->assertSame(
+            "M/d/yy 'at' h:mm:ss a zzzz",
+            Calendar::getDatetimeFormat('short|full')
+        );
+        $this->assertSame(
+            "M/d/yy 'at' h:mm a",
+            Calendar::getDatetimeFormat('full|short|short')
+        );
+        $this->assertSame(
+            "EEEE, MMMM d, y, h:mm:ss a zzzz",
+            Calendar::getDatetimeFormat('short|full|full')
+        );
+    }
+
+    public function testFormatDate()
+    {
+        $dt = Calendar::toDateTime('2010-10-12 23:59');
+        $this->assertSame(
+            'Tuesday, October 12, 2010',
+            Calendar::formatDate($dt, 'full')
+        );
+        $this->assertSame(
+            'October 12, 2010',
+            Calendar::formatDate($dt, 'long')
+        );
+        $this->assertSame(
+            'Oct 12, 2010',
+            Calendar::formatDate($dt, 'medium')
+        );
+        $this->assertSame(
+            '10/12/10',
+            Calendar::formatDate($dt, 'short')
+        );
+        $this->assertSame(
+            'martedì 12 ottobre 2010',
+            Calendar::formatDate($dt, 'full', 'it')
+        );
+        $this->assertSame(
+            '12 ottobre 2010',
+            Calendar::formatDate($dt, 'long', 'it')
+        );
+        $this->assertSame(
+            '12/ott/2010',
+            Calendar::formatDate($dt, 'medium', 'it')
+        );
+        $this->assertSame(
+            '12/10/10',
+            Calendar::formatDate($dt, 'short', 'it')
+        );
+    }
+
+    public function testFormatDateEx()
+    {
+        $this->assertSame(
+            'Tuesday, October 12, 2010',
+            Calendar::formatDateEx('2010-10-12 23:59', 'full', 'Europe/Rome')
+        );
+        $this->assertSame(
+            'Monday, October 11, 2010',
+            Calendar::formatDateEx('2010-10-12 00:00', 'full', 'Europe/Rome')
+        );
+    }
+
+    public function testFormatTime()
+    {
+        $dt = Calendar::toDateTime('2010-10-12 23:59');
+        $this->assertSame(
+            '11:59:00 PM Fiji Standard Time',
+            Calendar::formatTime($dt, 'full')
+        );
+        $this->assertSame(
+            '11:59:00 PM GMT+12',
+            Calendar::formatTime($dt, 'long')
+        );
+        $this->assertSame(
+            '11:59:00 PM',
+            Calendar::formatTime($dt, 'medium')
+        );
+        $this->assertSame(
+            '11:59 PM',
+            Calendar::formatTime($dt, 'short')
+        );
+        $this->assertSame(
+            '23:59:00 Ora standard delle Fiji',
+            Calendar::formatTime($dt, 'full', 'it')
+        );
+        $this->assertSame(
+            '23:59:00 GMT+12',
+            Calendar::formatTime($dt, 'long', 'it')
+        );
+        $this->assertSame(
+            '23:59:00',
+            Calendar::formatTime($dt, 'medium', 'it')
+        );
+        $this->assertSame(
+            '23:59',
+            Calendar::formatTime($dt, 'short', 'it')
+        );
+    }
+
+    public function testFormatTimeEx()
+    {
+        $this->assertSame(
+            '1:59:00 PM Central European Summer Time',
+            Calendar::formatTimeEx('2010-10-12 23:59', 'full', 'Europe/Rome')
+        );
+        $this->assertSame(
+            '2:00:00 PM Central European Summer Time',
+            Calendar::formatTimeEx('2010-10-12 00:00', 'full', 'Europe/Rome')
+        );
+    }
+
+    public function testFormatDateTime()
+    {
+        $dt = Calendar::toDateTime('2010-10-12 23:59');
+        $this->assertSame(
+            'Tuesday, October 12, 2010 at 11:59:00 PM Fiji Standard Time',
+            Calendar::formatDateTime($dt, 'full')
+        );
+        $this->assertSame(
+            'October 12, 2010 at 11:59:00 PM GMT+12',
+            Calendar::formatDateTime($dt, 'long')
+        );
+        $this->assertSame(
+            'Oct 12, 2010, 11:59:00 PM',
+            Calendar::formatDateTime($dt, 'medium')
+        );
+        $this->assertSame(
+            '10/12/10, 11:59 PM',
+            Calendar::formatDateTime($dt, 'short')
+        );
+        $this->assertSame(
+            'Tuesday, October 12, 2010 at 11:59 PM',
+            Calendar::formatDateTime($dt, 'full|short')
+        );
+        $this->assertSame(
+            'Tuesday, October 12, 2010, 11:59 PM',
+            Calendar::formatDateTime($dt, 'short|full|short')
+        );
+        $this->assertSame(
+            'martedì 12 ottobre 2010 23:59:00 Ora standard delle Fiji',
+            Calendar::formatDateTime($dt, 'full', 'it')
+        );
+        $this->assertSame(
+            '12 ottobre 2010 23:59:00 GMT+12',
+            Calendar::formatDateTime($dt, 'long', 'it')
+        );
+        $this->assertSame(
+            '12/ott/2010 23:59:00',
+            Calendar::formatDateTime($dt, 'medium', 'it')
+        );
+        $this->assertSame(
+            '12/10/10 23:59',
+            Calendar::formatDateTime($dt, 'short', 'it')
+        );
+    }
+
+    public function testFormatDateTimeEx()
+    {
+        $this->assertSame(
+            'Tuesday, October 12, 2010 at 1:59:00 PM Central European Summer Time',
+            Calendar::formatDateTimeEx('2010-10-12 23:59', 'full', 'Europe/Rome')
+        );
+        $this->assertSame(
+            'Monday, October 11, 2010 at 2:00:00 PM Central European Summer Time',
+            Calendar::formatDateTimeEx('2010-10-12 00:00', 'full', 'Europe/Rome')
+        );
+    }
+
 }
