@@ -333,7 +333,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         call_user_func_array(array('\Punic\Calendar', $method), $parameters);
     }
 
-
     public function testGetWeekdayName()
     {
         /* @var $dt \DateTime */
