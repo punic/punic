@@ -353,9 +353,9 @@ class Calendar
                 $date = $value->format('Y-m-d H:i');
                 if (empty($kind)) {
                     if (intval($value->format('I')) === 1) {
-                        $kind = 'dst';
+                        $kind = 'daylight';
                     } else {
-                        $kind = 'std';
+                        $kind = 'standard';
                     }
                 }
             } elseif (is_a($value, '\\DateTimeZone')) {
