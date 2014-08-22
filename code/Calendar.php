@@ -74,7 +74,7 @@ class Calendar
             'U' => 'U',
         );
         if (!is_string($format)) {
-            return null;
+            return '';
         }
         if (!array_key_exists($format, $cache)) {
             $escaped = false;

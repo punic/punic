@@ -80,6 +80,12 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             $dt->format('c'),
             'Calculating from timestamp to a specific timezone'
         );
+        $dt = Calendar::toDateTime($time, new \DateTimeZone('Europe/Rome'));
+        $this->assertSame(
+            '2017-03-07T17:30:00+01:00',
+            $dt->format('c'),
+            'Calculating from timestamp to a specific timezone'
+        );
 
         $dt = Calendar::toDateTime('2017-03-01 10:30');
         $this->assertSame(
@@ -153,6 +159,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('U', 'U'),
             array('HHmmss', 'His'),
             array("dd MMMM yyyy 'alle' H:mm:ss", 'd F Y \a\l\l\e G:i:s'),
+            array('', null),
+            array("dd MMMM yyyy '' H:mm:ss", "d F Y ' G:i:s"),
         );
     }
 
@@ -597,6 +605,21 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'CEST',
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'short', 'daylight', 'it')
         );
+        $dt = Calendar::toDateTime('1984-01-01 00:00', 'Africa/Casablanca');
+        $this->assertSame(
+            'Western European Standard Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+        $dt = Calendar::toDateTime('1985-01-01 00:00', 'Africa/Casablanca');
+        $this->assertSame(
+            'Central European Standard Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+        $dt = Calendar::toDateTime('1987-01-01 00:00', 'Africa/Casablanca');
+        $this->assertSame(
+            'Western European Standard Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
     }
 
     public function testGetTimezoneExemplarCity()
@@ -626,6 +649,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'Città del Vaticano',
             Calendar::getTimezoneExemplarCity('Europe/Vatican', false, 'it')
+        );
+        $this->assertSame(
+            'Città del Vaticano',
+            Calendar::getTimezoneExemplarCity(new \DateTimeZone('Europe/Vatican'), false, 'it')
         );
     }
 
@@ -1151,5 +1178,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('+13:00', Calendar::format($dt, 'XXX'));
         $this->assertSame('+1300', Calendar::format($dt, 'XXXX'));
         $this->assertSame('+13:00', Calendar::format($dt, 'XXXXX'));
+        // Mixed
+        $this->assertSame("2010'01", Calendar::format($dt, "yyyy''MM"));
     }
 }
