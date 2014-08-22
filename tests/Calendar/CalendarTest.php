@@ -811,4 +811,203 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @todo Formats not checked: 'U' (decodeYearCyclicName), 'W' (decodeWeekOfMonth), 'g' (decodeModifiedGiulianDay), 'V' (decodeTimezoneID), 'X' (decodeTimezoneWithTimeZ), 'x' (decodeTimezoneWithTime)
+     */
+    public function testFormat()
+    {
+        $dt = Calendar::toDateTime('2010-01-02 23:59:04.123');
+        $dt2 = Calendar::toDateTime('2010-01-02 08:01:02');
+        $dt3 = Calendar::toDateTime('2010-12-31 08:01:02');
+        $this->assertSame(
+            '',
+            Calendar::format(null, 'G')
+        );
+        $this->assertSame(
+            '',
+            Calendar::format(false, 'G')
+        );
+        $this->assertSame(
+            '',
+            Calendar::format('', 'G')
+        );
+        // decodeEra
+        $this->assertSame('AD', Calendar::format($dt, 'G'));
+        $this->assertSame('AD', Calendar::format($dt, 'GG'));
+        $this->assertSame('AD', Calendar::format($dt, 'GGG'));
+        $this->assertSame('Anno Domini', Calendar::format($dt, 'GGGG'));
+        $this->assertSame('A', Calendar::format($dt, 'GGGGG'));
+        $this->assertSame('d.C.', Calendar::format($dt, 'GGGG', 'it'));
+        // decodeYear
+        $this->assertSame('2010', Calendar::format($dt, 'y'));
+        $this->assertSame('10', Calendar::format($dt, 'yy'));
+        $this->assertSame('2010', Calendar::format($dt, 'yyy'));
+        $this->assertSame('2010', Calendar::format($dt, 'yyyy'));
+        $this->assertSame('02010', Calendar::format($dt, 'yyyyy'));
+        $this->assertSame('002010', Calendar::format($dt, 'yyyyyy'));
+        $this->assertSame('2010', Calendar::format($dt, 'y', 'it'));
+        // decodeYearWeekOfYear
+        $this->assertSame('2009', Calendar::format($dt, 'Y'));
+        $this->assertSame('09', Calendar::format($dt, 'YY'));
+        $this->assertSame('2009', Calendar::format($dt, 'YYY'));
+        $this->assertSame('2009', Calendar::format($dt, 'YYYY'));
+        $this->assertSame('02009', Calendar::format($dt, 'YYYYY'));
+        $this->assertSame('002009', Calendar::format($dt, 'YYYYYY'));
+        $this->assertSame('2009', Calendar::format($dt, 'Y', 'it'));
+        // decodeYearExtended
+        $this->assertSame('2010', Calendar::format($dt, 'u'));
+        $this->assertSame('10', Calendar::format($dt, 'uu'));
+        $this->assertSame('2010', Calendar::format($dt, 'uuu'));
+        $this->assertSame('2010', Calendar::format($dt, 'uuuu'));
+        $this->assertSame('02010', Calendar::format($dt, 'uuuuu'));
+        $this->assertSame('002010', Calendar::format($dt, 'uuuuuu'));
+        $this->assertSame('2010', Calendar::format($dt, 'u', 'it'));
+        // decodeYearRelatedGregorian
+        $this->assertSame('2010', Calendar::format($dt, 'r'));
+        $this->assertSame('10', Calendar::format($dt, 'rr'));
+        $this->assertSame('2010', Calendar::format($dt, 'rrr'));
+        $this->assertSame('2010', Calendar::format($dt, 'rrrr'));
+        $this->assertSame('02010', Calendar::format($dt, 'rrrrr'));
+        $this->assertSame('002010', Calendar::format($dt, 'rrrrrr'));
+        $this->assertSame('2010', Calendar::format($dt, 'r', 'it'));
+        // decodeQuarter
+        $this->assertSame('1', Calendar::format($dt, 'Q'));
+        $this->assertSame('01', Calendar::format($dt, 'QQ'));
+        $this->assertSame('Q1', Calendar::format($dt, 'QQQ'));
+        $this->assertSame('1st quarter', Calendar::format($dt, 'QQQQ'));
+        $this->assertSame('1', Calendar::format($dt, 'QQQQQ'));
+        $this->assertSame('I. negyedév', Calendar::format($dt, 'QQQQ', 'hu'));
+        // decodeQuarterAlone
+        $this->assertSame('1', Calendar::format($dt, 'q'));
+        $this->assertSame('01', Calendar::format($dt, 'qq'));
+        $this->assertSame('Q1', Calendar::format($dt, 'qqq'));
+        $this->assertSame('1st quarter', Calendar::format($dt, 'qqqq'));
+        $this->assertSame('1', Calendar::format($dt, 'qqqqq'));
+        $this->assertSame('1. negyedév', Calendar::format($dt, 'qqqq', 'hu'));
+        // decodeMonth
+        $this->assertSame('1', Calendar::format($dt, 'M'));
+        $this->assertSame('01', Calendar::format($dt, 'MM'));
+        $this->assertSame('Jan', Calendar::format($dt, 'MMM'));
+        $this->assertSame('January', Calendar::format($dt, 'MMMM'));
+        $this->assertSame('J', Calendar::format($dt, 'MMMMM'));
+        $this->assertSame('gennaio', Calendar::format($dt, 'MMMM', 'it'));
+        // decodeMonthAlone
+        $this->assertSame('1', Calendar::format($dt, 'L'));
+        $this->assertSame('01', Calendar::format($dt, 'LL'));
+        $this->assertSame('Jan', Calendar::format($dt, 'LLL'));
+        $this->assertSame('January', Calendar::format($dt, 'LLLL'));
+        $this->assertSame('J', Calendar::format($dt, 'LLLLL'));
+        $this->assertSame('Gennaio', Calendar::format($dt, 'LLLL', 'it'));
+        // decodeWeekOfYear
+        $this->assertSame('53', Calendar::format($dt, 'w'));
+        $this->assertSame('53', Calendar::format($dt, 'ww'));
+        $this->assertSame('53', Calendar::format($dt, 'w', 'it'));
+        // decodeDayOfMonth
+        $this->assertSame('2', Calendar::format($dt, 'd'));
+        $this->assertSame('02', Calendar::format($dt, 'dd'));
+        $this->assertSame('2', Calendar::format($dt, 'd', 'it'));
+        // decodeDayOfYear
+        $this->assertSame('2', Calendar::format($dt, 'D'));
+        $this->assertSame('02', Calendar::format($dt, 'DD'));
+        $this->assertSame('002', Calendar::format($dt, 'DDD'));
+        $this->assertSame('365', Calendar::format($dt3, 'D'));
+        $this->assertSame('365', Calendar::format($dt3, 'D', 'it'));
+        // decodeWeekdayInMonth
+        $this->assertSame('1', Calendar::format($dt, 'F'));
+        $this->assertSame('01', Calendar::format($dt, 'FF'));
+        $this->assertSame('001', Calendar::format($dt, 'FFF'));
+        $this->assertSame('1', Calendar::format($dt, 'F', 'it'));
+        // decodeDayOfWeek
+        $this->assertSame('Sat', Calendar::format($dt, 'E'));
+        $this->assertSame('Sat', Calendar::format($dt, 'EE'));
+        $this->assertSame('Sat', Calendar::format($dt, 'EEE'));
+        $this->assertSame('Saturday', Calendar::format($dt, 'EEEE'));
+        $this->assertSame('S', Calendar::format($dt, 'EEEEE'));
+        $this->assertSame('Sa', Calendar::format($dt, 'EEEEEE'));
+        $this->assertSame('sab', Calendar::format($dt, 'E', 'it'));
+        // decodeDayOfWeekLocal
+        $this->assertSame('7', Calendar::format($dt, 'e'));
+        $this->assertSame('07', Calendar::format($dt, 'ee'));
+        $this->assertSame('Sat', Calendar::format($dt, 'eee'));
+        $this->assertSame('Saturday', Calendar::format($dt, 'eeee'));
+        $this->assertSame('S', Calendar::format($dt, 'eeeee'));
+        $this->assertSame('Sa', Calendar::format($dt, 'eeeeee'));
+        $this->assertSame('6', Calendar::format($dt, 'e', 'it'));
+        $this->assertSame('sabato', Calendar::format($dt, 'eeee', 'it'));
+        // decodeDayOfWeekLocalAlone
+        $this->assertSame('7', Calendar::format($dt, 'c'));
+        $this->assertSame('07', Calendar::format($dt, 'cc'));
+        $this->assertSame('Sat', Calendar::format($dt, 'ccc'));
+        $this->assertSame('Saturday', Calendar::format($dt, 'cccc'));
+        $this->assertSame('S', Calendar::format($dt, 'ccccc'));
+        $this->assertSame('Sa', Calendar::format($dt, 'cccccc'));
+        $this->assertSame('6', Calendar::format($dt, 'c', 'it'));
+        $this->assertSame('Sabato', Calendar::format($dt, 'cccc', 'it'));
+        // decodeDayperiod
+        $this->assertSame('PM', Calendar::format($dt, 'a'));
+        $this->assertSame('nachm.', Calendar::format($dt, 'a', 'de'));
+        // decodeHour12
+        $this->assertSame('11', Calendar::format($dt, 'h'));
+        $this->assertSame('11', Calendar::format($dt, 'hh'));
+        $this->assertSame('11', Calendar::format($dt, 'h', 'it'));
+        // decodeHour24
+        $this->assertSame('8', Calendar::format($dt2, 'H'));
+        $this->assertSame('08', Calendar::format($dt2, 'HH'));
+        $this->assertSame('8', Calendar::format($dt2, 'H', 'it'));
+        // decodeHour12From0
+        $this->assertSame('8', Calendar::format($dt2, 'K'));
+        $this->assertSame('08', Calendar::format($dt2, 'KK'));
+        $this->assertSame('8', Calendar::format($dt2, 'K', 'it'));
+        // decodeHour24From1
+        $this->assertSame('9', Calendar::format($dt2, 'k'));
+        $this->assertSame('09', Calendar::format($dt2, 'kk'));
+        $this->assertSame('9', Calendar::format($dt2, 'k', 'it'));
+        // decodeMinute
+        $this->assertSame('1', Calendar::format($dt2, 'm'));
+        $this->assertSame('01', Calendar::format($dt2, 'mm'));
+        $this->assertSame('1', Calendar::format($dt2, 'm', 'it'));
+        // decodeSecond
+        $this->assertSame('2', Calendar::format($dt2, 's'));
+        $this->assertSame('02', Calendar::format($dt2, 'ss'));
+        $this->assertSame('2', Calendar::format($dt2, 's', 'it'));
+        // decodeFranctionsOfSeconds
+        $this->assertSame('1', Calendar::format($dt, 'S'));
+        $this->assertSame('12', Calendar::format($dt, 'SS'));
+        $this->assertSame('123', Calendar::format($dt, 'SSS'));
+        $this->assertSame('1230', Calendar::format($dt, 'SSSS'));
+        $this->assertSame('12300', Calendar::format($dt, 'SSSSS'));
+        $this->assertSame('123000', Calendar::format($dt, 'SSSSSS'));
+        $this->assertSame('1230000', Calendar::format($dt, 'SSSSSSS'));
+        $this->assertSame('1', Calendar::format($dt, 'S', 'it'));
+        // decodeMsecInDay
+        $this->assertSame('86344123', Calendar::format($dt, 'A'));
+        $this->assertSame('86344123', Calendar::format($dt, 'AA'));
+        $this->assertSame('86344123', Calendar::format($dt, 'AAA'));
+        $this->assertSame('86344123', Calendar::format($dt, 'AAAA'));
+        $this->assertSame('86344123', Calendar::format($dt, 'AAAAA'));
+        $this->assertSame('0086344123', Calendar::format($dt, 'AAAAAAAAAA'));
+        $this->assertSame('86344123', Calendar::format($dt, 'A', 'it'));
+        // decodeTimezoneNoLocationSpecific
+        $this->assertSame('GMT+13', Calendar::format($dt, 'z'));
+        $this->assertSame('GMT+13', Calendar::format($dt, 'zz'));
+        $this->assertSame('GMT+13', Calendar::format($dt, 'zzz'));
+        $this->assertSame('Fiji Summer Time', Calendar::format($dt, 'zzzz'));
+        $this->assertSame('Ora legale delle Fiji', Calendar::format($dt, 'zzzz', 'it'));
+        // decodeTimezoneDelta
+        $this->assertSame('+1300', Calendar::format($dt, 'Z'));
+        $this->assertSame('+1300', Calendar::format($dt, 'ZZ'));
+        $this->assertSame('+1300', Calendar::format($dt, 'ZZZ'));
+        $this->assertSame('GMT+13:00', Calendar::format($dt, 'ZZZZ'));
+        $this->assertSame('+13:00', Calendar::format($dt, 'ZZZZZ'));
+        $this->assertSame('UTC+13:00', Calendar::format($dt, 'ZZZZ', 'fr'));
+        // decodeTimezoneShortGMT
+        $this->assertSame('GMT+13', Calendar::format($dt, 'O'));
+        $this->assertSame('GMT+13:00', Calendar::format($dt, 'OOOO'));
+        $this->assertSame('UTC+13', Calendar::format($dt, 'O', 'fr'));
+        // decodeTimezoneNoLocationGeneric
+        $this->assertSame('GMT+13:00', Calendar::format($dt, 'v'));
+        $this->assertSame('Fiji Time', Calendar::format($dt, 'vvvv'));
+        $this->assertSame('UTC+13:00', Calendar::format($dt, 'v', 'fr'));
+        $this->assertSame('heure des îles Fidji', Calendar::format($dt, 'vvvv', 'fr'));
+    }
 }
