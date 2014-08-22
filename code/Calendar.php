@@ -1210,12 +1210,12 @@ class Calendar
 
     protected static function decodeFranctionsOfSeconds(\DateTime $value, $count, $locale)
     {
-        $us = $value->format('u');
+        $us = intval($value->format('u'));
         if ($count >= 6) {
             $result = str_pad(strval($us), $count, '0', STR_PAD_LEFT);
         } elseif ($count >= 1) {
             $v = intval(floor($us / pow(10, 6 - $count)));
-            $result = str_pad(strval($us), $count, '0', STR_PAD_LEFT);
+            $result = str_pad(strval($v), $count, '0', STR_PAD_LEFT);
         } else {
             throw new Exception('Invalid count for ' . __METHOD__);
         }
