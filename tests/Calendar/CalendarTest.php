@@ -153,7 +153,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('U', 'U'),
             array('HHmmss', 'His'),
             array("dd MMMM yyyy 'alle' H:mm:ss", 'd F Y \a\l\l\e G:i:s'),
-            array(1, null),
         );
     }
 
