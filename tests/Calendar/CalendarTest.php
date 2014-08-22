@@ -276,6 +276,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('getDatetimeFormat', array('invalid-width'), 'Exception'),
+            array('getDatetimeFormat', array('1|2|3|4'), 'Exception'),
             array('format', array(new stdClass(), ''), 'Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), 'Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), 'Exception'),

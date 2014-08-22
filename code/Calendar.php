@@ -1114,9 +1114,6 @@ class Calendar
 
     protected static function decodeYearWeekOfYear(\DateTime $value, $count, $locale)
     {
-        if ($count <= 0) {
-            throw new \Exception('Invalid count for ' . __METHOD__);
-        }
         $y = $value->format('o');
         if ($count === 2) {
             $y = substr('0' . $y, -2);
@@ -1216,8 +1213,6 @@ class Calendar
         } elseif ($count >= 1) {
             $v = intval(floor($us / pow(10, 6 - $count)));
             $result = str_pad(strval($v), $count, '0', STR_PAD_LEFT);
-        } else {
-            throw new \Exception('Invalid count for ' . __METHOD__);
         }
 
         return $result;
@@ -1225,9 +1220,6 @@ class Calendar
 
     protected static function decodeMsecInDay(\DateTime $value, $count, $locale)
     {
-        if ($count < 1) {
-            throw new \Exception('Invalid count for ' . __METHOD__);
-        }
         $hours = intval($value->format('G'));
         $minutes = $hours * 60 + intval($value->format('i'));
         $seconds = $minutes * 60 + intval($value->format('s'));
