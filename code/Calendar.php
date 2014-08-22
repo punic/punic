@@ -1260,8 +1260,7 @@ class Calendar
             case 4:
                 $data = \Punic\Data::get('timeZoneNames', $locale);
                 $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
-
-                return sprintf($format, $sign . implode(':', $partsWithoutSeconds));
+                return sprintf($format, implode(':', $partsWithoutSeconds));
             case 5:
                 return implode(':', $partsMaybeWithSeconds);
             default:
