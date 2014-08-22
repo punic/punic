@@ -16,19 +16,22 @@
     ],
     "homepage": "https://github.com/punic/calendar",
     "license": "MIT",
-    "require": {
-        "php": ">=5.3",
-        "punic/common": "self.version"
-    },
-    "autoload": {
-        "psr-4": {
-            "Punic\\": "code/"
-        }
-    },
     "authors": [
         {
             "name": "Michele Locati",
             "email": "mlocati@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Punic\\": "code/"
+        }
+    },
+    "require": {
+        "php": ">=5.3",
+        "punic/common": "self.version"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    }
 }
