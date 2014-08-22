@@ -494,7 +494,7 @@ class Calendar
             $cache[$locale] = (strpos($format, 'a') === false) ? false : true;
         }
 
-        return  $cache[$locale];
+        return $cache[$locale];
     }
 
     /**
@@ -515,7 +515,7 @@ class Calendar
             $cache[$locale] = $result;
         }
 
-        return  $cache[$locale];
+        return $cache[$locale];
     }
 
     /**
@@ -588,7 +588,7 @@ class Calendar
                                 break;
                             }
                             if ($b === $w) {
-                                $cmp = -1;
+                                $cmp = 1;
                                 break;
                             }
                         }
@@ -636,7 +636,7 @@ class Calendar
     {
         return static::format(
             $value,
-            static::getDateFormat($width),
+            static::getDateFormat($width, $locale),
             $locale
         );
     }
@@ -658,7 +658,7 @@ class Calendar
     {
         return static::formatEx(
             $value,
-            static::getDateFormat($width),
+            static::getDateFormat($width, $locale),
             $toTimezone,
             $locale
         );
@@ -679,7 +679,7 @@ class Calendar
     {
         return static::format(
             $value,
-            static::getTimeFormat($width),
+            static::getTimeFormat($width, $locale),
             $locale
         );
     }
@@ -701,7 +701,7 @@ class Calendar
     {
         return static::formatEx(
             $value,
-            static::getTimeFormat($width),
+            static::getTimeFormat($width, $locale),
             $toTimezone,
             $locale
         );
@@ -722,7 +722,7 @@ class Calendar
     {
         return static::format(
             $value,
-            static::getDatetimeFormat($width),
+            static::getDatetimeFormat($width, $locale),
             $locale
         );
     }
@@ -744,7 +744,7 @@ class Calendar
     {
         return static::formatEx(
             $value,
-            static::getDatetimeFormat($width),
+            static::getDatetimeFormat($width, $locale),
             $toTimezone,
             $locale
         );
