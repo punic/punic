@@ -276,6 +276,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('getDatetimeFormat', array('invalid-width'), 'Exception'),
+            array('getTimeFormat', array('invalid-width'), 'Exception'),
+            array('getDateFormat', array('invalid-width'), 'Exception'),
             array('getDatetimeFormat', array('1|2|3|4'), 'Exception'),
             array('format', array(new stdClass(), ''), 'Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), 'Exception'),
@@ -308,6 +310,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getWeekdayName', array(8), 'Exception'),
             array('getWeekdayName', array('test'), 'Exception'),
             array('getWeekdayName', array(1, 'invalid-width'), 'Exception'),
+            array('getDayperiodName', array('test'), 'Exception'),
+            array('getDayperiodName', array('am', 'invalid-width'), 'Exception'),
         );
     }
 
@@ -468,6 +472,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'AM',
             Calendar::getDayperiodName('1')
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName('am')
         );
         $this->assertSame(
             'AM',
