@@ -111,7 +111,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'Calculating from DateTime to a specific timezone'
         );
     }
-    
+
     public function providerConvertPhpToIso()
     {
         return array(
@@ -169,6 +169,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     public function testGetEraName()
     {
         $this->assertSame(
+            '',
+            Calendar::getEraName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getEraName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getEraName(false)
+        );
+        $this->assertSame(
             'AD',
             Calendar::getEraName(2000)
         );
@@ -187,6 +199,308 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'dC',
             Calendar::getEraName(2000, 'narrow', 'it')
+        );
+    }
+
+    public function testGetMonthName()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getMonthName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getMonthName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getMonthName(false)
+        );
+        $this->assertSame(
+            'March',
+            Calendar::getMonthName($dt)
+        );
+        $this->assertSame(
+            'March',
+            Calendar::getMonthName($dt, 'wide')
+        );
+        $this->assertSame(
+            'Mar',
+            Calendar::getMonthName($dt, 'abbreviated')
+        );
+        $this->assertSame(
+            'M',
+            Calendar::getMonthName($dt, 'narrow')
+        );
+        $this->assertSame(
+            'marzo',
+            Calendar::getMonthName($dt, 'wide', 'it')
+        );
+        $this->assertSame(
+            'marzo',
+            Calendar::getMonthName($dt, 'wide', 'it', false)
+        );
+        $this->assertSame(
+            'Marzo',
+            Calendar::getMonthName($dt, 'wide', 'it', true)
+        );
+    }
+
+    public function testGetWeekdayName()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getWeekdayName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getWeekdayName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getWeekdayName(false)
+        );
+        $this->assertSame(
+            'Sunday',
+            Calendar::getWeekdayName($dt)
+        );
+        $this->assertSame(
+            'Sunday',
+            Calendar::getWeekdayName($dt, 'wide')
+        );
+        $this->assertSame(
+            'Sun',
+            Calendar::getWeekdayName($dt, 'abbreviated')
+        );
+        $this->assertSame(
+            'Su',
+            Calendar::getWeekdayName($dt, 'short')
+        );
+        $this->assertSame(
+            'S',
+            Calendar::getWeekdayName($dt, 'narrow')
+        );
+        $this->assertSame(
+            'domenica',
+            Calendar::getWeekdayName($dt, 'wide', 'it')
+        );
+        $this->assertSame(
+            'domenica',
+            Calendar::getWeekdayName($dt, 'wide', 'it', false)
+        );
+        $this->assertSame(
+            'Domenica',
+            Calendar::getWeekdayName($dt, 'wide', 'it', true)
+        );
+    }
+
+    public function testGetQuarterName()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getQuarterName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getQuarterName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getQuarterName(false)
+        );
+        $this->assertSame(
+            '1st quarter',
+            Calendar::getQuarterName($dt)
+        );
+        $this->assertSame(
+            '1st quarter',
+            Calendar::getQuarterName($dt, 'wide')
+        );
+        $this->assertSame(
+            'Q1',
+            Calendar::getQuarterName($dt, 'abbreviated')
+        );
+        $this->assertSame(
+            '1',
+            Calendar::getQuarterName($dt, 'narrow')
+        );
+        $this->assertSame(
+            'I. negyedév',
+            Calendar::getQuarterName($dt, 'wide', 'hu')
+        );
+        $this->assertSame(
+            'I. negyedév',
+            Calendar::getQuarterName($dt, 'wide', 'hu', false)
+        );
+        $this->assertSame(
+            '1. negyedév',
+            Calendar::getQuarterName($dt, 'wide', 'hu', true)
+        );
+    }
+
+    public function testGetDayperiodName()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getDayperiodName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getDayperiodName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getDayperiodName(false)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt, 'wide')
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt, 'abbreviated')
+        );
+        $this->assertSame(
+            'a',
+            Calendar::getDayperiodName($dt, 'narrow')
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt, 'wide', 'it')
+        );
+        $this->assertSame(
+            'm.',
+            Calendar::getDayperiodName($dt, 'narrow', 'it')
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt, 'wide', 'it', false)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName($dt, 'wide', 'it', true)
+        );
+    }
+
+    public function testGetTimezoneNameNoLocationSpecific()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific(false)
+        );
+        $this->assertSame(
+            'Fiji Summer Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt)
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long', 'generic')
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt->getTimezone())
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt->getTimezone()->getName())
+        );
+        $this->assertSame(
+            'Greenwich Mean Time',
+            Calendar::getTimezoneNameNoLocationSpecific('GMT', 'long')
+        );
+        $this->assertSame(
+            'GMT',
+            Calendar::getTimezoneNameNoLocationSpecific('GMT', 'short')
+        );
+        $dt = Calendar::toDateTime('2010-03-07', 'Europe/Rome');
+        $this->assertSame(
+            'Central European Standard Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+        $dt = Calendar::toDateTime('2010-08-07', 'Europe/Rome');
+        $this->assertSame(
+            'Central European Summer Time',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+        $this->assertSame(
+            'Central European Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'generic')
+        );
+        $this->assertSame(
+            'Central European Standard Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'standard')
+        );
+        $this->assertSame(
+            'Central European Summer Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight')
+        );
+        $this->assertSame(
+            "Ora legale dell'Europa centrale",
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight', 'it')
+        );
+        $this->assertSame(
+            'CET',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'short', 'generic', 'it')
+        );
+        $this->assertSame(
+            'CET',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'short', 'standard', 'it')
+        );
+        $this->assertSame(
+            'CEST',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'short', 'daylight', 'it')
+        );
+    }
+
+    public function testGetTimezoneExemplarCity()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            'Fiji',
+            Calendar::getTimezoneExemplarCity($dt)
+        );
+        $this->assertSame(
+            'Unknown City',
+            Calendar::getTimezoneExemplarCity('This is a bad timezone name')
+        );
+        $this->assertSame(
+            'Unknown City',
+            Calendar::getTimezoneExemplarCity('This is a bad timezone name', true)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneExemplarCity('This is a bad timezone name', false)
+        );
+        $this->assertSame(
+            'Vatican',
+            Calendar::getTimezoneExemplarCity('Europe/Vatican')
+        );
+        $this->assertSame(
+            'Città del Vaticano',
+            Calendar::getTimezoneExemplarCity('Europe/Vatican', false, 'it')
         );
     }
 }
