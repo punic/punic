@@ -611,7 +611,7 @@ class Calendar
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!array_key_exists($wholeWidth, $data)) {
-            throw new \Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($wholeWidth)));
+            throw new \Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($data)));
         }
 
         return sprintf(
