@@ -74,7 +74,7 @@ class Calendar
             'U' => 'U',
         );
         if (!is_string($format)) {
-            return null;
+            return '';
         }
         if (!array_key_exists($format, $cache)) {
             $escaped = false;
@@ -469,9 +469,10 @@ class Calendar
             }
         }
         if ((!strlen($result)) && $returnUnknownIfNotFound) {
-            $result = static::getTimezoneExemplarCity('Etc/Unknown', false, $locale);
-            if (!strlen($result)) {
-                $result = 'Unknown City';
+            $result = 'Unknown City';
+            $s = static::getTimezoneExemplarCity('Etc/Unknown', false, $locale);
+            if (strlen($s)) {
+                $result = $s;
             }
         }
 
@@ -507,10 +508,11 @@ class Calendar
         static $cache = array();
         $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
         if (!array_key_exists($locale, $cache)) {
+            $result = 0;
             $data = \Punic\Data::getGeneric('weekData');
-            $result = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
-            if (!is_int($result)) {
-                $result = 0;
+            $i = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
+            if (is_int($i)) {
+                $result = $i;
             }
             $cache[$locale] = $result;
         }
@@ -1252,6 +1254,7 @@ class Calendar
             case 4:
                 $data = \Punic\Data::get('timeZoneNames', $locale);
                 $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
+
                 return sprintf($format, implode(':', $partsWithoutSeconds));
             case 5:
                 return implode(':', $partsMaybeWithSeconds);
