@@ -111,51 +111,59 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'Calculating from DateTime to a specific timezone'
         );
     }
+    
+    public function providerConvertPhpToIso()
+    {
+        return array(
+            array('dd', 'd'),
+            array('EE', 'D'),
+            array('d', 'j'),
+            array('EEEE', 'l'),
+            array('eee', 'N'),
+            array('SS', 'S'),
+            array('e', 'w'),
+            array('D', 'z'),
+            array('ww', 'W'),
+            array('MMMM', 'F'),
+            array('MM', 'm'),
+            array('MMM', 'M'),
+            array('M', 'n'),
+            array('ddd', 't'),
+            array('l', 'L'),
+            array('YYYY', 'o'),
+            array('yyyy', 'Y'),
+            array('yy', 'y'),
+            array('a', 'a'),
+            array('a', 'A'),
+            array('B', 'B'),
+            array('h', 'g'),
+            array('H', 'G'),
+            array('hh', 'h'),
+            array('HH', 'H'),
+            array('mm', 'i'),
+            array('ss', 's'),
+            array('zzzz', 'e'),
+            array('I', 'I'),
+            array('Z', 'O'),
+            array('ZZZZ', 'P'),
+            array('z', 'T'),
+            array('X', 'Z'),
+            array('yyyy-MM-ddTHH:mm:ssZZZZ', 'c'),
+            array('r', 'r'),
+            array('U', 'U'),
+            array('HHmmss', 'His'),
+            array("dd MMMM yyyy 'alle' H:mm:ss", 'd F Y \a\l\l\e G:i:s'),
+        );
+    }
 
     /**
      * test convertPhpToIso
      * expected boolean
+     * @dataProvider providerConvertPhpToIso
      */
-    public function testConvertPhpToIso()
+    public function testConvertPhpToIso($a, $b)
     {
-        $this->assertSame('dd', Calendar::convertPhpToIsoFormat('d'));
-        $this->assertSame('EE', Calendar::convertPhpToIsoFormat('D'));
-        $this->assertSame('d', Calendar::convertPhpToIsoFormat('j'));
-        $this->assertSame('EEEE', Calendar::convertPhpToIsoFormat('l'));
-        $this->assertSame('eee', Calendar::convertPhpToIsoFormat('N'));
-        $this->assertSame('SS', Calendar::convertPhpToIsoFormat('S'));
-        $this->assertSame('e', Calendar::convertPhpToIsoFormat('w'));
-        $this->assertSame('D', Calendar::convertPhpToIsoFormat('z'));
-        $this->assertSame('ww', Calendar::convertPhpToIsoFormat('W'));
-        $this->assertSame('MMMM', Calendar::convertPhpToIsoFormat('F'));
-        $this->assertSame('MM', Calendar::convertPhpToIsoFormat('m'));
-        $this->assertSame('MMM', Calendar::convertPhpToIsoFormat('M'));
-        $this->assertSame('M', Calendar::convertPhpToIsoFormat('n'));
-        $this->assertSame('ddd', Calendar::convertPhpToIsoFormat('t'));
-        $this->assertSame('l', Calendar::convertPhpToIsoFormat('L'));
-        $this->assertSame('YYYY', Calendar::convertPhpToIsoFormat('o'));
-        $this->assertSame('yyyy', Calendar::convertPhpToIsoFormat('Y'));
-        $this->assertSame('yy', Calendar::convertPhpToIsoFormat('y'));
-        $this->assertSame('a', Calendar::convertPhpToIsoFormat('a'));
-        $this->assertSame('a', Calendar::convertPhpToIsoFormat('A'));
-        $this->assertSame('B', Calendar::convertPhpToIsoFormat('B'));
-        $this->assertSame('h', Calendar::convertPhpToIsoFormat('g'));
-        $this->assertSame('H', Calendar::convertPhpToIsoFormat('G'));
-        $this->assertSame('hh', Calendar::convertPhpToIsoFormat('h'));
-        $this->assertSame('HH', Calendar::convertPhpToIsoFormat('H'));
-        $this->assertSame('mm', Calendar::convertPhpToIsoFormat('i'));
-        $this->assertSame('ss', Calendar::convertPhpToIsoFormat('s'));
-        $this->assertSame('zzzz', Calendar::convertPhpToIsoFormat('e'));
-        $this->assertSame('I', Calendar::convertPhpToIsoFormat('I'));
-        $this->assertSame('Z', Calendar::convertPhpToIsoFormat('O'));
-        $this->assertSame('ZZZZ', Calendar::convertPhpToIsoFormat('P'));
-        $this->assertSame('z', Calendar::convertPhpToIsoFormat('T'));
-        $this->assertSame('X', Calendar::convertPhpToIsoFormat('Z'));
-        $this->assertSame('yyyy-MM-ddTHH:mm:ssZZZZ', Calendar::convertPhpToIsoFormat('c'));
-        $this->assertSame('r', Calendar::convertPhpToIsoFormat('r'));
-        $this->assertSame('U', Calendar::convertPhpToIsoFormat('U'));
-        $this->assertSame('HHmmss', Calendar::convertPhpToIsoFormat('His'));
-        $this->assertSame("dd MMMM yyyy 'alle' H:mm:ss", Calendar::convertPhpToIsoFormat('d F Y \a\l\l\e G:i:s'));
+        $this->assertSame($a, Calendar::convertPhpToIsoFormat($b));
     }
 
     public function testGetEraName()
