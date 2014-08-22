@@ -896,7 +896,7 @@ class Calendar
             case 6:
                 return static::getWeekdayName($value, 'short', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -928,7 +928,7 @@ class Calendar
             case 2:
                 return $value->format('d');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -946,7 +946,7 @@ class Calendar
             case 5:
                 return static::getMonthName($value, 'narrow', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -980,7 +980,7 @@ class Calendar
             case 2:
                 return $value->format('h');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -990,7 +990,7 @@ class Calendar
             case 1:
                 return static::getDayperiodName($value, 'abbreviated', $locale);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1002,7 +1002,7 @@ class Calendar
             case 2:
                 return $value->format('H');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1013,7 +1013,7 @@ class Calendar
             case 2:
                 return str_pad(strval(intval($value->format('G')) % 12), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1024,7 +1024,7 @@ class Calendar
             case 2:
                 return str_pad(strval(1 + intval($value->format('G'))), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1036,7 +1036,7 @@ class Calendar
             case 2:
                 return $value->format('i');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1048,7 +1048,7 @@ class Calendar
             case 2:
                 return $value->format('s');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1070,7 +1070,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
 
         return $tz;
@@ -1092,7 +1092,7 @@ class Calendar
             case 4:
                 return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1108,14 +1108,14 @@ class Calendar
             case 5:
                 return static::getEraName($value, 'narrow', $locale);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
     protected static function decodeYearWeekOfYear(\DateTime $value, $count, $locale)
     {
         if ($count <= 0) {
-            throw new Exception('Invalid count for ' . __METHOD__);
+            throw new \Exception('Invalid count for ' . __METHOD__);
         }
         $y = $value->format('o');
         if ($count === 2) {
@@ -1160,7 +1160,7 @@ class Calendar
             case 5:
                 return static::getQuarterName($quarter, 'narrow', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1177,7 +1177,7 @@ class Calendar
             case 2:
                 return $value->format('W');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1189,7 +1189,7 @@ class Calendar
             case 3:
                 return str_pad(strval(1 + $value->format('z')), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1204,7 +1204,7 @@ class Calendar
 
                 return str_pad(strval($wim), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1217,7 +1217,7 @@ class Calendar
             $v = intval(floor($us / pow(10, 6 - $count)));
             $result = str_pad(strval($v), $count, '0', STR_PAD_LEFT);
         } else {
-            throw new Exception('Invalid count for ' . __METHOD__);
+            throw new \Exception('Invalid count for ' . __METHOD__);
         }
 
         return $result;
@@ -1226,7 +1226,7 @@ class Calendar
     protected static function decodeMsecInDay(\DateTime $value, $count, $locale)
     {
         if ($count < 1) {
-            throw new Exception('Invalid count for ' . __METHOD__);
+            throw new \Exception('Invalid count for ' . __METHOD__);
         }
         $hours = intval($value->format('G'));
         $minutes = $hours * 60 + intval($value->format('i'));
@@ -1265,7 +1265,7 @@ class Calendar
             case 5:
                 return implode(':', $partsMaybeWithSeconds);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1285,7 +1285,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
 
         return $tz;
@@ -1311,7 +1311,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
 
         return $result;
@@ -1355,7 +1355,7 @@ class Calendar
                 $result = $useZ ? 'Z' : implode(':', $hmsMaybe);
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new \Exception('Invalid count for ' . __METHOD__);
         }
     }
 
