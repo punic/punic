@@ -896,7 +896,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Formats not checked: 'U' (decodeYearCyclicName), 'W' (decodeWeekOfMonth), 'g' (decodeModifiedGiulianDay), 'X' (decodeTimezoneWithTimeZ), 'x' (decodeTimezoneWithTime)
+     * @todo Formats not checked: 'U' (decodeYearCyclicName), 'W' (decodeWeekOfMonth), 'g' (decodeModifiedGiulianDay)
      */
     public function testFormat()
     {
@@ -1098,5 +1098,17 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('Pacific/Fiji', Calendar::format($dt, 'VV'));
         $this->assertSame('Fiji', Calendar::format($dt, 'VVV'));
         $this->assertSame('GMT+13:00', Calendar::format($dt, 'VVVV'));
+        // decodeTimezoneWithTime
+        $this->assertSame('++13', Calendar::format($dt, 'x'));
+        $this->assertSame('+1300', Calendar::format($dt, 'xx'));
+        $this->assertSame('+13:00', Calendar::format($dt, 'xxx'));
+        $this->assertSame('++1300', Calendar::format($dt, 'xxxx'));
+        $this->assertSame('++13:00', Calendar::format($dt, 'xxxxx'));
+        // decodeTimezoneWithTimeZ
+        $this->assertSame('++13', Calendar::format($dt, 'X'));
+        $this->assertSame('+1300', Calendar::format($dt, 'XX'));
+        $this->assertSame('+13:00', Calendar::format($dt, 'XXX'));
+        $this->assertSame('++1300', Calendar::format($dt, 'XXXX'));
+        $this->assertSame('++13:00', Calendar::format($dt, 'XXXXX'));
     }
 }

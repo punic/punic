@@ -1356,6 +1356,8 @@ class Calendar
             default:
                 throw new \Exception('Invalid count for ' . __METHOD__);
         }
+
+        return $result;
     }
 
     protected static function decodeTimezoneWithTimeZ(\DateTime $value, $count, $locale)
