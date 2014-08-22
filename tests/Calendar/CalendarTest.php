@@ -248,6 +248,30 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testGetWeekdayNameException1()
+    {
+        Calendar::getWeekdayName(8);
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testGetWeekdayNameException2()
+    {
+        Calendar::getWeekdayName("test");
+    }
+    
+    /**
+     * @expectedException Exception
+     */
+    public function testGetWeekdayNameException3()
+    {
+        Calendar::getWeekdayName(1, 'invalid-width');
+    }
+
     public function testGetWeekdayName()
     {
         /* @var $dt \DateTime */
@@ -263,6 +287,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '',
             Calendar::getWeekdayName(false)
+        );
+        $this->assertSame(
+            'Monday',
+            Calendar::getWeekdayName(1)
+        );
+        $this->assertSame(
+            'Monday',
+            Calendar::getWeekdayName(1.0)
+        );
+        $this->assertSame(
+            'Monday',
+            Calendar::getWeekdayName('1')
         );
         $this->assertSame(
             'Sunday',
