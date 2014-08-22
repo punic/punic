@@ -32,6 +32,7 @@
         "punic/common": "self.version"
     },
     "require-dev": {
+        "punic/common": "dev-master",
         "satooshi/php-coveralls": "dev-master"
     }
 }
