@@ -454,53 +454,54 @@ class Data
     {
         $result = array();
         $localeInfo = static::explodeLocale($locale);
-        if (is_array($localeInfo)) {
-            extract($localeInfo);
-            if (!strlen($territory)) {
-                $fullLocale = static::guessFullLocale($language, $script);
-                if (strlen($fullLocale)) {
-                    extract(static::explodeLocale($fullLocale));
-                }
+        if (!is_array($localeInfo)) {
+            throw new \Exception("'$locale' is not a valid locale identifier");
+        }
+        extract($localeInfo);
+        if (!strlen($territory)) {
+            $fullLocale = static::guessFullLocale($language, $script);
+            if (strlen($fullLocale)) {
+                extract(static::explodeLocale($fullLocale));
             }
-            $territories = array();
-            while (strlen($territory) > 0) {
-                $territories[] = $territory;
-                $territory = static::getParentTerritory($territory);
-            }
-            if (strlen($script)) {
-                foreach ($territories as $territory) {
-                    $result[] = "{$language}-{$script}-{$territory}";
-                }
-            }
-            if (strlen($script)) {
-                $result[] = "{$language}-{$script}";
-            }
+        }
+        $territories = array();
+        while (strlen($territory) > 0) {
+            $territories[] = $territory;
+            $territory = static::getParentTerritory($territory);
+        }
+        if (strlen($script)) {
             foreach ($territories as $territory) {
-                $result[] = "{$language}-{$territory}";
-                if ("{$language}-{$territory}" === 'en-US') {
-                    $result[] = 'root';
-                }
+                $result[] = "{$language}-{$script}-{$territory}";
             }
-            if (strlen($parentLocale)) {
-                $result = array_merge($result, static::getLocaleAlternatives($parentLocale, false));
-            }
-            $result[] = $language;
-            if ($addFallback && ($locale !== static::$fallbackLocale)) {
-                $result = array_merge($result, static::getLocaleAlternatives(static::$fallbackLocale, false));
-            }
-            for ($i = count($result) - 1; $i > 1; $i--) {
-                for ($j = 0; $j < $i; $j++) {
-                    if ($result[$i] === $result[$j]) {
-                        array_splice($result, $i, 1);
-                        break;
-                    }
-                }
-            }
-            $i = array_search('root', $result, true);
-            if ($i !== false) {
-                array_splice($result, $i, 1);
+        }
+        if (strlen($script)) {
+            $result[] = "{$language}-{$script}";
+        }
+        foreach ($territories as $territory) {
+            $result[] = "{$language}-{$territory}";
+            if ("{$language}-{$territory}" === 'en-US') {
                 $result[] = 'root';
             }
+        }
+        if (strlen($parentLocale)) {
+            $result = array_merge($result, static::getLocaleAlternatives($parentLocale, false));
+        }
+        $result[] = $language;
+        if ($addFallback && ($locale !== static::$fallbackLocale)) {
+            $result = array_merge($result, static::getLocaleAlternatives(static::$fallbackLocale, false));
+        }
+        for ($i = count($result) - 1; $i > 1; $i--) {
+            for ($j = 0; $j < $i; $j++) {
+                if ($result[$i] === $result[$j]) {
+                    array_splice($result, $i, 1);
+                    break;
+                }
+            }
+        }
+        $i = array_search('root', $result, true);
+        if ($i !== false) {
+            array_splice($result, $i, 1);
+            $result[] = 'root';
         }
 
         return $result;
