@@ -389,6 +389,9 @@ class Calendar
                         }
                     }
                 }
+                if(!strlen($isoName)) {
+                    $isoName = $phpName;
+                }
                 if (strlen($isoName)) {
                     $data = \Punic\Data::get('timeZoneNames', $locale);
                     if (array_key_exists('metazone', $data)) {
