@@ -182,6 +182,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             'AD',
+            Calendar::getEraName(1)
+        );
+        $this->assertSame(
+            'AD',
+            Calendar::getEraName(1.0)
+        );
+        $this->assertSame(
+            'AD',
+            Calendar::getEraName('1')
+        );
+        $this->assertSame(
+            'AD',
             Calendar::getEraName(2000)
         );
         $this->assertSame(
@@ -217,6 +229,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '',
             Calendar::getMonthName(false)
+        );
+        $this->assertSame(
+            'January',
+            Calendar::getMonthName(1)
+        );
+        $this->assertSame(
+            'January',
+            Calendar::getMonthName(1.0)
+        );
+        $this->assertSame(
+            'January',
+            Calendar::getMonthName('1')
         );
         $this->assertSame(
             'March',
@@ -263,7 +287,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     {
         Calendar::getWeekdayName("test");
     }
-    
+
     /**
      * @expectedException Exception
      */
@@ -352,6 +376,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             '1st quarter',
+            Calendar::getQuarterName(1)
+        );
+        $this->assertSame(
+            '1st quarter',
+            Calendar::getQuarterName(1.0)
+        );
+        $this->assertSame(
+            '1st quarter',
+            Calendar::getQuarterName('1')
+        );
+        $this->assertSame(
+            '1st quarter',
             Calendar::getQuarterName($dt)
         );
         $this->assertSame(
@@ -395,6 +431,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '',
             Calendar::getDayperiodName(false)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName(1)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName(1.0)
+        );
+        $this->assertSame(
+            'AM',
+            Calendar::getDayperiodName('1')
         );
         $this->assertSame(
             'AM',
