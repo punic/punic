@@ -272,29 +272,50 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testGetWeekdayNameException1()
+    public function testExceptionsProvider()
     {
-        Calendar::getWeekdayName(8);
+        return array(
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ddd'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'EEEEEEE'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aa'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'kkk'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'mmm'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'sss'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'zzzzz'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OO'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOO'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOOOO'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'GGGGGG'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'QQQQQQ'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'www'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'DDDD'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'FFFF'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ZZZZZZ'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vv'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvv'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvvvv'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'VVVVV'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'XXXXXX'), 'Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'xxxxxx'), 'Exception'),
+            array('getWeekdayName', array(8), 'Exception'),
+            array('getWeekdayName', array('test'), 'Exception'),
+            array('getWeekdayName', array(1, 'invalid-width'), 'Exception'),
+        );
     }
 
     /**
-     * @expectedException Exception
+     * @dataProvider testExceptionsProvider
      */
-    public function testGetWeekdayNameException2()
+    public function testExceptions($method, $parameters, $exception)
     {
-        Calendar::getWeekdayName("test");
+        $this->setExpectedException($exception);
+        call_user_func_array(array('\Punic\Calendar', $method), $parameters);
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testGetWeekdayNameException3()
-    {
-        Calendar::getWeekdayName(1, 'invalid-width');
-    }
 
     public function testGetWeekdayName()
     {
