@@ -896,7 +896,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Formats not checked: 'U' (decodeYearCyclicName), 'W' (decodeWeekOfMonth), 'g' (decodeModifiedGiulianDay), 'V' (decodeTimezoneID), 'X' (decodeTimezoneWithTimeZ), 'x' (decodeTimezoneWithTime)
+     * @todo Formats not checked: 'U' (decodeYearCyclicName), 'W' (decodeWeekOfMonth), 'g' (decodeModifiedGiulianDay), 'X' (decodeTimezoneWithTimeZ), 'x' (decodeTimezoneWithTime)
      */
     public function testFormat()
     {
@@ -1093,5 +1093,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('Fiji Time', Calendar::format($dt, 'vvvv'));
         $this->assertSame('UTC+13:00', Calendar::format($dt, 'v', 'fr'));
         $this->assertSame('heure des îles Fidji', Calendar::format($dt, 'vvvv', 'fr'));
+        // decodeTimezoneID
+        $this->assertSame('unk', Calendar::format($dt, 'V'));
+        $this->assertSame('Pacific/Fiji', Calendar::format($dt, 'VV'));
+        $this->assertSame('Fiji', Calendar::format($dt, 'VVV'));
+        $this->assertSame('GMT+13:00', Calendar::format($dt, 'VVVV'));
     }
 }
