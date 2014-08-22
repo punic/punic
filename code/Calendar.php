@@ -389,7 +389,7 @@ class Calendar
                         }
                     }
                 }
-                if(!strlen($isoName)) {
+                if (!strlen($isoName)) {
                     $isoName = $phpName;
                 }
                 if (strlen($isoName)) {
