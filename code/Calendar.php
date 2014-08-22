@@ -1329,11 +1329,11 @@ class Calendar
         $hours2 = $sign . substr('0' . strval($hours), -2);
         $minutes2 = substr('0' . strval($minutes), -2);
         $seconds2 = substr('0' . strval($seconds), -2);
-        $hmMaybe = array($sign . $hours2);
+        $hmMaybe = array($hours2);
         if ($minutes > 0) {
             $hmMaybe[] = $minutes2;
         }
-        $hmsMaybe = array($sign . $hours2, $minutes2);
+        $hmsMaybe = array($hours2, $minutes2);
         if ($seconds > 0) {
             $hmsMaybe[] = $seconds2;
         }
