@@ -329,6 +329,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getQuarterName', array('test'), 'Exception'),
             array('getQuarterName', array(5), 'Exception'),
             array('getQuarterName', array(1, 'invalid-width'), 'Exception'),
+            array('toDateTime', array('2000-01-01', true), 'Exception'),
         );
     }
 
@@ -1172,6 +1173,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('+13:00', Calendar::format($dt, 'xxx'));
         $this->assertSame('+1300', Calendar::format($dt, 'xxxx'));
         $this->assertSame('+13:00', Calendar::format($dt, 'xxxxx'));
+        $this->assertSame('+13:00', Calendar::format($dt, 'xxxxx', 'it'));
+        $this->assertSame('-03:30', Calendar::format(Calendar::toDateTime('2000-01-01', 'NST'), 'xxx'));
         // decodeTimezoneWithTimeZ
         $this->assertSame('+13', Calendar::format($dt, 'X'));
         $this->assertSame('+1300', Calendar::format($dt, 'XX'));
