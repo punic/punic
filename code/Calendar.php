@@ -1231,7 +1231,7 @@ class Calendar
         $hours = intval($value->format('G'));
         $minutes = $hours * 60 + intval($value->format('i'));
         $seconds = $minutes * 60 + intval($value->format('s'));
-        $milliseconds = $seconds * 60 + intval(floor(intval($value->format('u')) / 1000));
+        $milliseconds = $seconds * 1000 + intval(floor(intval($value->format('u')) / 1000));
 
         return str_pad(strval($milliseconds), $count, '0', STR_PAD_LEFT);
     }
