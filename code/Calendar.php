@@ -1,6 +1,11 @@
 <?php
 namespace Punic;
 
+/*
+ * Comments marked as @TZWS have been added because it seems than PHP does
+ * not support timezones with seconds
+ */
+
 class Calendar
 {
     /**
@@ -1243,9 +1248,11 @@ class Calendar
         $partsWithoutSeconds[] = $sign . substr('0' . strval($hours), -2);
         $partsWithoutSeconds[] = substr('0' . strval($minutes), -2);
         $partsMaybeWithSeconds = $partsWithoutSeconds;
+        /* @TZWS
         if ($seconds > 0) {
             $partsMaybeWithSeconds[] = substr('0' . strval($seconds), -2);
         }
+        */
         switch ($count) {
             case 1:
             case 2:
@@ -1329,9 +1336,11 @@ class Calendar
             $hmMaybe[] = $minutes2;
         }
         $hmsMaybe = array($hours2, $minutes2);
+        /* @TZWS
         if ($seconds > 0) {
             $hmsMaybe[] = $seconds2;
         }
+        */
         switch ($count) {
             case 1:
                 $result = $useZ ? 'Z' : implode('', $hmMaybe);
