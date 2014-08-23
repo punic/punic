@@ -1161,6 +1161,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         // decodeTimezoneNoLocationGeneric
         $this->assertSame('GMT+13:00', Calendar::format($dt, 'v'));
         $this->assertSame('Fiji Time', Calendar::format($dt, 'vvvv'));
+        $this->assertSame('GMT+14:15', Calendar::format(Calendar::toDateTime('2000-01-01 11:12:13+14:15'), 'vvvv'));
         $this->assertSame('UTC+13:00', Calendar::format($dt, 'v', 'fr'));
         $this->assertSame('heure des îles Fidji', Calendar::format($dt, 'vvvv', 'fr'));
         // decodeTimezoneID
