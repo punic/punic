@@ -3,7 +3,10 @@ namespace Punic;
 
 /*
  * Comments marked as @TZWS have been added because it seems than PHP does
- * not support timezones with seconds
+ * not support timezones with seconds.
+ * Furthermore: the Unicode specs (http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table) says the following:
+ * "The ISO8601 basic format with hours, minutes and optional seconds fields. Note: The seconds field is not supported by the
+ * ISO8601 specification."
  */
 
 class Calendar
