@@ -1,29 +1,40 @@
+
 {
-    "name": "punic/common",
-    "description": "PHP-Unicode CLDR - CLDR Data",
+    "name": "punic/core",
+    "description": "PHP-Unicode CLDR",
     "keywords": [
         "localization",
         "l10n",
         "internationalization",
         "i18n",
+        "translations",
+        "translate",
+        "php",
         "unicode",
         "cldr",
-        "php"
+        "php",
+        "calendar",
+        "date-time",
+        "date",
+        "time"
     ],
-    "homepage": "https://github.com/punic/common",
+    "homepage": "https://github.com/punic/core",
     "license": "MIT",
-    "require": {
-        "php": ">=5.3"
-    },
-    "autoload": {
-        "psr-4": {
-            "Punic\\": "code/"
-        }
-    },
     "authors": [
         {
             "name": "Michele Locati",
             "email": "mlocati@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Punic\\": "code/"
+        }
+    },
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    }
 }

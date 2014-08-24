@@ -1,0 +1,9 @@
+<phpunit
+	bootstrap="./tests/bootstrap.php"
+>
+	<testsuites>
+		<testsuite name="Calendar tests">
+			<directory>./tests/Calendar/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
