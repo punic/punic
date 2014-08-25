@@ -2,7 +2,7 @@
 namespace Punic\Exception;
 
 /**
- * An exception raised when an data file has been hit
+ * An exception raised when an data folder has not been found
  */
 class DataFolderNotFound extends \Punic\Exception
 {
