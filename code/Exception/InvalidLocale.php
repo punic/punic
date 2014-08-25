@@ -22,7 +22,7 @@ class InvalidLocale extends \Punic\Exception
         } else {
             $message = "A valid locale should be a string, $type received";
         }
-        parent::__construct($message, Exception::INVALID_LOCALE, $previous);
+        parent::__construct($message, \Punic\Exception::INVALID_LOCALE, $previous);
     }
 
     /**

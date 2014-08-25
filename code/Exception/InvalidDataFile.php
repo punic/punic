@@ -1,12 +1,11 @@
 <?php
 namespace Punic\Exception;
 
-use \Punic\Exception;
 /**
  * An exception raised when an data file has been hit
  */
 
-class InvalidDataFile extends Exception
+class InvalidDataFile extends \Punic\Exception
 {
     protected $identifier;
 
@@ -24,7 +23,7 @@ class InvalidDataFile extends Exception
         } else {
             $message = "A valid identifier should be a string, $type received";
         }
-        parent::__construct($message, Exception::INVALID_DATAFILE, $previous);
+        parent::__construct($message, \Punic\Exception::INVALID_DATAFILE, $previous);
     }
 
     /**

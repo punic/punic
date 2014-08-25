@@ -1,12 +1,11 @@
 <?php
 namespace Punic\Exception;
 
-use \Punic\Exception;
 /**
  * An exception raised when an data file has been hit
  */
 
-class DataFolderNotFound extends Exception
+class DataFolderNotFound extends \Punic\Exception
 {
     protected $locale;
     protected $fallbackLocale;
@@ -27,7 +26,7 @@ class DataFolderNotFound extends Exception
         else {
             $message = "Unable to find the specified locale folder, neither for '$locale' nor for '$fallbackLocale'";
         }
-        parent::__construct($message, Exception::DATA_FOLDER_NOT_FOUND, $previous);
+        parent::__construct($message, \Punic\Exception::DATA_FOLDER_NOT_FOUND, $previous);
     }
 
     /**
