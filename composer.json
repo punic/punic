@@ -1,6 +1,6 @@
 
 {
-    "name": "punic/core",
+    "name": "punic/punic",
     "description": "PHP-Unicode CLDR",
     "keywords": [
         "localization",
@@ -17,7 +17,7 @@
         "date",
         "time"
     ],
-    "homepage": "https://github.com/punic/core",
+    "homepage": "https://github.com/punic/punic",
     "license": "MIT",
     "authors": [
         {
