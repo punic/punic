@@ -50,12 +50,12 @@ class Data
     /**
      * Set the current default locale and language
      * @param string $locale
-     * @throws \Exception Throws an exception if $locale is not a valid string
+     * @throws \Punic\Exception\InvalidLocale Throws an exception if $locale is not a valid string
      */
     public static function setDefaultLocale($locale)
     {
         if (is_null(static::explodeLocale($locale))) {
-           throw new \Exception("'$locale' is not a valid locale identifier");
+           throw new Exception\InvalidLocale($locale);
         }
         static::$defaultLocale = $locale;
     }
@@ -83,12 +83,12 @@ class Data
     /**
      * Set the current fallback locale and language
      * @param string $locale
-     * @throws \Exception Throws an exception if $locale is not a valid string
+     * @throws \Punic\Exception\InvalidLocale Throws an exception if $locale is not a valid string
      */
     public static function setFallbackLocale($locale)
     {
         if (is_null(static::explodeLocale($locale))) {
-            throw new \Exception("'$locale' is not a valid locale identifier");
+            throw new Exception\InvalidLocale($locale);
         }
         if (static::$fallbackLocale !== $locale) {
             static::$fallbackLocale = $locale;
@@ -101,7 +101,7 @@ class Data
      * @param string $identifier The data identifier
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
      * @return array
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function get($identifier, $locale = '')
     {
@@ -113,23 +113,23 @@ class Data
         }
         if (!@array_key_exists($identifier, static::$cache[$locale])) {
             if (!@preg_match('/^[a-zA-Z0-1_\\-]+$/i', $identifier)) {
-                throw new \Exception("Invalid file identifier specification: '$identifier'");
+                throw new Exception\InvalidDataFile($identifier);
             }
             $dir = static::getLocaleFolder($locale);
             if (!strlen($dir)) {
-                throw new \Exception("Unable to find the specified locale folder (neither '$locale' nor '" . static::$fallbackLocale . "' folders were found");
+                throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
             $file = $dir . DIRECTORY_SEPARATOR . $identifier . '.json';
             if (!is_file($file)) {
-                throw new \Exception("Invalid data '$identifier' for locale '$locale'");
+                throw new Exception("Invalid data '$identifier' for locale '$locale'");
             }
             $data = @file_get_contents($file);
             if ($data === false) {
-                throw new \Exception("Unable to read from file '$identifier' for locale '$locale'");
+                throw new Exception("Unable to read from file '$identifier' for locale '$locale'");
             }
             $data = @json_decode($data, true);
             if (!is_array($data)) {
-                throw new \Exception("Bad data read from file '$identifier' for locale '$locale'");
+                throw new Exception("Bad data read from file '$identifier' for locale '$locale'");
             }
             static::$cache[$locale][$identifier] = $data;
         }
@@ -141,7 +141,7 @@ class Data
      * Get the generic data
      * @param string $identifier The data identifier
      * @return array
-     * @throws \Exception Throws an exception in case of problems
+     * @throws Exception Throws an exception in case of problems
      */
     public static function getGeneric($identifier)
     {
@@ -154,11 +154,11 @@ class Data
                 if (is_file(__DIR__ . $file)) {
                     $data = @file_get_contents(__DIR__ . $file);
                     if ($data === false) {
-                        throw new \Exception("Unable to read from file $file");
+                        throw new Exception("Unable to read from file $file");
                     }
                     $data = @json_decode($data, true);
                     if (!is_array($data)) {
-                        throw new \Exception("Bad data read from file $file");
+                        throw new Exception("Bad data read from file $file");
                     }
                     static::$cacheGeneric[$identifier] = $data;
 
@@ -166,7 +166,7 @@ class Data
                 }
             }
         }
-        throw new \Exception("Invalid data '$identifier'");
+        throw new Exception("Invalid data '$identifier'");
     }
 
     /**
@@ -455,7 +455,7 @@ class Data
         $result = array();
         $localeInfo = static::explodeLocale($locale);
         if (!is_array($localeInfo)) {
-            throw new \Exception("'$locale' is not a valid locale identifier");
+            throw new Exception\InvalidLocale($locale);
         }
         extract($localeInfo);
         if (!strlen($territory)) {

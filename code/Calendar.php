@@ -16,7 +16,7 @@ class Calendar
      * @param mixed $value A unix timestamp, a \DateTime instance or a string accepted by strtotime
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @return \DateTime|null Returns null if $value is empty, a \DateTime instance otherwise
-     * @throws \Exception Throws an exception if $value is not empty and can't be converted to a \DateTime instance
+     * @throws \Punic\Exception Throws an exception if $value is not empty and can't be converted to a \DateTime instance
      * @link http://php.net/manual/datetime.formats.php
      */
     public static function toDateTime($value, $toTimezone = '')
@@ -36,7 +36,7 @@ class Calendar
                     $result = new \DateTime($value);
                 }
             } else {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a \\DateTime instance");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a \\DateTime instance");
             }
             if ($result) {
                 if (!empty($toTimezone)) {
@@ -45,7 +45,7 @@ class Calendar
                     } elseif (is_a($toTimezone, '\DateTimeZone')) {
                         $result->setTimezone($toTimezone);
                     } else {
-                        throw new \Exception("Can't convert a variable of kind " . gettype($toTimezone) . " to a \\DateTimeZone instance");
+                        throw new Exception("Can't convert a variable of kind " . gettype($toTimezone) . " to a \\DateTimeZone instance");
                     }
                 }
             }
@@ -131,7 +131,7 @@ class Calendar
      * @param string $width = 'abbreviated' The format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the name of the era otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function getEraName($value, $width = 'abbreviated', $locale = '')
     {
@@ -150,12 +150,12 @@ class Calendar
                 $year = intval($value->format('Y'));
             }
             if (is_null($year)) {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a year number");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a year number");
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['eras'];
             if (!array_key_exists($width, $data)) {
-                throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
             }
             $result = $data[$width][($year < 0) ? '0' : '1'];
         }
@@ -170,7 +170,7 @@ class Calendar
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
      * @return string Returns an empty string if $value is empty, the name of the month name otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function getMonthName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -189,15 +189,15 @@ class Calendar
                 $month = intval($value->format('n'));
             }
             if (is_null($month)) {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a month number");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a month number");
             }
             if (($month < 1) || ($month > 12)) {
-                throw new \Exception("Invalid month number ($month)");
+                throw new Exception("Invalid month number ($month)");
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
             }
             $result = $data[$width][$month];
         }
@@ -212,7 +212,7 @@ class Calendar
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
      * @return string Returns an empty string if $value is empty, the name of the weekday name otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function getWeekdayName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -232,16 +232,16 @@ class Calendar
                 $weekday = intval($value->format('w'));
             }
             if (is_null($weekday)) {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a weekday number");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a weekday number");
             }
             if (($weekday < 0) || ($weekday > 6)) {
-                throw new \Exception("Invalid weekday number ($weekday)");
+                throw new Exception("Invalid weekday number ($weekday)");
             }
             $weekday = $dictionary[$weekday];
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
             }
             $result = $data[$width][$weekday];
         }
@@ -256,7 +256,7 @@ class Calendar
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
      * @return string Returns an empty string if $value is empty, the name of the quarter name otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws Exception Throws an exception in case of problems
      */
     public static function getQuarterName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -275,15 +275,15 @@ class Calendar
                 $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
             }
             if (is_null($quarter)) {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a quarter number");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a quarter number");
             }
             if (($quarter < 1) || ($quarter > 4)) {
-                throw new \Exception("Invalid quarter number ($quarter)");
+                throw new Exception("Invalid quarter number ($quarter)");
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
             }
             $result = $data[$width][$quarter];
         }
@@ -298,7 +298,7 @@ class Calendar
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
      * @return string Returns an empty string if $value is empty, the name of the period name otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function getDayperiodName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -327,12 +327,12 @@ class Calendar
                 $dayperiod = ($hours < 12) ? 'am' : 'pm';
             }
             if (is_null($dayperiod)) {
-                throw new \Exception("Can't convert a variable of kind " . gettype($value) . " to a dayperiod identifier");
+                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a dayperiod identifier");
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
             }
             $result = $data[$width][$dayperiod];
         }
@@ -491,7 +491,7 @@ class Calendar
      * Returns true if a locale has a 12-hour clock, false if 24-hour clock
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return bool
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function has12HoursClock($locale = '')
     {
@@ -533,7 +533,7 @@ class Calendar
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns the requested ISO format
-     * @throws \Exception Throws an exception in case of problems
+     * @throws Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -543,7 +543,7 @@ class Calendar
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateFormats'];
         if (!array_key_exists($width, $data)) {
-            throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
         }
 
         return $data[$width];
@@ -554,7 +554,7 @@ class Calendar
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns the requested ISO format
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -564,7 +564,7 @@ class Calendar
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['timeFormats'];
         if (!array_key_exists($width, $data)) {
-            throw new \Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
         }
 
         return $data[$width];
@@ -575,7 +575,7 @@ class Calendar
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns the requested ISO format
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -616,12 +616,12 @@ class Calendar
                 $timeWidth = $chunks[2];
                 break;
             default:
-                throw new \Exception("Invalid format: $width");
+                throw new Exception("Invalid format: $width");
         }
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!array_key_exists($wholeWidth, $data)) {
-            throw new \Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($data)));
         }
 
         return sprintf(
@@ -637,7 +637,7 @@ class Calendar
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -658,7 +658,7 @@ class Calendar
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -680,7 +680,7 @@ class Calendar
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -701,7 +701,7 @@ class Calendar
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -723,7 +723,7 @@ class Calendar
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -744,7 +744,7 @@ class Calendar
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -766,7 +766,7 @@ class Calendar
      * @param string $format The ISO format that specify how to render the date/time
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -814,11 +814,11 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             if (!is_a($value, '\DateTime')) {
-                throw new \Exception("Invalid value parameter in format");
+                throw new Exception("Invalid value parameter in format");
             }
             $length = is_string($format) ? strlen($format) : 0;
             if ($length === 0) {
-                throw new \Exception("Invalid format parameter in format()");
+                throw new Exception("Invalid format parameter in format()");
             }
             $cacheKey = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
             if (!array_key_exists($cacheKey, $decodeCache)) {
@@ -878,7 +878,7 @@ class Calendar
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
-     * @throws \Exception Throws an exception in case of problems
+     * @throws \Punic\Exception Throws an exception in case of problems
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -906,7 +906,7 @@ class Calendar
             case 6:
                 return static::getWeekdayName($value, 'short', $locale, $standAlone);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -938,7 +938,7 @@ class Calendar
             case 2:
                 return $value->format('d');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -956,7 +956,7 @@ class Calendar
             case 5:
                 return static::getMonthName($value, 'narrow', $locale, $standAlone);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -990,7 +990,7 @@ class Calendar
             case 2:
                 return $value->format('h');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1000,7 +1000,7 @@ class Calendar
             case 1:
                 return static::getDayperiodName($value, 'abbreviated', $locale);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1012,7 +1012,7 @@ class Calendar
             case 2:
                 return $value->format('H');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1023,7 +1023,7 @@ class Calendar
             case 2:
                 return str_pad(strval(intval($value->format('G')) % 12), $count, '0', STR_PAD_LEFT);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1034,7 +1034,7 @@ class Calendar
             case 2:
                 return str_pad(strval(1 + intval($value->format('G'))), $count, '0', STR_PAD_LEFT);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1046,7 +1046,7 @@ class Calendar
             case 2:
                 return $value->format('i');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1058,7 +1058,7 @@ class Calendar
             case 2:
                 return $value->format('s');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1080,7 +1080,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
 
         return $tz;
@@ -1102,7 +1102,7 @@ class Calendar
             case 4:
                 return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1118,7 +1118,7 @@ class Calendar
             case 5:
                 return static::getEraName($value, 'narrow', $locale);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1167,7 +1167,7 @@ class Calendar
             case 5:
                 return static::getQuarterName($quarter, 'narrow', $locale, $standAlone);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1184,7 +1184,7 @@ class Calendar
             case 2:
                 return $value->format('W');
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1196,7 +1196,7 @@ class Calendar
             case 3:
                 return str_pad(strval(1 + $value->format('z')), $count, '0', STR_PAD_LEFT);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1211,7 +1211,7 @@ class Calendar
 
                 return str_pad(strval($wim), $count, '0', STR_PAD_LEFT);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1269,7 +1269,7 @@ class Calendar
             case 5:
                 return implode(':', $partsMaybeWithSeconds);
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
     }
 
@@ -1289,7 +1289,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
 
         return $tz;
@@ -1315,7 +1315,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
 
         return $result;
@@ -1361,7 +1361,7 @@ class Calendar
                 $result = $useZ ? 'Z' : implode(':', $hmsMaybe);
                 break;
             default:
-                throw new \Exception('Invalid count for ' . __METHOD__);
+                throw new Exception('Invalid count for ' . __METHOD__);
         }
 
         return $result;
@@ -1373,9 +1373,9 @@ class Calendar
     }
 
     /** @todo */
-    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new \Exception('Not implemented'); }
+    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new Exception('Not implemented'); }
     /** @todo */
-    protected static function decodeYearCyclicName() { throw new \Exception('Not implemented'); }
+    protected static function decodeYearCyclicName() { throw new Exception('Not implemented'); }
     /** @todo */
-    protected static function decodeModifiedGiulianDay() { throw new \Exception('Not implemented'); }
+    protected static function decodeModifiedGiulianDay() { throw new Exception('Not implemented'); }
 }
