@@ -36,19 +36,29 @@ class Calendar
                     $result = new \DateTime();
                     $result->setTimestamp($value);
                 } else {
-                    $result = new \DateTime($value);
+                    try {
+                        $result = new \DateTime($value);
+                    }
+                    catch(Exception $x) {
+                        throw new Exception\NotConvertibleToDateTime($value, $x);
+                    }
                 }
             } else {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a \\DateTime instance");
+                throw new Exception\NotConvertibleToDateTime($value);
             }
             if ($result) {
                 if (!empty($toTimezone)) {
                     if (is_string($toTimezone)) {
-                        $result->setTimezone(new \DateTimeZone($toTimezone));
+                        try {
+                            $result->setTimezone(new \DateTimeZone($toTimezone));
+                        }
+                        catch(Exception $x) {
+                            throw new Exception\NotConvertibleToDateTimeZone($toTimezone, $x);
+                        }
                     } elseif (is_a($toTimezone, '\DateTimeZone')) {
                         $result->setTimezone($toTimezone);
                     } else {
-                        throw new Exception("Can't convert a variable of kind " . gettype($toTimezone) . " to a \\DateTimeZone instance");
+                        throw new Exception\NotConvertibleToDateTimeZone($value);
                     }
                 }
             }

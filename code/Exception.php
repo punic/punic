@@ -43,6 +43,18 @@ class Exception extends \Exception
     const BAD_DATA_FILE_CONTENTS = 10006;
 
     /**
+     * Exception code for the \Punic\Exception\NotConvertibleToDateTime exception
+     * @var int
+     */
+    const NOT_CONVERTIBLE_TO_DATETIME = 10101;
+
+    /**
+     * Exception code for the \Punic\Exception\NotConvertibleToDateTimeZone exception
+     * @var int
+     */
+    const NOT_CONVERTIBLE_TO_DATETIMEZONE = 10102;
+    
+    /**
      * Initializes the instance
      * @param string $message
      * @param int $code
