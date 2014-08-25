@@ -1,6 +1,9 @@
 <?php
 namespace Punic;
 
+/**
+ * Common data helper stuff
+ */
 class Data
 {
     /**

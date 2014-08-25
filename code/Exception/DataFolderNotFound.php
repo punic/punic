@@ -4,7 +4,6 @@ namespace Punic\Exception;
 /**
  * An exception raised when an data file has been hit
  */
-
 class DataFolderNotFound extends \Punic\Exception
 {
     protected $locale;

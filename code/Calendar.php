@@ -9,6 +9,9 @@ namespace Punic;
  * ISO8601 specification."
  */
 
+/**
+ * Date and time related functions
+ */
 class Calendar
 {
     /**
