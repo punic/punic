@@ -12,7 +12,6 @@
         "php",
         "unicode",
         "cldr",
-        "php",
         "calendar",
         "date-time",
         "date",
@@ -23,7 +22,13 @@
     "authors": [
         {
             "name": "Michele Locati",
-            "email": "mlocati@gmail.com"
+            "email": "mlocati@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Remo Laubacher",
+            "email": "remo.laubacher@gmail.com",
+            "role": "Collaborator, motivator and perfectionist supporter"
         }
     ],
     "autoload": {
