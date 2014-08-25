@@ -8,5 +8,8 @@
 		<testsuite name="Calendar tests">
 			<directory>./tests/Calendar/</directory>
 		</testsuite>
+		<testsuite name="Miscellaneous functions tests">
+			<directory>./tests/Misc/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

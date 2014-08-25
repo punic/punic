@@ -134,6 +134,7 @@ function copyData()
     $copy = array(
         'ca-gregorian.json' => array('kind' => 'main', 'save-as' => 'calendar.json', 'roots' => array('dates', 'calendars', 'gregorian')),
         'timeZoneNames.json' => array('kind' => 'main', 'roots' => array('dates', 'timeZoneNames')),
+        'listPatterns.json' => array('kind' => 'main', 'roots' => array('listPatterns')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
@@ -142,7 +143,6 @@ function copyData()
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
         'languages.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'languages')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
-        'listPatterns.json' => array('kind' => 'main', 'roots' => array('listPatterns')),
         'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
         'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
@@ -344,6 +344,18 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
             }
             break;
+        case 'listPatterns.json':
+            $keys = array_keys($data);
+            foreach($keys as $key) {
+                if(!preg_match('/^listPattern-type-(.+)$/', $key, $m)) {
+                    throw new Exception("Invalid node '$key' in " . $dstFile);
+                }
+                foreach(array_keys($data[$key]) as $k) {
+                    $data[$key][$k] = toPhpSprintf($data[$key][$k]);
+                }
+                $data[$m[1]] = $data[$key];
+                unset($data[$key]);
+            }
     }
     $flags = JSON_FORCE_OBJECT;
     if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
