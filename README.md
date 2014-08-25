@@ -1,6 +1,6 @@
-[![Build Status](https://api.travis-ci.org/punic/calendar.svg?branch=master)](https://travis-ci.org/punic/calendar)
-[![Coverage Status](https://img.shields.io/coveralls/punic/calendar.svg)](https://coveralls.io/r/punic/calendar)
-[![License](https://poser.pugx.org/punic/calendar/license.svg)](https://packagist.org/packages/punic/calendar)
+[![Build Status](https://api.travis-ci.org/punic/punic.svg?branch=master)](https://travis-ci.org/punic/punic)
+[![Coverage Status](https://img.shields.io/coveralls/punic/punic.svg)](https://coveralls.io/r/punic/punic)
+[![License](https://poser.pugx.org/punic/punic/license.svg)](https://packagist.org/packages/punic/punic)
 Punic - PHP Unicode CLDR Toolkit
 ================================
 
