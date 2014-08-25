@@ -41,5 +41,9 @@
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"
+    },
+    "replace": {
+        "punic/common": "*",
+        "punic/calendar": "*"
     }
 }
