@@ -14,6 +14,38 @@ class Misc
      */
     public static function join($list, $locale = '')
     {
+        return static::joinInternal($list, null, $locale);
+    }
+
+    /**
+     * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'
+     * @param array $list The list to concatenate
+     * @param string $width = '' The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
+     */
+    public static function joinUnits($list, $width = '', $locale = '')
+    {
+        $keys = array();
+        if (!empty($width)) {
+            switch ($width) {
+                case 'narrow':
+                    $keys = array('unit-narrow', 'unit-short');
+                    break;
+                case 'short':
+                    $keys = array('unit-short', 'unit-narrow');
+                    break;
+                default:
+                    throw new \Punic\Exception\ValueNotInList($width, array('', 'short', 'narrow'));
+            }
+        }
+        $keys[] = 'unit';
+
+        return static::joinInternal($list, $keys, $locale);
+    }
+
+    protected static function joinInternal($list, $keys, $locale)
+    {
         $result = '';
         if (is_array($list)) {
             $list = array_values($list);
@@ -25,8 +57,19 @@ class Misc
                     $result = strval($list[0]);
                     break;
                 default:
-                    $data = \Punic\Data::get('listPatterns', $locale);
-                    $data = $data['standard'];
+                    $allData = \Punic\Data::get('listPatterns', $locale);
+                    $data = null;
+                    if (!empty($keys)) {
+                        foreach ($keys as $key) {
+                            if (array_key_exists($key, $allData)) {
+                                $data = $allData[$key];
+                                break;
+                            }
+                        }
+                    }
+                    if (is_null($data)) {
+                        $data = $allData['standard'];
+                    }
                     if (array_key_exists($n, $data)) {
                         $result = vsprintf($data[$n], $list);
                     } else {
