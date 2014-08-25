@@ -1,3 +1,7 @@
+/.settings/
 /source-data/
+/temp/
 /vendor/
+/.buildpath
+/.project
 /composer.lock
