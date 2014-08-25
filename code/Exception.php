@@ -25,6 +25,12 @@ class Exception extends \Exception
     const DATA_FOLDER_NOT_FOUND = 10003;
 
     /**
+     * Exception code for the \Punic\Exception\DataFileNotFound exception
+     * @var int
+     */
+    const DATA_FILE_NOT_FOUND = 10004;
+
+    /**
      * Initializes the instance
      * @param string $message
      * @param int $code

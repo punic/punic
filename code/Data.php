@@ -124,7 +124,7 @@ class Data
             }
             $file = $dir . DIRECTORY_SEPARATOR . $identifier . '.json';
             if (!is_file($file)) {
-                throw new Exception("Invalid data '$identifier' for locale '$locale'");
+                throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
             $data = @file_get_contents($file);
             if ($data === false) {
