@@ -7,6 +7,12 @@ namespace Punic;
 class Exception extends \Exception
 {
     /**
+     * Exception code for the \Punic\Exception\NotImplemented exception
+     * @var int
+     */
+    const NOT_IMPLEMENTED = 10000;
+
+    /**
      * Exception code for the \Punic\Exception\InvalidLocale exception
      * @var int
      */
@@ -47,6 +53,12 @@ class Exception extends \Exception
      * @var int
      */
     const BAD_ARGUMENT_TYPE = 10007;
+
+    /**
+     * Exception code for the \Punic\Exception\ValueNotInList exception
+     * @var int
+     */
+    const VALUE_NOT_IN_LIST = 10008;
 
     /**
      * Initializes the instance

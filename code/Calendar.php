@@ -166,7 +166,7 @@ class Calendar
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['eras'];
             if (!array_key_exists($width, $data)) {
-                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][($year < 0) ? '0' : '1'];
         }
@@ -205,7 +205,7 @@ class Calendar
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$month];
         }
@@ -246,7 +246,7 @@ class Calendar
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$weekday];
         }
@@ -285,7 +285,7 @@ class Calendar
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$quarter];
         }
@@ -334,7 +334,7 @@ class Calendar
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
-                throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+                throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$dayperiod];
         }
@@ -545,7 +545,7 @@ class Calendar
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateFormats'];
         if (!array_key_exists($width, $data)) {
-            throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception\ValueNotInList($width, array_keys($data));
         }
 
         return $data[$width];
@@ -566,7 +566,7 @@ class Calendar
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['timeFormats'];
         if (!array_key_exists($width, $data)) {
-            throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception\ValueNotInList($width, array_keys($data));
         }
 
         return $data[$width];
@@ -618,12 +618,12 @@ class Calendar
                 $timeWidth = $chunks[2];
                 break;
             default:
-                throw new Exception("Invalid format: $width");
+                throw new Exception\BadArgumentType($width, 'pipe-separated list of strings (from 1 to 3 chunks)');
         }
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!array_key_exists($wholeWidth, $data)) {
-            throw new Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($data)));
+            throw new Exception\ValueNotInList($wholeWidth, array_keys($data));
         }
 
         return sprintf(
@@ -820,7 +820,7 @@ class Calendar
             }
             $length = is_string($format) ? strlen($format) : 0;
             if ($length === 0) {
-                throw new Exception("Invalid format parameter in format()");
+                throw new Exception\BadArgumentType($format, 'date/time ISO format');
             }
             $cacheKey = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
             if (!array_key_exists($cacheKey, $decodeCache)) {
@@ -908,7 +908,7 @@ class Calendar
             case 6:
                 return static::getWeekdayName($value, 'short', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5, 6));
         }
     }
 
@@ -940,7 +940,7 @@ class Calendar
             case 2:
                 return $value->format('d');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -958,7 +958,7 @@ class Calendar
             case 5:
                 return static::getMonthName($value, 'narrow', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5));
         }
     }
 
@@ -992,7 +992,7 @@ class Calendar
             case 2:
                 return $value->format('h');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1002,7 +1002,7 @@ class Calendar
             case 1:
                 return static::getDayperiodName($value, 'abbreviated', $locale);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1));
         }
     }
 
@@ -1014,7 +1014,7 @@ class Calendar
             case 2:
                 return $value->format('H');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1025,7 +1025,7 @@ class Calendar
             case 2:
                 return str_pad(strval(intval($value->format('G')) % 12), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1036,7 +1036,7 @@ class Calendar
             case 2:
                 return str_pad(strval(1 + intval($value->format('G'))), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1048,7 +1048,7 @@ class Calendar
             case 2:
                 return $value->format('i');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1060,7 +1060,7 @@ class Calendar
             case 2:
                 return $value->format('s');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1082,7 +1082,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4));
         }
 
         return $tz;
@@ -1104,7 +1104,7 @@ class Calendar
             case 4:
                 return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 4));
         }
     }
 
@@ -1120,7 +1120,7 @@ class Calendar
             case 5:
                 return static::getEraName($value, 'narrow', $locale);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5));
         }
     }
 
@@ -1169,7 +1169,7 @@ class Calendar
             case 5:
                 return static::getQuarterName($quarter, 'narrow', $locale, $standAlone);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5));
         }
     }
 
@@ -1186,7 +1186,7 @@ class Calendar
             case 2:
                 return $value->format('W');
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2));
         }
     }
 
@@ -1198,7 +1198,7 @@ class Calendar
             case 3:
                 return str_pad(strval(1 + $value->format('z')), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3));
         }
     }
 
@@ -1213,7 +1213,7 @@ class Calendar
 
                 return str_pad(strval($wim), $count, '0', STR_PAD_LEFT);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3));
         }
     }
 
@@ -1271,7 +1271,7 @@ class Calendar
             case 5:
                 return implode(':', $partsMaybeWithSeconds);
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5));
         }
     }
 
@@ -1291,7 +1291,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 4));
         }
 
         return $tz;
@@ -1317,7 +1317,7 @@ class Calendar
                 }
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4));
         }
 
         return $result;
@@ -1363,7 +1363,7 @@ class Calendar
                 $result = $useZ ? 'Z' : implode(':', $hmsMaybe);
                 break;
             default:
-                throw new Exception('Invalid count for ' . __METHOD__);
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5));
         }
 
         return $result;
@@ -1375,9 +1375,9 @@ class Calendar
     }
 
     /** @todo */
-    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new Exception('Not implemented'); }
+    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new Exception\NotImplemented(__METHOD__); }
     /** @todo */
-    protected static function decodeYearCyclicName() { throw new Exception('Not implemented'); }
+    protected static function decodeYearCyclicName() { throw new Exception\NotImplemented(__METHOD__); }
     /** @todo */
-    protected static function decodeModifiedGiulianDay() { throw new Exception('Not implemented'); }
+    protected static function decodeModifiedGiulianDay() { throw new Exception\NotImplemented(__METHOD__); }
 }

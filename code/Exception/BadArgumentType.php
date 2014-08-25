@@ -55,7 +55,7 @@ class BadArgumentType extends \Punic\Exception
      * Retrieves the destination type (or a list of destination types)
      * @return string|array[string]
      */
-    public function getDdestinationTypeDescription()
+    public function getDestinationTypeDescription()
     {
         return $this->destinationTypeDescription;
     }
