@@ -108,6 +108,9 @@ class Data
      */
     public static function get($identifier, $locale = '')
     {
+        if (!(is_string($identifier) && strlen($identifier))) {
+            throw new Exception\InvalidDataFile($identifier);
+        }
         if (empty($locale)) {
             $locale = static::$defaultLocale;
         }
@@ -123,16 +126,16 @@ class Data
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
             $file = $dir . DIRECTORY_SEPARATOR . $identifier . '.json';
-            if (!is_file($file)) {
+            if (!is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
-            $data = @file_get_contents($file);
-            if ($data === false) {
-                throw new Exception("Unable to read from file '$identifier' for locale '$locale'");
+            $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+            if ($json === false) {
+                throw new Exception\DataFileNotReadable($file);
             }
-            $data = @json_decode($data, true);
+            $data = @json_decode($json, true);
             if (!is_array($data)) {
-                throw new Exception("Bad data read from file '$identifier' for locale '$locale'");
+                throw new Exception\BadDataFileContents($file, $json);
             }
             static::$cache[$locale][$identifier] = $data;
         }
@@ -148,28 +151,30 @@ class Data
      */
     public static function getGeneric($identifier)
     {
-        if (is_string($identifier) && strlen($identifier)) {
-            if (array_key_exists($identifier, static::$cacheGeneric)) {
-                return static::$cacheGeneric[$identifier];
-            }
-            if (preg_match('/^[a-zA-Z0-1_\\-]+$/', $identifier)) {
-                $file = "/data/$identifier.json";
-                if (is_file(__DIR__ . $file)) {
-                    $data = @file_get_contents(__DIR__ . $file);
-                    if ($data === false) {
-                        throw new Exception("Unable to read from file $file");
-                    }
-                    $data = @json_decode($data, true);
-                    if (!is_array($data)) {
-                        throw new Exception("Bad data read from file $file");
-                    }
-                    static::$cacheGeneric[$identifier] = $data;
-
-                    return $data;
-                }
-            }
+        if (!(is_string($identifier) && strlen($identifier))) {
+            throw new Exception\InvalidDataFile($identifier);
         }
-        throw new Exception("Invalid data '$identifier'");
+        if (array_key_exists($identifier, static::$cacheGeneric)) {
+            return static::$cacheGeneric[$identifier];
+        }
+        if (!preg_match('/^[a-zA-Z0-1_\\-]+$/', $identifier)) {
+            throw new Exception\InvalidDataFile($identifier);
+        }
+        $file = 'data' . DIRECTORY_SEPARATOR . "$identifier.json";
+        if (!is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
+            throw new Exception\DataFileNotFound($identifier);
+        }
+        $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+        if ($json === false) {
+            throw new Exception\DataFileNotReadable($file);
+        }
+        $data = @json_decode($json, true);
+        if (!is_array($data)) {
+            throw new Exception\BadDataFileContents($file, $json);
+        }
+        static::$cacheGeneric[$identifier] = $data;
+
+        return $data;
     }
 
     /**
@@ -180,12 +185,12 @@ class Data
     public static function getAvailableLocales($allowGroups = false)
     {
         $locales = array();
-        $dir = __DIR__ . '/data';
+        $dir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
         if (is_dir($dir) && is_readable($dir)) {
             $contents = @scandir($dir);
             if (is_array($contents)) {
                 foreach (array_diff($contents, array('.', '..')) as $item) {
-                    if (is_dir($dir . '/' . $item)) {
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                         if ($item === 'root') {
                             $item = 'en-US';
                         }
@@ -433,8 +438,8 @@ class Data
             $key = $locale . '/' . static::$fallbackLocale;
             if (!array_key_exists($key, $cache)) {
                 foreach (static::getLocaleAlternatives($locale) as $alternative) {
-                    $dir = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . $alternative;
-                    if (is_dir($dir)) {
+                    $dir = 'data' . DIRECTORY_SEPARATOR . $alternative;
+                    if (is_dir(__DIR__ . DIRECTORY_SEPARATOR . $dir)) {
                         $result = $dir;
                         break;
                     }

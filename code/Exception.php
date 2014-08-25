@@ -31,6 +31,18 @@ class Exception extends \Exception
     const DATA_FILE_NOT_FOUND = 10004;
 
     /**
+     * Exception code for the \Punic\Exception\DataFileNotReadable exception
+     * @var int
+     */
+    const DATA_FILE_NOT_READABLE = 10005;
+
+    /**
+     * Exception code for the \Punic\Exception\BadDataFileContents exception
+     * @var int
+     */
+    const BAD_DATA_FILE_CONTENTS = 10006;
+
+    /**
      * Initializes the instance
      * @param string $message
      * @param int $code
