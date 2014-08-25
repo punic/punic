@@ -155,7 +155,7 @@ class Calendar
             if (is_null($year)) {
                 throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a year number");
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = self::get('calendar', $locale);
             $data = $data['eras'];
             if (!array_key_exists($width, $data)) {
                 throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -197,7 +197,7 @@ class Calendar
             if (($month < 1) || ($month > 12)) {
                 throw new Exception("Invalid month number ($month)");
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = self::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
                 throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -241,7 +241,7 @@ class Calendar
                 throw new Exception("Invalid weekday number ($weekday)");
             }
             $weekday = $dictionary[$weekday];
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = self::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
                 throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -283,7 +283,7 @@ class Calendar
             if (($quarter < 1) || ($quarter > 4)) {
                 throw new Exception("Invalid quarter number ($quarter)");
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = self::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
                 throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -332,7 +332,7 @@ class Calendar
             if (is_null($dayperiod)) {
                 throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a dayperiod identifier");
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = self::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
             if (!array_key_exists($width, $data)) {
                 throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -374,7 +374,7 @@ class Calendar
             }
             if (strlen($phpName)) {
                 $chunks = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                $tzInfo = \Punic\Data::getGeneric('metaZones');
+                $tzInfo = self::getGeneric('metaZones');
                 foreach ($chunks as $chunk) {
                     if (array_key_exists($chunk, $tzInfo)) {
                         $tzInfo = $tzInfo[$chunk];
@@ -404,7 +404,7 @@ class Calendar
                     $isoName = $phpName;
                 }
                 if (strlen($isoName)) {
-                    $data = \Punic\Data::get('timeZoneNames', $locale);
+                    $data = self::get('timeZoneNames', $locale);
                     if (array_key_exists('metazone', $data)) {
                         $data = $data['metazone'];
                         if (array_key_exists($isoName, $data)) {
@@ -450,7 +450,7 @@ class Calendar
     public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '')
     {
         $result = '';
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? self::getDefaultLocale() : $locale;
         if (!empty($value)) {
             $phpName = '';
             $date = '';
@@ -463,7 +463,7 @@ class Calendar
             }
             if (strlen($phpName)) {
                 $chunks = array_merge(array('zone'), explode('/', $phpName));
-                $data = \Punic\Data::get('timeZoneNames', $locale);
+                $data = self::get('timeZoneNames', $locale);
                 foreach ($chunks as $chunk) {
                     if (array_key_exists($chunk, $data)) {
                         $data = $data[$chunk];
@@ -499,7 +499,7 @@ class Calendar
     public static function has12HoursClock($locale = '')
     {
         static $cache = array();
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? self::getDefaultLocale() : $locale;
         if (!array_key_exists($locale, $cache)) {
             $format = static::getTimeFormat('short', $locale);
             $format = str_replace("''", '', $format);
@@ -517,11 +517,11 @@ class Calendar
     public static function getFirstWeekday($locale = '')
     {
         static $cache = array();
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? self::getDefaultLocale() : $locale;
         if (!array_key_exists($locale, $cache)) {
             $result = 0;
-            $data = \Punic\Data::getGeneric('weekData');
-            $i = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
+            $data = self::getGeneric('weekData');
+            $i = self::getTerritoryNode($data['firstDay'], $locale);
             if (is_int($i)) {
                 $result = $i;
             }
@@ -543,7 +543,7 @@ class Calendar
      */
     public static function getDateFormat($width, $locale = '')
     {
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = self::get('calendar', $locale);
         $data = $data['dateFormats'];
         if (!array_key_exists($width, $data)) {
             throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -564,7 +564,7 @@ class Calendar
      */
     public static function getTimeFormat($width, $locale = '')
     {
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = self::get('calendar', $locale);
         $data = $data['timeFormats'];
         if (!array_key_exists($width, $data)) {
             throw new Exception("Invalid format: $width\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -621,7 +621,7 @@ class Calendar
             default:
                 throw new Exception("Invalid format: $width");
         }
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = self::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!array_key_exists($wholeWidth, $data)) {
             throw new Exception("Invalid format: $wholeWidth\nAvailable formats: " . implode(', ', array_keys($data)));
@@ -823,7 +823,7 @@ class Calendar
             if ($length === 0) {
                 throw new Exception("Invalid format parameter in format()");
             }
-            $cacheKey = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+            $cacheKey = empty($locale) ? self::getDefaultLocale() : $locale;
             if (!array_key_exists($cacheKey, $decodeCache)) {
                 $decodeCache[$cacheKey] = array();
             }
@@ -1097,7 +1097,7 @@ class Calendar
         $hours = intval(floor($seconds / 3600));
         $seconds -= $hours * 3600;
         $minutes = intval(floor($seconds / 60));
-        $data = \Punic\Data::get('timeZoneNames', $locale);
+        $data = self::get('timeZoneNames', $locale);
         $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
@@ -1265,7 +1265,7 @@ class Calendar
             case 3:
                 return implode('', $partsMaybeWithSeconds);
             case 4:
-                $data = \Punic\Data::get('timeZoneNames', $locale);
+                $data = self::get('timeZoneNames', $locale);
                 $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
 
                 return sprintf($format, implode(':', $partsWithoutSeconds));
