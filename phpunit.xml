@@ -2,6 +2,9 @@
 	bootstrap="./tests/bootstrap.php"
 >
 	<testsuites>
+		<testsuite name="Data tests">
+			<directory>./tests/Data/</directory>
+		</testsuite>
 		<testsuite name="Calendar tests">
 			<directory>./tests/Calendar/</directory>
 		</testsuite>
