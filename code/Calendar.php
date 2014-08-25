@@ -38,27 +38,25 @@ class Calendar
                 } else {
                     try {
                         $result = new \DateTime($value);
-                    }
-                    catch(Exception $x) {
-                        throw new Exception\NotConvertibleToDateTime($value, $x);
+                    } catch (Exception $x) {
+                        throw new Exception\BadArgumentType($value, '\\DateTime', $x);
                     }
                 }
             } else {
-                throw new Exception\NotConvertibleToDateTime($value);
+                throw new Exception\BadArgumentType($value, '\\DateTime');
             }
             if ($result) {
                 if (!empty($toTimezone)) {
                     if (is_string($toTimezone)) {
                         try {
                             $result->setTimezone(new \DateTimeZone($toTimezone));
-                        }
-                        catch(Exception $x) {
-                            throw new Exception\NotConvertibleToDateTimeZone($toTimezone, $x);
+                        } catch (Exception $x) {
+                            throw new Exception\BadArgumentType($value, '\\DateTimeZone', $x);
                         }
                     } elseif (is_a($toTimezone, '\DateTimeZone')) {
                         $result->setTimezone($toTimezone);
                     } else {
-                        throw new Exception\NotConvertibleToDateTimeZone($value);
+                        throw new Exception\BadArgumentType($value, '\\DateTimeZone');
                     }
                 }
             }
@@ -163,7 +161,7 @@ class Calendar
                 $year = intval($value->format('Y'));
             }
             if (is_null($year)) {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a year number");
+                throw new Exception\BadArgumentType($value, 'year number');
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['eras'];
@@ -201,11 +199,8 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $month = intval($value->format('n'));
             }
-            if (is_null($month)) {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a month number");
-            }
-            if (($month < 1) || ($month > 12)) {
-                throw new Exception("Invalid month number ($month)");
+            if (is_null($month) || (($month < 1) || ($month > 12))) {
+                throw new Exception\BadArgumentType($value, 'month number');
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
@@ -244,11 +239,8 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $weekday = intval($value->format('w'));
             }
-            if (is_null($weekday)) {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a weekday number");
-            }
-            if (($weekday < 0) || ($weekday > 6)) {
-                throw new Exception("Invalid weekday number ($weekday)");
+            if (is_null($weekday) || (($weekday < 0) || ($weekday > 6))) {
+                throw new Exception\BadArgumentType($value, 'weekday number');
             }
             $weekday = $dictionary[$weekday];
             $data = \Punic\Data::get('calendar', $locale);
@@ -287,11 +279,8 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
             }
-            if (is_null($quarter)) {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a quarter number");
-            }
-            if (($quarter < 1) || ($quarter > 4)) {
-                throw new Exception("Invalid quarter number ($quarter)");
+            if (is_null($quarter) || (($quarter < 1) || ($quarter > 4))) {
+                throw new Exception\BadArgumentType($value, 'quarter number');
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
@@ -340,7 +329,7 @@ class Calendar
                 $dayperiod = ($hours < 12) ? 'am' : 'pm';
             }
             if (is_null($dayperiod)) {
-                throw new Exception("Can't convert a variable of kind " . gettype($value) . " to a dayperiod identifier");
+                throw new Exception\BadArgumentType($value, 'day period');
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
@@ -826,8 +815,8 @@ class Calendar
         );
         $result = '';
         if (!empty($value)) {
-            if (!is_a($value, '\DateTime')) {
-                throw new Exception("Invalid value parameter in format");
+            if (!is_a($value, '\\DateTime')) {
+                throw new Exception\BadArgumentType($value, '\\DateTime');
             }
             $length = is_string($format) ? strlen($format) : 0;
             if ($length === 0) {

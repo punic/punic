@@ -26,7 +26,7 @@ class BadDataFileContents extends \Punic\Exception
 
     /**
      * Retrieves the path to the data file
-     * @return mixed
+     * @return string
      */
     public function getDataFilePath()
     {
@@ -35,7 +35,7 @@ class BadDataFileContents extends \Punic\Exception
 
     /**
      * Retrieves the malformed contents of the file
-     * @return mixed
+     * @return string
      */
     public function getDataFileContents()
     {

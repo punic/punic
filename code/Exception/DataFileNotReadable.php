@@ -22,7 +22,7 @@ class DataFileNotReadable extends \Punic\Exception
 
     /**
      * Retrieves the path to the unreadable file
-     * @return mixed
+     * @return string
      */
     public function getDataFilePath()
     {

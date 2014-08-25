@@ -38,7 +38,7 @@ class DataFileNotFound extends \Punic\Exception
 
     /**
      * Retrieves the bad data file identifier
-     * @return mixed
+     * @return string
      */
     public function getIdentifier()
     {
@@ -47,7 +47,7 @@ class DataFileNotFound extends \Punic\Exception
 
     /**
      * Retrieves the preferred locale
-     * @return mixed
+     * @return string
      */
     public function getLocale()
     {
@@ -56,7 +56,7 @@ class DataFileNotFound extends \Punic\Exception
 
     /**
      * Retrieves the fallback locale
-     * @return mixed
+     * @return string
      */
     public function getFallbackLocale()
     {

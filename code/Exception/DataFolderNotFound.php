@@ -29,7 +29,7 @@ class DataFolderNotFound extends \Punic\Exception
 
     /**
      * Retrieves the preferred locale
-     * @return mixed
+     * @return string
      */
     public function getLocale()
     {
@@ -38,7 +38,7 @@ class DataFolderNotFound extends \Punic\Exception
 
     /**
      * Retrieves the fallback locale
-     * @return mixed
+     * @return string
      */
     public function getFallbackLocale()
     {
