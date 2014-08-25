@@ -20,10 +20,9 @@ class DataFolderNotFound extends \Punic\Exception
     {
         $this->locale = $locale;
         $this->fallbackLocale = $fallbackLocale;
-        if(@strcasecmp($locale, $fallbackLocale) === 0) {
+        if (@strcasecmp($locale, $fallbackLocale) === 0) {
             $message = "Unable to find the specified locale folder for '$locale'";
-        }
-        else {
+        } else {
             $message = "Unable to find the specified locale folder, neither for '$locale' nor for '$fallbackLocale'";
         }
         parent::__construct($message, \Punic\Exception::DATA_FOLDER_NOT_FOUND, $previous);
@@ -37,7 +36,7 @@ class DataFolderNotFound extends \Punic\Exception
     {
         return $this->locale;
     }
-    
+
     /**
      * Retrieves the fallback locale
      * @return mixed
