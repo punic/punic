@@ -1074,7 +1074,7 @@ class Calendar
         return $result;
     }
 
-    protected static function ucFirst($str, $encoding = '')
+    protected static function ucFirst($str, $encoding = 'UTF-8')
     {
         $result = $str;
         if (is_string($str) && function_exists('mb_strlen')) {
@@ -1085,7 +1085,7 @@ class Calendar
             if ($l === 1) {
                 $result = mb_strtolower($str, $encoding);
             } elseif ($l > 1) {
-                $result = mb_strtoupper(mb_substr($str, 0, 1, $encoding)) . mb_substr($str, 1, null, $encoding);
+                $result = mb_strtoupper(mb_substr($str, 0, 1, $encoding)) . mb_substr($str, 1, $l - 1, $encoding);
             }
         }
 
