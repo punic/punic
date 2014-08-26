@@ -40,7 +40,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
         return $data;
     }
 
-    public function providerGetPluralRules()
+    public function providerGetRules()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -64,19 +64,19 @@ class PluralTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getPluralRules
+     * test getRules
      * expected boolean
-     * @dataProvider providerGetPluralRules
+     * @dataProvider providerGetRules
      */
-    public function testGetPluralRules($rules, $language)
+    public function testGetRules($rules, $language)
     {
         $this->assertSame(
             $rules,
-            static::joinPluralRules(\Punic\Plural::getPluralRules($language))
+            static::joinPluralRules(\Punic\Plural::getRules($language))
         );
     }
 
-    public function providerGetPluralRule()
+    public function providerGetRule()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -95,15 +95,15 @@ class PluralTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getPluralRule
+     * test getRule
      * expected boolean
-     * @dataProvider providerGetPluralRule
+     * @dataProvider providerGetRule
      */
-    public function testGetPluralRule($rule, $parameters)
+    public function testGetRule($rule, $parameters)
     {
         $this->assertSame(
             $rule,
-            \Punic\Plural::getPluralRule($parameters[0], $parameters[1])
+            \Punic\Plural::getRule($parameters[0], $parameters[1])
         );
     }
 
