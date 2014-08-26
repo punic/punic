@@ -27,7 +27,7 @@ class Unit
             throw new Exception\ValueNotInList($width, $widths);
         }
         $data = $data[$width];
-        if (strpos('/', $unit) === false) {
+        if (strpos($unit, '/') === false) {
             $unitCategory = null;
             foreach (array_keys($data) as $c) {
                 if (strpos($c, '_') === false) {
