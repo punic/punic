@@ -83,7 +83,6 @@ class Plural
             $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6);
             $check = str_replace(array('static::inRange(', ' and ', ' or ', ', false, ', ', true, ', ', array('), ' , ', $formula);
             if (preg_match('/[a-z]/', $check)) {
-                die("\n".$formula1."\n".$formula."\n".$check);
                 throw new \Exception('Bad formula!');
             }
             // fix for difference in modulo (%) in the definition and the one implemented in PHP for decimal numbers

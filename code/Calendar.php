@@ -434,7 +434,7 @@ class Calendar
     }
 
     /** @todo I can't find data for this */
-    public static function getTimezoneNameLocationSpecific()
+    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '',  $locale = '')
     {
         return '';
     }
@@ -452,7 +452,6 @@ class Calendar
         $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
         if (!empty($value)) {
             $phpName = '';
-            $date = '';
             if (is_string($value)) {
                 $phpName = $value;
             } elseif (is_a($value, '\\DateTime')) {
@@ -1533,7 +1532,9 @@ class Calendar
         $seconds -= $minutes * 60;
         $hours2 = $sign . substr('0' . strval($hours), -2);
         $minutes2 = substr('0' . strval($minutes), -2);
+        /* @TZWS
         $seconds2 = substr('0' . strval($seconds), -2);
+        */
         $hmMaybe = array($hours2);
         if ($minutes > 0) {
             $hmMaybe[] = $minutes2;
