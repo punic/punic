@@ -226,11 +226,6 @@ class Data
     public static function guessFullLocale($language = '', $script = '')
     {
         $result = '';
-        if (empty($language)) {
-            $defaultInfo = static::explodeLocale($locale);
-            $language = $defaultInfo['language'];
-            $script = $defaultInfo['script'];
-        }
         $data = static::getGeneric('likelySubtags');
         $keys = array();
         if (!empty($script)) {
@@ -406,7 +401,8 @@ class Data
                     $territory = '';
                     $parentLocale = '';
                     $ok = true;
-                    for ($i = 1; $ok && ($i < count($chunks)); $i++) {
+                    $chunkCount = count($chunks);
+                    for ($i = 1; $ok && ($i < $chunkCount); $i++) {
                         if (preg_match('/^[a-z]{4}$/', $chunks[$i])) {
                             if (strlen($script) > 0) {
                                 $ok = false;
