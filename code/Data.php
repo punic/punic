@@ -45,7 +45,7 @@ class Data
      */
     public static function getDefaultLanguage()
     {
-        $info = static::explodeLocale(static::$defaultLanguage);
+        $info = static::explodeLocale(static::$defaultLocale);
 
         return $info['language'];
     }
@@ -78,7 +78,7 @@ class Data
      */
     public static function getFallbackLanguage()
     {
-        $info = static::explodeLocale(static::$fallbackLanguage);
+        $info = static::explodeLocale(static::$fallbackLocale);
 
         return $info['language'];
     }

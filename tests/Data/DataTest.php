@@ -27,7 +27,26 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultLocale()
     {
-        \Punic\Data::setFallbackLocale('it');
+        \Punic\Data::setDefaultLocale('it');
+        $this->assertSame('it', \Punic\Data::getDefaultLocale());
+    }
+    
+    public function testDefaultLanguage()
+    {
+        \Punic\Data::setDefaultLocale('de_DE');
+        $this->assertSame('de', \Punic\Data::getDefaultLanguage());
     }
 
+    public function testFallbackLocale()
+    {
+        \Punic\Data::setFallbackLocale('it');
+        $this->assertSame('it', \Punic\Data::getFallbackLocale());
+    }
+    
+    public function testFallbackLanguage()
+    {
+        \Punic\Data::setFallbackLocale('de_DE');
+        $this->assertSame('de', \Punic\Data::getFallbackLanguage());
+    }
+    
 }

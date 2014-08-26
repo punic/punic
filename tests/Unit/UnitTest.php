@@ -57,5 +57,11 @@ class UnitTest extends PHPUnit_Framework_TestCase
             Unit::format($parameters[0], $parameters[1], $parameters[2], $parameters[3])
         );
     }
+    
+    public function testValueNotInListException()
+    {
+        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        Unit::format(2, 'milisecond', 'does-not-exist');
+    }
 
 }
