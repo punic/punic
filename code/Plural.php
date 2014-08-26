@@ -12,7 +12,7 @@ class Plural
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array[string] Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
      */
-    public static function getPluralRules($locale = '')
+    public static function getRules($locale = '')
     {
         $node = \Punic\Data::getLanguageNode(\Punic\Data::getGeneric('plurals'), $locale);
 
@@ -30,7 +30,7 @@ class Plural
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
      * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
      */
-    public static function getPluralRule($number, $locale = '')
+    public static function getRule($number, $locale = '')
     {
         if (is_int($number)) {
             $intPart = strval($number);
