@@ -29,7 +29,7 @@ class BadArgumentType extends \Punic\Exception
                 $shownName = strval($argumentValue);
                 break;
             case 'string':
-                $shownName = "'$type'";
+                $shownName = "'$argumentValue'";
                 break;
             case 'object':
                 $shownName = get_class($argumentValue);
