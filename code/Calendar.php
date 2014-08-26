@@ -584,10 +584,15 @@ class Calendar
      */
     public static function getDatetimeFormat($width, $locale = '')
     {
-        $chunks = explode('|', $width);
+        return static::getDatetimeFormatReal($width, $locale);
+    }
+
+    protected static function getDatetimeFormatReal($width, $locale = '', $overrideDateFormat = '', $overrideTimeFormat = '')
+    {
+        $chunks = explode('|', @str_replace(array('*', '^'), '', $width));
         switch (count($chunks)) {
             case 1:
-                $timeWidth = $dateWidth = $wholeWidth = $width;
+                $timeWidth = $dateWidth = $wholeWidth = $chunks[0];
                 break;
             case 2:
                 $sortedChunks = $chunks;
@@ -628,15 +633,45 @@ class Calendar
 
         return sprintf(
             $data[$wholeWidth],
-            static::getTimeFormat($timeWidth, $locale),
-            static::getDateFormat($dateWidth, $locale)
+            strlen($overrideTimeFormat) ? $overrideTimeFormat : static::getTimeFormat($timeWidth, $locale),
+            strlen($overrideDateFormat) ? $overrideDateFormat : static::getDateFormat($dateWidth, $locale)
         );
+    }
+
+    /**
+     * Returns the difference in days between two dates (or between a date and today)
+     * @param \DateTime $dateEnd The first date
+     * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @return int Returns the diffence $dateEnd - $dateStart in days
+     * @throws Exception\BadArgumentType
+     */
+    public static function getDeltaDays($dateEnd, $dateStart = null)
+    {
+        if (!is_a($dateEnd, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
+        }
+        if (empty($dateStart) && ($dateStart !== 0) && ($dateStart !== '0')) {
+            $dateStart = new \DateTime('now', $dateEnd->getTimezone());
+        }
+        if (!is_a($dateStart, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateStart, '\\DateTime');
+        }
+        if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
+            $dateStart->setTimezone($dateEnd->getTimezone());
+        }
+        $utc = new \DateTimeZone('UTC');
+        $dateEndUTC = new \DateTime($dateEnd->format('Y-m-d'), $utc);
+        $dateStartUTC = new \DateTime($dateStart->format('Y-m-d'), $utc);
+        $seconds = $dateEndUTC->getTimestamp() - $dateStartUTC->getTimestamp();
+
+        return intval(round($seconds / 86400));
     }
 
     /**
      * Format a date
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
-     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
+     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14').
+     *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      * @throws \Punic\Exception Throws an exception in case of problems
@@ -646,6 +681,15 @@ class Calendar
      */
     public static function formatDate($value, $width, $locale = '')
     {
+        $c = is_string($width) ? @substr($width, -1) : '';
+        if (($c === '^') || ($c === '*')) {
+            $dayName = static::getDateRelativeName($value, ($c === '^') ? true : false, $locale);
+            if (strlen($dayName)) {
+                return $dayName;
+            }
+            $width = substr($width, 0, -1);
+        }
+
         return static::format(
             $value,
             static::getDateFormat($width, $locale),
@@ -657,6 +701,7 @@ class Calendar
      * Format a date (extended version: various date/time representations - see toDateTime())
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
+     *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
@@ -668,10 +713,9 @@ class Calendar
      */
     public static function formatDateEx($value, $width, $toTimezone = '', $locale = '')
     {
-        return static::formatEx(
-            $value,
-            static::getDateFormat($width, $locale),
-            $toTimezone,
+        return static::formatDate(
+            static::toDateTime($value, $toTimezone),
+            $width,
             $locale
         );
     }
@@ -711,10 +755,9 @@ class Calendar
      */
     public static function formatTimeEx($value, $width, $toTimezone = '', $locale = '')
     {
-        return static::formatEx(
-            $value,
-            static::getTimeFormat($width, $locale),
-            $toTimezone,
+        return static::formatTime(
+            static::toDateTime($value, $toTimezone),
+            $width,
             $locale
         );
     }
@@ -723,6 +766,7 @@ class Calendar
      * Format a date/time
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
+     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      * @throws \Punic\Exception Throws an exception in case of problems
@@ -732,9 +776,32 @@ class Calendar
      */
     public static function formatDatetime($value, $width, $locale = '')
     {
+        $overrideDateFormat = '';
+        if (is_string($width)) {
+            $dateFormat = '';
+            $chunks = explode('|', $width);
+            switch (count($chunks)) {
+                case 1:
+                case 2:
+                    $dateFormat = $chunks[0];
+                    break;
+                case 3:
+                    $dateFormat = $chunks[1];
+                    break;
+            }
+            $c = strlen($dateFormat) ? @substr($dateFormat, -1) : '';
+            if (($c === '^') || ($c === '*')) {
+                $dayName = static::getDateRelativeName($value, ($c === '^') ? true : false, $locale);
+                if (strlen($dayName)) {
+                    $overrideDateFormat = "'$dayName'";
+                }
+
+            }
+        }
+
         return static::format(
             $value,
-            static::getDatetimeFormat($width, $locale),
+            static::getDatetimeFormatReal($width, $locale, $overrideDateFormat),
             $locale
         );
     }
@@ -743,6 +810,7 @@ class Calendar
      * Format a date/time (extended version: various date/time representations - see toDateTime())
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
+     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
@@ -754,10 +822,9 @@ class Calendar
      */
     public static function formatDatetimeEx($value, $width, $toTimezone = '', $locale = '')
     {
-        return static::formatEx(
-            $value,
-            static::getDatetimeFormat($width, $locale),
-            $toTimezone,
+        return static::formatDatetime(
+            static::toDateTime($value, $toTimezone),
+            $width,
             $locale
         );
     }
@@ -892,6 +959,50 @@ class Calendar
             $format,
             $locale
         );
+    }
+
+    /**
+     * Retrieve the relative day name (eg 'yesterday', 'tomorrow'), if available
+     * @param \DateTime $datetime The date for which you want the relative day name
+     * @param bool $ucFirst = false Force first letter to be upper case?
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return Returns the relative name if available, otherwise returns an empty string
+     */
+    public static function getDateRelativeName($datetime, $ucFirst = false, $locale = '')
+    {
+        $result = '';
+        $deltaDays = static::getDeltaDays($datetime);
+        $data = \Punic\Data::get('dateFields', $locale);
+        if (array_key_exists('day', $data)) {
+            $data = $data['day'];
+            $key = "relative-type-$deltaDays";
+            if (array_key_exists($key, $data)) {
+                $result = $data[$key];
+                if ($ucFirst) {
+                    $result = static::ucFirst($result);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected static function ucFirst($str, $encoding = '')
+    {
+        $result = $str;
+        if (is_string($str) && function_exists('mb_strlen')) {
+            if (empty($encoding)) {
+                $encoding = mb_internal_encoding();
+            }
+            $l = mb_strlen($str, $encoding);
+            if ($l === 1) {
+                $result = mb_strtolower($str, $encoding);
+            } elseif ($l > 1) {
+                $result = mb_strtoupper(mb_substr($str, 0, 1, $encoding)) . mb_substr($str, 1, null, $encoding);
+            }
+        }
+
+        return $result;
     }
 
     protected static function decodeDayOfWeek(\DateTime $value, $count, $locale, $standAlone = false)

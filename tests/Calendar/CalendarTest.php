@@ -811,6 +811,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testFormatDate()
     {
+        $today = Calendar::toDateTime('now');
+        $tomorrow = Calendar::toDateTime('+1 days');
+        $yesterday = Calendar::toDateTime('-1 days');
         $dt = Calendar::toDateTime('2010-10-12 23:59');
         $this->assertSame(
             'Tuesday, October 12, 2010',
@@ -843,6 +846,26 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '12/10/10',
             Calendar::formatDate($dt, 'short', 'it')
+        );
+        $this->assertSame(
+            'today',
+            Calendar::formatDate($today, 'short*', 'en')
+        );
+        $this->assertSame(
+            'Today',
+            Calendar::formatDate($today, 'short^', 'en')
+        );
+        $this->assertSame(
+            'yesterday',
+            Calendar::formatDate($yesterday, 'long*', 'en')
+        );
+        $this->assertSame(
+            'Tomorrow',
+            Calendar::formatDate($tomorrow, 'narrow^', 'en')
+        );
+        $this->assertSame(
+            'domani',
+            Calendar::formatDate($tomorrow, 'short*', 'it')
         );
     }
 
@@ -909,6 +932,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testFormatDateTime()
     {
+        $yesterday = Calendar::toDateTime('-1 days');
+        $yesterday->setTime(14, 15, 16);
         $dt = Calendar::toDateTime('2010-10-12 23:59');
         $this->assertSame(
             'Tuesday, October 12, 2010 at 11:59:00 PM Fiji Standard Time',
@@ -949,6 +974,14 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '12/10/10 23:59',
             Calendar::formatDateTime($dt, 'short', 'it')
+        );
+        $this->assertSame(
+            'Yesterday at 2:15 PM',
+            Calendar::formatDateTime($yesterday, 'full|short^|short', 'en')
+        );
+        $this->assertSame(
+            'Ieri 14:15',
+            Calendar::formatDateTime($yesterday, 'full|short^|short', 'it')
         );
     }
 

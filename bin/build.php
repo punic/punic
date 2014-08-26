@@ -24,6 +24,9 @@ try {
                 if ((strcasecmp($arg, 'full') === 0) || (strcasecmp($arg, '--full') === 0)) {
                     defined('FULL_JSON') or define('FULL_JSON', true);
                 }
+                if ((strcasecmp($arg, 'post-clean') === 0) || (strcasecmp($arg, '--post-clean') === 0)) {
+                    defined('POST_CLEAN') or define('POST_CLEAN', true);
+                }
             }
         }
     }
@@ -31,6 +34,7 @@ try {
     defined('FULL_JSON') or define('FULL_JSON', false);
     define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full.zip' : 'data.zip'));
     define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full' : 'data'));
+    defined('POST_CLEAN') or define('POST_CLEAN', false);
 
     if (!is_dir(SOURCE_DIR)) {
         if (mkdir(SOURCE_DIR, 0777, true) === false) {
@@ -60,6 +64,9 @@ try {
         ExtractCLDR();
     }
     copyData();
+    if (POST_CLEAN) {
+        deleteFromFilesystem(SOURCE_DIR_DATA);
+    }
     die(0);
 } catch (Exception $x) {
     echo $x->getMessage(), "\n";
@@ -147,11 +154,11 @@ function copyData()
         'timeZoneNames.json' => array('kind' => 'main', 'roots' => array('dates', 'timeZoneNames')),
         'listPatterns.json' => array('kind' => 'main', 'roots' => array('listPatterns')),
         'units.json' => array('kind' => 'main', 'roots' => array('units')),
+        'dateFields.json' => array('kind' => 'main', 'roots' => array('dates', 'fields')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
         'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
-        'dateFields.json' => array('kind' => 'main', 'roots' => array('dates', 'fields')),
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
         'languages.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'languages')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
