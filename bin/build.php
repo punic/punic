@@ -12,23 +12,25 @@ try {
     echo "Initializing... ";
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'source-data');
-    define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . 'data');
     define('DESTINATION_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR . 'data');
     define('TESTS_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'dataFiles');
-
-    define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . 'data.zip');
 
     if (isset($argv)) {
         foreach ($argv as $i => $arg) {
             if ($i > 0) {
                 if ((strcasecmp($arg, 'debug') === 0) || (strcasecmp($arg, '--debug') === 0)) {
-                    define('DEBUG', true);
-                    break;
+                    defined('DEBUG') or define('DEBUG', true);
+                }
+                if ((strcasecmp($arg, 'full') === 0) || (strcasecmp($arg, '--full') === 0)) {
+                    defined('FULL_JSON') or define('FULL_JSON', true);
                 }
             }
         }
     }
     defined('DEBUG') or define('DEBUG', false);
+    defined('FULL_JSON') or define('FULL_JSON', false);
+    define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full.zip' : 'data.zip'));
+    define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full' : 'data'));
 
     if (!is_dir(SOURCE_DIR)) {
         if (mkdir(SOURCE_DIR, 0777, true) === false) {
@@ -36,11 +38,12 @@ try {
             die(1);
         }
     }
-    if (!is_dir(DESTINATION_DIR)) {
-        if (mkdir(DESTINATION_DIR, 0777, false) === false) {
-            echo "Failed to create " . DESTINATION_DIR . "\n";
-            die(1);
-        }
+    if (is_dir(DESTINATION_DIR)) {
+        deleteFromFilesystem(DESTINATION_DIR);
+    }
+    if (mkdir(DESTINATION_DIR, 0777, false) === false) {
+        echo "Failed to create " . DESTINATION_DIR . "\n";
+        die(1);
     }
     if (!is_dir(TESTS_DIR)) {
         if (mkdir(TESTS_DIR, 0777, false) === false) {
@@ -65,7 +68,7 @@ try {
 
 function downloadCLDR()
 {
-    $remoteURL = 'http://www.unicode.org/Public/cldr/25/json.zip';
+    $remoteURL = FULL_JSON ? 'http://unicode.org/Public/cldr/25/json_full.zip' : 'http://www.unicode.org/Public/cldr/25/json.zip';
     $zipFrom = null;
     $zipTo = null;
     echo "Downloading $remoteURL... ";
