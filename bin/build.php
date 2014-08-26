@@ -14,6 +14,7 @@ try {
     define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'source-data');
     define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . 'data');
     define('DESTINATION_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR . 'data');
+    define('TESTS_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'dataFiles');
 
     define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . 'data.zip');
 
@@ -41,6 +42,13 @@ try {
             die(1);
         }
     }
+    if (!is_dir(TESTS_DIR)) {
+        if (mkdir(TESTS_DIR, 0777, false) === false) {
+            echo "Failed to create " . TESTS_DIR . "\n";
+            die(1);
+        }
+    }
+
     echo "done.\n";
     if (!is_dir(SOURCE_DIR_DATA)) {
         if (!is_file(LOCAL_ZIP_FILE)) {
@@ -157,6 +165,7 @@ function copyData()
         'likelySubtags.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'likelySubtags')),
         'territoryContainment.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryContainment')),
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
+        'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
     );
     $src = SOURCE_DIR_DATA . DIRECTORY_SEPARATOR . 'main';
     $locales = scandir($src);
@@ -256,6 +265,13 @@ function copyDataFile($srcFile, $info, $dstFile)
     if (!is_array($data)) {
         throw new Exception("Decoded data should be an array in $srcFile (path: $path)");
     }
+    $jsonFlags = JSON_FORCE_OBJECT;
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (DEBUG) {
+            $jsonFlags |= JSON_PRETTY_PRINT;
+        }
+    }
     switch (basename($dstFile)) {
         case 'calendar.json':
             unset($data['dateTimeFormats']['availableFormats']);
@@ -338,41 +354,142 @@ function copyDataFile($srcFile, $info, $dstFile)
             }
             break;
         case 'timeZoneNames.json':
-            foreach(array('gmtFormat', 'gmtZeroFormat', 'regionFormat', 'regionFormat-type-standard', 'regionFormat-type-daylight', 'fallbackFormat') as $k) {
-                if(array_key_exists($k, $data)) {
+            foreach (array('gmtFormat', 'gmtZeroFormat', 'regionFormat', 'regionFormat-type-standard', 'regionFormat-type-daylight', 'fallbackFormat') as $k) {
+                if (array_key_exists($k, $data)) {
                     $data[$k] = toPhpSprintf($data[$k]);
                 }
             }
             break;
         case 'listPatterns.json':
             $keys = array_keys($data);
-            foreach($keys as $key) {
-                if(!preg_match('/^listPattern-type-(.+)$/', $key, $m)) {
+            foreach ($keys as $key) {
+                if (!preg_match('/^listPattern-type-(.+)$/', $key, $m)) {
                     throw new Exception("Invalid node '$key' in " . $dstFile);
                 }
-                foreach(array_keys($data[$key]) as $k) {
+                foreach (array_keys($data[$key]) as $k) {
                     $data[$key][$k] = toPhpSprintf($data[$key][$k]);
                 }
                 $data[$m[1]] = $data[$key];
                 unset($data[$key]);
             }
+            break;
+        case 'plurals.json':
+            $testData = array();
+            foreach ($data as $l => $lData) {
+                $testData[$l] = array();
+                $keys = array_keys($lData);
+                foreach ($keys as $key) {
+                    if (!preg_match('/^pluralRule-count-(.+)$/', $key, $m)) {
+                        throw new Exception("Invalid node '$key' in " . $dstFile);
+                    }
+                    $rule = $m[1];
+                    $testData[$l][$rule] = array();
+                    $vOriginal = $lData[$key];
+                    $examples = explode('@', $vOriginal);
+                    $v = trim(array_shift($examples));
+                    foreach ($examples as $example) {
+                        list($exampleNumberType, $exampleValues) = explode(' ', $example, 2);
+                        switch ($exampleNumberType) {
+                            case 'integer':
+                            case 'decimal':
+                                $exampleValues = preg_replace('/, …$/', '', $exampleValues);
+                                $exampleValuesParsed = array();
+                                foreach (explode(', ', trim($exampleValues)) as $ev) {
+                                    if (preg_match('/^[+\-]?\d+$/', $ev)) {
+                                        $exampleValuesParsed[] = $ev;
+                                        $exampleValuesParsed[] = intval($ev);
+                                    } elseif (preg_match('/^[+\-]?\d+\.\d+$/', $ev)) {
+                                        $exampleValuesParsed[] = $ev;
+                                    } elseif (preg_match('/^([+\-]?\d+)~([+\-]?\d+)$/', $ev, $m)) {
+                                        $exampleValuesParsed[] = $m[1];
+                                        $exampleValuesParsed[] = intval($m[1]);
+                                        $exampleValuesParsed[] = $m[2];
+                                        $exampleValuesParsed[] = intval($m[2]);
+                                    } elseif (preg_match('/^([+\-]?\d+(\.\d+)?)~([+\-]?\d+(\.\d+)?)$/', $ev, $m)) {
+                                        $exampleValuesParsed[] = $m[1];
+                                        $exampleValuesParsed[] = $m[3];
+                                    } elseif ($ev !== '…') {
+                                        throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
+                                    }
+                                }
+                                $testData[$l][$rule] = $exampleValuesParsed;
+                                break;
+                            default:
+                                throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
+                        }
+                    }
+                    if ($rule === 'other') {
+                        if (strlen($v) > 0) {
+                            throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
+                        }
+                    } else {
+                        $v = str_replace(' = ', ' == ', $v);
+                        $map = array('==' => 'true', '!=' => 'false');
+                        foreach (array('^', ' and ', ' or ') as $pre) {
+                            while(preg_match(
+                                '/' . $pre . '(([nivfwft]( % \\d+)?) (==|!=) ((\\d+)(((\\.\\.)|,)+(\\d+))+))/',
+                                $v,
+                                $m
+                            )) {
+                                $found = $m[1];
+                                $leftyPart = $m[2]; // eg 'n % 10'
+                                $operator = $m[4]; // eg '=='
+                                $ranges = explode(',', $m[5]);
+                                foreach (array_keys($ranges) as $j) {
+                                    if (preg_match('/^(\\d+)\\.\\.(\\d+)$/', $ranges[$j], $m)) {
+                                        $ranges[$j] = "array({$m[1]}, {$m[2]})";
+                                    }
+                                }
+                                $v = str_replace($found, "static::inRange($leftyPart, {$map[$operator]}, " . implode(', ', $ranges) . ")", $v);
+                            }
+                        }
+                        if (strpos($v, '..') !== false) {
+                            throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
+                        }
+                        foreach(array(
+                            'n' => '%1$s', // absolute value of the source number (integer and decimals).
+                            'i' => '%2$s', // integer digits of n
+                            'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
+                            'w' => '%4$s', // number of visible fraction digits in n, without trailing zeros.
+                            'f' => '%5$s', // visible fractional digits in n, with trailing zeros.
+                            't' => '%6$s', // visible fractional digits in n, without trailing zeros.
+                        ) as $from => $to) {
+                            $v = preg_replace('/^' . $from .' /', "$to ", $v);
+                            $v = preg_replace("/^$from /", "$to ", $v);
+                            $v = str_replace(" $from ", " $to ", $v);
+                            $v = str_replace("($from, ", "($to, ", $v);
+                            $v = str_replace("($from ", "($to ", $v);
+                            $v = str_replace(" $from,", " $to,", $v);
+                        }
+                        $v = str_replace(' % ', ' %% ', $v);
+                        $lData[$rule] = $v;
+                    }
+                    unset($lData[$key]);
+                }
+                $data[$l] = $lData;
+            }
+            $testJson = json_encode($testData, $jsonFlags);
+            if ($testJson === false) {
+                throw new Exception("Failed to serialize test data for $srcFile");
+            }
+            $testDataFile = TESTS_DIR . DIRECTORY_SEPARATOR . basename($dstFile);
+            if (is_file($testDataFile)) {
+                deleteFromFilesystem($testDataFile);
+            }
+            if (file_put_contents($testDataFile, $testJson) === false) {
+                throw new Exception("Failed write to $testDataFile");
+            }
+            break;
     }
-    $flags = JSON_FORCE_OBJECT;
-    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $flags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-        if (DEBUG) {
-            $flags |= JSON_PRETTY_PRINT;
-        }
-    }
-    $json = json_encode($data, $flags);
+    $json = json_encode($data, $jsonFlags);
     if ($json === false) {
-        throw new Exception("Failed to serialise data of $srcFile");
+        throw new Exception("Failed to serialize data of $srcFile");
     }
     if (is_file($dstFile)) {
         deleteFromFilesystem($dstFile);
     }
     if (file_put_contents($dstFile, $json) === false) {
-        throw new Exception("Failed write to to $dstFile");
+        throw new Exception("Failed write to $dstFile");
     }
 }
 

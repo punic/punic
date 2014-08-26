@@ -11,5 +11,8 @@
 		<testsuite name="Miscellaneous functions tests">
 			<directory>./tests/Misc/</directory>
 		</testsuite>
+		<testsuite name="Plural functions tests">
+			<directory>./tests/Plural/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
