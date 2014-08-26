@@ -347,6 +347,9 @@ class Data
     public static function getLanguageNode($data, $locale = '')
     {
         $result = null;
+        if (empty($locale)) {
+            $locale = static::$defaultLocale;
+        }
         foreach (static::getLocaleAlternatives($locale) as $l) {
             if (strpos($l, '-') === false) {
                 if (array_key_exists($l, $data)) {
