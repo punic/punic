@@ -668,6 +668,93 @@ class Calendar
     }
 
     /**
+     * Describe an interval between two dates (eg '2 days and 4 hours').
+     * @param \DateTime $dateEnd The first date
+     * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param int $maxParts = 2 The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
+     * @param string $width = 'short' The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string
+     * @throws Exception\BadArgumentType
+     */
+    public static function describeInterval($dateEnd, $dateStart = null, $maxParts = 2, $width = 'short', $locale = '')
+    {
+
+        if (!is_a($dateEnd, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
+        }
+        if (empty($dateStart) && ($dateStart !== 0) && ($dateStart !== '0')) {
+            $dateStart = new \DateTime('now', $dateEnd->getTimezone());
+        }
+        if (!is_a($dateStart, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateStart, '\\DateTime');
+        }
+        if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
+            $dateStart->setTimezone($dateEnd->getTimezone());
+        }
+        $utc = new \DateTimeZone('UTC');
+        $dateEndUTC = new \DateTime($dateEnd->format('Y-m-d H:i:s'), $utc);
+        $dateStartUTC = new \DateTime($dateStart->format('Y-m-d H:i:s'), $utc);
+
+        $parts = array();
+        $data = \Punic\Data::get('dateFields', $locale);
+        if ($dateEndUTC->getTimestamp() == $dateStartUTC->getTimestamp()) {
+            $parts[] = $data['second']['relative-type-0'];
+        } else {
+            $diff =  $dateStartUTC->diff($dateEndUTC, true);
+            $mostFar = 0;
+            $maxDistance = 3;
+            if (($mostFar < $maxDistance) && ($diff->y > 0)) {
+                $parts[] = \Punic\Unit::format($diff->y, 'duration/year', $width, $locale);
+                $mostFar = 0;
+            } elseif (!empty($parts)) {
+                $mostFar++;
+            }
+            if (($mostFar < $maxDistance) && ($diff->m > 0)) {
+                $parts[] = \Punic\Unit::format($diff->m, 'duration/month', $width, $locale);
+                $mostFar = 0;
+            } elseif (!empty($parts)) {
+                $mostFar++;
+            }
+            if (($mostFar < $maxDistance) && ($diff->d > 0)) {
+                $parts[] = \Punic\Unit::format($diff->d, 'duration/day', $width, $locale);
+                $mostFar = 0;
+            } elseif (!empty($parts)) {
+                $mostFar++;
+            }
+            if (($mostFar < $maxDistance) && ($diff->h > 0)) {
+                $parts[] = \Punic\Unit::format($diff->h, 'duration/hour', $width, $locale);
+                $mostFar = 0;
+            } elseif (!empty($parts)) {
+                $mostFar++;
+            }
+            if (($mostFar < $maxDistance) && ($diff->i > 0)) {
+                $parts[] = \Punic\Unit::format($diff->i, 'duration/minute', $width, $locale);
+                $mostFar = 0;
+            } elseif (!empty($parts)) {
+                $mostFar++;
+            }
+            if (empty($parts) || ($diff->s > 0)) {
+                $parts[] = \Punic\Unit::format($diff->s, 'duration/second', $width, $locale);
+            }
+            if (count($parts) > $maxParts) {
+                $parts = array_slice($parts, 0, $maxParts);
+            }
+        }
+        switch ($width) {
+            case 'narrow':
+            case 'short':
+                $joined = \Punic\Misc::joinUnits($parts, $width, $locale);
+                break;
+            default:
+                $joined = \Punic\Misc::join($parts, $locale);
+                break;
+        }
+
+        return $joined;
+    }
+
+    /**
      * Format a date
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14').

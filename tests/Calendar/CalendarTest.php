@@ -1219,4 +1219,44 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         // Mixed
         $this->assertSame("2010'01", Calendar::format($dt, "yyyy''MM"));
     }
+
+    public function providerDescribeInterval()
+    {
+        $now = new \DateTime();
+        $before1 = clone $now;
+        $before1->sub(new \DateInterval('P2Y4DT6H8M'));
+        $before2 = clone $now;
+        $before2->sub(new \DateInterval('P2Y3M4DT6H8M59S'));
+        $before3 = clone $now;
+        $before3->sub(new \DateInterval('P1Y3M4DT6H8M59S'));
+
+        return array(
+            array('now', $now, $now, 1, 'short', 'en'),
+            array('2 yrs', $now, $before1, 1, 'short', 'en'),
+            array('2 years', $now, $before1, 1, 'long', 'en'),
+            array('2y 4d', $now, $before1, 2, 'narrow', 'en'),
+            array('2 years, 4 days, and 6 hours', $now, $before1, 3, 'long', 'en'),
+            array('2 yrs, 4 days, 6 hrs', $now, $before1, 3, 'short', 'en'),
+            array('2y 4d 6h', $now, $before1, 3, 'narrow', 'en'),
+            array('2 years, 4 days, 6 hours, and 8 minutes', $now, $before1, 4, 'long', 'en'),
+            array('2 years and 3 months', $now, $before2, 2, 'long', 'en'),
+            array('2 years, 3 months, 4 days, and 6 hours', $now, $before2, 4, 'long', 'en'),
+            array('1 year', $now, $before3, 1, 'long', 'en'),
+            array('2 anni e 3 mesi', $now, $before2, 2, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni, e 6 ore', $now, $before2, 4, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti, e 59 secondi', $now, $before2, 99, 'long', 'it'),
+        );
+    }
+
+    /**
+     * Test describeInterval
+     * @dataProvider providerDescribeInterval
+     */
+    public function testDescribeInterval($expected, $dateEnd, $dateStart, $maxParts, $width, $locale)
+    {
+        $this->assertSame(
+            $expected,
+            Calendar::describeInterval($dateEnd, $dateStart, $maxParts, $width, $locale)
+        );
+    }
 }
