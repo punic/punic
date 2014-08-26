@@ -146,6 +146,7 @@ function copyData()
         'ca-gregorian.json' => array('kind' => 'main', 'save-as' => 'calendar.json', 'roots' => array('dates', 'calendars', 'gregorian')),
         'timeZoneNames.json' => array('kind' => 'main', 'roots' => array('dates', 'timeZoneNames')),
         'listPatterns.json' => array('kind' => 'main', 'roots' => array('listPatterns')),
+        'units.json' => array('kind' => 'main', 'roots' => array('units')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
@@ -160,7 +161,6 @@ function copyData()
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'territories.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'territories')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
-        'units.json' => array('kind' => 'main', 'roots' => array('units')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
         */
         'weekData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'weekData')),
@@ -483,6 +483,63 @@ function copyDataFile($srcFile, $info, $dstFile)
                 throw new Exception("Failed write to $testDataFile");
             }
             break;
+        case 'units.json':
+            foreach (array_keys($data) as $width) {
+                switch ($width) {
+                    case 'long':
+                    case 'short':
+                    case 'narrow':
+                    case 'long':
+                        foreach (array_keys($data[$width]) as $unitKey) {
+                            switch ($unitKey) {
+                                case 'per':
+                                    if (implode('|', array_keys(($data[$width][$unitKey]))) !== 'compoundUnitPattern') {
+                                        throw new Exception("Invalid node '$width/$unitKey' in " . $dstFile);
+                                    }
+                                    $data[$width]['_compoundPattern'] = $data[$width][$unitKey]['compoundUnitPattern'];
+                                    unset($data[$width][$unitKey]);
+                                    break;
+                                default:
+                                    if (!preg_match('/^(\\w+)?-(.+)$/', $unitKey, $m)) {
+                                        throw new Exception("Invalid node '$width/$unitKey' in " . $dstFile);
+                                    }
+                                    $unitKind = $m[1];
+                                    $unitName = $m[2];
+                                    if (!array_key_exists($unitKind, $data[$width])) {
+                                        $data[$width][$unitKind] = array();
+                                    }
+                                    if (!array_key_exists($unitName, $data[$width][$unitKind])) {
+                                        $data[$width][$unitKind][$unitName] = array();
+                                    }
+                                    foreach (array_keys($data[$width][$unitKey]) as $pluralRuleSrc) {
+                                        if (!preg_match('/^unitPattern-count-(.+)$/', $pluralRuleSrc, $m)) {
+                                            throw new Exception("Invalid node '$width/$unitKey/$pluralRuleSrc' in " . $dstFile);
+                                        }
+                                        $pluralRule = $m[1];
+                                        $data[$width][$unitKind][$unitName][$pluralRule] = toPhpSprintf($data[$width][$unitKey][$pluralRuleSrc]);
+                                    }
+                                    unset($data[$width][$unitKey]);
+                                    break;
+                            }
+                        }
+                        break;
+                    default:
+                        if (preg_match('/^durationUnit-type-(.+)/', $width, $m)) {
+                            if (implode('|', array_keys(($data[$width]))) !== 'durationUnitPattern') {
+                                throw new Exception("Invalid node '$width' in " . $dstFile);
+                            }
+                            $t = $m[1];
+                            if (!array_key_exists('_durationPattern', $data)) {
+                                $data['_durationPattern'] = array();
+                            }
+                            $data['_durationPattern'][$t] = $data[$width]['durationUnitPattern'];
+                            unset($data[$width]);
+                        } else {
+                            throw new Exception("Invalid node '$width' in " . $dstFile);
+                        }
+                        break;
+                }
+            }
     }
     $json = json_encode($data, $jsonFlags);
     if ($json === false) {
