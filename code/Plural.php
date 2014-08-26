@@ -33,7 +33,6 @@ class Plural
     public static function getRule($number, $locale = '')
     {
         if (is_int($number)) {
-            $intPart = strval($number);
             $intPartAbs = strval(abs($number));
             $floatPart = '';
         } elseif (is_float($number)) {
@@ -48,13 +47,11 @@ class Plural
         } elseif (is_string($number) && strlen($number)) {
             if (preg_match('/^[+|\\-]?\\d+\\.?$/', $number)) {
                 $v = intval($number);
-                $intPart = strval($v);
                 $intPartAbs = strval(abs($v));
                 $floatPart = '';
             } elseif (preg_match('/^(\\d*)\\.(\\d+)$/', $number, $m)) {
                 list($intPart, $floatPart) = explode('.', $number);
                 $v = @intval($intPart);
-                $intPart = strval($v);
                 $intPartAbs = strval(abs($v));
             } else {
                 throw new Exception\BadArgumentType($number, 'number');
