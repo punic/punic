@@ -8,6 +8,21 @@ class Plural
 {
 
     /**
+     * Return the list of applicable plural rule for a locale
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return array[string] Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
+     */
+    public static function getPluralRules($locale = '')
+    {
+        $node = \Punic\Data::getLanguageNode(\Punic\Data::getGeneric('plurals'), $locale);
+
+        return array_merge(
+            array_keys($node),
+            array('other')
+        );
+    }
+
+    /**
      * Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale
      * @param string|int|float $number The number to check the plural rule for for
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
