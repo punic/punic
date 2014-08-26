@@ -340,6 +340,26 @@ class Data
     }
 
     /**
+     * Return the node associated to the language (not locale) territory
+     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @return mixed Returns null if the node was not found, the node data otherwise
+     */
+    public static function getLanguageNode($data, $locale = '')
+    {
+        $result = null;
+        foreach (static::getLocaleAlternatives($locale) as $l) {
+            if (strpos($l, '-') === false) {
+                if (array_key_exists($l, $data)) {
+                    $result = $data[$l];
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the item of an array associated to a locale
      * @param array $data The data containing the locale info
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
