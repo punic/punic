@@ -58,6 +58,19 @@ class UnitTest extends PHPUnit_Framework_TestCase
         );
     }
     
+    public function testValueNotInListExceptionGetValue()
+    {
+        try
+        {
+            Unit::format(2, 'milisecond', 'does-not-exist');
+        }
+        catch (\Punic\Exception\ValueNotInList $ex)
+        {
+            $this->assertSame('does-not-exist', $ex->getValue());
+            $this->assertSame(array('long', 'short', 'narrow'), $ex->getAllowedValues());            
+        }
+    }
+    
     public function testValueNotInListException()
     {
         $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');

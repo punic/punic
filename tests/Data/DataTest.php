@@ -24,6 +24,18 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException($exception);
         call_user_func_array(array('\\Punic\\Data', $method), $parameters);
     }
+    
+    public function testInvalidLocaleGet()
+    {
+        try
+        {
+            Data::setFallbackLocale('invalid');
+        }
+        catch (\Punic\Exception\InvalidLocale $ex)
+        {
+            $this->assertSame('invalid', $ex->getLocale());
+        }
+    }
 
     public function testDefaultLocale()
     {
