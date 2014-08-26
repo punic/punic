@@ -12,6 +12,10 @@ class UnitTest extends PHPUnit_Framework_TestCase
                 array(1, 'millisecond', 'long', 'en')
             ),
             array(
+                '1 millisecond',
+                array(1, 'duration/millisecond', 'long', 'en')
+            ),
+            array(
                 '2 milliseconds',
                 array(2, 'millisecond', 'long', 'en')
             ),
