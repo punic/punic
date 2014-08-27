@@ -47,7 +47,8 @@ try {
     echo "Creating configuration file... ";
     $v = array(
         'from' => addslashes(SOURCE_DIR),
-        'to' => addslashes(DEST_DIR)
+        'to' => addslashes(DEST_DIR),
+        'template' => addslashes(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'config.neon'),
     );
     if(file_put_contents(CONFIG_FILE, <<<EOT
 source: "{$v['from']}"
@@ -62,7 +63,7 @@ tree: yes
 todo: yes
 quiet: yes
 progressbar: no
-
+templateConfig: "{$v['template']}"
 EOT
     ) === false) {
         throw new Exception('Failed to create temporary ApiGen configuration');
