@@ -226,6 +226,11 @@ class Data
     public static function guessFullLocale($language = '', $script = '')
     {
         $result = '';
+        if (empty($language)) {
+            $defaultInfo = static::explodeLocale(static::$defaultLocale);
+            $language = $defaultInfo['language'];
+            $script = $defaultInfo['script'];
+        }
         $data = static::getGeneric('likelySubtags');
         $keys = array();
         if (!empty($script)) {
