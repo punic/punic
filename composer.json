@@ -40,7 +40,8 @@
         "php": ">=5.3"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "phpdocumentor/phpdocumentor": "2.*"
     },
     "replace": {
         "punic/common": "*",

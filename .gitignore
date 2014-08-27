@@ -2,6 +2,7 @@
 /source-data/
 /temp/
 /vendor/
+/website/
 /.buildpath
 /.project
 /composer.lock
