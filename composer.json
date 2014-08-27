@@ -41,7 +41,8 @@
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master",
-        "phpdocumentor/phpdocumentor": "2.*"
+		  "nette/nette": "2.1.*",
+        "apigen/apigen": "2.*"
     },
     "replace": {
         "punic/common": "*",

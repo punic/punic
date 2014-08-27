@@ -13,21 +13,13 @@ try {
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'code');
     define('TEMP_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp');
-    define('CONFIG_FILE', TEMP_DIR . DIRECTORY_SEPARATOR . 'phpdoc.xml');
-    define('TEMP_DIR_PHPDOC', TEMP_DIR . DIRECTORY_SEPARATOR . 'phpdoc');
+    define('CONFIG_FILE', TEMP_DIR . DIRECTORY_SEPARATOR . 'apigen.neon');
     define('WEBSITE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'website');
     define('DEST_DIR', WEBSITE_DIR . DIRECTORY_SEPARATOR . 'docs');
-    checkGraphviz();
     if (!is_dir(TEMP_DIR)) {
             @mkdir(TEMP_DIR, 0777, true);
         if (!is_dir(TEMP_DIR)) {
             throw new Exception('Unable to create the directory ' . TEMP_DIR);
-        }
-    }
-    if (!is_dir(TEMP_DIR_PHPDOC)) {
-        @mkdir(TEMP_DIR_PHPDOC, 0777, true);
-        if (!is_dir(TEMP_DIR_PHPDOC)) {
-            throw new Exception('Unable to create the directory ' . TEMP_DIR_PHPDOC);
         }
     }
     echo "done.\n";
@@ -54,35 +46,26 @@ try {
 
     echo "Creating configuration file... ";
     $v = array(
-        'from' => htmlspecialchars(SOURCE_DIR),
-        'to' => htmlspecialchars(DEST_DIR),
-        'temp' => htmlspecialchars(TEMP_DIR_PHPDOC),
+        'from' => addslashes(SOURCE_DIR),
+        'to' => addslashes(DEST_DIR)
     );
     if(file_put_contents(CONFIG_FILE, <<<EOT
-<?xml version="1.0" encoding="UTF-8" ?>
-<phpdoc>
-    <title>Punic API</title>
-    <files>
-        <directory>{$v['from']}</directory>
-    </files>
-    <extensions>
-        <extension>php</extension>
-    </extensions>
-    <parser>
-        <encoding>UTF-8</encoding>
-        <target>{$v['temp']}</target>
-        <visibility>public</visibility>
-    </parser>
-    <transformer>
-        <target>{$v['to']}</target>
-    </transformer>
-    <transformations>
-        <template name="responsive" />
-    </transformations>
-</phpdoc>
+source: "{$v['from']}"
+destination: "{$v['to']}"
+extensions: php
+charset: utf-8
+title: Punic APIs
+groups: namespaces
+accessLevels: public
+php: no
+tree: yes
+todo: yes
+quiet: yes
+progressbar: no
+
 EOT
     ) === false) {
-        throw new Exception('Failed to create temporary phpdoc configuration');
+        throw new Exception('Failed to create temporary ApiGen configuration');
     }
     echo "done.\n";
 
@@ -90,14 +73,14 @@ EOT
     $output = array();
     exec(
         'php'
-        . ' ' . escapeshellarg(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'phpdocumentor' . DIRECTORY_SEPARATOR . 'phpdocumentor' . DIRECTORY_SEPARATOR . 'bin/phpdoc')
-        . ' -c ' . escapeshellarg(CONFIG_FILE)
+        . ' ' . escapeshellarg(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen.php')
+        . ' --config ' . escapeshellarg(CONFIG_FILE)
         . ' 2>&1',
         $output,
         $rc
     );
     if ($rc !== 0) {
-        throw new Exception("phpDoc failed:\n" . trim(implode("\n", $output)));
+        throw new Exception("ApiGen failed:\n" . trim(implode("\n", $output)));
     }
     echo "done.\n";
 
@@ -123,52 +106,6 @@ function deleteFromFilesystem($path)
         }
         if (rmdir($path) === false) {
             throw new Exception("Failed to delete directory $path");
-        }
-    }
-}
-
-function checkGraphviz()
-{
-    $isWin = (stripos(PHP_OS, 'win') !== false) ? true : false;
-    $output = array();
-    exec('dot -V 2>&1', $output, $rc);
-    if (($rc !== 0) && $isWin) {
-        $graphWizPath = '';
-        foreach (array('ProgramFiles', 'ProgramFiles(x86)', 'ProgramW6432') as $envName) {
-            $envValue = getenv($envName);
-            if (is_string($envValue)) {
-                $envValue = rtrim($envValue, '\\');
-                if (is_dir($envValue)) {
-                    foreach (@scandir($envValue) as $pf) {
-                        if (stripos($pf, 'graphviz') !== false) {
-                            $pf2 = "$envValue\\$pf\\bin";
-                            if (is_file("$pf2\\dot.exe")) {
-                                $graphWizPath = $pf2;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (strlen($graphWizPath)) {
-                break;
-            }
-        }
-        if (strlen($graphWizPath)) {
-            $path = @getenv('PATH');
-            if (is_string($path)) {
-                $path = rtrim($path, ';') . ';' . $graphWizPath;
-                @putenv("PATH=$path");
-            }
-        }
-        $output = array();
-        exec('dot -V 2>&1', $output, $rc);
-    }
-    if ($rc !== 0) {
-        if ($isWin) {
-            throw new Exception('graphviz has not been found. Please install it from http://www.graphviz.org/Download_windows.php');
-        } else {
-            throw new Exception("graphviz has not been found. Please install it with\nsudo apt-get install graphviz");
         }
     }
 }
