@@ -534,7 +534,7 @@ class Calendar
      * @param string|false $namesWidth If false you'll get only the list of weekday identifiers (for instance: [0, 1, 2, 3, 4, 5, 6]),
      * If it's a string it must be one accepted by {@link getWeekdayName}, and you'll get an array like this: [{id: 0, name: 'Monday', ..., {id: 6, name: 'Sunday'}]
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return Ambigous <multitype:multitype:NULL unknown  , multitype:unknown >
+     * @return array
      */
     public static function getSortedWeekdays($namesWidth = false, $locale = '')
     {
