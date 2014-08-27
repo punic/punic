@@ -530,6 +530,36 @@ class Calendar
     }
 
     /**
+     * Returns the sorted list of weekdays, starting from {@link getFirstWeekday}
+     * @param string|false $namesWidth If false you'll get only the list of weekday identifiers (for instance: [0, 1, 2, 3, 4, 5, 6]),
+     * If it's a string it must be one accepted by {@link getWeekdayName}, and you'll get an array like this: [{id: 0, name: 'Monday', ..., {id: 6, name: 'Sunday'}]
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return Ambigous <multitype:multitype:NULL unknown  , multitype:unknown >
+     */
+    public static function getSortedWeekdays($namesWidth = false, $locale = '')
+    {
+        $codes = array();
+        $code = static::getFirstWeekday($locale);
+        for ($count = 0; $count < 7; $count++) {
+            $codes[] = $code;
+            $code += 1;
+            if ($code === 7) {
+                $code = 0;
+            }
+        }
+        if (empty($namesWidth)) {
+            $result = $codes;
+        } else {
+            $result = array();
+            foreach ($codes as $code) {
+                $result[] = array('id' => $code, 'name' => static::getWeekdayName($code, $namesWidth, $locale, true));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get the ISO format for a date
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data

@@ -1259,4 +1259,52 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::describeInterval($dateEnd, $dateStart, $maxParts, $width, $locale)
         );
     }
+
+    public function testGetSortedWeekdays()
+    {
+        $this->assertSame(
+            array(0,1,2,3,4,5,6),
+            Calendar::getSortedWeekdays(null, 'en')
+        );
+        $this->assertSame(
+            array(1,2,3,4,5,6,0),
+            Calendar::getSortedWeekdays(null, 'it')
+        );
+        $this->assertSame(
+            array(
+                array('id' => 0, 'name' => 'Su'),
+                array('id' => 1, 'name' => 'Mo'),
+                array('id' => 2, 'name' => 'Tu'),
+                array('id' => 3, 'name' => 'We'),
+                array('id' => 4, 'name' => 'Th'),
+                array('id' => 5, 'name' => 'Fr'),
+                array('id' => 6, 'name' => 'Sa')
+            ),
+            Calendar::getSortedWeekdays('short', 'en')
+        );
+        $this->assertSame(
+            array(
+                array('id' => 1, 'name' => 'lun'),
+                array('id' => 2, 'name' => 'mar'),
+                array('id' => 3, 'name' => 'mer'),
+                array('id' => 4, 'name' => 'gio'),
+                array('id' => 5, 'name' => 'ven'),
+                array('id' => 6, 'name' => 'sab'),
+                array('id' => 0, 'name' => 'dom')
+            ),
+            Calendar::getSortedWeekdays('short', 'it')
+        );
+        $this->assertSame(
+            array(
+                array('id' => 1, 'name' => 'lun'),
+                array('id' => 2, 'name' => 'mar'),
+                array('id' => 3, 'name' => 'mer'),
+                array('id' => 4, 'name' => 'gio'),
+                array('id' => 5, 'name' => 'ven'),
+                array('id' => 6, 'name' => 'sab'),
+                array('id' => 0, 'name' => 'dom')
+            ),
+            Calendar::getSortedWeekdays('short', 'it')
+        );
+    }
 }
