@@ -155,18 +155,18 @@ function copyData()
         'listPatterns.json' => array('kind' => 'main', 'roots' => array('listPatterns')),
         'units.json' => array('kind' => 'main', 'roots' => array('units')),
         'dateFields.json' => array('kind' => 'main', 'roots' => array('dates', 'fields')),
+        'languages.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'languages')),
+        'territories.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'territories')),
+        'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
         'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
-        'languages.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'languages')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
-        'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
         'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
-        'territories.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'territories')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
         */
@@ -503,7 +503,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                                     if (implode('|', array_keys(($data[$width][$unitKey]))) !== 'compoundUnitPattern') {
                                         throw new Exception("Invalid node '$width/$unitKey' in " . $dstFile);
                                     }
-                                    $data[$width]['_compoundPattern'] = $data[$width][$unitKey]['compoundUnitPattern'];
+                                    $data[$width]['_compoundPattern'] = toPhpSprintf($data[$width][$unitKey]['compoundUnitPattern']);
                                     unset($data[$width][$unitKey]);
                                     break;
                                 default:
@@ -547,6 +547,21 @@ function copyDataFile($srcFile, $info, $dstFile)
                         break;
                 }
             }
+            break;
+        case 'localeDisplayNames.json':
+            if (!array_key_exists('localeDisplayPattern', $data)) {
+                throw new Exception("Missing node 'localeDisplayPattern' in " . $dstFile);
+            }
+            foreach (array_keys($data['localeDisplayPattern']) as $k) {
+                $data['localeDisplayPattern'][$k] = toPhpSprintf($data['localeDisplayPattern'][$k]);
+            }
+            if (!array_key_exists('codePatterns', $data)) {
+                throw new Exception("Missing node 'codePatterns' in " . $dstFile);
+            }
+            foreach (array_keys($data['codePatterns']) as $k) {
+                $data['codePatterns'][$k] = toPhpSprintf($data['codePatterns'][$k]);
+            }
+            break;
     }
     $json = json_encode($data, $jsonFlags);
     if ($json === false) {

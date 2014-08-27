@@ -17,5 +17,11 @@
 		<testsuite name="Unit functions tests">
 			<directory>./tests/Unit/</directory>
 		</testsuite>
+		<testsuite name="Language functions tests">
+			<directory>./tests/Language/</directory>
+		</testsuite>
+		<testsuite name="Territory functions tests">
+			<directory>./tests/Territory/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

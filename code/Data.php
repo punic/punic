@@ -390,8 +390,9 @@ class Data
      * Parse a string representing a locale and extract its components.
      * @param string $locale
      * @return Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
+     * @internal
      */
-    protected static function explodeLocale($locale)
+    public static function explodeLocale($locale)
     {
         $result = null;
         if (is_string($locale)) {
