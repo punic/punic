@@ -1665,6 +1665,27 @@ class Calendar
             case 'Pacific/Pohnpei':
                 $result[] = 'Pacific/Ponape';
                 break;
+            case 'America/Argentina/Buenos_Aires':
+                $result[] = 'America/Buenos_Aires';
+                break;
+            case 'America/Argentina/Catamarca':
+                $result[] = 'America/Catamarca';
+                break;
+            case 'America/Argentina/Cordoba':
+                $result[] = 'America/Cordoba';
+                break;
+            case 'America/Argentina/Jujuy':
+                $result[] = 'America/Jujuy';
+                break;
+            case 'America/Argentina/Mendoza':
+                $result[] = 'America/Mendoza';
+                break;
+            case 'America/Indiana/Indianapolis':
+                $result[] = 'America/Indianapolis';
+                break;
+            case 'America/Kentucky/Louisville':
+                $result[] = 'America/Louisville';
+                break;
         }
 
         return $result;
