@@ -42,21 +42,28 @@ try {
             die(1);
         }
     }
+    echo "done.\n";
+
     if (is_dir(DESTINATION_DIR)) {
+        echo "Cleanup old data folder... ";
         deleteFromFilesystem(DESTINATION_DIR);
+        echo "done.\n";
     }
+    echo "Creating data folder... ";
     if (mkdir(DESTINATION_DIR, 0777, false) === false) {
         echo "Failed to create " . DESTINATION_DIR . "\n";
         die(1);
     }
+    echo "done.\n";
     if (!is_dir(TESTS_DIR)) {
+        echo "Creating tests folder... ";
         if (mkdir(TESTS_DIR, 0777, false) === false) {
             echo "Failed to create " . TESTS_DIR . "\n";
             die(1);
         }
+        echo "done.\n";
     }
-
-    echo "done.\n";
+    
     if (!is_dir(SOURCE_DIR_DATA)) {
         if (!is_file(LOCAL_ZIP_FILE)) {
             downloadCLDR();
@@ -65,7 +72,9 @@ try {
     }
     copyData();
     if (POST_CLEAN) {
+        echo "Cleanup temporary data folder... ";
         deleteFromFilesystem(SOURCE_DIR_DATA);
+        echo "done.\n";
     }
     die(0);
 } catch (Exception $x) {
@@ -158,6 +167,7 @@ function copyData()
         'languages.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'languages')),
         'territories.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'territories')),
         'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
+        'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
@@ -165,7 +175,6 @@ function copyData()
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
         'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
-        'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
@@ -580,6 +589,70 @@ function copyDataFile($srcFile, $info, $dstFile)
                 $data['codePatterns'][$k] = toPhpSprintf($data['codePatterns'][$k]);
             }
             break;
+        case 'numbers.json':
+            $final = array();
+            $numberSystems = array();
+            foreach($data as $key => $value) {
+                if(preg_match('/^([a-z]+)-numberSystem-([a-z]+)$/i', $key, $m)) {
+                    $keyChunk = $m[1];
+                    $ns = $m[2];
+                    if(!array_key_exists($ns, $numberSystems)) {
+                        $numberSystems[$ns] = array();
+                    }
+                    if(is_array($value)) {
+                        $unitPattern = null;
+                        foreach ($value as $k2 => $v2) {
+                            if(preg_match('/^unitPattern-(.+)$/i', $k2, $m)) {
+                                if(is_null($unitPattern)) {
+                                    $unitPattern = array();
+                                }
+                                $unitPattern[$m[1]] = toPhpSprintf($v2);
+                                unset($value[$k2]);
+                            }
+                        }
+                        if(!is_null($unitPattern)) {
+                            $value['unitPattern'] = $unitPattern;
+                        }
+                    }
+                    $numberSystems[$ns][$keyChunk] = $value;
+                }
+                else {
+                    switch($key) {
+                        case 'defaultNumberingSystem':
+                            $final[$key] = $value;
+                            break;
+                        case 'otherNumberingSystems':
+                            break;
+                        default:
+                            throw new Exception("Invalid node '$key' in " . $dstFile);
+                    }
+                }
+            }
+            // Use only latn
+            if(!array_key_exists('latn', $numberSystems)) {
+                throw new Exception("Missing 'latn' in " . $dstFile);
+            }
+            foreach($numberSystems['latn'] as $key => $value) {
+                if(array_key_exists($key, $final)) {
+                    throw new Exception("Duplicated node '$key' in " . $dstFile);
+                }
+                $final[$key] = $value;
+            }
+            $data = $final;
+            $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
+            if(empty($symbols)) {
+                throw new Exception("Missing symbols in " . $dstFile);
+            }
+            foreach(array_keys($data) as $key) {
+                if(is_array($data[$key]) && preg_match('/\\w+Formats$/', $key) && array_key_exists('standard', $data[$key])) {
+                    $format = $data[$key]['standard'];
+                    $data[$key]['standard'] = array('format' => $format);
+                    foreach(numberFormatToRegularExpressions($symbols, $format) as $rxKey => $rx) {
+                        $data[$key]['standard']["rx$rxKey"] = $rx;
+                    }
+                }
+            }
+            break;
     }
     $json = json_encode($data, $jsonFlags);
     if ($json === false) {
@@ -661,4 +734,130 @@ function checkOneKey($node, $key)
     if (!array_key_exists($key, $node)) {
         throw new Exception("Expected just one node '$key', found this key: " . implode(', ', array_keys($node)));
     }
+}
+
+function numberFormatToRegularExpressions($symbols, $isoPattern) {
+    $p = explode(';', $isoPattern);
+    $patterns = array(
+        '+' => $p[0],
+        '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1]
+    );
+    $result = array();
+    foreach ($patterns as $patternKey => $pattern) {
+        $rxPost = $rxPre = '';
+        if(preg_match('/(-)?([^0#E,\\.\\-+]*)(.+?)([^0#E,\\.\\-+]*)(-)?$/', $pattern, $m)) {
+            for($i = 1; $i < 6; $i++) {
+                if(!isset($m[$i])) {
+                    $m[$i] = '';
+                }
+            }
+            if(strlen($m[2]) > 0) {
+                $rxPre = preg_quote($m[2]);;
+            }
+            $pattern = $m[1] . $m[3] . $m[5];
+            if(strlen($m[4]) > 0) {
+                $rxPost = preg_quote($m[4]);
+            }
+        }
+        $rx = '';
+        if (strpos($pattern, '.') !== false) {
+            list($intPattern, $decimalPattern) = explode('.', $pattern, 2);
+        }
+        else {
+            $intPattern = $pattern;
+            $decimalPattern = '';
+        }
+        if (strpos($intPattern, 'E') !== false) {
+            switch($intPattern) {
+                case '#E0':
+                case '#E00':
+                    $rx .= '(' . preg_quote($symbols['plusSign']). ')?[0-9]+((' . preg_quote($symbols['decimal']) . ')[0-9]+)*[eE]((' . preg_quote($symbols['minusSign']) . ')|(' . preg_quote($symbols['plusSign']) . '))?[0-9]+';
+                    break;
+                case '-#E0':
+                case '-#E00':
+                    $rx .= '(' . preg_quote($symbols['minusSign']). ')?[0-9]+((' . preg_quote($symbols['decimal']) . ')[0-9]+)*[eE]((' . preg_quote($symbols['minusSign']) . ')|(' . preg_quote($symbols['plusSign']) . '))?[0-9]+';
+                    break;
+                default:
+                    throw new \Exception("Invalid chunk ('$intPattern') in pattern '$pattern'");
+            }
+        }
+        elseif (strpos($intPattern, ',') !== false) {
+            $chunks = explode(',', $intPattern);
+            $maxChunkIndex = count($chunks) - 1;
+            $prevChunk = null;
+            for($chunkIndex = 0; $chunkIndex <= $maxChunkIndex; $chunkIndex++) {
+                $chunk = $chunks[$chunkIndex];
+                $nextChunk = ($chunkIndex == $maxChunkIndex) ? null : $chunks[$chunkIndex + 1];
+                switch ($chunk) {
+                    case '#':
+                    case '-#':
+                        if ($chunk === '-#') {
+                            $rx .= '(' . preg_quote($symbols['minusSign']) . ')?';
+                        } else {
+                            $rx .= '(' . preg_quote($symbols['plusSign']) . ')?';
+                        }
+                        if ($nextChunk === '##0') {
+                            $rx .= '[0-9]{1,3}';
+                        } elseif ($nextChunk === '##') {
+                            $rx .= '[0-9]{1,2}';
+                        } else {
+                            throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
+                        }
+                        break;
+                    case '##':
+                        if ($nextChunk === '##0') {
+                            $rx .= '((' . preg_quote($symbols['group']) . ')?[0-9]{2})*';
+                        } else {
+                            throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
+                        }
+                        break;
+                    case '##0':
+                        if ($prevChunk === '##') {
+                            $rx .= '[0-9]';
+                        } elseif (($prevChunk === '#') || ($prevChunk === '-#')) {
+                            $rx .= '((' . preg_quote($symbols['group']) . ')?[0-9]{3})*';
+                        } else {
+                            throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
+                        }
+                        break;
+                    case '#0':
+                        if ($chunkIndex === 0) {
+                            $rx .= '[0-9]*';
+                        } else {
+                            throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
+                        }
+                        break;
+                }
+                $prevChunk = $chunk;
+            }
+        }
+        else {
+            throw new \Exception("Invalid chunk ('$intPattern') in pattern '$pattern'");
+        }
+
+        if (strlen($decimalPattern) > 0) {
+            switch($decimalPattern) {
+                case '###':
+                    $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?';
+                    break;
+                case '###-':
+                    $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?(' . preg_quote($symbols['minusSign']) . ')';
+                    break;
+                default:
+                    if(preg_match('/^(0+)(-?)$/', $decimalPattern, $m)) {
+                        $n = strlen($m[1]);
+                        $rx .= '(' . preg_quote($symbols['decimal']) . ')[0-9]{' . strlen($m[1]) . '}';
+                        if(substr($decimalPattern, -1) === '-') {
+                            $rx .= '(' . preg_quote($symbols['minusSign']) . ')';
+                        }
+                    } else {
+                        throw new \Exception("Invalid chunk ('$decimalPattern') in pattern '$pattern'");
+                    }
+            }
+        }
+
+        $result[$patternKey] = '/^' . $rxPre . $rx . $rxPost  . '$/u';
+    }
+
+    return $result;
 }
