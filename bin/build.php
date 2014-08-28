@@ -275,7 +275,7 @@ function copyDataFile($srcFile, $info, $dstFile)
     if (!is_array($data)) {
         throw new Exception("Decoded data should be an array in $srcFile (path: $path)");
     }
-    $jsonFlags = JSON_FORCE_OBJECT;
+    $jsonFlags = 0;
     if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
         $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         if (DEBUG) {
