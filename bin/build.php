@@ -266,9 +266,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
             }
         }
-        if ((count($data) !== 1) || (!array_key_exists($root, $data))) {
-            throw new Exception("Invalid data in $srcFile:\nExpected one array with the sole key '$root' (path: $path), keys found: " . implode(', ', array_keys($data)));
-        }
+        checkOneKey($data, $root);
         $data = $data[$root];
         $path .= "/$root";
     }
@@ -332,9 +330,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             }
             break;
         case 'metaZones.json':
-            if ((count($data['metazoneInfo']) !== 1) || (!array_key_exists('timezone', $data['metazoneInfo']))) {
-                throw new Exception('Invalid metazoneInfo node');
-            }
+            checkOneKey($data['metazoneInfo'], 'timezone');
             $data['metazoneInfo'] = $data['metazoneInfo']['timezone'];
             foreach ($data['metazoneInfo'] as $id0 => $info0) {
                 $values1 = null;
@@ -362,6 +358,28 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
                 $data['metazoneInfo'][$id0] = $info0;
             }
+            $metazones = array();
+            if ((!array_key_exists('metazones', $data)) && is_array($data['metazones']) && (count($data['metazones']) > 0)) {
+                throw new Exception('metazones node not found/invalid');
+            }
+            foreach ($data['metazones'] as $mz) {
+                checkOneKey($mz, 'mapZone');
+                $mz = $mz['mapZone'];
+                foreach (array_keys($mz) as $i) {
+                    switch ($i) {
+                        case '_other':
+                        case '_territory':
+                        case '_type':
+                            $mz[substr($i, 1)] = $mz[$i];
+                            unset($mz[$i]);
+                            break;
+                        default:
+                            throw new Exception('Invalid mapZone node key: ' . $i);
+                    }
+                }
+                $metazones[] = $mz;
+            }
+            $data['metazones'] = $metazones;
             break;
         case 'timeZoneNames.json':
             foreach (array('gmtFormat', 'gmtZeroFormat', 'regionFormat', 'regionFormat-type-standard', 'regionFormat-type-daylight', 'fallbackFormat') as $k) {
@@ -614,9 +632,7 @@ function toPhpSprintf($fmt)
 
 function fixMetazoneInfo($a)
 {
-    if ((count(array_keys($a)) !== 1) || (!array_key_exists('usesMetazone', $a))) {
-        throw new Exception('Invalid metazoneInfo node');
-    }
+    checkOneKey($a, 'usesMetazone');
     $a = $a['usesMetazone'];
     foreach (array_keys($a) as $key) {
         switch ($key) {
@@ -632,4 +648,17 @@ function fixMetazoneInfo($a)
     }
 
     return $a;
+}
+
+function checkOneKey($node, $key)
+{
+    if (!is_array($node)) {
+        throw new Exception("$node is not an array");
+    }
+    if (count($node) !== 1) {
+        throw new Exception("Expected just one node '$key', found these keys: " . implode(', ', array_keys($node)));
+    }
+    if (!array_key_exists($key, $node)) {
+        throw new Exception("Expected just one node '$key', found this key: " . implode(', ', array_keys($node)));
+    }
 }

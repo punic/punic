@@ -372,42 +372,53 @@ class Calendar
                 $phpName = $value->getName();
             }
             if (strlen($phpName)) {
-                $chunks = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                $tzInfo = \Punic\Data::getGeneric('metaZones');
-                foreach ($chunks as $chunk) {
-                    if (array_key_exists($chunk, $tzInfo)) {
-                        $tzInfo = $tzInfo[$chunk];
-                    } else {
-                        $tzInfo = null;
-                        break;
+                $metazoneCode = '';
+                $data = \Punic\Data::getGeneric('metaZones');
+                if (!strlen($metazoneCode)) {
+                    $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
+                    $tzInfo = $data;
+                    foreach ($path as $chunk) {
+                        if (array_key_exists($chunk, $tzInfo)) {
+                            $tzInfo = $tzInfo[$chunk];
+                        } else {
+                            $tzInfo = null;
+                            break;
+                        }
+                    }
+                    if (is_array($tzInfo)) {
+                        foreach ($tzInfo as $tz) {
+                            if (is_array($tz) && array_key_exists('mzone', $tz)) {
+                                if (strlen($date)) {
+                                    if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
+                                        continue;
+                                    }
+                                    if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
+                                        continue;
+                                    }
+                                }
+                                $metazoneCode = $tz['mzone'];
+                                break;
+                            }
+                        }
                     }
                 }
-                $isoName = '';
-                if (is_array($tzInfo)) {
-                    foreach ($tzInfo as $tz) {
-                        if (is_array($tz) && array_key_exists('mzone', $tz)) {
-                            if (strlen($date)) {
-                                if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
-                                    continue;
-                                }
-                                if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
-                                    continue;
-                                }
-                            }
-                            $isoName = $tz['mzone'];
+                if (!strlen($metazoneCode)) {
+                    foreach ($data['metazones'] as $metazone) {
+                        if (strcasecmp($phpName, $metazone['type']) === 0) {
+                            $metazoneCode = $metazone['other'];
                             break;
                         }
                     }
                 }
-                if (!strlen($isoName)) {
-                    $isoName = $phpName;
+                if (!strlen($metazoneCode)) {
+                    $metazoneCode = $phpName;
                 }
-                if (strlen($isoName)) {
+                if (strlen($metazoneCode)) {
                     $data = \Punic\Data::get('timeZoneNames', $locale);
                     if (array_key_exists('metazone', $data)) {
                         $data = $data['metazone'];
-                        if (array_key_exists($isoName, $data)) {
-                            $data = $data[$isoName];
+                        if (array_key_exists($metazoneCode, $data)) {
+                            $data = $data[$metazoneCode];
                             if (array_key_exists($width, $data)) {
                                 $data = $data[$width];
                                 $lookFor = array();
