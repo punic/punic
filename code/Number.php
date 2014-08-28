@@ -39,6 +39,32 @@ class Number
     }
 
     /**
+     * Check if a variable contains a valid integer number for the specified locale
+     * @param string $value The string value to check
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return bool
+     */
+    public static function isInteger($value, $locale = '')
+    {
+        $result = false;
+        if (is_int($value)) {
+            $result = true;
+        } elseif (is_float($value)) {
+            if ($value === floatval(round($value))) {
+                $result = true;
+            }
+        } elseif (is_string($value) && static::isNumeric($value, $locale)) {
+            $data = \Punic\Data::get('numbers', $locale);
+            $decimal = $data['symbols']['decimal'];
+            if (strpos($value, $decimal) === false) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Convert a localized representation of a number to a number (for instance, converts the string '1,234' to 1234 in case of English and to 1.234 in case of Italian)
      * @param string $value The string value to convert
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
