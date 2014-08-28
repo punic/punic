@@ -63,7 +63,7 @@ try {
         }
         echo "done.\n";
     }
-    
+
     if (!is_dir(SOURCE_DIR_DATA)) {
         if (!is_file(LOCAL_ZIP_FILE)) {
             downloadCLDR();
@@ -592,32 +592,31 @@ function copyDataFile($srcFile, $info, $dstFile)
         case 'numbers.json':
             $final = array();
             $numberSystems = array();
-            foreach($data as $key => $value) {
-                if(preg_match('/^([a-z]+)-numberSystem-([a-z]+)$/i', $key, $m)) {
+            foreach ($data as $key => $value) {
+                if (preg_match('/^([a-z]+)-numberSystem-([a-z]+)$/i', $key, $m)) {
                     $keyChunk = $m[1];
                     $ns = $m[2];
-                    if(!array_key_exists($ns, $numberSystems)) {
+                    if (!array_key_exists($ns, $numberSystems)) {
                         $numberSystems[$ns] = array();
                     }
-                    if(is_array($value)) {
+                    if (is_array($value)) {
                         $unitPattern = null;
                         foreach ($value as $k2 => $v2) {
-                            if(preg_match('/^unitPattern-(.+)$/i', $k2, $m)) {
-                                if(is_null($unitPattern)) {
+                            if (preg_match('/^unitPattern-(.+)$/i', $k2, $m)) {
+                                if (is_null($unitPattern)) {
                                     $unitPattern = array();
                                 }
                                 $unitPattern[$m[1]] = toPhpSprintf($v2);
                                 unset($value[$k2]);
                             }
                         }
-                        if(!is_null($unitPattern)) {
+                        if (!is_null($unitPattern)) {
                             $value['unitPattern'] = $unitPattern;
                         }
                     }
                     $numberSystems[$ns][$keyChunk] = $value;
-                }
-                else {
-                    switch($key) {
+                } else {
+                    switch ($key) {
                         case 'defaultNumberingSystem':
                             $final[$key] = $value;
                             break;
@@ -629,25 +628,25 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
             }
             // Use only latn
-            if(!array_key_exists('latn', $numberSystems)) {
+            if (!array_key_exists('latn', $numberSystems)) {
                 throw new Exception("Missing 'latn' in " . $dstFile);
             }
-            foreach($numberSystems['latn'] as $key => $value) {
-                if(array_key_exists($key, $final)) {
+            foreach ($numberSystems['latn'] as $key => $value) {
+                if (array_key_exists($key, $final)) {
                     throw new Exception("Duplicated node '$key' in " . $dstFile);
                 }
                 $final[$key] = $value;
             }
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
-            if(empty($symbols)) {
+            if (empty($symbols)) {
                 throw new Exception("Missing symbols in " . $dstFile);
             }
-            foreach(array_keys($data) as $key) {
-                if(is_array($data[$key]) && preg_match('/\\w+Formats$/', $key) && array_key_exists('standard', $data[$key])) {
+            foreach (array_keys($data) as $key) {
+                if (is_array($data[$key]) && preg_match('/\\w+Formats$/', $key) && array_key_exists('standard', $data[$key])) {
                     $format = $data[$key]['standard'];
                     $data[$key]['standard'] = array('format' => $format);
-                    foreach(numberFormatToRegularExpressions($symbols, $format) as $rxKey => $rx) {
+                    foreach (numberFormatToRegularExpressions($symbols, $format) as $rxKey => $rx) {
                         $data[$key]['standard']["rx$rxKey"] = $rx;
                     }
                 }
@@ -736,7 +735,8 @@ function checkOneKey($node, $key)
     }
 }
 
-function numberFormatToRegularExpressions($symbols, $isoPattern) {
+function numberFormatToRegularExpressions($symbols, $isoPattern)
+{
     $p = explode(';', $isoPattern);
     $patterns = array(
         '+' => $p[0],
@@ -745,30 +745,29 @@ function numberFormatToRegularExpressions($symbols, $isoPattern) {
     $result = array();
     foreach ($patterns as $patternKey => $pattern) {
         $rxPost = $rxPre = '';
-        if(preg_match('/(-)?([^0#E,\\.\\-+]*)(.+?)([^0#E,\\.\\-+]*)(-)?$/', $pattern, $m)) {
-            for($i = 1; $i < 6; $i++) {
-                if(!isset($m[$i])) {
+        if (preg_match('/(-)?([^0#E,\\.\\-+]*)(.+?)([^0#E,\\.\\-+]*)(-)?$/', $pattern, $m)) {
+            for ($i = 1; $i < 6; $i++) {
+                if (!isset($m[$i])) {
                     $m[$i] = '';
                 }
             }
-            if(strlen($m[2]) > 0) {
+            if (strlen($m[2]) > 0) {
                 $rxPre = preg_quote($m[2]);;
             }
             $pattern = $m[1] . $m[3] . $m[5];
-            if(strlen($m[4]) > 0) {
+            if (strlen($m[4]) > 0) {
                 $rxPost = preg_quote($m[4]);
             }
         }
         $rx = '';
         if (strpos($pattern, '.') !== false) {
             list($intPattern, $decimalPattern) = explode('.', $pattern, 2);
-        }
-        else {
+        } else {
             $intPattern = $pattern;
             $decimalPattern = '';
         }
         if (strpos($intPattern, 'E') !== false) {
-            switch($intPattern) {
+            switch ($intPattern) {
                 case '#E0':
                 case '#E00':
                     $rx .= '(' . preg_quote($symbols['plusSign']). ')?[0-9]+((' . preg_quote($symbols['decimal']) . ')[0-9]+)*[eE]((' . preg_quote($symbols['minusSign']) . ')|(' . preg_quote($symbols['plusSign']) . '))?[0-9]+';
@@ -780,12 +779,11 @@ function numberFormatToRegularExpressions($symbols, $isoPattern) {
                 default:
                     throw new \Exception("Invalid chunk ('$intPattern') in pattern '$pattern'");
             }
-        }
-        elseif (strpos($intPattern, ',') !== false) {
+        } elseif (strpos($intPattern, ',') !== false) {
             $chunks = explode(',', $intPattern);
             $maxChunkIndex = count($chunks) - 1;
             $prevChunk = null;
-            for($chunkIndex = 0; $chunkIndex <= $maxChunkIndex; $chunkIndex++) {
+            for ($chunkIndex = 0; $chunkIndex <= $maxChunkIndex; $chunkIndex++) {
                 $chunk = $chunks[$chunkIndex];
                 $nextChunk = ($chunkIndex == $maxChunkIndex) ? null : $chunks[$chunkIndex + 1];
                 switch ($chunk) {
@@ -830,13 +828,12 @@ function numberFormatToRegularExpressions($symbols, $isoPattern) {
                 }
                 $prevChunk = $chunk;
             }
-        }
-        else {
+        } else {
             throw new \Exception("Invalid chunk ('$intPattern') in pattern '$pattern'");
         }
 
         if (strlen($decimalPattern) > 0) {
-            switch($decimalPattern) {
+            switch ($decimalPattern) {
                 case '###':
                     $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?';
                     break;
@@ -844,10 +841,10 @@ function numberFormatToRegularExpressions($symbols, $isoPattern) {
                     $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?(' . preg_quote($symbols['minusSign']) . ')';
                     break;
                 default:
-                    if(preg_match('/^(0+)(-?)$/', $decimalPattern, $m)) {
+                    if (preg_match('/^(0+)(-?)$/', $decimalPattern, $m)) {
                         $n = strlen($m[1]);
                         $rx .= '(' . preg_quote($symbols['decimal']) . ')[0-9]{' . strlen($m[1]) . '}';
-                        if(substr($decimalPattern, -1) === '-') {
+                        if (substr($decimalPattern, -1) === '-') {
                             $rx .= '(' . preg_quote($symbols['minusSign']) . ')';
                         }
                     } else {
