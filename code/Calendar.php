@@ -354,12 +354,12 @@ class Calendar
     {
         $result = '';
         if (!empty($value)) {
-            $phpName = '';
+            $receivedPhpName = '';
             $date = '';
             if (is_string($value)) {
-                $phpName = $value;
+                $receivedPhpName = $value;
             } elseif (is_a($value, '\\DateTime')) {
-                $phpName = $value->getTimezone()->getName();
+                $receivedPhpName = $value->getTimezone()->getName();
                 $date = $value->format('Y-m-d H:i');
                 if (empty($kind)) {
                     if (intval($value->format('I')) === 1) {
@@ -369,49 +369,60 @@ class Calendar
                     }
                 }
             } elseif (is_a($value, '\\DateTimeZone')) {
-                $phpName = $value->getName();
+                $receivedPhpName = $value->getName();
             }
-            if (strlen($phpName)) {
+            if (strlen($receivedPhpName)) {
                 $metazoneCode = '';
                 $data = \Punic\Data::getGeneric('metaZones');
+                $phpNames = static::getTimezonesAliases($receivedPhpName);
                 if (!strlen($metazoneCode)) {
-                    $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                    $tzInfo = $data;
-                    foreach ($path as $chunk) {
-                        if (array_key_exists($chunk, $tzInfo)) {
-                            $tzInfo = $tzInfo[$chunk];
-                        } else {
-                            $tzInfo = null;
-                            break;
-                        }
-                    }
-                    if (is_array($tzInfo)) {
-                        foreach ($tzInfo as $tz) {
-                            if (is_array($tz) && array_key_exists('mzone', $tz)) {
-                                if (strlen($date)) {
-                                    if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
-                                        continue;
-                                    }
-                                    if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
-                                        continue;
-                                    }
-                                }
-                                $metazoneCode = $tz['mzone'];
+                    foreach ($phpNames as $phpName) {
+                        $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
+                        $tzInfo = $data;
+                        foreach ($path as $chunk) {
+                            if (array_key_exists($chunk, $tzInfo)) {
+                                $tzInfo = $tzInfo[$chunk];
+                            } else {
+                                $tzInfo = null;
                                 break;
                             }
                         }
-                    }
-                }
-                if (!strlen($metazoneCode)) {
-                    foreach ($data['metazones'] as $metazone) {
-                        if (strcasecmp($phpName, $metazone['type']) === 0) {
-                            $metazoneCode = $metazone['other'];
+                        if (is_array($tzInfo)) {
+                            foreach ($tzInfo as $tz) {
+                                if (is_array($tz) && array_key_exists('mzone', $tz)) {
+                                    if (strlen($date)) {
+                                        if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
+                                            continue;
+                                        }
+                                        if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
+                                            continue;
+                                        }
+                                    }
+                                    $metazoneCode = $tz['mzone'];
+                                    break;
+                                }
+                            }
+                        }
+                        if (strlen($metazoneCode)) {
                             break;
                         }
                     }
                 }
                 if (!strlen($metazoneCode)) {
-                    $metazoneCode = $phpName;
+                    foreach ($phpNames as $phpName) {
+                        foreach ($data['metazones'] as $metazone) {
+                            if (strcasecmp($phpName, $metazone['type']) === 0) {
+                                $metazoneCode = $metazone['other'];
+                                break;
+                            }
+                        }
+                        if (strlen($metazoneCode)) {
+                            break;
+                        }
+                    }
+                }
+                if (!strlen($metazoneCode)) {
+                    $metazoneCode = $receivedPhpName;
                 }
                 if (strlen($metazoneCode)) {
                     $data = \Punic\Data::get('timeZoneNames', $locale);
@@ -462,29 +473,34 @@ class Calendar
         $result = '';
         $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
         if (!empty($value)) {
-            $phpName = '';
+            $receivedPhpName = '';
             if (is_string($value)) {
-                $phpName = $value;
+                $receivedPhpName = $value;
             } elseif (is_a($value, '\\DateTime')) {
-                $phpName = $value->getTimezone()->getName();
+                $receivedPhpName = $value->getTimezone()->getName();
             } elseif (is_a($value, '\\DateTimeZone')) {
-                $phpName = $value->getName();
+                $receivedPhpName = $value->getName();
             }
-            if (strlen($phpName)) {
-                $chunks = array_merge(array('zone'), explode('/', $phpName));
-                $data = \Punic\Data::get('timeZoneNames', $locale);
-                foreach ($chunks as $chunk) {
-                    if (array_key_exists($chunk, $data)) {
-                        $data = $data[$chunk];
-                    } else {
-                        $data = null;
+            if (strlen($receivedPhpName)) {
+                $phpNames = static::getTimezonesAliases($receivedPhpName);
+                $timeZoneNames = \Punic\Data::get('timeZoneNames', $locale);
+                foreach ($phpNames as $phpName) {
+                    $chunks = array_merge(array('zone'), explode('/', $phpName));
+                    $data = $timeZoneNames;
+                    foreach ($chunks as $chunk) {
+                        if (array_key_exists($chunk, $data)) {
+                            $data = $data[$chunk];
+                        } else {
+                            $data = null;
+                        }
+                        if (!is_array($data)) {
+                            break;
+                        }
                     }
-                    if (!is_array($data)) {
+                    if (is_array($data) && array_key_exists('exemplarCity', $data)) {
+                        $result = $data['exemplarCity'];
                         break;
                     }
-                }
-                if (is_array($data) && array_key_exists('exemplarCity', $data)) {
-                    $result = $data['exemplarCity'];
                 }
             }
         }
@@ -1620,4 +1636,37 @@ class Calendar
     protected static function decodeYearCyclicName() { throw new Exception\NotImplemented(__METHOD__); }
     /** @todo */
     protected static function decodeModifiedGiulianDay() { throw new Exception\NotImplemented(__METHOD__); }
+
+    protected static function getTimezonesAliases($phpTimezoneName)
+    {
+        $result = array($phpTimezoneName);
+        switch ($phpTimezoneName) {
+            case 'Africa/Asmara':
+                $result[] = 'Africa/Asmera';
+                break;
+            case 'America/Atikokan':
+                $result[] = 'America/Coral_Harbour';
+                break;
+            case 'Asia/Ho_Chi_Minh':
+                $result[] = 'Asia/Saigon';
+                break;
+            case 'Asia/Kathmandu':
+                $result[] = 'Asia/Katmandu';
+                break;
+            case 'Asia/Kolkata':
+                $result[] = 'Asia/Calcutta';
+                break;
+            case 'Atlantic/Faroe':
+                $result[] = 'Atlantic/Faeroe';
+                break;
+            case 'Pacific/Chuuk':
+                $result[] = 'Pacific/Truk';
+                break;
+            case 'Pacific/Pohnpei':
+                $result[] = 'Pacific/Ponape';
+                break;
+        }
+
+        return $result;
+    }
 }
