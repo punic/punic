@@ -23,5 +23,8 @@
 		<testsuite name="Territory functions tests">
 			<directory>./tests/Territory/</directory>
 		</testsuite>
+		<testsuite name="Number functions tests">
+			<directory>./tests/Number/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

@@ -618,8 +618,6 @@ function copyDataFile($srcFile, $info, $dstFile)
                 } else {
                     switch ($key) {
                         case 'defaultNumberingSystem':
-                            $final[$key] = $value;
-                            break;
                         case 'otherNumberingSystems':
                             break;
                         default:
@@ -627,7 +625,6 @@ function copyDataFile($srcFile, $info, $dstFile)
                     }
                 }
             }
-            // Use only latn
             if (!array_key_exists('latn', $numberSystems)) {
                 throw new Exception("Missing 'latn' in " . $dstFile);
             }
@@ -635,11 +632,12 @@ function copyDataFile($srcFile, $info, $dstFile)
                 if (array_key_exists($key, $final)) {
                     throw new Exception("Duplicated node '$key' in " . $dstFile);
                 }
-                $final[$key] = $value;
+                // $final[$key] = $value; REMOVED ADVANCED LOCALIZATION
+                if($key === 'symbols') $final[$key] = $value; // REMOVED ADVANCED LOCALIZATION
             }
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
-            if (empty($symbols)) {
+            if (empty($symbols) || (!is_array($symbols))) {
                 throw new Exception("Missing symbols in " . $dstFile);
             }
             foreach (array_keys($data) as $key) {
