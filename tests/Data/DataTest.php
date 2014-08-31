@@ -24,15 +24,12 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException($exception);
         call_user_func_array(array('\\Punic\\Data', $method), $parameters);
     }
-    
+
     public function testInvalidLocaleGet()
     {
-        try
-        {
+        try {
             Data::setFallbackLocale('invalid');
-        }
-        catch (\Punic\Exception\InvalidLocale $ex)
-        {
+        } catch (\Punic\Exception\InvalidLocale $ex) {
             $this->assertSame('invalid', $ex->getLocale());
         }
     }
@@ -42,7 +39,7 @@ class DataTest extends PHPUnit_Framework_TestCase
         \Punic\Data::setDefaultLocale('it');
         $this->assertSame('it', \Punic\Data::getDefaultLocale());
     }
-    
+
     public function testDefaultLanguage()
     {
         \Punic\Data::setDefaultLocale('de_DE');
@@ -54,11 +51,38 @@ class DataTest extends PHPUnit_Framework_TestCase
         \Punic\Data::setFallbackLocale('it');
         $this->assertSame('it', \Punic\Data::getFallbackLocale());
     }
-    
+
     public function testFallbackLanguage()
     {
         \Punic\Data::setFallbackLocale('de_DE');
         $this->assertSame('de', \Punic\Data::getFallbackLanguage());
     }
-    
+
+    public function providerInvalidDataFile()
+    {
+        return array(
+            array('\\Punic\Exception\InvalidDataFile', 'get', true),
+            array('\\Punic\Exception\InvalidDataFile', 'get', array()),
+            array('\\Punic\Exception\InvalidDataFile', 'get', ''),
+            array('\\Punic\Exception\InvalidDataFile', 'get', '../x'),
+            array('\\Punic\Exception\InvalidDataFile', 'get', '*'),
+            array('\\Punic\Exception\DataFileNotFound', 'get', 'invalid-data-file'),
+            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', true),
+            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', array()),
+            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', ''),
+            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', '../x'),
+            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', '*'),
+            array('\\Punic\Exception\DataFileNotFound', 'getGeneric', 'invalid-data-file'),
+        );
+    }
+
+    /**
+     * @dataProvider providerInvalidDataFile
+     */
+    public function testInvalidDataFile($exception, $method, $dataFileID)
+    {
+        $this->setExpectedException($exception);
+        call_user_func(array('\\Punic\\Data', $method), $dataFileID);
+    }
+
 }
