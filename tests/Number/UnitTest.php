@@ -90,6 +90,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array(1234, 1234, 'en'),
         );
     }
+
     /**
      * @dataProvider providerUnformat
      */
@@ -100,4 +101,33 @@ class NumberTest extends PHPUnit_Framework_TestCase
             Number::unformat($value, $locale)
         );
     }
+
+    public function testGetAvailableLocales()
+    {
+        $locales = \Punic\Data::getAvailableLocales();
+
+        // this list isn't static, we assume that something between 280 and 320 locales is okay
+        $this->assertLessThan(320, count($locales));
+        $this->assertGreaterThan(280, count($locales));
+    }
+
+    public function providerGuessFullLocale()
+    {
+        return array(
+            array('en-Latn-US', array('en')),
+            array('it-Latn-IT', array('it')),
+            array('de-Latn-DE', array('de')),
+            array('az-Cyrl-AZ', array('az', 'Cyrl')),
+        );
+    }
+
+    /**
+     * @dataProvider providerGuessFullLocale
+     */
+    public function testGuessFullLocale($result, $parameters)
+    {
+        $locale = call_user_func_array(array('\Punic\Data', 'guessFullLocale'), $parameters);
+
+        $this->assertSame($result, $locale);
+    }    
 }
