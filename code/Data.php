@@ -240,6 +240,12 @@ class Data
         foreach ($keys as $key) {
             if (array_key_exists($key, $data)) {
                 $result = $data[$key];
+                if ((strlen($script) > 0) && (stripos("$language-$script-") !== 0)) {
+                    $parts = static::explodeLocale($result);
+                    if (!is_null($parts)) {
+                        $result = "{$parts['language']}-$script-{$parts['territory']}";
+                    }
+                }
                 break;
             }
         }
