@@ -91,7 +91,18 @@ class PluralTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        return $parameters;
+		// add custom rules to test some edge cases
+		$rules = array(
+			array('zero', array(0, 'en')),
+			array('one', array(1, 'en')),
+			array('one', array(1.0, 'en')),
+			array('other', array(1.1, 'en')),
+			array('one', array('1', 'en')),
+			array('one', array('1.0', 'en')),
+			array('other', array('1.1', 'en')),
+		);
+
+        return array_merge($parameters, $rules);
     }
 
     /**
@@ -105,6 +116,23 @@ class PluralTest extends PHPUnit_Framework_TestCase
             $rule,
             \Punic\Plural::getRule($parameters[0], $parameters[1])
         );
+    }
+	
+    public function testExceptionsProvider()
+    {
+        return array(
+            array('getRule', array('not-a-number'), '\\Punic\\Exception\\BadArgumentType'),
+            array('getRule', array(true), '\\Punic\\Exception\\BadArgumentType'),
+		);
+	}
+	
+    /**
+     * @dataProvider testExceptionsProvider
+     */
+    public function testExceptions($method, $parameters, $exception)
+    {
+        $this->setExpectedException($exception);
+        call_user_func_array(array('\Punic\Plural', $method), $parameters);
     }
 
 }
