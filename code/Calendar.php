@@ -1122,26 +1122,8 @@ class Calendar
             if (array_key_exists($key, $data)) {
                 $result = $data[$key];
                 if ($ucFirst) {
-                    $result = static::ucFirst($result);
+                    $result = \Punic\Misc::fixCase($result, 'titlecase-firstword');
                 }
-            }
-        }
-
-        return $result;
-    }
-
-    protected static function ucFirst($str, $encoding = 'UTF-8')
-    {
-        $result = $str;
-        if (is_string($str) && function_exists('mb_strlen')) {
-            if (empty($encoding)) {
-                $encoding = mb_internal_encoding();
-            }
-            $l = mb_strlen($str, $encoding);
-            if ($l === 1) {
-                $result = mb_strtolower($str, $encoding);
-            } elseif ($l > 1) {
-                $result = mb_strtoupper(mb_substr($str, 0, 1, $encoding)) . mb_substr($str, 1, $l - 1, $encoding);
             }
         }
 

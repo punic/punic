@@ -87,4 +87,56 @@ class Misc
 
         return $result;
     }
+
+    /**
+     * Fix the case of a string.
+     * @param string $string The string whose case needs to be fixed
+     * @param string $case How to fix case. Allowed values:<ul>
+     *   <li><code>'titlecase-words'</code> all words in the phrase should be title case</li>
+     *   <li><code>'titlecase-firstword'</code> the first word should be title case</li>
+     *   <li><code>'lowercase-words'</code> all words in the phrase should be lower case</li>
+     * </ul>
+     * @return string
+     * @link http://cldr.unicode.org/development/development-process/design-proposals/consistent-casing
+     */
+    public static function fixCase($string, $case)
+    {
+        $result = $string;
+        if (is_string($string) && is_string($case) && (strlen($string) > 0)) {
+            switch ($case) {
+                case 'titlecase-words':
+                    if (function_exists('mb_strtoupper') && (@preg_match('/\pL/u', 'a'))) {
+                        $result = preg_replace_callback('/\\pL+/u', function ($m) {
+                            $s = $m[0];
+                            $l = mb_strlen($s, 'UTF-8');
+                            if ($l === 1) {
+                                $s = mb_strtoupper($s, 'UTF-8');
+                            } else {
+                                $s = mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($s, 1, $l - 1, 'UTF-8');
+                            }
+
+                            return $s;
+                        }, $string);
+                    }
+                    break;
+                case 'titlecase-firstword':
+                    if (function_exists('mb_strlen')) {
+                        $l = mb_strlen($string, 'UTF-8');
+                        if ($l === 1) {
+                            $result = mb_strtoupper($string, 'UTF-8');
+                        } elseif ($l > 1) {
+                            $result = mb_strtoupper(mb_substr($string, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($string, 1, $l - 1, 'UTF-8');
+                        }
+                    }
+                    break;
+                case 'lowercase-words':
+                    if (function_exists('mb_strtolower')) {
+                        $result = mb_strtolower($string, 'UTF-8');
+                    }
+                    break;
+            }
+        }
+
+        return $result;
+    }
 }
