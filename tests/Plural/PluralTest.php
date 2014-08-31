@@ -93,12 +93,12 @@ class PluralTest extends PHPUnit_Framework_TestCase
 
 		// add custom rules to test some edge cases
 		$rules = array(
-			array('zero', array(0, 'en')),
+			array('other', array(0, 'en')),
 			array('one', array(1, 'en')),
 			array('one', array(1.0, 'en')),
 			array('other', array(1.1, 'en')),
 			array('one', array('1', 'en')),
-			array('one', array('1.0', 'en')),
+			array('other', array('1.0', 'en')),
 			array('other', array('1.1', 'en')),
 		);
 
