@@ -118,4 +118,33 @@ class DataTest extends PHPUnit_Framework_TestCase
         $locale = call_user_func_array(array('\Punic\Data', 'guessFullLocale'), $parameters);
         $this->assertSame($result, $locale);
     }
+    
+    public function testGuessFullDefaultLocale()
+    {
+        \Punic\Data::setDefaultLocale('de_DE');
+        $locale = \Punic\Data::guessFullLocale();
+        $this->assertSame('de-Latn-DE', $locale);
+    }
+
+    public function providerGetTerritory()
+    {
+        return array(
+            array('US', array('en_US')),
+            array('IT', array('it_IT')),
+            array('DE', array('de_DE')),
+            array('CH', array('de_CH')),
+            array('AZ', array('az_Latn_AZ')),
+            array('AZ', array('az')),
+        );
+    }
+
+    /**
+    * @dataProvider providerGetTerritory
+    */
+    public function testGetTerritory($result, $parameters)
+    {
+        $locale = call_user_func_array(array('\Punic\Data', 'getTerritory'), $parameters);
+        $this->assertSame($result, $locale);
+    }
+    
 }
