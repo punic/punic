@@ -35,7 +35,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $this->assertLessThan(280, count($countries));
         $this->assertGreaterThan(240, count($countries));
     }
-    
+
     public function testContinents()
     {
         $continents = Territory::getContinents();
@@ -45,4 +45,19 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $this->assertLessThan(count($continents), 3);
         $this->assertGreaterThan(count($continents), 7);
     }
+
+    public function testContinentsAndCountries()
+    {
+        $continentsAndCountries = Territory::getContinentsAndCountries();
+        
+        // this list isn't static, we assume that something between 3 and 7 continents is okay
+        $this->assertLessThan(count($continentsAndCountries), 3);
+        $this->assertGreaterThan(count($continentsAndCountries), 7);
+    }
+
+	public function testInvalidTerritoryTypeException()
+	{
+		$this->setExpectedException('\\Punic\\Exception\\BadArgumentType');
+		$list = Territory::getList('a');
+	}
 }

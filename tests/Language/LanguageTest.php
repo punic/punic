@@ -22,6 +22,8 @@ class LanguageTest extends PHPUnit_Framework_TestCase
             array('italiano (Mondo)', 'it-001', 'it-001'),
             array('italiano (Europa)', 'it-150', 'it-150'),
             array('italiano (Europa)', 'it-150', 'it-CH'),
+            array('Azerbaijani (Azerbaijan)', 'az-Latn-AZ', 'en'),
+            array('Azerbaijani (Azerbaijan)', 'az-Cyrl-AZ', 'en'),
         );
     }
 

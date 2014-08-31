@@ -13,6 +13,12 @@ class DataTest extends PHPUnit_Framework_TestCase
             array('setFallbackLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
             array('setFallbackLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
             array('setFallbackLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(''), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(null), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(true), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
         );
     }
 

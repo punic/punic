@@ -131,4 +131,10 @@ class ListTest extends PHPUnit_Framework_TestCase
             Misc::joinUnits(array('Uno', 'due', 'tre', 'quattro', 5), '', 'it')
         );
     }
+
+    public function testValueNotInListException()
+	{
+		$this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+		Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');	
+	}
 }

@@ -28,6 +28,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array(true, '1,234', 'en'),
             array(false, '1,234', 'it'),
             array(false, '1,234.56', 'en'),
+            array(true, '1,234.00', 'en'),
         );
     }
     /**
@@ -49,6 +50,10 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array('1,200', 1234.567, -2, 'en'),
             array('1,234.57', 1234.567, 2, 'en'),
             array('1.234,57', 1234.567, 2, 'it'),
+            array('-1,234.57', -1234.567, 2, 'en'),
+            array('-1,234.57', '-1234.567', 2, 'en'),
+            array('1,234.57', '1234.567', 2, 'en'),
+            array('1,234.00', '1234', 2, 'en'),
         );
     }
     /**
@@ -70,6 +75,8 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array((float) 1235, '1,235.', 'en'),
             array((float) 1235, '1,235.0', 'en'),
             array(1234.57, '1.234,57', 'it'),
+            array(-1234.57, '-1,234.57', 'en'),
+            array(1234, 1234, 'en'),
         );
     }
     /**
