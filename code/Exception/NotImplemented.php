@@ -15,7 +15,7 @@ class NotImplemented extends \Punic\Exception
     public function __construct($function, $previous = null)
     {
         $this->function = $function;
-        $message = "$function is not implemented.";
+        $message = "$function is not implemented";
         parent::__construct($message, \Punic\Exception::NOT_IMPLEMENTED, $previous);
     }
 
