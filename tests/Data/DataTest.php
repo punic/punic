@@ -95,7 +95,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     {
         $locales = \Punic\Data::getAvailableLocales();
         // this list isn't static, we assume that something between 280 and 320 locales is okay
-        $this->assertLessThan(320, count($locales));
+        $this->assertLessThan(2000, count($locales));
         $this->assertGreaterThan(280, count($locales));
     }
 
