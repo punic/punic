@@ -58,6 +58,9 @@ class ExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertSame('en', $ex->getFallbackLocale());
         $this->assertSame("Unable to find the specified locale folder, neither for 'it' nor for 'en'", $ex->getMessage());
 
+        $ex = new \Punic\Exception\DataFolderNotFound('en', 'en');
+        $this->assertSame("Unable to find the specified locale folder for 'en'", $ex->getMessage());
+
         $ex = new \Punic\Exception\InvalidDataFile('fileID');
         $this->assertSame(\Punic\Exception::INVALID_DATAFILE, $ex->getCode());
         $this->assertSame("'fileID' is not a valid data file identifier", $ex->getMessage());
