@@ -55,10 +55,18 @@ class Number
         } elseif (is_string($value) && strlen($value)) {
             if (preg_match('/^[\\-+]?\\d+$/', $value)) {
                 $number = intval($value);
-            } elseif (preg_match('/^[\\-+]?\\d*(\\.\\d*)$/', $value, $m)) {
-                $number = floatval($value);
-                if (!is_numeric($precision)) {
-                    $precision = strlen($m[1]) - 1;
+            } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
+                if (!isset($m[1])) {
+                    $m[1] = '';
+                }
+                if (!isset($m[2])) {
+                    $m[2] = '';
+                }
+                if ((strlen($m[1]) > 0) || (strlen($m[2]) > 0)) {
+                    $number = floatval($value);
+                    if (!is_numeric($precision)) {
+                        $precision = strlen($m[2]);
+                    }
                 }
             }
         }
