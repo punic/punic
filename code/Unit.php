@@ -11,12 +11,23 @@ class Unit
      * Format a unit string
      * @param int|float|string $number The unit amount
      * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
-     * @param string $width = 'short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms')
+     * @param string $width = 'short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      */
     public static function format($number, $unit, $width = 'short', $locale = '')
     {
         $data = \Punic\Data::get('units', $locale);
+        $precision = null;
+        if (is_int($width)) {
+            $precision = $width;
+            $width = 'short';
+        } elseif (is_string($width) && preg_match('/^(?:(.*),)?([+\\-]?\\d+)$/', $width, $m)) {
+            $precision = intval($m[2]);
+            $width = $m[1];
+            if (!strlen($width)) {
+                $width = 'short';
+            }
+        }
         if ((strpos($width, '_') === 0) || (!array_key_exists($width, $data))) {
             $widths = array();
             foreach (array_keys($data) as $w) {
@@ -73,6 +84,6 @@ class Unit
             $format = $rules[$pluralRule];
         }
 
-        return sprintf($format, $number);
+        return sprintf($format, \Punic\Number::format($number, $precision, $locale));
     }
 }

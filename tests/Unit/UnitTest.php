@@ -43,6 +43,42 @@ class UnitTest extends PHPUnit_Framework_TestCase
                 '2ms',
                 array(2, 'millisecond', 'narrow', 'en')
             ),
+            array(
+                '0.2ms',
+                array(.2, 'millisecond', 'narrow', 'en')
+            ),
+            array(
+                '2.0ms',
+                array('2.0', 'millisecond', 'narrow', 'en')
+            ),
+            array(
+                '2.0 milliseconds',
+                array(2, 'millisecond', 'long,1', 'en')
+            ),
+            array(
+                '2.0 milliseconds',
+                array(2., 'millisecond', 'long,1', 'en')
+            ),
+            array(
+                '2.0 milliseconds',
+                array('2.', 'millisecond', 'long,1', 'en')
+            ),
+            array(
+                '2.0 milliseconds',
+                array('2.0123', 'millisecond', 'long,1', 'en')
+            ),
+            array(
+                '2.0 ms',
+                array('2.0123', 'millisecond', '1', 'en')
+            ),
+            array(
+                '2.0 ms',
+                array('2.0123', 'millisecond', 1, 'en')
+            ),
+            array(
+                '2,0 millisecondi',
+                array('2.0123', 'millisecond', 'long,1', 'it')
+            ),
         );
     }
 
@@ -60,14 +96,11 @@ class UnitTest extends PHPUnit_Framework_TestCase
 
     public function testValueNotInListExceptionGetValue()
     {
-        try
-        {
+        try {
             Unit::format(2, 'milisecond', 'does-not-exist');
-        }
-        catch (\Punic\Exception\ValueNotInList $ex)
-        {
+        } catch (\Punic\Exception\ValueNotInList $ex) {
             $this->assertSame('does-not-exist', $ex->getValue());
-            $this->assertSame(array('long', 'short', 'narrow'), $ex->getAllowedValues());            
+            $this->assertSame(array('long', 'short', 'narrow'), $ex->getAllowedValues());
         }
     }
 
