@@ -54,6 +54,17 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array('-1,234.57', '-1234.567', 2, 'en'),
             array('1,234.57', '1234.567', 2, 'en'),
             array('1,234.00', '1234', 2, 'en'),
+            array('', '', null, 'en'),
+            array('', false, null, 'en'),
+            array('', null, null, 'en'),
+            array('', array(), null, 'en'),
+            array('', true, null, 'en'),
+            array('', '', null, 'en'),
+            array('0', '0', null, 'en'),
+            array('0', '0.', null, 'en'),
+            array('0.0', '.0', null, 'en'),
+            array('0.0', '0.0', null, 'en'),
+            array('', '.', null, 'en'),
         );
     }
     /**
