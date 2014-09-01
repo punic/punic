@@ -132,7 +132,6 @@ class Territory
     {
         static $cache = null;
         if (is_null($cache)) {
-            $result = array();
             $data = Data::getGeneric('territoryContainment');
             $result = static::fillStructure($data, '001', 0);
             $cache = $result;
