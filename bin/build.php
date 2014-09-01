@@ -11,7 +11,7 @@ set_error_handler('handleError');
 try {
     echo "Initializing... ";
     define('ROOT_DIR', dirname(__DIR__));
-    define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'source-data');
+    define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'source-data');
     define('DESTINATION_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR . 'data');
     define('TESTS_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'dataFiles');
 
