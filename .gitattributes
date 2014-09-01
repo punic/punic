@@ -1,0 +1,6 @@
+/bin/ export-ignore
+/temp/ export-ignore
+/tests/ export-ignore
+/.* export-ignore
+/*.yml export-ignore
+/*.xml export-ignore
