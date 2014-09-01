@@ -1311,4 +1311,26 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSortedWeekdays('short', 'it')
         );
     }
+
+    public function providerGetDeltaDays()
+    {
+        return array(
+            array(0, array(new \DateTime())),
+            array(1, array(new \DateTime('+1 days'))),
+            array(5, array(new \DateTime('+4 days'), new \DateTime('-1 days'))),
+            array(0, array(new \DateTime('now', new \DateTimeZone('Pacific/Pago_Pago')), new \DateTime('now', new \DateTimeZone('Pacific/Kiritimati')))),
+        );
+    }
+    /**
+     * Test getDeltaDays
+     * @dataProvider providerGetDeltaDays
+     */
+    public function testGetDeltaDays($expected, $arguments)
+    {
+        $this->assertSame(
+            $expected,
+            call_user_func_array('\\Punic\\Calendar::getDeltaDays', $arguments)
+        );
+    }
+
 }
