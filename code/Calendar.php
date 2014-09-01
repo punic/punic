@@ -38,7 +38,7 @@ class Calendar
                 } else {
                     try {
                         $result = new \DateTime($value);
-                    } catch (Exception $x) {
+                    } catch (\Exception $x) {
                         throw new Exception\BadArgumentType($value, '\\DateTime', $x);
                     }
                 }
@@ -50,7 +50,7 @@ class Calendar
                     if (is_string($toTimezone)) {
                         try {
                             $result->setTimezone(new \DateTimeZone($toTimezone));
-                        } catch (Exception $x) {
+                        } catch (\Exception $x) {
                             throw new Exception\BadArgumentType($value, '\\DateTimeZone', $x);
                         }
                     } elseif (is_a($toTimezone, '\DateTimeZone')) {
