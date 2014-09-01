@@ -321,6 +321,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getDayperiodName', array('test'), '\\Punic\\Exception'),
             array('getDayperiodName', array('am', 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array(true), '\\Punic\\Exception'),
+            array('toDateTime', array('this is an invalid date representation'), '\\Punic\\Exception'),
+            array('toDateTime', array('now', 'this is an invalid timezone representation'), '\\Punic\\Exception'),
             array('getEraName', array('test'), '\\Punic\\Exception'),
             array('getEraName', array(1, 'invalid-width'), '\\Punic\\Exception'),
             array('getMonthName', array('test'), '\\Punic\\Exception'),
@@ -330,6 +332,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getQuarterName', array(5), '\\Punic\\Exception'),
             array('getQuarterName', array(1, 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array('2000-01-01', true), '\\Punic\\Exception'),
+            array('getDeltaDays', array('string'), '\\Punic\\Exception'),
+            array('getDeltaDays', array(new \DateTime(), 'string'), '\\Punic\\Exception'),
         );
     }
 
