@@ -130,13 +130,19 @@ class Data
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
             $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+            //@codeCoverageIgnoreStart
+            // In test enviro we can't replicate this problem
             if ($json === false) {
                 throw new Exception\DataFileNotReadable($file);
             }
+            //@codeCoverageIgnoreEnd
             $data = @json_decode($json, true);
+            //@codeCoverageIgnoreStart
+            // In test enviro we can't replicate this problem
             if (!is_array($data)) {
                 throw new Exception\BadDataFileContents($file, $json);
             }
+            //@codeCoverageIgnoreEnd
             static::$cache[$locale][$identifier] = $data;
         }
 
@@ -165,13 +171,19 @@ class Data
             throw new Exception\DataFileNotFound($identifier);
         }
         $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+        //@codeCoverageIgnoreStart
+        // In test enviro we can't replicate this problem
         if ($json === false) {
             throw new Exception\DataFileNotReadable($file);
         }
+        //@codeCoverageIgnoreEnd
         $data = @json_decode($json, true);
+        //@codeCoverageIgnoreStart
+        // In test enviro we can't replicate this problem
         if (!is_array($data)) {
             throw new Exception\BadDataFileContents($file, $json);
         }
+        //@codeCoverageIgnoreEnd
         static::$cacheGeneric[$identifier] = $data;
 
         return $data;
