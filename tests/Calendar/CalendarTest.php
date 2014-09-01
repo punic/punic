@@ -334,6 +334,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('toDateTime', array('2000-01-01', true), '\\Punic\\Exception'),
             array('getDeltaDays', array('string'), '\\Punic\\Exception'),
             array('getDeltaDays', array(new \DateTime(), 'string'), '\\Punic\\Exception'),
+            array('describeInterval', array('not-a-datetime'), '\\Punic\\Exception'),
+            array('describeInterval', array(new \DateTime(), 'not-a-datetime'), '\\Punic\\Exception'),
         );
     }
 
@@ -1233,6 +1235,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $before2->sub(new \DateInterval('P2Y3M4DT6H8M59S'));
         $before3 = clone $now;
         $before3->sub(new \DateInterval('P1Y3M4DT6H8M59S'));
+        $nowTZ1 = clone $now;
+        $nowTZ1->setTimezone(new \DateTimeZone('Pacific/Pago_Pago'));
+        $nowTZ2 = clone $now;
+        $nowTZ2->setTimezone(new \DateTimeZone('Pacific/Kiritimati'));
 
         return array(
             array('now', $now, $now, 1, 'short', 'en'),
@@ -1249,6 +1255,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('2 anni e 3 mesi', $now, $before2, 2, 'long', 'it'),
             array('2 anni, 3 mesi, 4 giorni, e 6 ore', $now, $before2, 4, 'long', 'it'),
             array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti, e 59 secondi', $now, $before2, 99, 'long', 'it'),
+            array('now', $nowTZ1, $nowTZ2, 1, 'short', 'en'),
         );
     }
 
@@ -1261,6 +1268,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             $expected,
             Calendar::describeInterval($dateEnd, $dateStart, $maxParts, $width, $locale)
+        );
+    }
+
+    /**
+     * Test describeInterval
+     * @dataProvider providerDescribeInterval
+     */
+    public function testDescribeInterval2()
+    {
+        $this->assertRegExp(
+            '/^(now|1 second|\\d+ seconds)$/',
+            Calendar::describeInterval(new \DateTime(), null, 1, 'long', 'en')
         );
     }
 
@@ -1330,6 +1349,51 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             $expected,
             call_user_func_array('\\Punic\\Calendar::getDeltaDays', $arguments)
+        );
+    }
+
+    public function testFormatEx()
+    {
+        $this->assertSame(
+            '2010',
+            Calendar::formatEx('2010-12-31 23:59', 'y')
+        );
+        $this->assertSame(
+            '2010',
+            Calendar::formatEx('2010-01-01 00:00', 'y')
+        );
+    }
+
+    public function providerGetTimezonesAliases()
+    {
+        return array(
+          array('Asmara', 'Africa/Asmara'),
+          array('Atikokan', 'America/Atikokan'),
+          array('Ho Chi Minh City', 'Asia/Ho_Chi_Minh'),
+          array('Kathmandu', 'Asia/Kathmandu'),
+          array('Kolkata', 'Asia/Kolkata'),
+          array('Faroe', 'Atlantic/Faroe'),
+          array('Chuuk', 'Pacific/Chuuk'),
+          array('Pohnpei', 'Pacific/Pohnpei'),
+          array('Buenos Aires', 'America/Argentina/Buenos_Aires'),
+          array('Catamarca', 'America/Argentina/Catamarca'),
+          array('Cordoba', 'America/Argentina/Cordoba'),
+          array('Jujuy', 'America/Argentina/Jujuy'),
+          array('Mendoza', 'America/Argentina/Mendoza'),
+          array('Indianapolis', 'America/Indiana/Indianapolis'),
+          array('Louisville', 'America/Kentucky/Louisville'),
+          array('Unknown City', 'America/Not_Existing_TimeZone_Name'),
+       );
+    }
+    /**
+     * Test getTimezonesAliases
+     * @dataProvider providerGetTimezonesAliases
+     */
+    public function testGetTimezonesAliases($expected, $phpTimezoneName)
+    {
+        $this->assertSame(
+            $expected,
+            \Punic\Calendar::getTimezoneExemplarCity($phpTimezoneName, true, 'en')
         );
     }
 
