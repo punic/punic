@@ -30,4 +30,9 @@
 			<directory>./tests/Exception/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./code</directory>
+		</whitelist>
+	</filter>
 </phpunit>
