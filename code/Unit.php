@@ -57,7 +57,7 @@ class Unit
             list($unitCategory, $unitID) = explode('/', $unit, 2);
         }
         $rules = null;
-        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && array_key_exists($unitCategory, $data) && array_key_exists($unitID, $data[$unitCategory])) {
+        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && (!is_null($unitID)) && array_key_exists($unitCategory, $data) && array_key_exists($unitID, $data[$unitCategory])) {
             $rules = $data[$unitCategory][$unitID];
         }
         if (is_null($rules)) {
