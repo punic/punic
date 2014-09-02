@@ -188,7 +188,7 @@ class Calendar
      * @param number|\DateTime $value The month number (1-12) or a \DateTime instance for which you want the name of the month.
      * @param string $width = 'wide' The format name; it can be 'wide' (eg 'January'), 'abbreviated' (eg 'Jan') or 'narrow' (eg 'J').
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
-     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the month name part of a date.
+     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the month name will be part of a date.
      * @return string Returns an empty string if $value is empty, the name of the month otherwise.
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
@@ -225,13 +225,15 @@ class Calendar
     }
 
     /**
-     * Get the name of a weekday
-     * @param mixed $value A weekday number (from 0-Sunday to 6-Saturnday) or a \DateTime instance
-     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
-     * @return string Returns an empty string if $value is empty, the name of the weekday name otherwise
-     * @throws \Punic\Exception Throws an exception in case of problems
+     * Get the name of a week day.
+     * @param number|\DateTime $value A week day number (from 0-Sunday to 6-Saturnday) or a \DateTime instance for which you want the name of the day of the week.
+     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S').
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the week day name will be part of a date.
+     * @return string Returns an empty string if $value is empty, the name of the week day name otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
+     * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
+     * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
      */
     public static function getWeekdayName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -266,13 +268,15 @@ class Calendar
     }
 
     /**
-     * Get the name of a quarter
-     * @param mixed $value A quarter number (from 1 to 4) or a \DateTime instance
-     * @param string $width = 'wide' The format name; it can be 'wide' (eg '1st quarter'), 'abbreviated' (eg 'Q1') or 'narrow' (eg '1')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
-     * @return string Returns an empty string if $value is empty, the name of the quarter name otherwise
-     * @throws Exception Throws an exception in case of problems
+     * Get the name of a quarter.
+     * @param number|\DateTime $value A quarter number (from 1 to 4) or a \DateTime instance for which you want the name of the day of the quarter.
+     * @param string $width = 'wide' The format name; it can be 'wide' (eg '1st quarter'), 'abbreviated' (eg 'Q1') or 'narrow' (eg '1').
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the quarter name will be part of a date.
+     * @return string Returns an empty string if $value is empty, the name of the quarter name otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
+     * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
+     * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
      */
     public static function getQuarterName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -305,13 +309,15 @@ class Calendar
     }
 
     /**
-     * Get the name of a day period (AM/PM)
-     * @param mixed $value An hour (from 0 to 23), a standard period name('am' or 'pm', lower or upper case) or a \DateTime instance
-     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'AM'), 'abbreviated' (eg 'AM') or 'narrow' (eg 'a')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
-     * @return string Returns an empty string if $value is empty, the name of the period name otherwise
-     * @throws \Punic\Exception Throws an exception in case of problems
+     * Get the name of a day period (AM/PM).
+     * @param number|string|\DateTime $value An hour (from 0 to 23), a standard period name ('am' or 'pm', lower or upper case) a \DateTime instance for which you want the name of the day period.
+     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'AM'), 'abbreviated' (eg 'AM') or 'narrow' (eg 'a').
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the day period name will be part of a date.
+     * @return string Returns an empty string if $value is empty, the name of the day period name otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
+     * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
+     * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
      */
     public static function getDayperiodName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -354,12 +360,13 @@ class Calendar
     }
 
     /**
-     * Returns the localized name of a timezone
-     * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance
-     * @param string $width = 'long' The format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT')
-     * @param string $kind = '' Set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise)
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return string Returns an empty string if the timezone has not been found (maybe we don't have the data in the specified $width), the timezone name otherwise
+     * Returns the localized name of a timezone, no location-specific. 
+     * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name.
+     * @param string $width = 'long' The format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT').
+     * @param string $kind = '' Set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise).
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @return string Returns an empty string if the timezone has not been found (maybe we don't have the data in the specified $width), the timezone name otherwise.
+     * @throws \Punic\Exception Throws a generic exception in case of problems (for instance if you specify an invalid locale).
      */
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
