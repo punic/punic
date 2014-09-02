@@ -15,12 +15,26 @@ namespace Punic;
 class Calendar
 {
     /**
-     * Convert a date/time representation to a \DateTime instance
-     * @param mixed $value A unix timestamp, a \DateTime instance or a string accepted by strtotime
-     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
-     * @return \DateTime|null Returns null if $value is empty, a \DateTime instance otherwise
-     * @throws \Punic\Exception Throws an exception if $value is not empty and can't be converted to a \DateTime instance
-     * @link http://php.net/manual/datetime.formats.php
+     * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
+     * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a <code>\DateTime</code>).
+     * @return \DateTime|null Returns null if $value is empty, a <code>\DateTime</code> instance otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws an exception if $value is not empty and can't be converted to a <code>\DateTime</code> instance or if $toTimezone is not empty and is not valid.
+     * @example
+     * Convert a Unix timestamp to a \DateTime instance with the current time zone:<br>
+     * \Punic\Calendar::toDateTime(1409648286);<br>
+     * <br>
+     * Convert a Unix timestamp to a \DateTime instance with a specific time zone:<br>
+     * \Punic\Calendar::toDateTime(1409648286, 'Europe/Rome');<br>
+     * \Punic\Calendar::toDateTime(1409648286, new \DateTimeZone('Europe/Rome'));<br>
+     * <br>
+     * Convert a string to a \DateTime instance with the current time zone:<br>
+     * \Punic\Calendar::toDateTime('2014-03-07 13:30');<br>
+     * <br>
+     * Convert a string to a \DateTime instance with a specific time zone:<br>
+     * \Punic\Calendar::toDateTime('2014-03-07 13:30', 'Europe/Rome');<br>
+     * Please remark that in this case '2014-03-07 13:30' is converted to a \DateTime instance with the current timezone, and <u>after</u> we change the timezone.<br>
+     * So, if your system default timezone is 'America/Los_Angeles' (GMT -8), the resulting date/time will be '2014-03-07 22:30 GMT+1' since it'll be converted to 'Europe/Rome' (GMT +1)
      */
     public static function toDateTime($value, $toTimezone = '')
     {
@@ -66,16 +80,9 @@ class Calendar
     }
 
     /**
-     * Converts a format string from PHP's date format to ISO format
-     * Remember that Zend Date always returns localized string, so a month name which returns the english
-     * month in php's date() will return the translated month name with this function... use 'en' as locale
-     * if you are in need of the original english names
-     *
-     * The conversion has the following restrictions:
-     * 'a', 'A' - Meridiem is not explicit upper/lowercase, you have to upper/lowercase the translated value yourself
-     *
-     * @param string $format Format string in PHP's date format
-     * @return string Format string in ISO format
+     * Converts a format string from {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
+     * @param string $format The PHP date/time format string to convert.
+     * @return string Returns the ISO date/time format corresponding to the specified PHP date/time format.
      */
     public static function convertPhpToIsoFormat($format)
     {
@@ -137,12 +144,14 @@ class Calendar
     }
 
     /**
-     * Get the name of an era
-     * @param mixed $value A year or a \DateTime instance
-     * @param string $width = 'abbreviated' The format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return string Returns an empty string if $value is empty, the name of the era otherwise
-     * @throws \Punic\Exception Throws an exception in case of problems
+     * Get the name of an era.
+     * @param number|\DateTime $value The year number or the \DateTime instance for which you want the name of the era.
+     * @param string $width = 'abbreviated' The format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B').
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @return string Returns an empty string if $value is empty, the name of the era otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
+     * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
+     * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
      */
     public static function getEraName($value, $width = 'abbreviated', $locale = '')
     {
@@ -175,13 +184,15 @@ class Calendar
     }
 
     /**
-     * Get the name of a month
-     * @param mixed $value A month number (1-12) or a \DateTime instance
-     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'January'), 'abbreviated' (eg 'Jan') or 'narrow' (eg 'J')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header)
-     * @return string Returns an empty string if $value is empty, the name of the month name otherwise
-     * @throws \Punic\Exception Throws an exception in case of problems
+     * Get the name of a month.
+     * @param number|\DateTime $value The month number (1-12) or a \DateTime instance for which you want the name of the month.
+     * @param string $width = 'wide' The format name; it can be 'wide' (eg 'January'), 'abbreviated' (eg 'Jan') or 'narrow' (eg 'J').
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param bool $standAlone = false Set to true to return the form used independently (such as in calendar header), set to false if the month name part of a date.
+     * @return string Returns an empty string if $value is empty, the name of the month otherwise.
+     * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
+     * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
+     * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
      */
     public static function getMonthName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -350,7 +361,7 @@ class Calendar
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if the timezone has not been found (maybe we don't have the data in the specified $width), the timezone name otherwise
      */
-    public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '',  $locale = '')
+    public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
         $result = '';
         if (!empty($value)) {
@@ -456,7 +467,7 @@ class Calendar
     }
 
     /** @todo I can't find data for this */
-    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '',  $locale = '')
+    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
         return '';
     }
@@ -757,7 +768,7 @@ class Calendar
         if ($dateEndUTC->getTimestamp() == $dateStartUTC->getTimestamp()) {
             $parts[] = $data['second']['relative-type-0'];
         } else {
-            $diff =  $dateStartUTC->diff($dateEndUTC, true);
+            $diff = $dateStartUTC->diff($dateEndUTC, true);
             $mostFar = 0;
             $maxDistance = 3;
             if (($mostFar < $maxDistance) && ($diff->y > 0)) {
@@ -1336,7 +1347,7 @@ class Calendar
         $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
-                return sprintf($format, $sign . $hours . (($minutes === 0) ? '' :  (':' . substr('0' . $minutes, -2))));
+                return sprintf($format, $sign . $hours . (($minutes === 0) ? '' : (':' . substr('0' . $minutes, -2))));
             case 4:
                 return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
             default:
