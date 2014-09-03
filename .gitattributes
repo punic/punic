@@ -5,3 +5,4 @@
 /.* export-ignore
 /*.yml export-ignore
 /*.xml export-ignore
+/README.md
