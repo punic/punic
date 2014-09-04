@@ -860,7 +860,7 @@ class Calendar
 
     /**
      * Format a date (extended version: various date/time representations - see toDateTime())
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -903,7 +903,7 @@ class Calendar
 
     /**
      * Format a time (extended version: various date/time representations - see toDateTime())
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -969,7 +969,7 @@ class Calendar
 
     /**
      * Format a date/time (extended version: various date/time representations - see toDateTime())
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1103,7 +1103,7 @@ class Calendar
     }
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime())
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $format The ISO format that specify how to render the date/time
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
