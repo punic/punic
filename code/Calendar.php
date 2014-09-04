@@ -1103,7 +1103,7 @@ class Calendar
     }
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime())
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param \DateTime|int $value The \DateTime instance or unix timestamp for which you want the localized textual representation
      * @param string $format The ISO format that specify how to render the date/time
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
