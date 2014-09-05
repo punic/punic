@@ -17,7 +17,8 @@ class Calendar
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
      * @param number|\DateTime|string $value An Unix timestamp, a <code>\DateTime</code> instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a <code>\DateTime</code>).
+     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a <code>\DateTime</code>).
+     * @param string|\DateTimeZone $fromTimezone The original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a <code>\DateTime</code>).
      * @return \DateTime|null Returns null if $value is empty, a <code>\DateTime</code> instance otherwise.
      * @throws \Punic\Exception\BadArgumentType Throws an exception if $value is not empty and can't be converted to a <code>\DateTime</code> instance or if $toTimezone is not empty and is not valid.
      * @example
@@ -36,22 +37,49 @@ class Calendar
      * Please remark that in this case '2014-03-07 13:30' is converted to a \DateTime instance with the current timezone, and <u>after</u> we change the timezone.<br>
      * So, if your system default timezone is 'America/Los_Angeles' (GMT -8), the resulting date/time will be '2014-03-07 22:30 GMT+1' since it'll be converted to 'Europe/Rome' (GMT +1)
      */
-    public static function toDateTime($value, $toTimezone = '')
+    public static function toDateTime($value, $toTimezone = '', $fromTimezone = '')
     {
         $result = null;
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
+            $tzFrom = null;
+            if (!empty($fromTimezone)) {
+                if (is_string($fromTimezone)) {
+                    try {
+                        $tzFrom = new \DateTimeZone($fromTimezone);
+                    } catch (\Exception $x) {
+                        throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone', $x);
+                    }
+                } elseif (is_a($fromTimezone, '\DateTimeZone')) {
+                    $tzFrom = $fromTimezone;
+                } else {
+                    throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone');
+                }
+            }
             if (is_int($value) || is_float($value)) {
                 $result = new \DateTime();
                 $result->setTimestamp($value);
+                if (!is_null($tzFrom)) {
+                    $result->setTimezone($tzFrom);
+                }
             } elseif ($value instanceof \DateTime) {
                 $result = clone $value;
+                if (!is_null($tzFrom)) {
+                    $result->setTimezone($tzFrom);
+                }
             } elseif (is_string($value)) {
                 if (is_numeric($value)) {
                     $result = new \DateTime();
                     $result->setTimestamp($value);
+                    if (!is_null($tzFrom)) {
+                        $result->setTimezone($tzFrom);
+                    }
                 } else {
                     try {
-                        $result = new \DateTime($value);
+                        if (is_null($tzFrom)) {
+                            $result = new \DateTime($value);
+                        } else {
+                            $result = new \DateTime($value, $tzFrom);
+                        }
                     } catch (\Exception $x) {
                         throw new Exception\BadArgumentType($value, '\\DateTime', $x);
                     }
@@ -65,12 +93,12 @@ class Calendar
                         try {
                             $result->setTimezone(new \DateTimeZone($toTimezone));
                         } catch (\Exception $x) {
-                            throw new Exception\BadArgumentType($value, '\\DateTimeZone', $x);
+                            throw new Exception\BadArgumentType($toTimezone, '\\DateTimeZone', $x);
                         }
                     } elseif (is_a($toTimezone, '\DateTimeZone')) {
                         $result->setTimezone($toTimezone);
                     } else {
-                        throw new Exception\BadArgumentType($value, '\\DateTimeZone');
+                        throw new Exception\BadArgumentType($toTimezone, '\\DateTimeZone');
                     }
                 }
             }
@@ -360,7 +388,7 @@ class Calendar
     }
 
     /**
-     * Returns the localized name of a timezone, no location-specific. 
+     * Returns the localized name of a timezone, no location-specific.
      * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name.
      * @param string $width = 'long' The format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT').
      * @param string $kind = '' Set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise).

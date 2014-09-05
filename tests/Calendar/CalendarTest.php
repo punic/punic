@@ -116,6 +116,34 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             $dt2->format('c'),
             'Calculating from DateTime to a specific timezone'
         );
+        $this->assertSame(
+                '2000-01-01T00:00:00+01:00',
+                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Europe/Rome')->format('c')
+        );
+        $this->assertSame(
+                '2000-01-01T09:30:00+10:30',
+                Calendar::toDateTime('2000-01-01 00:00', 'Australia/Adelaide', 'Europe/Rome')->format('c')
+        );
+        $this->assertSame(
+                '1999-12-31T14:30:00+01:00',
+                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+        );
+        $this->assertSame(
+                '1999-12-31T14:30:00+01:00',
+                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new \DateTimeZone('Australia/Adelaide'))->format('c')
+        );
+        $this->assertSame(
+                '1999-12-31T14:30:00+01:00',
+                Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
+        );
+        $this->assertSame(
+                '1999-12-31T14:30:00+01:00',
+                Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), new \DateTimeZone('Australia/Adelaide'))->format('c')
+        );
+        $this->assertSame(
+                '2000-01-01T01:00:00+01:00',
+                Calendar::toDateTime('2000-01-01T00:00:00+00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+        );
     }
 
     public function providerConvertPhpToIso()
