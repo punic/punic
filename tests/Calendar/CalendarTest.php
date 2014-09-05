@@ -117,32 +117,48 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'Calculating from DateTime to a specific timezone'
         );
         $this->assertSame(
-                '2000-01-01T00:00:00+01:00',
-                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Europe/Rome')->format('c')
+            '2000-01-01T00:00:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Europe/Rome')->format('c')
         );
         $this->assertSame(
-                '2000-01-01T09:30:00+10:30',
-                Calendar::toDateTime('2000-01-01 00:00', 'Australia/Adelaide', 'Europe/Rome')->format('c')
+            '2000-01-01T09:30:00+10:30',
+            Calendar::toDateTime('2000-01-01 00:00', 'Australia/Adelaide', 'Europe/Rome')->format('c')
         );
         $this->assertSame(
-                '1999-12-31T14:30:00+01:00',
-                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
         );
         $this->assertSame(
-                '1999-12-31T14:30:00+01:00',
-                Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new \DateTimeZone('Australia/Adelaide'))->format('c')
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new \DateTimeZone('Australia/Adelaide'))->format('c')
         );
         $this->assertSame(
-                '1999-12-31T14:30:00+01:00',
-                Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
         );
         $this->assertSame(
-                '1999-12-31T14:30:00+01:00',
-                Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), new \DateTimeZone('Australia/Adelaide'))->format('c')
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), new \DateTimeZone('Australia/Adelaide'))->format('c')
         );
         $this->assertSame(
-                '2000-01-01T01:00:00+01:00',
-                Calendar::toDateTime('2000-01-01T00:00:00+00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+            '2000-01-01T01:00:00+01:00',
+            Calendar::toDateTime('2000-01-01T00:00:00+00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+        );
+        $time = 1488904200; // 2017-03-07 16:30:00 UTC
+        $this->assertSame(
+            '2017-03-07T17:30:00+01:00',
+            Calendar::toDateTime($time, null, 'Europe/Rome')->format('c'),
+            'Calculating from timestamp'
+        );
+        $this->assertSame(
+            '2017-03-08T03:00:00+10:30',
+            Calendar::toDateTime(strval($time), null, 'Australia/Adelaide')->format('c'),
+            'Calculating from timestamp'
+        );
+        $this->assertSame(
+            '2017-03-08T03:00:00+10:30',
+            Calendar::toDateTime(new \DateTime('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
+            'Calculating from timestamp'
         );
     }
 
@@ -360,6 +376,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getQuarterName', array(5), '\\Punic\\Exception'),
             array('getQuarterName', array(1, 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array('2000-01-01', true), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'This is an invalid *to* timezone'), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', 'This is an invalid *from* timezone'), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', true), '\\Punic\\Exception'),
             array('getDeltaDays', array('string'), '\\Punic\\Exception'),
             array('getDeltaDays', array(new \DateTime(), 'string'), '\\Punic\\Exception'),
             array('describeInterval', array('not-a-datetime'), '\\Punic\\Exception'),
