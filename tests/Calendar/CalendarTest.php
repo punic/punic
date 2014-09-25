@@ -644,7 +644,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight')
         );
         $this->assertSame(
-            "Ora legale dell'Europa centrale",
+            "Ora legale dell’Europa centrale",
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight', 'it')
         );
         $this->assertSame(
@@ -773,11 +773,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDateFormat('full', 'it')
         );
         $this->assertSame(
-            'dd MMMM y',
+            'd MMMM y',
             Calendar::getDateFormat('long', 'it')
         );
         $this->assertSame(
-            'dd/MMM/y',
+            'dd MMM y',
             Calendar::getDateFormat('medium', 'it_IT')
         );
         $this->assertSame(
@@ -893,7 +893,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDate($dt, 'long', 'it')
         );
         $this->assertSame(
-            '12/ott/2010',
+            '12 ott 2010',
             Calendar::formatDate($dt, 'medium', 'it')
         );
         $this->assertSame(
@@ -954,7 +954,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatTime($dt, 'short')
         );
         $this->assertSame(
-            '23:59:00 Ora standard delle Fiji',
+            '23:59:00 Ora standard delle Figi',
             Calendar::formatTime($dt, 'full', 'it')
         );
         $this->assertSame(
@@ -1013,7 +1013,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDateTime($dt, 'short|full|short')
         );
         $this->assertSame(
-            'martedì 12 ottobre 2010 23:59:00 Ora standard delle Fiji',
+            'martedì 12 ottobre 2010 23:59:00 Ora standard delle Figi',
             Calendar::formatDateTime($dt, 'full', 'it')
         );
         $this->assertSame(
@@ -1021,11 +1021,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDateTime($dt, 'long', 'it')
         );
         $this->assertSame(
-            '12/ott/2010 23:59:00',
+            '12 ott 2010, 23:59:00',
             Calendar::formatDateTime($dt, 'medium', 'it')
         );
         $this->assertSame(
-            '12/10/10 23:59',
+            '12/10/10, 23:59',
             Calendar::formatDateTime($dt, 'short', 'it')
         );
         $this->assertSame(
@@ -1231,7 +1231,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('GMT+13', Calendar::format($dt, 'zz'));
         $this->assertSame('GMT+13', Calendar::format($dt, 'zzz'));
         $this->assertSame('Fiji Summer Time', Calendar::format($dt, 'zzzz'));
-        $this->assertSame('Ora legale delle Fiji', Calendar::format($dt, 'zzzz', 'it'));
+        $this->assertSame('Ora legale delle Figi', Calendar::format($dt, 'zzzz', 'it'));
         $this->assertSame('GMT-1:02', Calendar::format(Calendar::toDateTime('10/Oct/2000:13:55:36 -0102'), 'zzzz'));
         // decodeTimezoneDelta
         $this->assertSame('+1300', Calendar::format($dt, 'Z'));
@@ -1300,8 +1300,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('2 years, 3 months, 4 days, and 6 hours', $now, $before2, 4, 'long', 'en'),
             array('1 year', $now, $before3, 1, 'long', 'en'),
             array('2 anni e 3 mesi', $now, $before2, 2, 'long', 'it'),
-            array('2 anni, 3 mesi, 4 giorni, e 6 ore', $now, $before2, 4, 'long', 'it'),
-            array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti, e 59 secondi', $now, $before2, 99, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni e 6 ore', $now, $before2, 4, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti e 59 secondi', $now, $before2, 99, 'long', 'it'),
             array('now', $nowTZ1, $nowTZ2, 1, 'short', 'en'),
         );
     }
