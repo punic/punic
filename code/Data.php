@@ -369,11 +369,9 @@ class Data
             $locale = static::$defaultLocale;
         }
         foreach (static::getLocaleAlternatives($locale) as $l) {
-            if (strpos($l, '-') === false) {
-                if (array_key_exists($l, $data)) {
-                    $result = $data[$l];
-                    break;
-                }
+            if (array_key_exists($l, $data)) {
+                $result = $data[$l];
+                break;
             }
         }
 

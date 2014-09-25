@@ -10,6 +10,7 @@ set_error_handler('handleError');
 
 try {
     echo "Initializing... ";
+    define('CLDR_VERSION', 26);
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'source-data');
     define('DESTINATION_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR . 'data');
@@ -32,8 +33,8 @@ try {
     }
     defined('DEBUG') or define('DEBUG', false);
     defined('FULL_JSON') or define('FULL_JSON', false);
-    define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full.zip' : 'data.zip'));
-    define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'data_full' : 'data'));
+    define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'cldr_full' : 'cldr') . '-' . CLDR_VERSION . '.zip');
+    define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'cldr_full' : 'cldr') . '-' . CLDR_VERSION);
     defined('POST_CLEAN') or define('POST_CLEAN', false);
 
     if (!is_dir(SOURCE_DIR)) {
@@ -84,7 +85,11 @@ try {
 
 function downloadCLDR()
 {
-    $remoteURL = FULL_JSON ? 'http://unicode.org/Public/cldr/25/json_full.zip' : 'http://www.unicode.org/Public/cldr/25/json.zip';
+    switch (CLDR_VERSION) {
+        default:
+            $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json_full.zip' : 'json.zip');
+            break;
+    }
     $zipFrom = null;
     $zipTo = null;
     echo "Downloading $remoteURL... ";
@@ -518,6 +523,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             }
             break;
         case 'units.json':
+            $compounds = array();
             foreach (array_keys($data) as $width) {
                 switch ($width) {
                     case 'long':
@@ -528,14 +534,14 @@ function copyDataFile($srcFile, $info, $dstFile)
                             switch ($unitKey) {
                                 case 'per':
                                     if (implode('|', array_keys(($data[$width][$unitKey]))) !== 'compoundUnitPattern') {
-                                        throw new Exception("Invalid node '$width/$unitKey' in " . $dstFile);
+                                        throw new Exception("Invalid node (1) '$width/$unitKey' in " . $dstFile);
                                     }
                                     $data[$width]['_compoundPattern'] = toPhpSprintf($data[$width][$unitKey]['compoundUnitPattern']);
                                     unset($data[$width][$unitKey]);
                                     break;
                                 default:
                                     if (!preg_match('/^(\\w+)?-(.+)$/', $unitKey, $m)) {
-                                        throw new Exception("Invalid node '$width/$unitKey' in " . $dstFile);
+                                        throw new Exception("Invalid node (2) '$width/$unitKey' in " . $dstFile);
                                     }
                                     $unitKind = $m[1];
                                     $unitName = $m[2];
@@ -546,11 +552,21 @@ function copyDataFile($srcFile, $info, $dstFile)
                                         $data[$width][$unitKind][$unitName] = array();
                                     }
                                     foreach (array_keys($data[$width][$unitKey]) as $pluralRuleSrc) {
-                                        if (!preg_match('/^unitPattern-count-(.+)$/', $pluralRuleSrc, $m)) {
-                                            throw new Exception("Invalid node '$width/$unitKey/$pluralRuleSrc' in " . $dstFile);
+                                        switch ($pluralRuleSrc) {
+                                            case 'displayName':
+                                                $data[$width][$unitKind][$unitName]['_name'] = $data[$width][$unitKey][$pluralRuleSrc];
+                                                break;
+                                            case 'perUnitPattern':
+                                                $data[$width][$unitKind][$unitName]['_per'] = toPhpSprintf($data[$width][$unitKey][$pluralRuleSrc]);
+                                                break;
+                                            default:
+                                                if (!preg_match('/^unitPattern-count-(.+)$/', $pluralRuleSrc, $m)) {
+                                                    throw new Exception("Invalid node (4) '$width/$unitKey/$pluralRuleSrc' in " . $dstFile);
+                                                }
+                                                $pluralRule = $m[1];
+                                                $data[$width][$unitKind][$unitName][$pluralRule] = toPhpSprintf($data[$width][$unitKey][$pluralRuleSrc]);
+                                                break;
                                         }
-                                        $pluralRule = $m[1];
-                                        $data[$width][$unitKind][$unitName][$pluralRule] = toPhpSprintf($data[$width][$unitKey][$pluralRuleSrc]);
                                     }
                                     unset($data[$width][$unitKey]);
                                     break;
@@ -560,7 +576,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                     default:
                         if (preg_match('/^durationUnit-type-(.+)/', $width, $m)) {
                             if (implode('|', array_keys(($data[$width]))) !== 'durationUnitPattern') {
-                                throw new Exception("Invalid node '$width' in " . $dstFile);
+                                throw new Exception("Invalid node (5) '$width' in " . $dstFile);
                             }
                             $t = $m[1];
                             if (!array_key_exists('_durationPattern', $data)) {
@@ -569,7 +585,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                             $data['_durationPattern'][$t] = $data[$width]['durationUnitPattern'];
                             unset($data[$width]);
                         } else {
-                            throw new Exception("Invalid node '$width' in " . $dstFile);
+                            throw new Exception("Invalid node (6) '$width' in " . $dstFile);
                         }
                         break;
                 }
@@ -619,6 +635,15 @@ function copyDataFile($srcFile, $info, $dstFile)
                     switch ($key) {
                         case 'defaultNumberingSystem':
                         case 'otherNumberingSystems':
+                            break;
+                        case 'minimumGroupingDigits':
+                            if (is_string($value) && preg_match('/^\\d+$/', $value)) {
+                                $value = @intval($value);
+                            }
+                            if (!is_int($value)) {
+                                throw new Exception("Invalid node '$key' in " . $dstFile);
+                            }
+                            $final[$key] = $value;
                             break;
                         default:
                             throw new Exception("Invalid node '$key' in " . $dstFile);
