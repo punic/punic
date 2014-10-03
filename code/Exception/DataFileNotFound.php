@@ -30,7 +30,7 @@ class DataFileNotFound extends \Punic\Exception
             if (@strcasecmp($locale, $fallbackLocale) === 0) {
                 $message = "Unable to find the data file '$identifier' for '$locale'";
             } else {
-                $message = "Unable to find the data file, neither for '$locale' nor for '$fallbackLocale'";
+                $message = "Unable to find the data file '$identifier', neither for '$locale' nor for '$fallbackLocale'";
             }
         }
         parent::__construct($message, \Punic\Exception::DATA_FILE_NOT_FOUND, $previous);

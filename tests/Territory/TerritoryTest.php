@@ -55,9 +55,9 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $this->assertGreaterThan(count($continentsAndCountries), 7);
     }
 
-	public function testInvalidTerritoryTypeException()
-	{
-		$this->setExpectedException('\\Punic\\Exception\\BadArgumentType');
-		$list = Territory::getList('a');
-	}
+    public function testInvalidTerritoryTypeException()
+    {
+        $this->setExpectedException('\\Punic\\Exception\\BadArgumentType');
+        $list = Territory::getList('a');
+    }
 }

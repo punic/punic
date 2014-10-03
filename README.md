@@ -4,3 +4,4 @@
 Punic - PHP Unicode CLDR Toolkit
 ================================
 
+See [punic.github.io](http://punic.github.io) for more info.

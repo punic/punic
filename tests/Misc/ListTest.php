@@ -47,15 +47,15 @@ class ListTest extends PHPUnit_Framework_TestCase
             Misc::join(array('Uno', 'due'), 'it')
         );
         $this->assertSame(
-            'Uno, due, e tre',
+            'Uno, due e tre',
             Misc::join(array('Uno', 'due', 'tre'), 'it')
         );
         $this->assertSame(
-            'Uno, due, tre, e quattro',
+            'Uno, due, tre e quattro',
             Misc::join(array('Uno', 'due', 'tre', 'quattro'), 'it')
         );
         $this->assertSame(
-            'Uno, due, tre, quattro, e 5',
+            'Uno, due, tre, quattro e 5',
             Misc::join(array('Uno', 'due', 'tre', 'quattro', 5), 'it')
         );
     }
@@ -111,23 +111,23 @@ class ListTest extends PHPUnit_Framework_TestCase
             Misc::joinUnits(array('Uno', 'due'), '', 'it')
         );
         $this->assertSame(
-            'Uno, due, e tre',
+            'Uno, due e tre',
             Misc::joinUnits(array('Uno', 'due', 'tre'), '', 'it')
         );
         $this->assertSame(
-            'Uno, due, e tre',
+            'Uno, due e tre',
             Misc::joinUnits(array('Uno', 'due', 'tre'), 'short', 'it')
         );
         $this->assertSame(
-            'Uno, due, e tre',
+            'Uno, due e tre',
             Misc::joinUnits(array('Uno', 'due', 'tre'), 'narrow', 'it')
         );
         $this->assertSame(
-            'Uno, due, tre, e quattro',
+            'Uno, due, tre e quattro',
             Misc::joinUnits(array('Uno', 'due', 'tre', 'quattro'), '', 'it')
         );
         $this->assertSame(
-            'Uno, due, tre, quattro, e 5',
+            'Uno, due, tre, quattro e 5',
             Misc::joinUnits(array('Uno', 'due', 'tre', 'quattro', 5), '', 'it')
         );
     }
@@ -137,4 +137,29 @@ class ListTest extends PHPUnit_Framework_TestCase
 		$this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
 		Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');	
 	}
+    
+    public function providerFixCase()
+    {
+        return array(
+            array('Test', 'test', 'titlecase-words'),
+            array('Test Test', 'test test', 'titlecase-words'),
+            array('TEST TEST', 'TEST TEST', 'titlecase-words'),
+            array('A', 'a', 'titlecase-words'),
+            array('Test', 'test', 'titlecase-firstword'),
+            array('Test test', 'test test', 'titlecase-firstword'),
+            array('TEST TEST', 'TEST TEST', 'titlecase-firstword'),
+            array('A', 'a', 'titlecase-firstword'),
+            array('a', 'a', 'lowercase-words'),
+            array('a', 'A', 'lowercase-words'),
+            array('test test', 'Test test', 'lowercase-words'),
+        );
+    }
+    
+    /**
+     * @dataProvider providerFixCase
+     */
+    public function testFixCase($result, $string, $case)
+    {
+        $this->assertSame($result, \Punic\Misc::fixCase($string, $case));
+    }
 }

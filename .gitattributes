@@ -1,0 +1,8 @@
+/bin/ export-ignore
+/temp/ export-ignore
+/tests/ export-ignore
+/examples/ export-ignore
+/.* export-ignore
+/*.yml export-ignore
+/*.xml export-ignore
+/README.md

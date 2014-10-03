@@ -116,6 +116,50 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             $dt2->format('c'),
             'Calculating from DateTime to a specific timezone'
         );
+        $this->assertSame(
+            '2000-01-01T00:00:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Europe/Rome')->format('c')
+        );
+        $this->assertSame(
+            '2000-01-01T09:30:00+10:30',
+            Calendar::toDateTime('2000-01-01 00:00', 'Australia/Adelaide', 'Europe/Rome')->format('c')
+        );
+        $this->assertSame(
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+        );
+        $this->assertSame(
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new \DateTimeZone('Australia/Adelaide'))->format('c')
+        );
+        $this->assertSame(
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
+        );
+        $this->assertSame(
+            '1999-12-31T14:30:00+01:00',
+            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), new \DateTimeZone('Australia/Adelaide'))->format('c')
+        );
+        $this->assertSame(
+            '2000-01-01T01:00:00+01:00',
+            Calendar::toDateTime('2000-01-01T00:00:00+00:00', 'Europe/Rome', 'Australia/Adelaide')->format('c')
+        );
+        $time = 1488904200; // 2017-03-07 16:30:00 UTC
+        $this->assertSame(
+            '2017-03-07T17:30:00+01:00',
+            Calendar::toDateTime($time, null, 'Europe/Rome')->format('c'),
+            'Calculating from timestamp'
+        );
+        $this->assertSame(
+            '2017-03-08T03:00:00+10:30',
+            Calendar::toDateTime(strval($time), null, 'Australia/Adelaide')->format('c'),
+            'Calculating from timestamp'
+        );
+        $this->assertSame(
+            '2017-03-08T03:00:00+10:30',
+            Calendar::toDateTime(new \DateTime('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
+            'Calculating from timestamp'
+        );
     }
 
     public function providerConvertPhpToIso()
@@ -321,6 +365,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getDayperiodName', array('test'), '\\Punic\\Exception'),
             array('getDayperiodName', array('am', 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array(true), '\\Punic\\Exception'),
+            array('toDateTime', array('this is an invalid date representation'), '\\Punic\\Exception'),
+            array('toDateTime', array('now', 'this is an invalid timezone representation'), '\\Punic\\Exception'),
             array('getEraName', array('test'), '\\Punic\\Exception'),
             array('getEraName', array(1, 'invalid-width'), '\\Punic\\Exception'),
             array('getMonthName', array('test'), '\\Punic\\Exception'),
@@ -330,6 +376,13 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getQuarterName', array(5), '\\Punic\\Exception'),
             array('getQuarterName', array(1, 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array('2000-01-01', true), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'This is an invalid *to* timezone'), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', 'This is an invalid *from* timezone'), '\\Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', true), '\\Punic\\Exception'),
+            array('getDeltaDays', array('string'), '\\Punic\\Exception'),
+            array('getDeltaDays', array(new \DateTime(), 'string'), '\\Punic\\Exception'),
+            array('describeInterval', array('not-a-datetime'), '\\Punic\\Exception'),
+            array('describeInterval', array(new \DateTime(), 'not-a-datetime'), '\\Punic\\Exception'),
         );
     }
 
@@ -591,7 +644,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight')
         );
         $this->assertSame(
-            "Ora legale dell'Europa centrale",
+            "Ora legale dell’Europa centrale",
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight', 'it')
         );
         $this->assertSame(
@@ -720,11 +773,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDateFormat('full', 'it')
         );
         $this->assertSame(
-            'dd MMMM y',
+            'd MMMM y',
             Calendar::getDateFormat('long', 'it')
         );
         $this->assertSame(
-            'dd/MMM/y',
+            'dd MMM y',
             Calendar::getDateFormat('medium', 'it_IT')
         );
         $this->assertSame(
@@ -840,7 +893,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDate($dt, 'long', 'it')
         );
         $this->assertSame(
-            '12/ott/2010',
+            '12 ott 2010',
             Calendar::formatDate($dt, 'medium', 'it')
         );
         $this->assertSame(
@@ -901,7 +954,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatTime($dt, 'short')
         );
         $this->assertSame(
-            '23:59:00 Ora standard delle Fiji',
+            '23:59:00 Ora standard delle Figi',
             Calendar::formatTime($dt, 'full', 'it')
         );
         $this->assertSame(
@@ -960,7 +1013,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDateTime($dt, 'short|full|short')
         );
         $this->assertSame(
-            'martedì 12 ottobre 2010 23:59:00 Ora standard delle Fiji',
+            'martedì 12 ottobre 2010 23:59:00 Ora standard delle Figi',
             Calendar::formatDateTime($dt, 'full', 'it')
         );
         $this->assertSame(
@@ -968,11 +1021,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDateTime($dt, 'long', 'it')
         );
         $this->assertSame(
-            '12/ott/2010 23:59:00',
+            '12 ott 2010, 23:59:00',
             Calendar::formatDateTime($dt, 'medium', 'it')
         );
         $this->assertSame(
-            '12/10/10 23:59',
+            '12/10/10, 23:59',
             Calendar::formatDateTime($dt, 'short', 'it')
         );
         $this->assertSame(
@@ -1178,7 +1231,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('GMT+13', Calendar::format($dt, 'zz'));
         $this->assertSame('GMT+13', Calendar::format($dt, 'zzz'));
         $this->assertSame('Fiji Summer Time', Calendar::format($dt, 'zzzz'));
-        $this->assertSame('Ora legale delle Fiji', Calendar::format($dt, 'zzzz', 'it'));
+        $this->assertSame('Ora legale delle Figi', Calendar::format($dt, 'zzzz', 'it'));
         $this->assertSame('GMT-1:02', Calendar::format(Calendar::toDateTime('10/Oct/2000:13:55:36 -0102'), 'zzzz'));
         // decodeTimezoneDelta
         $this->assertSame('+1300', Calendar::format($dt, 'Z'));
@@ -1229,6 +1282,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $before2->sub(new \DateInterval('P2Y3M4DT6H8M59S'));
         $before3 = clone $now;
         $before3->sub(new \DateInterval('P1Y3M4DT6H8M59S'));
+        $nowTZ1 = clone $now;
+        $nowTZ1->setTimezone(new \DateTimeZone('Pacific/Pago_Pago'));
+        $nowTZ2 = clone $now;
+        $nowTZ2->setTimezone(new \DateTimeZone('Pacific/Kiritimati'));
 
         return array(
             array('now', $now, $now, 1, 'short', 'en'),
@@ -1243,8 +1300,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('2 years, 3 months, 4 days, and 6 hours', $now, $before2, 4, 'long', 'en'),
             array('1 year', $now, $before3, 1, 'long', 'en'),
             array('2 anni e 3 mesi', $now, $before2, 2, 'long', 'it'),
-            array('2 anni, 3 mesi, 4 giorni, e 6 ore', $now, $before2, 4, 'long', 'it'),
-            array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti, e 59 secondi', $now, $before2, 99, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni e 6 ore', $now, $before2, 4, 'long', 'it'),
+            array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti e 59 secondi', $now, $before2, 99, 'long', 'it'),
+            array('now', $nowTZ1, $nowTZ2, 1, 'short', 'en'),
         );
     }
 
@@ -1257,6 +1315,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             $expected,
             Calendar::describeInterval($dateEnd, $dateStart, $maxParts, $width, $locale)
+        );
+    }
+
+    /**
+     * Test describeInterval
+     * @dataProvider providerDescribeInterval
+     */
+    public function testDescribeInterval2()
+    {
+        $this->assertRegExp(
+            '/^(now|1 second|\\d+ seconds)$/',
+            Calendar::describeInterval(new \DateTime(), null, 1, 'long', 'en')
         );
     }
 
@@ -1307,4 +1377,71 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSortedWeekdays('short', 'it')
         );
     }
+
+    public function providerGetDeltaDays()
+    {
+        return array(
+            array(0, array(new \DateTime())),
+            array(1, array(new \DateTime('+1 days'))),
+            array(5, array(new \DateTime('+4 days'), new \DateTime('-1 days'))),
+            array(0, array(new \DateTime('now', new \DateTimeZone('Pacific/Pago_Pago')), new \DateTime('now', new \DateTimeZone('Pacific/Kiritimati')))),
+        );
+    }
+    /**
+     * Test getDeltaDays
+     * @dataProvider providerGetDeltaDays
+     */
+    public function testGetDeltaDays($expected, $arguments)
+    {
+        $this->assertSame(
+            $expected,
+            call_user_func_array('\\Punic\\Calendar::getDeltaDays', $arguments)
+        );
+    }
+
+    public function testFormatEx()
+    {
+        $this->assertSame(
+            '2010',
+            Calendar::formatEx('2010-12-31 23:59', 'y')
+        );
+        $this->assertSame(
+            '2010',
+            Calendar::formatEx('2010-01-01 00:00', 'y')
+        );
+    }
+
+    public function providerGetTimezonesAliases()
+    {
+        return array(
+          array('Asmara', 'Africa/Asmara'),
+          array('Atikokan', 'America/Atikokan'),
+          array('Ho Chi Minh City', 'Asia/Ho_Chi_Minh'),
+          array('Kathmandu', 'Asia/Kathmandu'),
+          array('Kolkata', 'Asia/Kolkata'),
+          array('Faroe', 'Atlantic/Faroe'),
+          array('Chuuk', 'Pacific/Chuuk'),
+          array('Pohnpei', 'Pacific/Pohnpei'),
+          array('Buenos Aires', 'America/Argentina/Buenos_Aires'),
+          array('Catamarca', 'America/Argentina/Catamarca'),
+          array('Cordoba', 'America/Argentina/Cordoba'),
+          array('Jujuy', 'America/Argentina/Jujuy'),
+          array('Mendoza', 'America/Argentina/Mendoza'),
+          array('Indianapolis', 'America/Indiana/Indianapolis'),
+          array('Louisville', 'America/Kentucky/Louisville'),
+          array('Unknown City', 'America/Not_Existing_TimeZone_Name'),
+       );
+    }
+    /**
+     * Test getTimezonesAliases
+     * @dataProvider providerGetTimezonesAliases
+     */
+    public function testGetTimezonesAliases($expected, $phpTimezoneName)
+    {
+        $this->assertSame(
+            $expected,
+            \Punic\Calendar::getTimezoneExemplarCity($phpTimezoneName, true, 'en')
+        );
+    }
+
 }

@@ -1,1 +1,1 @@
-{"symbols":{"decimal":",","group":" ","list":";","percentSign":"%","plusSign":"+","minusSign":"-","exponential":"E","superscriptingExponent":"×","perMille":"‰","infinity":"∞","nan":"не число"}}
+{"minimumGroupingDigits":1,"symbols":{"decimal":",","group":" ","list":";","percentSign":"%","plusSign":"+","minusSign":"-","exponential":"E","superscriptingExponent":"×","perMille":"‰","infinity":"∞","nan":"не число","timeSeparator":":"}}

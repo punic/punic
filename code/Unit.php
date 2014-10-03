@@ -40,6 +40,7 @@ class Unit
         $data = $data[$width];
         if (strpos($unit, '/') === false) {
             $unitCategory = null;
+            $unitID = null;
             foreach (array_keys($data) as $c) {
                 if (strpos($c, '_') === false) {
                     if (array_key_exists($unit, $data[$c])) {
@@ -57,7 +58,7 @@ class Unit
             list($unitCategory, $unitID) = explode('/', $unit, 2);
         }
         $rules = null;
-        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && array_key_exists($unitCategory, $data) && array_key_exists($unitID, $data[$unitCategory])) {
+        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && (!is_null($unitID)) && array_key_exists($unitCategory, $data) && array_key_exists($unitID, $data[$unitCategory])) {
             $rules = $data[$unitCategory][$unitID];
         }
         if (is_null($rules)) {
@@ -74,16 +75,17 @@ class Unit
             throw new \Punic\Exception\ValueNotInList($unit, $units);
         }
         $pluralRule = \Punic\Plural::getRule($number, $locale);
-        if (($pluralRule !== 'other') && (!array_key_exists($pluralRule, $rules))) {
-            $pluralRule = 'other';
-        }
+        //@codeCoverageIgnoreStart
+        // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)
         if (!array_key_exists($pluralRule, $rules)) {
-            $format = array_values($rules);
-            $format = $format[0];
-        } else {
-            $format = $rules[$pluralRule];
+            if (array_key_exists('other', $rules)) {
+                $pluralRule = 'other';
+            } else {
+                $availableRules = array_keys($rules);
+                $pluralRule = $availableRules[0];
+            }
         }
-
-        return sprintf($format, \Punic\Number::format($number, $precision, $locale));
+        //@codeCoverageIgnoreEnd
+        return sprintf($rules[$pluralRule], \Punic\Number::format($number, $precision, $locale));
     }
 }

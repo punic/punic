@@ -14,7 +14,7 @@ try {
     define('SOURCE_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'code');
     define('TEMP_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp');
     define('CONFIG_FILE', TEMP_DIR . DIRECTORY_SEPARATOR . 'apigen.neon');
-    define('WEBSITE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'website');
+    define('WEBSITE_DIR', TEMP_DIR . DIRECTORY_SEPARATOR . 'website');
     define('DEST_DIR', WEBSITE_DIR . DIRECTORY_SEPARATOR . 'docs');
     if (!is_dir(TEMP_DIR)) {
             @mkdir(TEMP_DIR, 0777, true);
@@ -56,14 +56,21 @@ destination: "{$v['to']}"
 extensions: php
 charset: utf-8
 title: Punic APIs
-groups: namespaces
-accessLevels: public
-php: no
-tree: yes
-todo: yes
-quiet: yes
-progressbar: no
 templateConfig: "{$v['template']}"
+groups: namespaces
+allowedHtml: [b, i, a, ul, ol, li, p, br, var, samp, kbd, tt, code]
+accessLevels: public
+internal: No
+php: No
+tree: Yes
+todo: Yes
+sourceCode: Yes
+download: No
+wipeout: Yes
+quiet: yes
+progressbar: No
+updateCheck: No
+debug: No
 EOT
     ) === false) {
         throw new Exception('Failed to create temporary ApiGen configuration');

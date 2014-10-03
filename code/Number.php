@@ -88,7 +88,7 @@ class Number
             $intPart = $full[0];
             $floatPath = (count($full) > 1) ? $full[1] : '';
             $len = strlen($intPart);
-            if ($len > $groupLength) {
+            if (($groupLength > 0) && ($len > $groupLength)) {
                 $groupSign = $data['symbols']['group'];
                 $preLength = 1 + (($len -1) % 3);
                 $pre = substr($intPart, 0, $preLength);
