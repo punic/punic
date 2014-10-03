@@ -114,7 +114,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $rule,
-            \Punic\Plural::getRule($parameters[0], $parameters[1])
+            Plural::getRule($parameters[0], $parameters[1])
         );
     }
 	

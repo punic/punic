@@ -42,25 +42,25 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultLocale()
     {
-        \Punic\Data::setDefaultLocale('it');
+        Data::setDefaultLocale('it');
         $this->assertSame('it', \Punic\Data::getDefaultLocale());
     }
 
     public function testDefaultLanguage()
     {
-        \Punic\Data::setDefaultLocale('de_DE');
+        Data::setDefaultLocale('de_DE');
         $this->assertSame('de', \Punic\Data::getDefaultLanguage());
     }
 
     public function testFallbackLocale()
     {
-        \Punic\Data::setFallbackLocale('it');
+        Data::setFallbackLocale('it');
         $this->assertSame('it', \Punic\Data::getFallbackLocale());
     }
 
     public function testFallbackLanguage()
     {
-        \Punic\Data::setFallbackLocale('de_DE');
+        Data::setFallbackLocale('de_DE');
         $this->assertSame('de', \Punic\Data::getFallbackLanguage());
     }
 
@@ -93,7 +93,7 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     public function testGetAvailableLocales()
     {
-        $locales = \Punic\Data::getAvailableLocales();
+        $locales = Data::getAvailableLocales();
         // this list isn't static, we assume that something between 280 and 320 locales is okay
         $this->assertLessThan(320, count($locales));
         $this->assertGreaterThan(280, count($locales));
@@ -121,8 +121,8 @@ class DataTest extends PHPUnit_Framework_TestCase
     
     public function testGuessFullDefaultLocale()
     {
-        \Punic\Data::setDefaultLocale('de_DE');
-        $locale = \Punic\Data::guessFullLocale();
+        Data::setDefaultLocale('de_DE');
+        $locale = Data::guessFullLocale();
         $this->assertSame('de-Latn-DE', $locale);
     }
 
