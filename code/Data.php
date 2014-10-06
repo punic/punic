@@ -105,6 +105,7 @@ class Data
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
      * @return array
      * @throws \Punic\Exception Throws an exception in case of problems
+     * @internal
      */
     public static function get($identifier, $locale = '')
     {
@@ -154,6 +155,7 @@ class Data
      * @param string $identifier The data identifier
      * @return array
      * @throws Exception Throws an exception in case of problems
+     * @internal
      */
     public static function getGeneric($identifier)
     {
@@ -341,6 +343,7 @@ class Data
      * Return the node associated to the locale territory
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if the node was not found, the node data otherwise
+     * @internal
      */
     public static function getTerritoryNode($data, $locale = '')
     {
@@ -361,6 +364,7 @@ class Data
      * Return the node associated to the language (not locale) territory
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if the node was not found, the node data otherwise
+     * @internal
      */
     public static function getLanguageNode($data, $locale = '')
     {
@@ -383,6 +387,7 @@ class Data
      * @param array $data The data containing the locale info
      * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if $data is not an array or it does not contain locale info, the array item otherwise
+     * @internal
      */
     public static function getLocaleItem($data, $locale = '')
     {
