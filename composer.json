@@ -41,7 +41,7 @@
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master",
-        "apigen/apigen": "~2.8.2"
+        "apigen/apigen": "~2.8"
     },
     "replace": {
         "punic/common": "*",
