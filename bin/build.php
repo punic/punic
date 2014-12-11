@@ -228,7 +228,7 @@ function copyData()
                     $info['unsetByPath'] = array_merge(
                         isset($info['unsetByPath']) ? $info['unsetByPath'] : array(),
                         array(
-                            "/main/$useLocale" => array('identity')
+                            "/main/$useLocale" => array('identity'),
                         )
                     );
                     copyDataFile($srcFile, $info, $dstFile);
@@ -250,7 +250,7 @@ function copyData()
             $info['unsetByPath'] = array_merge(
                 isset($info['unsetByPath']) ? $info['unsetByPath'] : array(),
                 array(
-                    '/supplemental' => array('version', 'generation')
+                    '/supplemental' => array('version', 'generation'),
                 )
             );
             copyDataFile($srcFile, $info, $dstFile);
@@ -368,16 +368,16 @@ function copyDataFile($srcFile, $info, $dstFile)
                                 foreach ($v3 as $k4 => $v4) {
                                     switch ($k4) {
                                         case '_officialStatus':
-                                            switch($v4) {
+                                            switch ($v4) {
                                                 case 'official':
-                                                	$v5 = 'o';
-                                                	break;
+                                                    $v5 = 'o';
+                                                    break;
                                                 case 'official_regional':
-                                                	$v5 = 'r';
-                                                	break;
+                                                    $v5 = 'r';
+                                                    break;
                                                 case 'de_facto_official':
-                                                	$v5 = 'f';
-                                                	break;
+                                                    $v5 = 'f';
+                                                    break;
                                                 default:
                                                     throw new Exception("Unknown language status: $v4");
                                             }
@@ -582,7 +582,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $v = str_replace(' = ', ' == ', $v);
                         $map = array('==' => 'true', '!=' => 'false');
                         foreach (array('^', ' and ', ' or ') as $pre) {
-                            while(preg_match(
+                            while (preg_match(
                                 '/' . $pre . '(([nivfwft]( % \\d+)?) (==|!=) ((\\d+)(((\\.\\.)|,)+(\\d+))+))/',
                                 $v,
                                 $m
@@ -602,7 +602,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         if (strpos($v, '..') !== false) {
                             throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
                         }
-                        foreach(array(
+                        foreach (array(
                             'n' => '%1$s', // absolute value of the source number (integer and decimals).
                             'i' => '%2$s', // integer digits of n
                             'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
@@ -772,7 +772,9 @@ function copyDataFile($srcFile, $info, $dstFile)
                     throw new Exception("Duplicated node '$key' in " . $dstFile);
                 }
                 // $final[$key] = $value; REMOVED ADVANCED LOCALIZATION
-                if($key === 'symbols') $final[$key] = $value; // REMOVED ADVANCED LOCALIZATION
+                if ($key === 'symbols') { // REMOVED ADVANCED LOCALIZATION
+                    $final[$key] = $value;
+                }
             }
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
@@ -877,7 +879,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
     $p = explode(';', $isoPattern);
     $patterns = array(
         '+' => $p[0],
-        '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1]
+        '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1],
     );
     $result = array();
     foreach ($patterns as $patternKey => $pattern) {
@@ -889,7 +891,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                 }
             }
             if (strlen($m[2]) > 0) {
-                $rxPre = preg_quote($m[2]);;
+                $rxPre = preg_quote($m[2]);
             }
             $pattern = $m[1] . $m[3] . $m[5];
             if (strlen($m[4]) > 0) {
