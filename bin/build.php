@@ -313,6 +313,9 @@ function copyDataFile($srcFile, $info, $dstFile)
         case 'territoryInfo.json': // http://www.unicode.org/reports/tr35/tr35-info.html#Supplemental_Territory_Information
             // Merge -alt-secondary language nodes into the main nodes
             foreach ($data as $k => $v) {
+                if ($k === 'ZZ') {
+                    continue;
+                }
                 $D = array();
                 foreach ($v as $k2 => $v2) {
                     switch ($k2) {
@@ -419,6 +422,18 @@ function copyDataFile($srcFile, $info, $dstFile)
                              throw new Exception("Unknown node: $k2");
                             die($k2);
                     }
+                }
+                if (!array_key_exists('gdp', $D)) {
+                    throw new Exception("Missing _gdp node in for $k");
+                }
+                if (!array_key_exists('literacy', $D)) {
+                    throw new Exception("Missing _literacyPercent node in for $k");
+                }
+                if (!array_key_exists('population', $D)) {
+                    throw new Exception("Missing _population node in for $k");
+                }
+                if (!array_key_exists('languages', $D)) {
+                    throw new Exception("Missing languagePopulation node in for $k");
                 }
                 $data[$k] = $D;
             }
