@@ -416,10 +416,16 @@ function copyDataFile($srcFile, $info, $dstFile)
                                             throw new Exception("Unknown node: $k2/$k3/$k4");
                                     }
                                 }
+                                if (!array_key_exists('population', $D['languages'][$k3])) {
+                                    throw new Exception("Missing _populationPercent node in for $k/$k2/$k3");
+                                }
+                            }
+                            if (empty($D['languages'])) {
+                                throw new Exception("No languages for $k");
                             }
                             break;
                         default:
-                             throw new Exception("Unknown node: $k2");
+                            throw new Exception("Unknown node: $k2");
                             die($k2);
                     }
                 }
