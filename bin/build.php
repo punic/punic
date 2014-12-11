@@ -184,6 +184,7 @@ function copyData()
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
         */
+        'territoryInfo.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryInfo')),
         'weekData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'weekData')),
         'parentLocales.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'parentLocales', 'parentLocale')),
         'likelySubtags.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'likelySubtags')),
@@ -307,6 +308,119 @@ function copyDataFile($srcFile, $info, $dstFile)
                     $data['eras'][$keyTo] = $data['eras'][$keyFrom];
                     unset($data['eras'][$keyFrom]);
                 }
+            }
+            break;
+        case 'territoryInfo.json': // http://www.unicode.org/reports/tr35/tr35-info.html#Supplemental_Territory_Information
+            // Merge -alt-secondary language nodes into the main nodes
+            foreach ($data as $k => $v) {
+                $D = array();
+                foreach ($v as $k2 => $v2) {
+                    switch ($k2) {
+                        case '_gdp': // Gross domestic product
+                            if (!is_int($v2)) {
+                                $v3 = @intval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['gdp'] = $v2;
+                            break;
+                        case '_literacyPercent':
+                            if (!(is_int($v2) || is_float($v2))) {
+                                $v3 = @floatval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['literacy'] = $v2;
+                            break;
+                        case '_population':
+                            if (!is_int($v2)) {
+                                $v3 = @intval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['population'] = $v2;
+                            break;
+                        case 'languagePopulation':
+                            if (!is_array($v2)) {
+                                throw new Exception("Invalid node: $k2 is not an array");
+                            }
+                            $D['languages'] = array();
+                            foreach ($v2 as $k3 => $v3) {
+                                if (!is_array($v3)) {
+                                    throw new Exception("Invalid node: $k2/$k3 is not an array");
+                                }
+                                $D['languages'][$k3] = array();
+                                foreach ($v3 as $k4 => $v4) {
+                                    switch ($k4) {
+                                        case '_officialStatus':
+                                            switch($v4) {
+                                                case 'official':
+                                                	$v5 = 'o';
+                                                	break;
+                                                case 'official_regional':
+                                                	$v5 = 'r';
+                                                	break;
+                                                case 'de_facto_official':
+                                                	$v5 = 'f';
+                                                	break;
+                                                default:
+                                                    throw new Exception("Unknown language status: $v4");
+                                            }
+                                            $D['languages'][$k3]['status'] = $v5;
+                                            break;
+                                        case '_populationPercent':
+                                            if (!(is_int($v4) || is_float($v4))) {
+                                                $v5 = @floatval($v4);
+                                                if (strval($v5) !== $v4) {
+                                                    $v5 = @floatval($v4);
+                                                }
+                                                if (strval($v5) !== $v4) {
+                                                    throw new Exception("Unable to parse $v4 as an integer ($k2)");
+                                                }
+                                                $v4 = $v5;
+                                            }
+                                            $D['languages'][$k3]['population'] = $v4;
+                                            break;
+                                        case '_writingPercent':
+                                            if (!(is_int($v4) || is_float($v4))) {
+                                                $v5 = @floatval($v4);
+                                                if (strval($v5) !== $v4) {
+                                                    $v5 = @floatval($v4);
+                                                }
+                                                if (strval($v5) !== $v4) {
+                                                    throw new Exception("Unable to parse $v4 as an integer ($k2)");
+                                                }
+                                                $v4 = $v5;
+                                            }
+                                            $D['languages'][$k3]['writing'] = $v4;
+                                            break;
+                                        default:
+                                            throw new Exception("Unknown node: $k2/$k3/$k4");
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                             throw new Exception("Unknown node: $k2");
+                            die($k2);
+                    }
+                }
+                $data[$k] = $D;
             }
             break;
         case 'weekData.json':
