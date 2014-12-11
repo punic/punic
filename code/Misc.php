@@ -139,4 +139,89 @@ class Misc
 
         return $result;
     }
+
+    /**
+     * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales
+     * @return array
+     */
+    public static function getBrowserLocales()
+    {
+        static $result;
+        if (!isset($result)) {
+            $httpAcceptLanguages = @getenv('HTTP_ACCEPT_LANGUAGE');
+            if ((!is_string($httpAcceptLanguages)) && (strlen($httpAcceptLanguages) === 0)) {
+                if (isset($_SERVER) && is_array($_SERVER) && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+                    $httpAcceptLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+                }
+            }
+            $result = self::parseHttpAcceptLanguage($httpAcceptLanguages);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales
+     * @param string $httpAcceptLanguages
+     * @return array
+     */
+    public static function parseHttpAcceptLanguage($httpAcceptLanguages)
+    {
+        $result = array();
+        if (is_string($httpAcceptLanguages) && (strlen($httpAcceptLanguages) > 0)) {
+            foreach (explode(',', $httpAcceptLanguages) as $httpAcceptLanguage) {
+                if (preg_match('/^([a-z]{2,3}(?:[_\\-][a-z]+)*)(?:\\s*;(?:\\s*q(?:\\s*=(?:\\s*([\\d.]+))?)?)?)?$/', strtolower(trim($httpAcceptLanguage, " \t")), $m)) {
+                    if (count($m) > 2) {
+                        if (strpos($m[2], '.') === 0) {
+                            $m[2] = '0' . $m[2];
+                        }
+                        if (preg_match('/^[01](\\.\\d*)?$/', $m[2])) {
+                            $quality = round(@floatval($m[2]), 4);
+                        } else {
+                            $quality = -1;
+                        }
+                    } else {
+                        $quality = 1;
+                    }
+                    if (($quality >= 0) && ($quality <= 1)) {
+                        $found = array();
+                        $chunks = explode('-', str_replace('_', '-', $m[1]));
+                        $numChunks = count($chunks);
+                        if ($numChunks === 1) {
+                            $found[] = $m[1];
+                        } else {
+                            $base = $chunks[0];
+                            for ($i = 1; $i < $numChunks; $i++) {
+                                if (strlen($chunks[$i]) === 4) {
+                                    $base .= '-' . ucfirst($chunks[$i]);
+                                    break;
+                                }
+                            }
+                            for ($i = 1; $i < $numChunks; $i++) {
+                                if (preg_match('/^[a-z][a-z]$/', $chunks[$i])) {
+                                    $found[] = $base . '-' . strtoupper($chunks[$i]);
+                                } elseif (preg_match('/^\\d{3}$/', $chunks[$i])) {
+                                    $found[] = $base . '-' . $chunks[$i];
+                                }
+                            }
+                            if (empty($found)) {
+                                $found[] = $base;
+                            }
+                        }
+                        foreach ($found as $f) {
+                            if (array_key_exists($f, $result)) {
+                                if ($result[$f] < $quality) {
+                                    $result[$f] = $quality;
+                                }
+                            } else {
+                                $result[$f] = $quality;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
 }
