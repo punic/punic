@@ -85,10 +85,11 @@ try {
 
 function downloadCLDR()
 {
-    switch (CLDR_VERSION) {
-        default:
-            $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json_full.zip' : 'json.zip');
-            break;
+    if(version_compare(CLDR_VERSION, 26) >= 0) {
+        $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json-full.zip' : 'json.zip');
+    }
+    else {
+        $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json_full.zip' : 'json.zip');
     }
     $zipFrom = null;
     $zipTo = null;
