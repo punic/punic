@@ -311,11 +311,8 @@ function copyDataFile($srcFile, $info, $dstFile)
             }
             break;
         case 'territoryInfo.json': // http://www.unicode.org/reports/tr35/tr35-info.html#Supplemental_Territory_Information
-            // Merge -alt-secondary language nodes into the main nodes
+            unset($data['ZZ']);
             foreach ($data as $k => $v) {
-                if ($k === 'ZZ') {
-                    continue;
-                }
                 $D = array();
                 foreach ($v as $k2 => $v2) {
                     switch ($k2) {
