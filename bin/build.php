@@ -381,6 +381,9 @@ function copyDataFile($srcFile, $info, $dstFile)
                                                 case 'de_facto_official':
                                                     $v5 = 'f';
                                                     break;
+                                                case 'official_minority':
+                                                	 $v5 = 'm';
+                                                	 break;
                                                 default:
                                                     throw new Exception("Unknown language status: $v4");
                                             }
