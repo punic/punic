@@ -6,7 +6,6 @@ namespace Punic;
  */
 class Territory
 {
-
     /**
      * Retrieve the name of a territory (country, continent, ...)
      * @param string $territoryCode The territory code
@@ -128,6 +127,157 @@ class Territory
         return $finalized;
     }
 
+    /**
+     * Return a list of territory identifiers for which we have some info (languages, population, literacy level, Gross Domestic Product)
+     * @return array The list of territory IDs for which we have some info
+     */
+    public static function getTerritoriesWithInfo()
+    {
+        return array_keys(Data::getGeneric('territoryInfo'));
+    }
+
+    /**
+     * Return the list of languages spoken in a territory
+     * @param string $territoryCode The territory code
+     * @param string $filterStatuses = '' Filter language status.
+     * <ul>
+     *     <li>If empty no filter will be applied</li>
+     *     <li>'o' to include official languages</li>
+     *     <li>'r' to include official regional languages</li>
+     *     <li>'f' to include de facto official languages</li>
+     *     <li>'m' to include official minority languages</li>
+     *     <li>'u' to include unofficial or unknown languages</li>
+     * </ul>
+     * @param string $onlyCodes = false Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
+     * <ul>
+     *     <li>string id: the language identifier</li>
+     *     <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
+     *     <li>number population: the amount of people speaking the language (%)</li>
+     *     <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
+     * </ul>
+     * @return array|null Return the languages spoken in the specified territory, as described by the $onlyCodes parameter (or null if $territoryCode is not valid or no data is available)
+     */
+    public static function getLanguages($territoryCode, $filterStatuses = '', $onlyCodes = false)
+    {
+        $result = null;
+        $info = self::getTerritoryInfo($territoryCode);
+        if (is_array($info)) {
+            $result = array();
+            foreach ($info['languages'] as $languageID => $languageInfo) {
+                if (!array_key_exists('status', $languageInfo)) {
+                    $languageInfo['status'] = 'u';
+                }
+                if ((strlen($filterStatuses) === 0) || (stripos($filterStatuses, $languageInfo['status']) !== false)) {
+                    if (!array_key_exists('writing', $languageInfo)) {
+                        $languageInfo['writing'] = null;
+                    }
+                    if ($onlyCodes) {
+                        $result[] = $languageID;
+                    } else {
+                        $result[] = array_merge(array('id' => $languageID), $languageInfo);
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the population of a specific territory
+     * @param string $territoryCode The territory code
+     * @return number|null Return the size of the population of the specified territory (or null if $territoryCode is not valid or no data is available)
+     */
+    public static function getPopulation($territoryCode)
+    {
+        $result = null;
+        $info = self::getTerritoryInfo($territoryCode);
+        if (is_array($info)) {
+            $result = $info['population'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the literacy level for a specific territory, in %
+     * @param string $territoryCode The territory code
+     * @return number|null Return the % of literacy lever of the specified territory (or null if $territoryCode is not valid or no data is available)
+     */
+    public static function getLiteracyLevel($territoryCode)
+    {
+        $result = null;
+        $info = self::getTerritoryInfo($territoryCode);
+        if (is_array($info)) {
+            $result = $info['literacy'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the GDP (Gross Domestic Product) for a specific territory, in US$
+     * @param string $territoryCode The territory code
+     * @return number|null Return the GDP of the specified territory (or null if $territoryCode is not valid or no data is available)
+     */
+    public static function getGrossDomesticProduct($territoryCode)
+    {
+        $result = null;
+        $info = self::getTerritoryInfo($territoryCode);
+        if (is_array($info)) {
+            $result = $info['gdp'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return a list of territory IDs where a specific language is spoken, sorted by the total number of people speaking that language.
+     * @param string $languageID The language identifier
+     * @return array
+     */
+    public static function getTerritoriesForLanguage($languageID)
+    {
+        $langPeople = array();
+        foreach (Data::getGeneric('territoryInfo') as $territoryID => $territoryInfo) {
+            foreach ($territoryInfo['languages'] as $langID => $langInfo) {
+                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID . '_') === 0)) {
+                    $langPeople[] = array('territoryID' => $territoryID, 'people' => $territoryInfo['population'] * $langInfo['population']);
+                }
+            }
+        }
+        usort($langPeople, function ($a, $b) {
+               $delta = $a['people'] - $b['people'];
+               if ($delta != 0) {
+                   $result = ($delta > 0) ? -1 : 1;
+               } else {
+                   $result = strcmp($a['territoryID'], $b['territoryID']);
+               }
+
+               return $result;
+        });
+        $territoryIDs = array();
+        foreach ($langPeople as $lp) {
+            $territoryIDs[] = $lp['territoryID'];
+        }
+
+        return $territoryIDs;
+    }
+
+    protected static function getTerritoryInfo($territoryCode)
+    {
+        $result = null;
+        if (preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
+            $territoryCode = strtoupper($territoryCode);
+            $data = Data::getGeneric('territoryInfo');
+            if (array_key_exists($territoryCode, $data)) {
+                $result = $data[$territoryCode];
+            }
+        }
+
+        return $result;
+    }
+
     protected static function getStructure()
     {
         static $cache = null;
@@ -209,5 +359,4 @@ class Territory
 
         return $list;
     }
-
 }

@@ -184,6 +184,7 @@ function copyData()
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
         */
+        'territoryInfo.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryInfo')),
         'weekData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'weekData')),
         'parentLocales.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'parentLocales', 'parentLocale')),
         'likelySubtags.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'likelySubtags')),
@@ -227,7 +228,7 @@ function copyData()
                     $info['unsetByPath'] = array_merge(
                         isset($info['unsetByPath']) ? $info['unsetByPath'] : array(),
                         array(
-                            "/main/$useLocale" => array('identity')
+                            "/main/$useLocale" => array('identity'),
                         )
                     );
                     copyDataFile($srcFile, $info, $dstFile);
@@ -249,7 +250,7 @@ function copyData()
             $info['unsetByPath'] = array_merge(
                 isset($info['unsetByPath']) ? $info['unsetByPath'] : array(),
                 array(
-                    '/supplemental' => array('version', 'generation')
+                    '/supplemental' => array('version', 'generation'),
                 )
             );
             copyDataFile($srcFile, $info, $dstFile);
@@ -307,6 +308,140 @@ function copyDataFile($srcFile, $info, $dstFile)
                     $data['eras'][$keyTo] = $data['eras'][$keyFrom];
                     unset($data['eras'][$keyFrom]);
                 }
+            }
+            break;
+        case 'territoryInfo.json': // http://www.unicode.org/reports/tr35/tr35-info.html#Supplemental_Territory_Information
+            unset($data['ZZ']);
+            foreach ($data as $k => $v) {
+                $D = array();
+                foreach ($v as $k2 => $v2) {
+                    switch ($k2) {
+                        case '_gdp': // Gross domestic product
+                            if (!is_int($v2)) {
+                                $v3 = @intval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['gdp'] = $v2;
+                            break;
+                        case '_literacyPercent':
+                            if (!(is_int($v2) || is_float($v2))) {
+                                $v3 = @floatval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['literacy'] = $v2;
+                            break;
+                        case '_population':
+                            if (!is_int($v2)) {
+                                $v3 = @intval($v2);
+                                if (strval($v3) !== $v2) {
+                                    $v3 = @floatval($v2);
+                                }
+                                if (strval($v3) !== $v2) {
+                                    throw new Exception("Unable to parse $v2 as an integer ($k2)");
+                                }
+                                $v2 = $v3;
+                            }
+                            $D['population'] = $v2;
+                            break;
+                        case 'languagePopulation':
+                            if (!is_array($v2)) {
+                                throw new Exception("Invalid node: $k2 is not an array");
+                            }
+                            $D['languages'] = array();
+                            foreach ($v2 as $k3 => $v3) {
+                                if (!is_array($v3)) {
+                                    throw new Exception("Invalid node: $k2/$k3 is not an array");
+                                }
+                                $D['languages'][$k3] = array();
+                                foreach ($v3 as $k4 => $v4) {
+                                    switch ($k4) {
+                                        case '_officialStatus':
+                                            switch ($v4) {
+                                                case 'official':
+                                                    $v5 = 'o';
+                                                    break;
+                                                case 'official_regional':
+                                                    $v5 = 'r';
+                                                    break;
+                                                case 'de_facto_official':
+                                                    $v5 = 'f';
+                                                    break;
+                                                case 'official_minority':
+                                                	 $v5 = 'm';
+                                                	 break;
+                                                default:
+                                                    throw new Exception("Unknown language status: $v4");
+                                            }
+                                            $D['languages'][$k3]['status'] = $v5;
+                                            break;
+                                        case '_populationPercent':
+                                            if (!(is_int($v4) || is_float($v4))) {
+                                                $v5 = @floatval($v4);
+                                                if (strval($v5) !== $v4) {
+                                                    $v5 = @floatval($v4);
+                                                }
+                                                if (strval($v5) !== $v4) {
+                                                    throw new Exception("Unable to parse $v4 as an integer ($k2)");
+                                                }
+                                                $v4 = $v5;
+                                            }
+                                            $D['languages'][$k3]['population'] = $v4;
+                                            break;
+                                        case '_writingPercent':
+                                            if (!(is_int($v4) || is_float($v4))) {
+                                                $v5 = @floatval($v4);
+                                                if (strval($v5) !== $v4) {
+                                                    $v5 = @floatval($v4);
+                                                }
+                                                if (strval($v5) !== $v4) {
+                                                    throw new Exception("Unable to parse $v4 as an integer ($k2)");
+                                                }
+                                                $v4 = $v5;
+                                            }
+                                            $D['languages'][$k3]['writing'] = $v4;
+                                            break;
+                                        default:
+                                            throw new Exception("Unknown node: $k2/$k3/$k4");
+                                    }
+                                }
+                                if (!array_key_exists('population', $D['languages'][$k3])) {
+                                    throw new Exception("Missing _populationPercent node in for $k/$k2/$k3");
+                                }
+                            }
+                            if (empty($D['languages'])) {
+                                throw new Exception("No languages for $k");
+                            }
+                            break;
+                        default:
+                            throw new Exception("Unknown node: $k2");
+                            die($k2);
+                    }
+                }
+                if (!array_key_exists('gdp', $D)) {
+                    throw new Exception("Missing _gdp node in for $k");
+                }
+                if (!array_key_exists('literacy', $D)) {
+                    throw new Exception("Missing _literacyPercent node in for $k");
+                }
+                if (!array_key_exists('population', $D)) {
+                    throw new Exception("Missing _population node in for $k");
+                }
+                if (!array_key_exists('languages', $D)) {
+                    throw new Exception("Missing languagePopulation node in for $k");
+                }
+                $data[$k] = $D;
             }
             break;
         case 'weekData.json':
@@ -468,7 +603,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $v = str_replace(' = ', ' == ', $v);
                         $map = array('==' => 'true', '!=' => 'false');
                         foreach (array('^', ' and ', ' or ') as $pre) {
-                            while(preg_match(
+                            while (preg_match(
                                 '/' . $pre . '(([nivfwft]( % \\d+)?) (==|!=) ((\\d+)(((\\.\\.)|,)+(\\d+))+))/',
                                 $v,
                                 $m
@@ -488,7 +623,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         if (strpos($v, '..') !== false) {
                             throw new Exception("Invalid node '$key' in $dstFile: $vOriginal");
                         }
-                        foreach(array(
+                        foreach (array(
                             'n' => '%1$s', // absolute value of the source number (integer and decimals).
                             'i' => '%2$s', // integer digits of n
                             'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
@@ -658,7 +793,9 @@ function copyDataFile($srcFile, $info, $dstFile)
                     throw new Exception("Duplicated node '$key' in " . $dstFile);
                 }
                 // $final[$key] = $value; REMOVED ADVANCED LOCALIZATION
-                if($key === 'symbols') $final[$key] = $value; // REMOVED ADVANCED LOCALIZATION
+                if ($key === 'symbols') { // REMOVED ADVANCED LOCALIZATION
+                    $final[$key] = $value;
+                }
             }
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
@@ -763,7 +900,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
     $p = explode(';', $isoPattern);
     $patterns = array(
         '+' => $p[0],
-        '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1]
+        '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1],
     );
     $result = array();
     foreach ($patterns as $patternKey => $pattern) {
@@ -775,7 +912,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                 }
             }
             if (strlen($m[2]) > 0) {
-                $rxPre = preg_quote($m[2]);;
+                $rxPre = preg_quote($m[2]);
             }
             $pattern = $m[1] . $m[3] . $m[5];
             if (strlen($m[4]) > 0) {
