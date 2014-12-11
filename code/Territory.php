@@ -6,7 +6,6 @@ namespace Punic;
  */
 class Territory
 {
-
     /**
      * Retrieve the name of a territory (country, continent, ...)
      * @param string $territoryCode The territory code
@@ -209,5 +208,4 @@ class Territory
 
         return $list;
     }
-
 }
