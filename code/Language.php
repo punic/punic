@@ -6,7 +6,6 @@ namespace Punic;
  */
 class Language
 {
-
     /**
      * Retrieve the name of a language
      * @param string $languageCode The language code. If it contails also a terrotory code (eg: 'en-US'), the result will contain also the territory code (eg 'English (United States)')
