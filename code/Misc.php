@@ -142,14 +142,15 @@ class Misc
 
     /**
      * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales
+     * @param boolean $ignoreCache set to true if you want to ignore the cache
      * @return array
      */
-    public static function getBrowserLocales()
+    public static function getBrowserLocales($ignoreCache = false)
     {
         static $result;
-        if (!isset($result)) {
+        if (!isset($result) || $ignoreCache) {
             $httpAcceptLanguages = @getenv('HTTP_ACCEPT_LANGUAGE');
-            if ((!is_string($httpAcceptLanguages)) && (strlen($httpAcceptLanguages) === 0)) {
+            if ((!is_string($httpAcceptLanguages)) || (strlen($httpAcceptLanguages) === 0)) {
                 if (isset($_SERVER) && is_array($_SERVER) && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
                     $httpAcceptLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
                 }

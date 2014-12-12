@@ -6,8 +6,16 @@ class BrowserLocaleTest extends PHPUnit_Framework_TestCase
     public function testBrowserLocales()
     {
         @putenv('HTTP_ACCEPT_LANGUAGE=en');
-        $locales = Misc::getBrowserLocales();
+        $locales = Misc::getBrowserLocales(true);
         $this->assertSame(array('en' => 1), $locales);
+        @putenv('HTTP_ACCEPT_LANGUAGE=');
+    }
+
+    public function testBrowserLocalesServer()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $locales = Misc::getBrowserLocales(true);
+        $this->assertSame(array('en' => 1), $locales);        
     }
 
     public function providerParseHttpAcceptLanguage()
