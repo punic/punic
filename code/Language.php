@@ -6,6 +6,41 @@ namespace Punic;
  */
 class Language
 {
+    /**
+     * Return all the languages
+     * @param bool $excludeCountrySpecific = false Set to false (default) to include also Country-specific languages (eg 'U.S. English' in addition to 'English'), set to true to exclude them
+     * @param bool $excludeScriptSpecific = false Set to false (default) to include also script-specific languages (eg 'Simplified Chinese' in addition to 'Chinese'), set to true to exclude them
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return array Return an array, sorted by values, whose keys are the language IDs and the values are the localized language names
+     */
+    public static function getAll($excludeCountrySpecific = false, $excludeScriptSpecific = false, $locale = '')
+    {
+        if ($excludeCountrySpecific && $excludeScriptSpecific) {
+            $filter = function ($languageID) {
+                return (strpos($languageID, '-') === false) ? true : false;
+            };
+        } elseif ($excludeCountrySpecific) {
+            $filter = function ($languageID) {
+                return preg_match('/^[a-z]+(-[A-Z][a-z]{3})?$/', $languageID) ? true : false;
+            };
+        } elseif ($excludeScriptSpecific) {
+            $filter = function ($languageID) {
+                return preg_match('/^[a-z]+(-([A-Z]{2}|[0-9]{3}))?$/', $languageID) ? true : false;
+            };
+        } else {
+            $filter = function ($languageID) {
+                return preg_match('/^[a-z]++(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$/', $languageID) ? true : false;
+            };
+        }
+        $data = Data::get('languages', $locale);
+        $result = array();
+        foreach (array_filter(array_keys($data), $filter) as $languageID) {
+            $result[$languageID] = $data[$languageID];
+        }
+        natcasesort($result);
+
+        return $result;
+    }
 
     /**
      * Retrieve the name of a language

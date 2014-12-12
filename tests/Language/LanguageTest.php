@@ -3,6 +3,34 @@ use \Punic\Language;
 
 class LanguageTest extends PHPUnit_Framework_TestCase
 {
+    public function testGetAll()
+    {
+        $languages = Language::getAll(false, false);
+        $this->assertArrayHasKey('en', $languages);
+        $this->assertArrayHasKey('en-US', $languages);
+        $this->assertArrayHasKey('zh-Hans', $languages);
+
+        $languages = Language::getAll(false, true);
+        $this->assertArrayHasKey('en', $languages);
+        $this->assertArrayHasKey('en-US', $languages);
+        $this->assertArrayNotHasKey('zh-Hans', $languages);
+
+        $languages = Language::getAll(true, false);
+        $this->assertArrayHasKey('en', $languages);
+        $this->assertArrayNotHasKey('en-US', $languages);
+        $this->assertArrayHasKey('zh-Hans', $languages);
+
+        $languages = Language::getAll(true, true);
+        $this->assertArrayHasKey('en', $languages);
+        $this->assertArrayNotHasKey('en-US', $languages);
+        $this->assertArrayNotHasKey('zh-Hans', $languages);
+
+        $languages = Language::getAll(false, false, 'en');
+        $this->assertSame('English', $languages['en']);
+
+        $languages = Language::getAll(false, false, 'it');
+        $this->assertSame('inglese', $languages['en']);
+    }
 
     public function providerGetName()
     {
@@ -38,5 +66,4 @@ class LanguageTest extends PHPUnit_Framework_TestCase
             Language::getName($languageCode, $forLocale)
         );
     }
-
 }
