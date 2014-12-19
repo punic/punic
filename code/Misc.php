@@ -225,4 +225,28 @@ class Misc
 
         return $result;
     }
+
+    /**
+     * Retrieve the character order (right-to-left or left-to-right)
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string Return 'left-to-right' or 'right-to-left'
+     */
+    public static function getCharacterOrder($locale = '')
+    {
+        $data = \Punic\Data::get('layout', $locale);
+
+        return $data['characterOrder'];
+    }
+
+    /**
+     * Retrieve the line order (top-to-bottom or bottom-to-top)
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string Return 'top-to-bottom' or 'bottom-to-top'
+     */
+    public static function getLineOrder($locale = '')
+    {
+        $data = \Punic\Data::get('layout', $locale);
+
+        return $data['lineOrder'];
+    }
 }
