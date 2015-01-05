@@ -26,6 +26,9 @@
 		<testsuite name="Number functions tests">
 			<directory>./tests/Number/</directory>
 		</testsuite>
+		<testsuite name="Phone functions tests">
+			<directory>./tests/Phone/</directory>
+		</testsuite>
 		<testsuite name="Exceptions tests">
 			<directory>./tests/Exception/</directory>
 		</testsuite>
