@@ -12,9 +12,9 @@ try {
     echo "Initializing... ";
     define('CLDR_VERSION', 26);
     define('ROOT_DIR', dirname(__DIR__));
-    define('SOURCE_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'source-data');
-    define('DESTINATION_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR . 'data');
-    define('TESTS_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'dataFiles');
+    define('SOURCE_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'source-data');
+    define('DESTINATION_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'code'.DIRECTORY_SEPARATOR.'data');
+    define('TESTS_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'dataFiles');
 
     if (isset($argv)) {
         foreach ($argv as $i => $arg) {
@@ -33,13 +33,13 @@ try {
     }
     defined('DEBUG') or define('DEBUG', false);
     defined('FULL_JSON') or define('FULL_JSON', false);
-    define('LOCAL_ZIP_FILE', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'cldr_full' : 'cldr') . '-' . CLDR_VERSION . '.zip');
-    define('SOURCE_DIR_DATA', SOURCE_DIR . DIRECTORY_SEPARATOR . (FULL_JSON ? 'cldr_full' : 'cldr') . '-' . CLDR_VERSION);
+    define('LOCAL_ZIP_FILE', SOURCE_DIR.DIRECTORY_SEPARATOR.(FULL_JSON ? 'cldr_full' : 'cldr').'-'.CLDR_VERSION.'.zip');
+    define('SOURCE_DIR_DATA', SOURCE_DIR.DIRECTORY_SEPARATOR.(FULL_JSON ? 'cldr_full' : 'cldr').'-'.CLDR_VERSION);
     defined('POST_CLEAN') or define('POST_CLEAN', false);
 
     if (!is_dir(SOURCE_DIR)) {
         if (mkdir(SOURCE_DIR, 0777, true) === false) {
-            echo "Failed to create " . SOURCE_DIR . "\n";
+            echo "Failed to create ".SOURCE_DIR."\n";
             die(1);
         }
     }
@@ -52,14 +52,14 @@ try {
     }
     echo "Creating data folder... ";
     if (mkdir(DESTINATION_DIR, 0777, false) === false) {
-        echo "Failed to create " . DESTINATION_DIR . "\n";
+        echo "Failed to create ".DESTINATION_DIR."\n";
         die(1);
     }
     echo "done.\n";
     if (!is_dir(TESTS_DIR)) {
         echo "Creating tests folder... ";
         if (mkdir(TESTS_DIR, 0777, false) === false) {
-            echo "Failed to create " . TESTS_DIR . "\n";
+            echo "Failed to create ".TESTS_DIR."\n";
             die(1);
         }
         echo "done.\n";
@@ -85,11 +85,10 @@ try {
 
 function downloadCLDR()
 {
-    if(version_compare(CLDR_VERSION, 26) >= 0) {
-        $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json-full.zip' : 'json.zip');
-    }
-    else {
-        $remoteURL = 'http://unicode.org/Public/cldr/' . CLDR_VERSION . '/' . (FULL_JSON ? 'json_full.zip' : 'json.zip');
+    if (version_compare(CLDR_VERSION, 26) >= 0) {
+        $remoteURL = 'http://unicode.org/Public/cldr/'.CLDR_VERSION.'/'.(FULL_JSON ? 'json-full.zip' : 'json.zip');
+    } else {
+        $remoteURL = 'http://unicode.org/Public/cldr/'.CLDR_VERSION.'/'.(FULL_JSON ? 'json_full.zip' : 'json.zip');
     }
     $zipFrom = null;
     $zipTo = null;
@@ -101,7 +100,7 @@ function downloadCLDR()
         }
         $zipTo = fopen(LOCAL_ZIP_FILE, 'wb');
         if ($zipTo === false) {
-            throw new Exception("Failed to create " . LOCAL_ZIP_FILE);
+            throw new Exception("Failed to create ".LOCAL_ZIP_FILE);
         }
         while (!feof($zipFrom)) {
             $buffer = fread($zipFrom, 4096);
@@ -109,7 +108,7 @@ function downloadCLDR()
                 throw new Exception("Failed to fetch data from $remoteURL");
             }
             if (fwrite($zipTo, $buffer) === false) {
-                throw new Exception("Failed to write data to " . LOCAL_ZIP_FILE);
+                throw new Exception("Failed to write data to ".LOCAL_ZIP_FILE);
             }
         }
         fclose($zipTo);
@@ -136,12 +135,12 @@ function downloadCLDR()
 function extractCLDR()
 {
     $zip = null;
-    echo "Extracting " . LOCAL_ZIP_FILE . "... ";
+    echo "Extracting ".LOCAL_ZIP_FILE."... ";
     try {
         $zip = new ZipArchive();
         $rc = $zip->open(LOCAL_ZIP_FILE);
         if ($rc !== true) {
-            throw new Exception("Opening " . LOCAL_ZIP_FILE . " failed with return code $rc");
+            throw new Exception("Opening ".LOCAL_ZIP_FILE." failed with return code $rc");
         }
         $zip->extractTo(SOURCE_DIR_DATA);
         $zip->close();
@@ -185,6 +184,7 @@ function copyData()
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
         */
+        'telephoneCodeData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'telephoneCodeData')),
         'territoryInfo.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryInfo')),
         'weekData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'weekData')),
         'parentLocales.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'parentLocales', 'parentLocale')),
@@ -193,16 +193,16 @@ function copyData()
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
         'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
     );
-    $src = SOURCE_DIR_DATA . DIRECTORY_SEPARATOR . 'main';
+    $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'main';
     $locales = scandir($src);
     if ($locales === false) {
         throw new Exception("Failed to retrieve the file list of $src");
     }
     $locales = array_diff($locales, array('.', '..'));
     foreach ($locales as $locale) {
-        if (is_dir($src . DIRECTORY_SEPARATOR . $locale)) {
+        if (is_dir($src.DIRECTORY_SEPARATOR.$locale)) {
             echo "Parsing locale $locale... ";
-            $destFolder = DESTINATION_DIR . DIRECTORY_SEPARATOR . $locale;
+            $destFolder = DESTINATION_DIR.DIRECTORY_SEPARATOR.$locale;
             if (is_dir($destFolder)) {
                 deleteFromFilesystem($destFolder);
             }
@@ -215,12 +215,12 @@ function copyData()
                     if ($copyTo === false) {
                         $copyTo = $copyFrom;
                     }
-                    $dstFile = $destFolder . DIRECTORY_SEPARATOR . $copyTo;
+                    $dstFile = $destFolder.DIRECTORY_SEPARATOR.$copyTo;
                     $useLocale = $locale;
-                    $srcFile = $src . DIRECTORY_SEPARATOR . $useLocale . DIRECTORY_SEPARATOR . $copyFrom;
+                    $srcFile = $src.DIRECTORY_SEPARATOR.$useLocale.DIRECTORY_SEPARATOR.$copyFrom;
                     if (!is_file($srcFile)) {
                         $useLocale = 'en';
-                        $srcFile = $src . DIRECTORY_SEPARATOR . $useLocale . DIRECTORY_SEPARATOR . $copyFrom;
+                        $srcFile = $src.DIRECTORY_SEPARATOR.$useLocale.DIRECTORY_SEPARATOR.$copyFrom;
                         if (!is_file($srcFile)) {
                             throw new Exception("File not found: $srcFile");
                         }
@@ -239,12 +239,12 @@ function copyData()
         }
     }
     echo "Parsing supplemental files... ";
-    $src = SOURCE_DIR_DATA . DIRECTORY_SEPARATOR . 'supplemental';
+    $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'supplemental';
     foreach ($copy as $copyFrom => $info) {
         if ($info['kind'] === 'supplemental') {
             $copyTo = array_key_exists('save-as', $info) ? $info['save-as'] : $copyFrom;
-            $dstFile = DESTINATION_DIR . DIRECTORY_SEPARATOR . $copyTo;
-            $srcFile = $src . DIRECTORY_SEPARATOR . $copyFrom;
+            $dstFile = DESTINATION_DIR.DIRECTORY_SEPARATOR.$copyTo;
+            $srcFile = $src.DIRECTORY_SEPARATOR.$copyFrom;
             if (!is_file($srcFile)) {
                 throw new Exception("File not found: $srcFile");
             }
@@ -308,6 +308,28 @@ function copyDataFile($srcFile, $info, $dstFile)
                 if (array_key_exists($keyFrom, $data['eras'])) {
                     $data['eras'][$keyTo] = $data['eras'][$keyFrom];
                     unset($data['eras'][$keyFrom]);
+                }
+            }
+            break;
+        case 'telephoneCodeData.json':
+            foreach (array_keys($data) as $k) {
+                if (!preg_match('/^([A-Z]{2}|[0-9]{3})$/', $k)) {
+                    throw new Exception("Invalid territory ID: $k");
+                }
+                $d = $data[$k];
+                if ((!is_array($d)) || empty($d)) {
+                    throw new Exception("Expecting non empty array for $k, found ".gettype($d));
+                }
+                $data[$k] = array();
+                $n = count($d);
+                for ($i = 0; $i < $n; $i++) {
+                    if (!isset($d[$i])) {
+                        throw new Exception("Invalid array for $k");
+                    }
+                    if ((!is_array($d[$i])) || (count($d[$i]) !== 1) || (!array_key_exists('telephoneCountryCode', $d[$i])) || (!is_string($d[$i]['telephoneCountryCode'])) || (!strlen($d[$i]['telephoneCountryCode']))) {
+                        throw new Exception("Invalid telephoneCountryCode for $k");
+                    }
+                    $data[$k][] = $d[$i]['telephoneCountryCode'];
                 }
             }
             break;
@@ -380,8 +402,8 @@ function copyDataFile($srcFile, $info, $dstFile)
                                                     $v5 = 'f';
                                                     break;
                                                 case 'official_minority':
-                                                	 $v5 = 'm';
-                                                	 break;
+                                                     $v5 = 'm';
+                                                     break;
                                                 default:
                                                     throw new Exception("Unknown language status: $v4");
                                             }
@@ -524,7 +546,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                             unset($mz[$i]);
                             break;
                         default:
-                            throw new Exception('Invalid mapZone node key: ' . $i);
+                            throw new Exception('Invalid mapZone node key: '.$i);
                     }
                 }
                 $metazones[] = $mz;
@@ -542,7 +564,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             $keys = array_keys($data);
             foreach ($keys as $key) {
                 if (!preg_match('/^listPattern-type-(.+)$/', $key, $m)) {
-                    throw new Exception("Invalid node '$key' in " . $dstFile);
+                    throw new Exception("Invalid node '$key' in ".$dstFile);
                 }
                 foreach (array_keys($data[$key]) as $k) {
                     $data[$key][$k] = toPhpSprintf($data[$key][$k]);
@@ -558,7 +580,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                 $keys = array_keys($lData);
                 foreach ($keys as $key) {
                     if (!preg_match('/^pluralRule-count-(.+)$/', $key, $m)) {
-                        throw new Exception("Invalid node '$key' in " . $dstFile);
+                        throw new Exception("Invalid node '$key' in ".$dstFile);
                     }
                     $rule = $m[1];
                     $testData[$l][$rule] = array();
@@ -605,7 +627,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $map = array('==' => 'true', '!=' => 'false');
                         foreach (array('^', ' and ', ' or ') as $pre) {
                             while (preg_match(
-                                '/' . $pre . '(([nivfwft]( % \\d+)?) (==|!=) ((\\d+)(((\\.\\.)|,)+(\\d+))+))/',
+                                '/'.$pre.'(([nivfwft]( % \\d+)?) (==|!=) ((\\d+)(((\\.\\.)|,)+(\\d+))+))/',
                                 $v,
                                 $m
                             )) {
@@ -618,7 +640,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                                         $ranges[$j] = "array({$m[1]}, {$m[2]})";
                                     }
                                 }
-                                $v = str_replace($found, "static::inRange($leftyPart, {$map[$operator]}, " . implode(', ', $ranges) . ")", $v);
+                                $v = str_replace($found, "static::inRange($leftyPart, {$map[$operator]}, ".implode(', ', $ranges).")", $v);
                             }
                         }
                         if (strpos($v, '..') !== false) {
@@ -632,7 +654,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                             'f' => '%5$s', // visible fractional digits in n, with trailing zeros.
                             't' => '%6$s', // visible fractional digits in n, without trailing zeros.
                         ) as $from => $to) {
-                            $v = preg_replace('/^' . $from .' /', "$to ", $v);
+                            $v = preg_replace('/^'.$from.' /', "$to ", $v);
                             $v = preg_replace("/^$from /", "$to ", $v);
                             $v = str_replace(" $from ", " $to ", $v);
                             $v = str_replace("($from, ", "($to, ", $v);
@@ -650,7 +672,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             if ($testJson === false) {
                 throw new Exception("Failed to serialize test data for $srcFile");
             }
-            $testDataFile = TESTS_DIR . DIRECTORY_SEPARATOR . basename($dstFile);
+            $testDataFile = TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile);
             if (is_file($testDataFile)) {
                 deleteFromFilesystem($testDataFile);
             }
@@ -670,14 +692,14 @@ function copyDataFile($srcFile, $info, $dstFile)
                             switch ($unitKey) {
                                 case 'per':
                                     if (implode('|', array_keys(($data[$width][$unitKey]))) !== 'compoundUnitPattern') {
-                                        throw new Exception("Invalid node (1) '$width/$unitKey' in " . $dstFile);
+                                        throw new Exception("Invalid node (1) '$width/$unitKey' in ".$dstFile);
                                     }
                                     $data[$width]['_compoundPattern'] = toPhpSprintf($data[$width][$unitKey]['compoundUnitPattern']);
                                     unset($data[$width][$unitKey]);
                                     break;
                                 default:
                                     if (!preg_match('/^(\\w+)?-(.+)$/', $unitKey, $m)) {
-                                        throw new Exception("Invalid node (2) '$width/$unitKey' in " . $dstFile);
+                                        throw new Exception("Invalid node (2) '$width/$unitKey' in ".$dstFile);
                                     }
                                     $unitKind = $m[1];
                                     $unitName = $m[2];
@@ -697,7 +719,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                                                 break;
                                             default:
                                                 if (!preg_match('/^unitPattern-count-(.+)$/', $pluralRuleSrc, $m)) {
-                                                    throw new Exception("Invalid node (4) '$width/$unitKey/$pluralRuleSrc' in " . $dstFile);
+                                                    throw new Exception("Invalid node (4) '$width/$unitKey/$pluralRuleSrc' in ".$dstFile);
                                                 }
                                                 $pluralRule = $m[1];
                                                 $data[$width][$unitKind][$unitName][$pluralRule] = toPhpSprintf($data[$width][$unitKey][$pluralRuleSrc]);
@@ -712,7 +734,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                     default:
                         if (preg_match('/^durationUnit-type-(.+)/', $width, $m)) {
                             if (implode('|', array_keys(($data[$width]))) !== 'durationUnitPattern') {
-                                throw new Exception("Invalid node (5) '$width' in " . $dstFile);
+                                throw new Exception("Invalid node (5) '$width' in ".$dstFile);
                             }
                             $t = $m[1];
                             if (!array_key_exists('_durationPattern', $data)) {
@@ -721,7 +743,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                             $data['_durationPattern'][$t] = $data[$width]['durationUnitPattern'];
                             unset($data[$width]);
                         } else {
-                            throw new Exception("Invalid node (6) '$width' in " . $dstFile);
+                            throw new Exception("Invalid node (6) '$width' in ".$dstFile);
                         }
                         break;
                 }
@@ -729,13 +751,13 @@ function copyDataFile($srcFile, $info, $dstFile)
             break;
         case 'localeDisplayNames.json':
             if (!array_key_exists('localeDisplayPattern', $data)) {
-                throw new Exception("Missing node 'localeDisplayPattern' in " . $dstFile);
+                throw new Exception("Missing node 'localeDisplayPattern' in ".$dstFile);
             }
             foreach (array_keys($data['localeDisplayPattern']) as $k) {
                 $data['localeDisplayPattern'][$k] = toPhpSprintf($data['localeDisplayPattern'][$k]);
             }
             if (!array_key_exists('codePatterns', $data)) {
-                throw new Exception("Missing node 'codePatterns' in " . $dstFile);
+                throw new Exception("Missing node 'codePatterns' in ".$dstFile);
             }
             foreach (array_keys($data['codePatterns']) as $k) {
                 $data['codePatterns'][$k] = toPhpSprintf($data['codePatterns'][$k]);
@@ -777,21 +799,21 @@ function copyDataFile($srcFile, $info, $dstFile)
                                 $value = @intval($value);
                             }
                             if (!is_int($value)) {
-                                throw new Exception("Invalid node '$key' in " . $dstFile);
+                                throw new Exception("Invalid node '$key' in ".$dstFile);
                             }
                             $final[$key] = $value;
                             break;
                         default:
-                            throw new Exception("Invalid node '$key' in " . $dstFile);
+                            throw new Exception("Invalid node '$key' in ".$dstFile);
                     }
                 }
             }
             if (!array_key_exists('latn', $numberSystems)) {
-                throw new Exception("Missing 'latn' in " . $dstFile);
+                throw new Exception("Missing 'latn' in ".$dstFile);
             }
             foreach ($numberSystems['latn'] as $key => $value) {
                 if (array_key_exists($key, $final)) {
-                    throw new Exception("Duplicated node '$key' in " . $dstFile);
+                    throw new Exception("Duplicated node '$key' in ".$dstFile);
                 }
                 // $final[$key] = $value; REMOVED ADVANCED LOCALIZATION
                 if ($key === 'symbols') { // REMOVED ADVANCED LOCALIZATION
@@ -801,7 +823,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
             if (empty($symbols) || (!is_array($symbols))) {
-                throw new Exception("Missing symbols in " . $dstFile);
+                throw new Exception("Missing symbols in ".$dstFile);
             }
             foreach (array_keys($data) as $key) {
                 if (is_array($data[$key]) && preg_match('/\\w+Formats$/', $key) && array_key_exists('standard', $data[$key])) {
@@ -838,7 +860,7 @@ function deleteFromFilesystem($path)
             throw new Exception("Failed to retrieve the file list of $path");
         }
         foreach (array_diff($contents, array('.', '..')) as $item) {
-            deleteFromFilesystem($path . DIRECTORY_SEPARATOR . $item);
+            deleteFromFilesystem($path.DIRECTORY_SEPARATOR.$item);
         }
         if (rmdir($path) === false) {
             throw new Exception("Failed to delete directory $path");
@@ -854,7 +876,7 @@ function toPhpSprintf($fmt)
         $result = preg_replace_callback(
             '/\\{(\\d+)\\}/',
             function ($matches) {
-                return '%' . (1 + intval($matches[1])) . '$s';
+                return '%'.(1 + intval($matches[1])).'$s';
             },
             $fmt
         );
@@ -889,10 +911,10 @@ function checkOneKey($node, $key)
         throw new Exception("$node is not an array");
     }
     if (count($node) !== 1) {
-        throw new Exception("Expected just one node '$key', found these keys: " . implode(', ', array_keys($node)));
+        throw new Exception("Expected just one node '$key', found these keys: ".implode(', ', array_keys($node)));
     }
     if (!array_key_exists($key, $node)) {
-        throw new Exception("Expected just one node '$key', found this key: " . implode(', ', array_keys($node)));
+        throw new Exception("Expected just one node '$key', found this key: ".implode(', ', array_keys($node)));
     }
 }
 
@@ -915,7 +937,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
             if (strlen($m[2]) > 0) {
                 $rxPre = preg_quote($m[2]);
             }
-            $pattern = $m[1] . $m[3] . $m[5];
+            $pattern = $m[1].$m[3].$m[5];
             if (strlen($m[4]) > 0) {
                 $rxPost = preg_quote($m[4]);
             }
@@ -931,11 +953,11 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
             switch ($intPattern) {
                 case '#E0':
                 case '#E00':
-                    $rx .= '(' . preg_quote($symbols['plusSign']). ')?[0-9]+((' . preg_quote($symbols['decimal']) . ')[0-9]+)*[eE]((' . preg_quote($symbols['minusSign']) . ')|(' . preg_quote($symbols['plusSign']) . '))?[0-9]+';
+                    $rx .= '('.preg_quote($symbols['plusSign']).')?[0-9]+(('.preg_quote($symbols['decimal']).')[0-9]+)*[eE](('.preg_quote($symbols['minusSign']).')|('.preg_quote($symbols['plusSign']).'))?[0-9]+';
                     break;
                 case '-#E0':
                 case '-#E00':
-                    $rx .= '(' . preg_quote($symbols['minusSign']). ')?[0-9]+((' . preg_quote($symbols['decimal']) . ')[0-9]+)*[eE]((' . preg_quote($symbols['minusSign']) . ')|(' . preg_quote($symbols['plusSign']) . '))?[0-9]+';
+                    $rx .= '('.preg_quote($symbols['minusSign']).')?[0-9]+(('.preg_quote($symbols['decimal']).')[0-9]+)*[eE](('.preg_quote($symbols['minusSign']).')|('.preg_quote($symbols['plusSign']).'))?[0-9]+';
                     break;
                 default:
                     throw new \Exception("Invalid chunk ('$intPattern') in pattern '$pattern'");
@@ -951,9 +973,9 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                     case '#':
                     case '-#':
                         if ($chunk === '-#') {
-                            $rx .= '(' . preg_quote($symbols['minusSign']) . ')?';
+                            $rx .= '('.preg_quote($symbols['minusSign']).')?';
                         } else {
-                            $rx .= '(' . preg_quote($symbols['plusSign']) . ')?';
+                            $rx .= '('.preg_quote($symbols['plusSign']).')?';
                         }
                         if ($nextChunk === '##0') {
                             $rx .= '[0-9]{1,3}';
@@ -965,7 +987,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                         break;
                     case '##':
                         if ($nextChunk === '##0') {
-                            $rx .= '((' . preg_quote($symbols['group']) . ')?[0-9]{2})*';
+                            $rx .= '(('.preg_quote($symbols['group']).')?[0-9]{2})*';
                         } else {
                             throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
                         }
@@ -974,7 +996,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                         if ($prevChunk === '##') {
                             $rx .= '[0-9]';
                         } elseif (($prevChunk === '#') || ($prevChunk === '-#')) {
-                            $rx .= '((' . preg_quote($symbols['group']) . ')?[0-9]{3})*';
+                            $rx .= '(('.preg_quote($symbols['group']).')?[0-9]{3})*';
                         } else {
                             throw new \Exception("Invalid chunk #$chunkIndex ('$chunk') in pattern '$pattern'");
                         }
@@ -996,17 +1018,17 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
         if (strlen($decimalPattern) > 0) {
             switch ($decimalPattern) {
                 case '###':
-                    $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?';
+                    $rx .= '(('.preg_quote($symbols['decimal']).')[0-9]+)?';
                     break;
                 case '###-':
-                    $rx .= '((' . preg_quote($symbols['decimal']) . ')[0-9]+)?(' . preg_quote($symbols['minusSign']) . ')';
+                    $rx .= '(('.preg_quote($symbols['decimal']).')[0-9]+)?('.preg_quote($symbols['minusSign']).')';
                     break;
                 default:
                     if (preg_match('/^(0+)(-?)$/', $decimalPattern, $m)) {
                         $n = strlen($m[1]);
-                        $rx .= '(' . preg_quote($symbols['decimal']) . ')[0-9]{' . strlen($m[1]) . '}';
+                        $rx .= '('.preg_quote($symbols['decimal']).')[0-9]{'.strlen($m[1]).'}';
                         if (substr($decimalPattern, -1) === '-') {
-                            $rx .= '(' . preg_quote($symbols['minusSign']) . ')';
+                            $rx .= '('.preg_quote($symbols['minusSign']).')';
                         }
                     } else {
                         throw new \Exception("Invalid chunk ('$decimalPattern') in pattern '$pattern'");
@@ -1014,7 +1036,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
             }
         }
 
-        $result[$patternKey] = '/^' . $rxPre . $rx . $rxPost  . '$/u';
+        $result[$patternKey] = '/^'.$rxPre.$rx.$rxPost.'$/u';
     }
 
     return $result;
