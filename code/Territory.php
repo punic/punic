@@ -264,6 +264,27 @@ class Territory
         return $territoryIDs;
     }
 
+    /**
+     * Return the code of the territory that contains a territory
+     * @param string $childTerritoryCode
+     * @return string Return the parent territory code, or an empty string if $childTerritoryCode is the World (001) or if it's invalid.
+     */
+    public static function getParentTerritoryCode($childTerritoryCode)
+    {
+        $result = '';
+        if (is_string($childTerritoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $childTerritoryCode)) {
+            $childTerritoryCode = strtoupper($childTerritoryCode);
+            foreach (\Punic\Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
+                if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
+                    $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     protected static function getTerritoryInfo($territoryCode)
     {
         $result = null;

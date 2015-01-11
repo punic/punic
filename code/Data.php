@@ -58,7 +58,7 @@ class Data
     public static function setDefaultLocale($locale)
     {
         if (is_null(static::explodeLocale($locale))) {
-           throw new Exception\InvalidLocale($locale);
+            throw new Exception\InvalidLocale($locale);
         }
         static::$defaultLocale = $locale;
     }
@@ -297,23 +297,11 @@ class Data
     }
 
     /**
-     * Return the parent of a territory
-     * @param string $territory The child territory
-     * @return string Returns an empty string if the parent territory was not found, the parent territory ID if found
+     * @deprecated
      */
     protected static function getParentTerritory($territory)
     {
-        $result = '';
-        if (is_string($territory) && strlen($territory)) {
-            foreach (static::getGeneric('territoryContainment') as $parent => $info) {
-                if (in_array($territory, $info['contains'], true)) {
-                    $result = $parent;
-                    break;
-                }
-            }
-        }
-
-        return $result;
+        return \Punic\Territory::getParentTerritoryCode($territory);
     }
 
     /**
@@ -354,7 +342,7 @@ class Data
                 $result = $data[$territory];
                 break;
             }
-            $territory = static::getParentTerritory($territory);
+            $territory = \Punic\Territory::getParentTerritoryCode($territory);
         }
 
         return $result;
@@ -461,7 +449,7 @@ class Data
                             'language' => $language,
                             'script' => $script,
                             'territory' => $territory,
-                            'parentLocale' => $parentLocale
+                            'parentLocale' => $parentLocale,
                         );
                     }
                 }
@@ -521,7 +509,7 @@ class Data
         $territories = array();
         while (strlen($territory) > 0) {
             $territories[] = $territory;
-            $territory = static::getParentTerritory($territory);
+            $territory = \Punic\Territory::getParentTerritoryCode($territory);
         }
         if (strlen($script)) {
             foreach ($territories as $territory) {

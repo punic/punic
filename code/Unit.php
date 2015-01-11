@@ -6,7 +6,6 @@ namespace Punic;
  */
 class Unit
 {
-
     /**
      * Format a unit string
      * @param int|float|string $number The unit amount
@@ -87,5 +86,38 @@ class Unit
         }
         //@codeCoverageIgnoreEnd
         return sprintf($rules[$pluralRule], \Punic\Number::format($number, $precision, $locale));
+    }
+
+    /**
+     * Retrieve the measurement systems and their localized names
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return array The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
+     */
+    public static function getMeasurementSystems($locale = '')
+    {
+        return \Punic\Data::get('measurementSystemNames', $locale);
+    }
+
+    /**
+     * Retrieve the measurement system for a specific territory
+     * @param string $territoryCode The territory code (eg. 'US' for 'United States of America').
+     * @return string Return the measurement system code (eg: 'metric') for the specified territory. If $territoryCode is not valid we'll return an empty string.
+     */
+    public static function getMeasurementSystemFor($territoryCode)
+    {
+        $result = '';
+        if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
+            $territoryCode = \strtoupper($territoryCode);
+            $data = \Punic\Data::getGeneric('measurementData');
+            while (strlen($territoryCode)) {
+                if (array_key_exists($territoryCode, $data['measurementSystem'])) {
+                    $result = $data['measurementSystem'][$territoryCode];
+                    break;
+                }
+                $territoryCode = \Punic\Territory::getParentTerritoryCode($territoryCode);
+            }
+        }
+
+        return $result;
     }
 }

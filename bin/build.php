@@ -174,12 +174,12 @@ function copyData()
         'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
+        'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
         'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
-        'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
@@ -192,6 +192,7 @@ function copyData()
         'territoryContainment.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryContainment')),
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
         'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
+        'measurementData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'measurementData')),
     );
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'main';
     $locales = scandir($src);
@@ -833,6 +834,14 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $data[$key]['standard']["rx$rxKey"] = $rx;
                     }
                 }
+            }
+            break;
+        case 'measurementData.json':
+            if (!(array_key_exists('measurementSystem', $data) && is_array($data['measurementSystem']))) {
+                throw new Exception('Missing/invalid key: measurementSystem');
+            }
+            if (!(array_key_exists('paperSize', $data) && is_array($data['paperSize']))) {
+                throw new Exception('Missing/invalid key: paperSize');
             }
             break;
     }
