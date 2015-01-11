@@ -6,7 +6,6 @@ namespace Punic;
  */
 class Unit
 {
-
     /**
      * Format a unit string
      * @param int|float|string $number The unit amount
@@ -87,5 +86,15 @@ class Unit
         }
         //@codeCoverageIgnoreEnd
         return sprintf($rules[$pluralRule], \Punic\Number::format($number, $precision, $locale));
+    }
+
+    /**
+     * Retrieve the measurement systems and their localized names
+     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return array The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
+     */
+    public static function getMeasurementSystems($locale = '')
+    {
+        return \Punic\Data::get('measurementSystemNames', $locale);
     }
 }
