@@ -192,6 +192,7 @@ function copyData()
         'territoryContainment.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'territoryContainment')),
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
         'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
+        'measurementData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'measurementData')),
     );
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'main';
     $locales = scandir($src);
@@ -833,6 +834,14 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $data[$key]['standard']["rx$rxKey"] = $rx;
                     }
                 }
+            }
+            break;
+        case 'measurementData.json':
+            if (!(array_key_exists('measurementSystem', $data) && is_array($data['measurementSystem']))) {
+                throw new Exception('Missing/invalid key: measurementSystem');
+            }
+            if (!(array_key_exists('paperSize', $data) && is_array($data['paperSize']))) {
+                throw new Exception('Missing/invalid key: paperSize');
             }
             break;
     }
