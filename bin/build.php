@@ -174,12 +174,12 @@ function copyData()
         'localeDisplayNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames')),
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
+        'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
         'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
-        'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
         'variants.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'variants')),
