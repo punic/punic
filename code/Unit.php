@@ -97,4 +97,27 @@ class Unit
     {
         return \Punic\Data::get('measurementSystemNames', $locale);
     }
+
+    /**
+     * Retrieve the measurement system for a specific territory
+     * @param string $territoryCode The territory code (eg. 'US' for 'United States of America').
+     * @return string Return the measurement system code (eg: 'metric') for the specified territory. If $territoryCode is not valid we'll return an empty string.
+     */
+    public static function getMeasurementSystemFor($territoryCode)
+    {
+        $result = '';
+        if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
+            $territoryCode = \strtoupper($territoryCode);
+            $data = \Punic\Data::getGeneric('measurementData');
+            while (strlen($territoryCode)) {
+                if (array_key_exists($territoryCode, $data['measurementSystem'])) {
+                    $result = $data['measurementSystem'][$territoryCode];
+                    break;
+                }
+                $territoryCode = \Punic\Territory::getParentTerritoryCode($territoryCode);
+            }
+        }
+
+        return $result;
+    }
 }

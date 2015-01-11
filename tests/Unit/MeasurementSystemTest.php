@@ -16,4 +16,24 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         }
         $this->assertNotNull($keys);
     }
+
+    public function providerGetMeasurementSystemFor()
+    {
+        return array(
+            array('US', 'US'),
+            array('IT', 'metric'),
+            array('DE', 'metric'),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetMeasurementSystemFor
+     */
+    public function testGetMeasurementSystemFor($territoryCode, $measurementSystemCode)
+    {
+        $this->assertSame(
+            $measurementSystemCode,
+            \Punic\Unit::getMeasurementSystemFor($territoryCode)
+        );
+    }
 }
