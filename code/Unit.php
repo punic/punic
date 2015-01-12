@@ -107,7 +107,7 @@ class Unit
     {
         $result = '';
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
-            $territoryCode = \strtoupper($territoryCode);
+            $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
             while (strlen($territoryCode)) {
                 if (array_key_exists($territoryCode, $data['measurementSystem'])) {
@@ -147,6 +147,70 @@ class Unit
                 $otherCountries = array();
                 foreach ($data['measurementSystem'] as $territory => $ms) {
                     if (($territory !== '001') && (strcasecmp($measurementSystem, $ms) !== 0)) {
+                        $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                        if (empty($children)) {
+                            $otherCountries[] = $territory;
+                        } else {
+                            $otherCountries = array_merge($otherCountries, $children);
+                        }
+                    }
+                }
+                $result = array_values(array_diff($result, $otherCountries));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the standard paper size for a specific territory
+     * @param string $territoryCode The territory code (eg. 'US' for 'United States of America').
+     * @return string Return the standard paper size (eg: 'A4' or 'US-Letter') for the specified territory. If $territoryCode is not valid we'll return an empty string.
+     */
+    public static function getPaperSizeFor($territoryCode)
+    {
+        $result = '';
+        if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
+            $territoryCode = strtoupper($territoryCode);
+            $data = \Punic\Data::getGeneric('measurementData');
+            while (strlen($territoryCode)) {
+                if (array_key_exists($territoryCode, $data['paperSize'])) {
+                    $result = $data['paperSize'][$territoryCode];
+                    break;
+                }
+                $territoryCode = \Punic\Territory::getParentTerritoryCode($territoryCode);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the list of countries that use a specific paper size by default
+     * @param string $paperSize The paper size identifier ('A4' or 'US-Letter')
+     * @return array The list of country IDs that use the specified paper size (if $paperSize is invalid you'll get an empty array)
+     */
+    public static function getCountriesWithPaperSize($paperSize)
+    {
+        $result = array();
+        if (is_string($paperSize) && (strlen($paperSize) > 0)) {
+            $someGroup = false;
+            $data = \Punic\Data::getGeneric('measurementData');
+            foreach ($data['paperSize'] as $territory => $ms) {
+                if (strcasecmp($paperSize, $ms) === 0) {
+                    $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                    if (empty($children)) {
+                        $result[] = $territory;
+                    } else {
+                        $someGroup = true;
+                        $result = array_merge($result, $children);
+                    }
+                }
+            }
+            if ($someGroup) {
+                $otherCountries = array();
+                foreach ($data['paperSize'] as $territory => $ms) {
+                    if (($territory !== '001') && (strcasecmp($paperSize, $ms) !== 0)) {
                         $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
                         if (empty($children)) {
                             $otherCountries[] = $territory;
