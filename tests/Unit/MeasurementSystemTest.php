@@ -36,4 +36,27 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
             \Punic\Unit::getMeasurementSystemFor($territoryCode)
         );
     }
+
+    public function providerGetCountriesWithMeasurementSystem()
+    {
+        return array(
+            array('US', 'US', true),
+            array('US', 'IT', false),
+            array('metric', 'US', false),
+            array('metric', 'IT', true),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetCountriesWithMeasurementSystem
+     */
+    public function testGetCountriesWithMeasurementSystem($measurementSystemCode, $territoryCode, $territoryPresent)
+    {
+        $countries = \Punic\Unit::getCountriesWithMeasurementSystem($measurementSystemCode);
+        if ($territoryPresent) {
+            $this->assertContains($territoryCode, $countries);
+        } else {
+            $this->assertNotContains($territoryCode, $countries);
+        }
+    }
 }

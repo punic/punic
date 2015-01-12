@@ -277,7 +277,41 @@ class Territory
             foreach (\Punic\Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
                     $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
-                    break;
+                    if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the child territories of a parent territory
+     * @param string $parentTerritoryCode
+     * @param bool $expandSubGroups = false Set to true to expand the sub-groups, false to retrieve them.
+     * @return array Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
+     */
+    public static function getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups = false)
+    {
+        $result = array();
+        if (is_string($parentTerritoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $parentTerritoryCode)) {
+            $parentTerritoryCode = strtoupper($parentTerritoryCode);
+            $data = \Punic\Data::getGeneric('territoryContainment');
+            if (array_key_exists($parentTerritoryCode, $data)) {
+                $children = $data[$parentTerritoryCode]['contains'];
+                if ($expandSubGroups) {
+                    foreach ($children as $child) {
+                        $grandChildren = static::getChildTerritoryCodes($child, true);
+                        if (empty($grandChildren)) {
+                            $result[] = $child;
+                        } else {
+                            $result = array_merge($result, $grandChildren);
+                        }
+                    }
+                } else {
+                    $result = $children;
                 }
             }
         }

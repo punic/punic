@@ -149,4 +149,46 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $this->assertContains('SM', $it);
         $this->assertContains('VA', $it);
     }
+
+    public function providerGetParentTerritoryCode()
+    {
+        return array(
+            array(/*World*/'001', /*Nothing*/''),
+            array(/*Europe*/'150', /*World*/'001'),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetParentTerritoryCode
+     */
+    public function testGetParentTerritoryCode($child, $parent)
+    {
+        $this->assertSame(
+            $parent,
+            Territory::getParentTerritoryCode($child)
+        );
+    }
+
+    public function providerGetChildTerritoryCodes()
+    {
+        return array(
+            array(/*World*/'001', false, /*Europe*/'150', true),
+            array(/*World*/'001', false, 'IT', false),
+            array(/*World*/'001', true, /*Europe*/'150', false),
+            array(/*World*/'001', true, 'IT', true),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetChildTerritoryCodes
+     */
+    public function testGetChildTerritoryCodes($parentTerritoryCode, $expandSubGroups, $childTerritoryCode, $childIncluded)
+    {
+        $children = Territory::getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups);
+        if ($childIncluded) {
+            $this->assertContains($childTerritoryCode, $children);
+        } else {
+            $this->assertNotContains($childTerritoryCode, $children);
+        }
+    }
 }

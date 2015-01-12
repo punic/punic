@@ -120,4 +120,45 @@ class Unit
 
         return $result;
     }
+
+    /**
+     * Returns the list of countries that use a specific measurement system
+     * @param string $measurementSystem The measurement system identifier ('metric', 'US' or 'UK')
+     * @return array The list of country IDs that use the specified measurement system (if $measurementSystem is invalid you'll get an empty array)
+     */
+    public static function getCountriesWithMeasurementSystem($measurementSystem)
+    {
+        $result = array();
+        if (is_string($measurementSystem) && (strlen($measurementSystem) > 0)) {
+            $someGroup = false;
+            $data = \Punic\Data::getGeneric('measurementData');
+            foreach ($data['measurementSystem'] as $territory => $ms) {
+                if (strcasecmp($measurementSystem, $ms) === 0) {
+                    $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                    if (empty($children)) {
+                        $result[] = $territory;
+                    } else {
+                        $someGroup = true;
+                        $result = array_merge($result, $children);
+                    }
+                }
+            }
+            if ($someGroup) {
+                $otherCountries = array();
+                foreach ($data['measurementSystem'] as $territory => $ms) {
+                    if (($territory !== '001') && (strcasecmp($measurementSystem, $ms) !== 0)) {
+                        $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                        if (empty($children)) {
+                            $otherCountries[] = $territory;
+                        } else {
+                            $otherCountries = array_merge($otherCountries, $children);
+                        }
+                    }
+                }
+                $result = array_values(array_diff($result, $otherCountries));
+            }
+        }
+
+        return $result;
+    }
 }
