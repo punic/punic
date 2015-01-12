@@ -107,7 +107,7 @@ class Unit
     {
         $result = '';
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
-            $territoryCode = \strtoupper($territoryCode);
+            $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
             while (strlen($territoryCode)) {
                 if (array_key_exists($territoryCode, $data['measurementSystem'])) {
