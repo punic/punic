@@ -277,7 +277,9 @@ class Territory
             foreach (\Punic\Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
                     $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
-                    break;
+                    if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
+                        break;
+                    }
                 }
             }
         }
