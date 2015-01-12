@@ -211,7 +211,7 @@ class Data
                         $info = static::explodeLocale($item);
                         if (is_array($info)) {
                             if ((!$allowGroups) && preg_match('/^[0-9]{3}$/', $info['territory'])) {
-                                foreach (static::expandTerritoryGroup($info['territory']) as $territory) {
+                                foreach (\Punic\Territory::getChildTerritoryCodes($info['territory'], true) as $territory) {
                                     if (strlen($info['script'])) {
                                         $locales[] = "{$info['language']}-{$info['script']}-$territory";
                                     } else {
@@ -305,26 +305,11 @@ class Data
     }
 
     /**
-     * Retrieves all the atomic territories belonging to a group.
-     * @param string $parentTerritory The parent territory (eg '001')
-     * @return array
+     * @deprecated
      */
     protected static function expandTerritoryGroup($parentTerritory)
     {
-        $result = array();
-        $data = static::getGeneric('territoryContainment');
-        if (array_key_exists($parentTerritory, $data)) {
-            foreach ($data[$parentTerritory]['contains'] as $child) {
-                $grandchildren = static::expandTerritoryGroup($child);
-                if (empty($grandchildren)) {
-                    $result[] = $child;
-                } else {
-                    $result = array_merge($result, $grandchildren);
-                }
-            }
-        }
-
-        return $result;
+        return \Punic\Territory::getChildTerritoryCodes($parentTerritory, true);
     }
 
     /**
