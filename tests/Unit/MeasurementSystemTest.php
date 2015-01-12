@@ -59,4 +59,47 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
             $this->assertNotContains($territoryCode, $countries);
         }
     }
+
+    public function providerGetPaperSizeFor()
+    {
+        return array(
+            array('US', 'US-Letter'),
+            array('IT', 'A4'),
+            array('DE', 'A4'),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetPaperSizeFor
+     */
+    public function testGetPaperSizeFor($territoryCode, $paperSize)
+    {
+        $this->assertSame(
+            $paperSize,
+            \Punic\Unit::getPaperSizeFor($territoryCode)
+        );
+    }
+
+    public function providerGetCountriesWithPaperSize()
+    {
+        return array(
+            array('US-Letter', 'US', true),
+            array('US-Letter', 'IT', false),
+            array('A4', 'US', false),
+            array('A4', 'IT', true),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetCountriesWithPaperSize
+     */
+    public function testGetCountriesWithPaperSize($paperSize, $territoryCode, $territoryPresent)
+    {
+        $countries = \Punic\Unit::getCountriesWithPaperSize($paperSize);
+        if ($territoryPresent) {
+            $this->assertContains($territoryCode, $countries);
+        } else {
+            $this->assertNotContains($territoryCode, $countries);
+        }
+    }
 }
