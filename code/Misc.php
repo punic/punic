@@ -141,9 +141,9 @@ class Misc
     }
 
     /**
-     * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales
+     * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
      * @param boolean $ignoreCache set to true if you want to ignore the cache
-     * @return array
+     * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function getBrowserLocales($ignoreCache = false)
     {
@@ -162,9 +162,9 @@ class Misc
     }
 
     /**
-     * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales
+     * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
      * @param string $httpAcceptLanguages
-     * @return array
+     * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function parseHttpAcceptLanguage($httpAcceptLanguages)
     {
@@ -222,6 +222,7 @@ class Misc
                 }
             }
         }
+        arsort($result, SORT_NUMERIC);
 
         return $result;
     }
