@@ -53,7 +53,7 @@ try {
         . ' --destination=' . escapeshellarg(DEST_DIR)
         . ' --access-levels=public'
         . ' --extensions=php'
-        . ' --groups=namespace'
+        . ' --groups=namespaces'
         . ' --charset=UTF-8'
         . ' --template-theme=bootstrap'
         . ' --title=' . escapeshellarg('Punic APIs')
