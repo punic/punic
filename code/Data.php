@@ -102,7 +102,7 @@ class Data
     /**
      * Get the locale data
      * @param string $identifier The data identifier
-     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @param string $locale='' The locale identifier (if empty we'll use the current default locale)
      * @return array
      * @throws \Punic\Exception Throws an exception in case of problems
      * @internal
@@ -193,7 +193,7 @@ class Data
 
     /**
      * Return a list of available locale identifiers
-     * @param bool $allowGroups = false Set to true if you want to retrieve locale groups (eg. 'en-001'), false otherwise
+     * @param bool $allowGroups=false Set to true if you want to retrieve locale groups (eg. 'en-001'), false otherwise
      * @return array
      */
     public static function getAvailableLocales($allowGroups = false)
@@ -233,8 +233,8 @@ class Data
 
     /**
      * Try to guess the full locale (with script and territory) ID associated to a language
-     * @param string $language ='' The language identifier (if empty we'll use the current default language)
-     * @param string $script ='' The script identifier (if $language is empty we'll use the current default script)
+     * @param string $language='' The language identifier (if empty we'll use the current default language)
+     * @param string $script='' The script identifier (if $language is empty we'll use the current default script)
      * @return string Returns an empty string if the territory was not found, the territory ID otherwise
      */
     public static function guessFullLocale($language = '', $script = '')
@@ -269,7 +269,8 @@ class Data
 
     /**
      * Return the terrotory associated to the locale (guess it if it's not present in $locale)
-     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @param string $locale='' The locale identifier (if empty we'll use the current default locale)
+     * @param bool $checkFallbackLocale=true Set to true to check the fallback locale if $locale (or the default locale) don't have an associated territory, false to don't fallback to fallback locale
      * @return string
      */
     public static function getTerritory($locale = '', $checkFallbackLocale = true)
@@ -314,7 +315,8 @@ class Data
 
     /**
      * Return the node associated to the locale territory
-     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @param array $data The parent array for which you want the territory node
+     * @param string $locale='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if the node was not found, the node data otherwise
      * @internal
      */
@@ -335,7 +337,8 @@ class Data
 
     /**
      * Return the node associated to the language (not locale) territory
-     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @param array $data The parent array for which you want the language node
+     * @param string $locale='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if the node was not found, the node data otherwise
      * @internal
      */
@@ -358,7 +361,7 @@ class Data
     /**
      * Returns the item of an array associated to a locale
      * @param array $data The data containing the locale info
-     * @param string $locale ='' The locale identifier (if empty we'll use the current default locale)
+     * @param string $locale='' The locale identifier (if empty we'll use the current default locale)
      * @return mixed Returns null if $data is not an array or it does not contain locale info, the array item otherwise
      * @internal
      */
@@ -474,7 +477,7 @@ class Data
     /**
      * Returns a list of locale identifiers associated to a locale
      * @param string $locale The locale for which you want the alternatives
-     * @param string $addFallback = true Set to true to add the fallback locale to the result, false otherwise
+     * @param string $addFallback=true Set to true to add the fallback locale to the result, false otherwise
      * @return array
      */
     protected static function getLocaleAlternatives($locale, $addFallback = true)

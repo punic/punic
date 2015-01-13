@@ -10,8 +10,8 @@ class Unit
      * Format a unit string
      * @param int|float|string $number The unit amount
      * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
-     * @param string $width = 'short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $width='short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
+     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      */
     public static function format($number, $unit, $width = 'short', $locale = '')
     {
@@ -90,7 +90,7 @@ class Unit
 
     /**
      * Retrieve the measurement systems and their localized names
-     * @param string $locale = '' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
      */
     public static function getMeasurementSystems($locale = '')

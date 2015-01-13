@@ -13,7 +13,6 @@ try {
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'code');
     define('TEMP_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'temp');
-    define('CONFIG_FILE', TEMP_DIR . DIRECTORY_SEPARATOR . 'apigen.neon');
     define('WEBSITE_DIR', TEMP_DIR . DIRECTORY_SEPARATOR . 'website');
     define('DEST_DIR', WEBSITE_DIR . DIRECTORY_SEPARATOR . 'docs');
     if (!is_dir(TEMP_DIR)) {
@@ -44,45 +43,23 @@ try {
     }
     echo "done.\n";
 
-    echo "Creating configuration file... ";
-    $v = array(
-        'from' => addslashes(SOURCE_DIR),
-        'to' => addslashes(DEST_DIR),
-        'template' => addslashes(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'config.neon'),
-    );
-    if(file_put_contents(CONFIG_FILE, <<<EOT
-source: "{$v['from']}"
-destination: "{$v['to']}"
-extensions: php
-charset: utf-8
-title: Punic APIs
-templateConfig: "{$v['template']}"
-groups: namespaces
-allowedHtml: [b, i, a, ul, ol, li, p, br, var, samp, kbd, tt, code]
-accessLevels: public
-internal: No
-php: No
-tree: Yes
-todo: Yes
-sourceCode: Yes
-download: No
-wipeout: Yes
-quiet: yes
-progressbar: No
-updateCheck: No
-debug: No
-EOT
-    ) === false) {
-        throw new Exception('Failed to create temporary ApiGen configuration');
-    }
-    echo "done.\n";
-
     echo "Creating doc files... ";
     $output = array();
     exec(
         'php'
-        . ' ' . escapeshellarg(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen.php')
-        . ' --config ' . escapeshellarg(CONFIG_FILE)
+        . ' ' . escapeshellarg(ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'apigen' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'apigen.php')
+        . ' generate'
+        . ' --source=' . escapeshellarg(SOURCE_DIR)
+        . ' --destination=' . escapeshellarg(DEST_DIR)
+        . ' --access-levels=public'
+        . ' --extensions=php'
+        . ' --groups=namespace'
+        . ' --charset=UTF-8'
+        . ' --template-theme=bootstrap'
+        . ' --title=' . escapeshellarg('Punic APIs')
+        . ' --todo'
+        . ' --tree'
+        . ' --debug'
         . ' 2>&1',
         $output,
         $rc

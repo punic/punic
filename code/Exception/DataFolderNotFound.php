@@ -13,7 +13,7 @@ class DataFolderNotFound extends \Punic\Exception
      * Initializes the instance
      * @param string $locale The preferred locale
      * @param string $fallbackLocale The fallback locale
-     * @param \Exception $previous = null The previous exception used for the exception chaining
+     * @param \Exception $previous=null The previous exception used for the exception chaining
      */
     public function __construct($locale, $fallbackLocale, $previous = null)
     {
