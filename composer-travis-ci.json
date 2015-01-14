@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Punic\\": "code/"
+        }
+    },
+    "require": {
+        "php": ">=5.3",
+        "satooshi/php-coveralls": "dev-master"
+    }
+}

@@ -40,7 +40,6 @@
         "php": ">=5.3"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master",
         "apigen/apigen": "4.0.*"
     },
     "replace": {
