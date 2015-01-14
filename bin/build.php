@@ -175,10 +175,11 @@ function copyData()
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
         'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
+        'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
-        'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
+
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
@@ -193,6 +194,7 @@ function copyData()
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
         'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
         'measurementData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'measurementData')),
+        'currencyData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'currencyData')),
     );
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'main';
     $locales = scandir($src);
@@ -239,6 +241,14 @@ function copyData()
             echo "done.\n";
         }
     }
+    $defaultCurrencyData = readJsonFile(DESTINATION_DIR.DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.'currencies.json');
+    foreach ($locales as $locale) {
+        if ($locale !== 'en') {
+            if (is_dir($src.DIRECTORY_SEPARATOR.$locale)) {
+                copyMissingData_currency($defaultCurrencyData, DESTINATION_DIR.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.'currencies.json');
+            }
+        }
+    }
     echo "Parsing supplemental files... ";
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'supplemental';
     foreach ($copy as $copyFrom => $info) {
@@ -261,16 +271,43 @@ function copyData()
     echo "done.\n";
 }
 
-function copyDataFile($srcFile, $info, $dstFile)
+function readJsonFile($file)
 {
-    $json = file_get_contents($srcFile);
+    $json = file_get_contents($file);
     if ($json === false) {
-        throw new Exception("Failed to read from $srcFile");
+        throw new Exception("Failed to read from $file");
     }
     $data = json_decode($json, true);
     if (is_null($data)) {
-        throw new Exception("Failed to decode data in $srcFile");
+        throw new Exception("Failed to decode data in $file");
     }
+
+    return $data;
+}
+function saveJsonFile($data, $file)
+{
+    $jsonFlags = 0;
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (DEBUG) {
+            $jsonFlags |= JSON_PRETTY_PRINT;
+        }
+    }
+    $json = json_encode($data, $jsonFlags);
+    if ($json === false) {
+        throw new Exception("Failed to serialize data for $file");
+    }
+    if (is_file($file)) {
+        deleteFromFilesystem($file);
+    }
+    if (file_put_contents($file, $json) === false) {
+        throw new Exception("Failed write to $file");
+    }
+}
+
+function copyDataFile($srcFile, $info, $dstFile)
+{
+    $data = readJsonFile($srcFile);
     $path = '';
     foreach ($info['roots'] as $root) {
         if (!is_array($data)) {
@@ -289,13 +326,6 @@ function copyDataFile($srcFile, $info, $dstFile)
     }
     if (!is_array($data)) {
         throw new Exception("Decoded data should be an array in $srcFile (path: $path)");
-    }
-    $jsonFlags = 0;
-    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-        if (DEBUG) {
-            $jsonFlags |= JSON_PRETTY_PRINT;
-        }
     }
     switch (basename($dstFile)) {
         case 'calendar.json':
@@ -669,17 +699,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
                 $data[$l] = $lData;
             }
-            $testJson = json_encode($testData, $jsonFlags);
-            if ($testJson === false) {
-                throw new Exception("Failed to serialize test data for $srcFile");
-            }
-            $testDataFile = TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile);
-            if (is_file($testDataFile)) {
-                deleteFromFilesystem($testDataFile);
-            }
-            if (file_put_contents($testDataFile, $testJson) === false) {
-                throw new Exception("Failed write to $testDataFile");
-            }
+            saveJsonFile($testData, TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile));
             break;
         case 'units.json':
             $compounds = array();
@@ -844,19 +864,226 @@ function copyDataFile($srcFile, $info, $dstFile)
                 throw new Exception('Missing/invalid key: paperSize');
             }
             break;
+        case 'currencies.json':
+            $final = array();
+            foreach ($data as $currencyCode => $currencyInfo) {
+                if (!preg_match('/^[A-Z]{3}$/', $currencyCode)) {
+                    throw new Exception("Invalid currency code: $currencyCode");
+                }
+                if (array_key_exists('symbol', $currencyInfo) && (strcmp($currencyInfo['symbol'], $currencyCode) === 0)) {
+                    unset($currencyInfo['symbol']);
+                }
+                foreach ($currencyInfo as $currencyInfoKey => $currencyInfoValue) {
+                    switch ($currencyInfoKey) {
+                        case 'displayName':
+                            unset($currencyInfo[$currencyInfoKey]);
+                            $currencyInfo['name'] = $currencyInfoValue;
+                            break;
+                        case 'symbol-alt-variant':
+                            if ($currencyInfoValue !== $currencyCode) {
+                                $currencyInfo['symbolAlt'] = $currencyInfoValue;
+                            }
+                            unset($currencyInfo[$currencyInfoKey]);
+                            break;
+                        case 'symbol-alt-narrow':
+                            if ($currencyInfoValue !== $currencyCode) {
+                                $currencyInfo['symbolNarrow'] = $currencyInfoValue;
+                            }
+                            unset($currencyInfo[$currencyInfoKey]);
+                            break;
+                        default:
+                            if (preg_match('/^displayName-count-(.+)$/', $currencyInfoKey, $m)) {
+                                if (!array_key_exists('pluralName', $currencyInfo)) {
+                                    $currencyInfo['pluralName'] = array();
+                                }
+                                $currencyInfo['pluralName'][$m[1]] = $currencyInfoValue;
+                                unset($currencyInfo[$currencyInfoKey]);
+                            }
+                            break;
+                    }
+                }
+                if (array_key_exists('pluralName', $currencyInfo)) {
+                    if (!array_key_exists('other', $currencyInfo['pluralName'])) {
+                        throw new Exception("Missing 'other' plural rule for currency $currencyCode");
+                    }
+                    if (!array_key_exists('name', $currencyInfo)) {
+                        if (array_key_exists('one', $currencyInfo['pluralName'])) {
+                            $currencyInfo['name'] = $currencyInfo['pluralName']['one'];
+                        } else {
+                            $currencyInfo['name'] = $currencyInfo['pluralName']['other'];
+                        }
+                    }
+                }
+                if (!array_key_exists('name', $currencyInfo)) {
+                    $currencyInfo['name'] = $currencyCode;
+                }
+                if (array_key_exists('pluralName', $currencyInfo)) {
+                    if ((count($currencyInfo['pluralName']) === 1) && (strcmp($currencyInfo['pluralName']['other'], $currencyInfo['name']) === 0)) {
+                        unset($currencyInfo['pluralName']);
+                    }
+                }
+                $final[$currencyCode] = $currencyInfo;
+            }
+            $data = $final;
+            break;
+        case 'currencyData.json':
+            $keys = array('fractions', 'region');
+            if ((count($data) !== count($keys)) || (count(array_diff($keys, array_keys($data))) !== 0)) {
+                throw new Exception('Unexpected keys in currencyData.json');
+            }
+            $final = array();
+            if (!array_key_exists('DEFAULT', $data['fractions'])) {
+                throw new Exception('Missing DEFAULT in currencyData.json');
+            }
+            $parseFraction = function ($info, $defaultValues) {
+                $result = array();
+                foreach (array('_digits' => 'digits', '_rounding' => 'rounding', '_cashDigits' => 'cashDigits', '_cashRounding' => 'cashRounding') as $keyFrom => $keyTo) {
+                    if (array_key_exists($keyTo, $info)) {
+                        throw new Exception("$keyTo already exist in array");
+                    }
+                    if (array_key_exists($keyFrom, $info)) {
+                        $v = $info[$keyFrom];
+                        unset($info[$keyFrom]);
+                        switch (gettype($v)) {
+                            case 'integer':
+                                break;
+                            case 'string':
+                                if (!preg_match('/^[0-9]+$/', $v)) {
+                                    throw new Exception("$keyFrom is invalid");
+                                }
+                                $v = intval($v);
+                                break;
+                            default:
+                                throw new Exception("$keyFrom is invalid");
+                        }
+                        switch ($keyTo) {
+                            case 'rounding':
+                            case 'cashRounding':
+                                if ($v === 0) {
+                                    $v = 1;
+                                }
+                                break;
+                        }
+                        $result[$keyTo] = $v;
+                    }
+                }
+                if (!empty($info)) {
+                    throw new Exception('Unexpected data in currency franction');
+                }
+                if (array_key_exists('cashDigits', $result) && array_key_exists('digits', $result) && ($result['cashDigits'] === $result['digits'])) {
+                    unset($result['cashDigits']);
+                }
+                if (array_key_exists('cashRounding', $result) && array_key_exists('rounding', $result) && ($result['cashRounding'] === $result['rounding'])) {
+                    unset($result['cashRounding']);
+                }
+                if ($defaultValues === true) {
+                    if (!array_key_exists('digits', $result)) {
+                        throw new Exception('Missing default rounding');
+                    }
+                    if (!array_key_exists('digits', $result)) {
+                        throw new Exception('Missing default rounding');
+                    }
+                } else {
+                    if (array_key_exists('digits', $result) && ($result['digits'] === $defaultValues['digits'])) {
+                        unset($result['digits']);
+                    }
+                    if (array_key_exists('rounding', $result) && ($result['rounding'] === $defaultValues['rounding'])) {
+                        unset($result['rounding']);
+                    }
+                }
+
+                return $result;
+            };
+            $final['fractionsDefault'] = $parseFraction($data['fractions']['DEFAULT'], true);
+            unset($data['fractions']['DEFAULT']);
+            $final['fractions'] = array();
+            foreach ($data['fractions'] as $currencyCode => $currencyInfo) {
+                $currencyInfo = $parseFraction($currencyInfo, $final['fractionsDefault']);
+                if (!empty($currencyInfo)) {
+                    $final['fractions'][$currencyCode] = $currencyInfo;
+                }
+            }
+            $parseRegion = function ($currencyInfo) {
+                $result = array();
+                if (array_key_exists('_tender', $currencyInfo)) {
+                    if ($currencyInfo['_tender'] !== 'false') {
+                        throw new Exception('Invalid _tender value');
+                    }
+                    unset($currencyInfo['_tender']);
+                    $result['notTender'] = true;
+                }
+                foreach (array('_from' => 'from', '_to' => 'to') as $keyFrom => $keyTo) {
+                    if (array_key_exists($keyFrom, $currencyInfo)) {
+                        $v = $currencyInfo[$keyFrom];
+                        unset($currencyInfo[$keyFrom]);
+                        if (!(is_string($v) && preg_match('/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/', $v))) {
+                            throw new Exception("Invalid $keyFrom value");
+                        }
+                        $result[$keyTo] = $v;
+                    }
+                }
+                if (!empty($currencyInfo)) {
+                    throw new Exception('Unknown currency info keys found: ' . implode(', ', array_keys($currencyInfo)));
+                }
+                if (empty($result)) {
+                    throw new Exception('Empty currency info');
+                }
+
+                return $result;
+            };
+            $final['regions'] = array();
+            foreach ($data['region'] as $territoryCode => $territoryInfos) {
+                if (is_int($territoryCode)) {
+                    $territoryCode = substr('00' . $territoryCode, -3);
+                }
+                $final['regions'][$territoryCode] = array();
+                foreach ($territoryInfos as $territoryInfo) {
+                    foreach ($territoryInfo as $currencyCode => $currencyInfo) {
+                        $final['regions'][$territoryCode][] = array_merge(array('currency' => $currencyCode), $parseRegion($currencyInfo));
+                    }
+                }
+                usort($final['regions'][$territoryCode], function ($a, $b) {
+                    if (array_key_exists('notTender', $a) && $a['notTender']) {
+                        if (!array_key_exists('notTender', $b)) {
+                            return 1;
+                        }
+                    } elseif (array_key_exists('notTender', $b) && $b['notTender']) {
+                        return -1;
+                    }
+                    if (array_key_exists('to', $a)) {
+                        if (array_key_exists('to', $b)) {
+                            if ($a['to'] !== $b['to']) {
+                                return strcmp($b['to'], $a['to']);
+                            }
+                        } else {
+                            return 1;
+                        }
+                    } elseif (array_key_exists('to', $b)) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+            }
+            $data = $final;
+            break;
     }
-    $json = json_encode($data, $jsonFlags);
-    if ($json === false) {
-        throw new Exception("Failed to serialize data of $srcFile");
+    saveJsonFile($data, $dstFile);
+}
+function copyMissingData_currency($defaultData, $file)
+{
+    $someChanged = false;
+    $data = readJsonFile($file);
+    foreach ($defaultData as $currency => $currencyInfo) {
+        if (!array_key_exists($currency, $data)) {
+            $someChanged = true;
+            $data[$currency] = $currencyInfo;
+        }
     }
-    if (is_file($dstFile)) {
-        deleteFromFilesystem($dstFile);
-    }
-    if (file_put_contents($dstFile, $json) === false) {
-        throw new Exception("Failed write to $dstFile");
+    if ($someChanged) {
+        saveJsonFile($data, $file);
     }
 }
-
 function deleteFromFilesystem($path)
 {
     if (is_file($path)) {
