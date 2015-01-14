@@ -175,10 +175,11 @@ function copyData()
         'numbers.json' => array('kind' => 'main', 'roots' => array('numbers')),
         'layout.json' => array('kind' => 'main', 'roots' => array('layout', 'orientation')),
         'measurementSystemNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'measurementSystemNames')),
+        'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
         /*
         'characters.json' => array('kind' => 'main', 'roots' => array('characters')),
         'contextTransforms.json' => array('kind' => 'main', 'roots' => array('contextTransforms')),
-        'currencies.json' => array('kind' => 'main', 'roots' => array('numbers', 'currencies')),
+
         'delimiters.json' => array('kind' => 'main', 'roots' => array('delimiters')),
         'scripts.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'scripts')),
         'transformNames.json' => array('kind' => 'main', 'roots' => array('localeDisplayNames', 'transformNames')),
@@ -843,6 +844,68 @@ function copyDataFile($srcFile, $info, $dstFile)
             if (!(array_key_exists('paperSize', $data) && is_array($data['paperSize']))) {
                 throw new Exception('Missing/invalid key: paperSize');
             }
+            break;
+        case 'currencies.json':
+            $final = array();
+            foreach ($data as $currencyCode => $currencyInfo) {
+                if (!preg_match('/^[A-Z]{3}$/', $currencyCode)) {
+                    throw new Exception("Invalid currency code: $currencyCode");
+                }
+                if (array_key_exists('symbol', $currencyInfo) && (strcmp($currencyInfo['symbol'], $currencyCode) === 0)) {
+                    unset($currencyInfo['symbol']);
+                }
+                foreach ($currencyInfo as $currencyInfoKey => $currencyInfoValue) {
+                    switch ($currencyInfoKey) {
+                        case 'displayName':
+                            unset($currencyInfo[$currencyInfoKey]);
+                            $currencyInfo['name'] = $currencyInfoValue;
+                            break;
+                        case 'symbol-alt-variant':
+                            if ($currencyInfoValue !== $currencyCode) {
+                                $currencyInfo['symbolAlt'] = $currencyInfoValue;
+                            }
+                            unset($currencyInfo['symbol-alt-narrow']);
+                            break;
+                        case 'symbol-alt-narrow':
+                            if ($currencyInfoValue !== $currencyCode) {
+                                $currencyInfo['symbolNarrow'] = $currencyInfoValue;
+                            }
+                            unset($currencyInfo['symbol-alt-narrow']);
+                            break;
+                        default:
+                            if (preg_match('/^displayName-count-(.+)$/', $currencyInfoKey, $m)) {
+                                if (!array_key_exists('pluralName', $currencyInfo)) {
+                                    $currencyInfo['pluralName'] = array();
+                                }
+                                $currencyInfo['pluralName'][$m[1]] = $currencyInfoValue;
+                                unset($currencyInfo[$currencyInfoKey]);
+                            }
+                            break;
+                    }
+                }
+                if (array_key_exists('pluralName', $currencyInfo)) {
+                    if (!array_key_exists('other', $currencyInfo['pluralName'])) {
+                        throw new Exception("Missing 'other' plural rule for currency $currencyCode");
+                    }
+                    if (!array_key_exists('name', $currencyInfo)) {
+                        if (array_key_exists('one', $currencyInfo['pluralName'])) {
+                            $currencyInfo['name'] = $currencyInfo['pluralName']['one'];
+                        } else {
+                            $currencyInfo['name'] = $currencyInfo['pluralName']['other'];
+                        }
+                    }
+                }
+                if (!array_key_exists('name', $currencyInfo)) {
+                    $currencyInfo['name'] = $currencyCode;
+                }
+                if (array_key_exists('pluralName', $currencyInfo)) {
+                    if ((count($currencyInfo['pluralName']) === 1) && (strcmp($currencyInfo['pluralName']['other'], $currencyInfo['name']) === 0)) {
+                        unset($currencyInfo['pluralName']);
+                    }
+                }
+                $final[$currencyCode] = $currencyInfo;
+            }
+            $data = $final;
             break;
     }
     $json = json_encode($data, $jsonFlags);
