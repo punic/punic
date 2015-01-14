@@ -194,6 +194,7 @@ function copyData()
         'metaZones.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'metaZones')),
         'plurals.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'plurals-type-cardinal')),
         'measurementData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'measurementData')),
+        'currencyData.json' => array('kind' => 'supplemental', 'roots' => array('supplemental', 'currencyData')),
     );
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'main';
     $locales = scandir($src);
@@ -904,6 +905,147 @@ function copyDataFile($srcFile, $info, $dstFile)
                     }
                 }
                 $final[$currencyCode] = $currencyInfo;
+            }
+            $data = $final;
+            break;
+        case 'currencyData.json':
+            $keys = array('fractions', 'region');
+            if ((count($data) !== count($keys)) || (count(array_diff($keys, array_keys($data))) !== 0)) {
+                throw new Exception('Unexpected keys in currencyData.json');
+            }
+            $final = array();
+            if (!array_key_exists('DEFAULT', $data['fractions'])) {
+                throw new Exception('Missing DEFAULT in currencyData.json');
+            }
+            $parseFraction = function ($info, $defaultValues) {
+                $result = array();
+                foreach (array('_digits' => 'digits', '_rounding' => 'rounding', '_cashDigits' => 'cashDigits', '_cashRounding' => 'cashRounding') as $keyFrom => $keyTo) {
+                    if (array_key_exists($keyTo, $info)) {
+                        throw new Exception("$keyTo already exist in array");
+                    }
+                    if (array_key_exists($keyFrom, $info)) {
+                        $v = $info[$keyFrom];
+                        unset($info[$keyFrom]);
+                        switch (gettype($v)) {
+                            case 'integer':
+                                break;
+                            case 'string':
+                                if (!preg_match('/^[0-9]+$/', $v)) {
+                                    throw new Exception("$keyFrom is invalid");
+                                }
+                                $v = intval($v);
+                                break;
+                            default:
+                                throw new Exception("$keyFrom is invalid");
+                        }
+                        switch ($keyTo) {
+                            case 'rounding':
+                            case 'cashRounding':
+                                if ($v === 0) {
+                                    $v = 1;
+                                }
+                                break;
+                        }
+                        $result[$keyTo] = $v;
+                    }
+                }
+                if (!empty($info)) {
+                    throw new Exception('Unexpected data in currency franction');
+                }
+                if (array_key_exists('cashDigits', $result) && array_key_exists('digits', $result) && ($result['cashDigits'] === $result['digits'])) {
+                    unset($result['cashDigits']);
+                }
+                if (array_key_exists('cashRounding', $result) && array_key_exists('rounding', $result) && ($result['cashRounding'] === $result['rounding'])) {
+                    unset($result['cashRounding']);
+                }
+                if ($defaultValues === true) {
+                    if (!array_key_exists('digits', $result)) {
+                        throw new Exception('Missing default rounding');
+                    }
+                    if (!array_key_exists('digits', $result)) {
+                        throw new Exception('Missing default rounding');
+                    }
+                } else {
+                    if (array_key_exists('digits', $result) && ($result['digits'] === $defaultValues['digits'])) {
+                        unset($result['digits']);
+                    }
+                    if (array_key_exists('rounding', $result) && ($result['rounding'] === $defaultValues['rounding'])) {
+                        unset($result['rounding']);
+                    }
+                }
+
+                return $result;
+            };
+            $final['fractionsDefault'] = $parseFraction($data['fractions']['DEFAULT'], true);
+            unset($data['fractions']['DEFAULT']);
+            $final['fractions'] = array();
+            foreach ($data['fractions'] as $currencyCode => $currencyInfo) {
+                $currencyInfo = $parseFraction($currencyInfo, $final['fractionsDefault']);
+                if (!empty($currencyInfo)) {
+                    $final['fractions'][$currencyCode] = $currencyInfo;
+                }
+            }
+            $parseRegion = function ($currencyInfo) {
+                $result = array();
+                if (array_key_exists('_tender', $currencyInfo)) {
+                    if ($currencyInfo['_tender'] !== 'false') {
+                        throw new Exception('Invalid _tender value');
+                    }
+                    unset($currencyInfo['_tender']);
+                    $result['illegal'] = true;
+                }
+                foreach (array('_from' => 'from', '_to' => 'to') as $keyFrom => $keyTo) {
+                    if (array_key_exists($keyFrom, $currencyInfo)) {
+                        $v = $currencyInfo[$keyFrom];
+                        unset($currencyInfo[$keyFrom]);
+                        if (!(is_string($v) && preg_match('/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/', $v))) {
+                            throw new Exception("Invalid $keyFrom value");
+                        }
+                        $result[$keyTo] = $v;
+                    }
+                }
+                if (!empty($currencyInfo)) {
+                    throw new Exception('Unknown currency info keys found: ' . implode(', ', array_keys($currencyInfo)));
+                }
+                if (empty($result)) {
+                    throw new Exception('Empty currency info');
+                }
+
+                return $result;
+            };
+            $final['regions'] = array();
+            foreach ($data['region'] as $territoryCode => $territoryInfos) {
+                if (is_int($territoryCode)) {
+                    $territoryCode = substr('00' . $territoryCode, -3);
+                }
+                $final['regions'][$territoryCode] = array();
+                foreach ($territoryInfos as $territoryInfo) {
+                    foreach ($territoryInfo as $currencyCode => $currencyInfo) {
+                        $final['regions'][$territoryCode][] = array_merge(array('currency' => $currencyCode), $parseRegion($currencyInfo));
+                    }
+                }
+                usort($final['regions'][$territoryCode], function ($a, $b) {
+                    if (array_key_exists('illegal', $a)) {
+                        if (!array_key_exists('illegal', $b)) {
+                            return 1;
+                        }
+                    } elseif (array_key_exists('illegal', $b)) {
+                        return -1;
+                    }
+                    if (array_key_exists('to', $a)) {
+                        if (array_key_exists('to', $b)) {
+                            if ($a['to'] !== $b['to']) {
+                                return strcmp($b['to'], $a['to']);
+                            }
+                        } else {
+                            return 1;
+                        }
+                    } elseif (array_key_exists('to', $b)) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
             }
             $data = $final;
             break;
