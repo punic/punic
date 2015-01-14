@@ -883,13 +883,13 @@ function copyDataFile($srcFile, $info, $dstFile)
                             if ($currencyInfoValue !== $currencyCode) {
                                 $currencyInfo['symbolAlt'] = $currencyInfoValue;
                             }
-                            unset($currencyInfo['symbol-alt-narrow']);
+                            unset($currencyInfo[$currencyInfoKey]);
                             break;
                         case 'symbol-alt-narrow':
                             if ($currencyInfoValue !== $currencyCode) {
                                 $currencyInfo['symbolNarrow'] = $currencyInfoValue;
                             }
-                            unset($currencyInfo['symbol-alt-narrow']);
+                            unset($currencyInfo[$currencyInfoKey]);
                             break;
                         default:
                             if (preg_match('/^displayName-count-(.+)$/', $currencyInfoKey, $m)) {
@@ -1010,7 +1010,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                         throw new Exception('Invalid _tender value');
                     }
                     unset($currencyInfo['_tender']);
-                    $result['illegal'] = true;
+                    $result['notTender'] = true;
                 }
                 foreach (array('_from' => 'from', '_to' => 'to') as $keyFrom => $keyTo) {
                     if (array_key_exists($keyFrom, $currencyInfo)) {
@@ -1043,11 +1043,11 @@ function copyDataFile($srcFile, $info, $dstFile)
                     }
                 }
                 usort($final['regions'][$territoryCode], function ($a, $b) {
-                    if (array_key_exists('illegal', $a)) {
-                        if (!array_key_exists('illegal', $b)) {
+                    if (array_key_exists('notTender', $a) && $a['notTender']) {
+                        if (!array_key_exists('notTender', $b)) {
                             return 1;
                         }
-                    } elseif (array_key_exists('illegal', $b)) {
+                    } elseif (array_key_exists('notTender', $b) && $b['notTender']) {
                         return -1;
                     }
                     if (array_key_exists('to', $a)) {
