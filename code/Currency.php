@@ -144,7 +144,7 @@ class Currency
             $data = Data::getGeneric('currencyData');
             if (array_key_exists($territoryCode, $data['regions'])) {
                 foreach ($data['regions'][$territoryCode] as $c) {
-                    if (array_keys('notTender', $c)) {
+                    if (array_key_exists('notTender', $c)) {
                         $c['tender'] = !$c['notTender'];
                         unset($c['notTender']);
                     } else {
