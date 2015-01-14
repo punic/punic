@@ -241,6 +241,14 @@ function copyData()
             echo "done.\n";
         }
     }
+    $defaultCurrencyData = readJsonFile(DESTINATION_DIR.DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.'currencies.json');
+    foreach ($locales as $locale) {
+        if ($locale !== 'en') {
+            if (is_dir($src.DIRECTORY_SEPARATOR.$locale)) {
+                copyMissingData_currency($defaultCurrencyData, DESTINATION_DIR.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.'currencies.json');
+            }
+        }
+    }
     echo "Parsing supplemental files... ";
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'supplemental';
     foreach ($copy as $copyFrom => $info) {
@@ -263,16 +271,43 @@ function copyData()
     echo "done.\n";
 }
 
-function copyDataFile($srcFile, $info, $dstFile)
+function readJsonFile($file)
 {
-    $json = file_get_contents($srcFile);
+    $json = file_get_contents($file);
     if ($json === false) {
-        throw new Exception("Failed to read from $srcFile");
+        throw new Exception("Failed to read from $file");
     }
     $data = json_decode($json, true);
     if (is_null($data)) {
-        throw new Exception("Failed to decode data in $srcFile");
+        throw new Exception("Failed to decode data in $file");
     }
+
+    return $data;
+}
+function saveJsonFile($data, $file)
+{
+    $jsonFlags = 0;
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (DEBUG) {
+            $jsonFlags |= JSON_PRETTY_PRINT;
+        }
+    }
+    $json = json_encode($data, $jsonFlags);
+    if ($json === false) {
+        throw new Exception("Failed to serialize data for $file");
+    }
+    if (is_file($file)) {
+        deleteFromFilesystem($file);
+    }
+    if (file_put_contents($file, $json) === false) {
+        throw new Exception("Failed write to $file");
+    }
+}
+
+function copyDataFile($srcFile, $info, $dstFile)
+{
+    $data = readJsonFile($srcFile);
     $path = '';
     foreach ($info['roots'] as $root) {
         if (!is_array($data)) {
@@ -291,13 +326,6 @@ function copyDataFile($srcFile, $info, $dstFile)
     }
     if (!is_array($data)) {
         throw new Exception("Decoded data should be an array in $srcFile (path: $path)");
-    }
-    $jsonFlags = 0;
-    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-        if (DEBUG) {
-            $jsonFlags |= JSON_PRETTY_PRINT;
-        }
     }
     switch (basename($dstFile)) {
         case 'calendar.json':
@@ -671,17 +699,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
                 $data[$l] = $lData;
             }
-            $testJson = json_encode($testData, $jsonFlags);
-            if ($testJson === false) {
-                throw new Exception("Failed to serialize test data for $srcFile");
-            }
-            $testDataFile = TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile);
-            if (is_file($testDataFile)) {
-                deleteFromFilesystem($testDataFile);
-            }
-            if (file_put_contents($testDataFile, $testJson) === false) {
-                throw new Exception("Failed write to $testDataFile");
-            }
+            saveJsonFile($testData, TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile));
             break;
         case 'units.json':
             $compounds = array();
@@ -1050,18 +1068,22 @@ function copyDataFile($srcFile, $info, $dstFile)
             $data = $final;
             break;
     }
-    $json = json_encode($data, $jsonFlags);
-    if ($json === false) {
-        throw new Exception("Failed to serialize data of $srcFile");
+    saveJsonFile($data, $dstFile);
+}
+function copyMissingData_currency($defaultData, $file)
+{
+    $someChanged = false;
+    $data = readJsonFile($file);
+    foreach ($defaultData as $currency => $currencyInfo) {
+        if (!array_key_exists($currency, $data)) {
+            $someChanged = true;
+            $data[$currency] = $currencyInfo;
+        }
     }
-    if (is_file($dstFile)) {
-        deleteFromFilesystem($dstFile);
-    }
-    if (file_put_contents($dstFile, $json) === false) {
-        throw new Exception("Failed write to $dstFile");
+    if ($someChanged) {
+        saveJsonFile($data, $file);
     }
 }
-
 function deleteFromFilesystem($path)
 {
     if (is_file($path)) {
