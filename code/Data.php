@@ -115,10 +115,10 @@ class Data
         if (empty($locale)) {
             $locale = static::$defaultLocale;
         }
-        if (!array_key_exists($locale, static::$cache)) {
+        if (!isset(static::$cache[$locale])) {
             static::$cache[$locale] = array();
         }
-        if (!@array_key_exists($identifier, static::$cache[$locale])) {
+        if (!isset(static::$cache[$locale][$identifier])) {
             if (!@preg_match('/^[a-zA-Z0-1_\\-]+$/i', $identifier)) {
                 throw new Exception\InvalidDataFile($identifier);
             }
@@ -162,7 +162,7 @@ class Data
         if (!(is_string($identifier) && strlen($identifier))) {
             throw new Exception\InvalidDataFile($identifier);
         }
-        if (array_key_exists($identifier, static::$cacheGeneric)) {
+        if (isset(static::$cacheGeneric[$identifier])) {
             return static::$cacheGeneric[$identifier];
         }
         if (!preg_match('/^[a-zA-Z0-1_\\-]+$/', $identifier)) {
@@ -252,7 +252,7 @@ class Data
         }
         $keys[] = $language;
         foreach ($keys as $key) {
-            if (array_key_exists($key, $data)) {
+            if (isset($data[$key])) {
                 $result = $data[$key];
                 if ((strlen($script) > 0) && (stripos($result, "$language-$script-") !== 0)) {
                     $parts = static::explodeLocale($result);
@@ -325,7 +325,7 @@ class Data
         $result = null;
         $territory = static::getTerritory($locale);
         while (strlen($territory)) {
-            if (array_key_exists($territory, $data)) {
+            if (isset($data[$territory])) {
                 $result = $data[$territory];
                 break;
             }
@@ -349,7 +349,7 @@ class Data
             $locale = static::$defaultLocale;
         }
         foreach (static::getLocaleAlternatives($locale) as $l) {
-            if (array_key_exists($l, $data)) {
+            if (isset($data[$l])) {
                 $result = $data[$l];
                 break;
             }
@@ -373,7 +373,7 @@ class Data
                 $locale = static::$defaultLocale;
             }
             foreach (static::getLocaleAlternatives($locale) as $alternative) {
-                if (array_key_exists($alternative, $data)) {
+                if (isset($data[$alternative])) {
                     $result = $data[$alternative];
                     break;
                 }
@@ -386,7 +386,7 @@ class Data
     /**
      * Parse a string representing a locale and extract its components.
      * @param string $locale
-     * @return Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
+     * @return null]string[] Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
      * @internal
      */
     public static function explodeLocale($locale)
@@ -424,13 +424,13 @@ class Data
                     }
                     if ($ok) {
                         $parentLocales = static::getGeneric('parentLocales');
-                        if (strlen($script) && strlen($territory) && array_key_exists("$language-$script-$territory", $parentLocales)) {
+                        if (strlen($script) && strlen($territory) && isset($parentLocales["$language-$script-$territory"])) {
                             $parentLocale = $parentLocales["$language-$script-$territory"];
-                        } elseif (strlen($script) && array_key_exists("$language-$script", $parentLocales)) {
+                        } elseif (strlen($script) && isset($parentLocales["$language-$script"])) {
                             $parentLocale = $parentLocales["$language-$script"];
-                        } elseif (strlen($territory) && array_key_exists("$language-$territory", $parentLocales)) {
+                        } elseif (strlen($territory) && isset($parentLocales["$language-$territory"])) {
                             $parentLocale = $parentLocales["$language-$territory"];
-                        } elseif (array_key_exists($language, $parentLocales)) {
+                        } elseif (isset($parentLocales[$language])) {
                             $parentLocale = $parentLocales[$language];
                         }
                         $result = array(
@@ -458,7 +458,7 @@ class Data
         $result = '';
         if (is_string($locale)) {
             $key = $locale . '/' . static::$fallbackLocale;
-            if (!array_key_exists($key, $cache)) {
+            if (!isset($cache[$key])) {
                 foreach (static::getLocaleAlternatives($locale) as $alternative) {
                     $dir = 'data' . DIRECTORY_SEPARATOR . $alternative;
                     if (is_dir(__DIR__ . DIRECTORY_SEPARATOR . $dir)) {

@@ -18,7 +18,7 @@ class Territory
         if (preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = Data::get('territories', $locale);
-            if (array_key_exists($territoryCode, $data)) {
+            if (isset($data[$territoryCode])) {
                 $result = $data[$territoryCode];
             }
         }
@@ -93,6 +93,7 @@ class Territory
      * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      * @link http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
+     * @throws Exception\BadArgumentType
      */
     public static function getList($levels = 'W', $locale = '')
     {
@@ -102,7 +103,7 @@ class Territory
         if ($n > 0) {
             for ($i = 0; $i < $n; $i++) {
                 $l = substr($levels, $i, 1);
-                if (!array_key_exists($l, $levelMap)) {
+                if (!isset($levelMap[$l])) {
                     $decodedLevels = array();
                     break;
                 }
@@ -164,11 +165,11 @@ class Territory
         if (is_array($info)) {
             $result = array();
             foreach ($info['languages'] as $languageID => $languageInfo) {
-                if (!array_key_exists('status', $languageInfo)) {
+                if (!isset($languageInfo['status'])) {
                     $languageInfo['status'] = 'u';
                 }
                 if ((strlen($filterStatuses) === 0) || (stripos($filterStatuses, $languageInfo['status']) !== false)) {
-                    if (!array_key_exists('writing', $languageInfo)) {
+                    if (!isset($languageInfo['writing'])) {
                         $languageInfo['writing'] = null;
                     }
                     if ($onlyCodes) {
@@ -299,7 +300,7 @@ class Territory
         if (is_string($parentTerritoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $parentTerritoryCode)) {
             $parentTerritoryCode = strtoupper($parentTerritoryCode);
             $data = \Punic\Data::getGeneric('territoryContainment');
-            if (array_key_exists($parentTerritoryCode, $data)) {
+            if (isset($data[$parentTerritoryCode])) {
                 $children = $data[$parentTerritoryCode]['contains'];
                 if ($expandSubGroups) {
                     foreach ($children as $child) {
@@ -325,7 +326,7 @@ class Territory
         if (preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = Data::getGeneric('territoryInfo');
-            if (array_key_exists($territoryCode, $data)) {
+            if (isset($data[$territoryCode])) {
                 $result = $data[$territoryCode];
             }
         }
@@ -350,7 +351,7 @@ class Territory
     protected static function fillStructure($data, $id, $level)
     {
         $item = array('id' => $id, 'level' => $level, 'children' => array());
-        if (array_key_exists($id, $data)) {
+        if (isset($data[$id])) {
             foreach ($data[$id]['contains'] as $childID) {
                 $item['children'][] = static::fillStructure($data, $childID, $level + 1);
             }
@@ -404,7 +405,7 @@ class Territory
     protected static function sort($list)
     {
         foreach (array_keys($list) as $i) {
-            if (array_key_exists('children', $list[$i])) {
+            if (isset($list[$i]['children'])) {
                 $list[$i]['children'] = static::sort($list[$i]['children']);
             }
         }

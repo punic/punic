@@ -66,7 +66,7 @@ class Language
             $lookFor[] = $language;
             $data = Data::get('languages', $locale);
             foreach ($lookFor as $key) {
-                if (array_key_exists($key, $data)) {
+                if (isset($data[$key])) {
                     $result = $data[$key];
                     break;
                 }

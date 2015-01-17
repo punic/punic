@@ -17,7 +17,7 @@ class Phone
         if (is_string($territoryCode) && preg_match('/^([a-z]{2}|[0-9]{3})$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = Data::getGeneric('telephoneCodeData');
-            if (array_key_exists($territoryCode, $data)) {
+            if (isset($data[$territoryCode])) {
                 $result = $data[$territoryCode];
             }
         }

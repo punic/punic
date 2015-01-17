@@ -134,7 +134,7 @@ class Calendar
         if (!is_string($format)) {
             return '';
         }
-        if (!array_key_exists($format, $cache)) {
+        if (!isset($cache[$format])) {
             $escaped = false;
             $inEscapedString = false;
             $converted = array();
@@ -206,7 +206,7 @@ class Calendar
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['eras'];
-            if (!array_key_exists($width, $data)) {
+            if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][($year < 0) ? '0' : '1'];
@@ -247,7 +247,7 @@ class Calendar
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
-            if (!array_key_exists($width, $data)) {
+            if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$month];
@@ -290,7 +290,7 @@ class Calendar
             $weekday = $dictionary[$weekday];
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
-            if (!array_key_exists($width, $data)) {
+            if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$weekday];
@@ -331,7 +331,7 @@ class Calendar
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
-            if (!array_key_exists($width, $data)) {
+            if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$quarter];
@@ -382,7 +382,7 @@ class Calendar
             }
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
-            if (!array_key_exists($width, $data)) {
+            if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$dayperiod];
@@ -430,7 +430,7 @@ class Calendar
                         $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
                         $tzInfo = $data;
                         foreach ($path as $chunk) {
-                            if (array_key_exists($chunk, $tzInfo)) {
+                            if (isset($tzInfo[$chunk])) {
                                 $tzInfo = $tzInfo[$chunk];
                             } else {
                                 $tzInfo = null;
@@ -439,12 +439,12 @@ class Calendar
                         }
                         if (is_array($tzInfo)) {
                             foreach ($tzInfo as $tz) {
-                                if (is_array($tz) && array_key_exists('mzone', $tz)) {
+                                if (is_array($tz) && isset($tz['mzone'])) {
                                     if (strlen($date)) {
-                                        if (array_key_exists('from', $tz) && (strcmp($date, $tz['from']) < 0)) {
+                                        if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
                                             continue;
                                         }
-                                        if (array_key_exists('to', $tz) && (strcmp($date, $tz['to']) >= 0)) {
+                                        if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
                                             continue;
                                         }
                                     }
@@ -476,11 +476,11 @@ class Calendar
                 }
                 if (strlen($metazoneCode)) {
                     $data = \Punic\Data::get('timeZoneNames', $locale);
-                    if (array_key_exists('metazone', $data)) {
+                    if (isset($data['metazone'])) {
                         $data = $data['metazone'];
-                        if (array_key_exists($metazoneCode, $data)) {
+                        if (isset($data[$metazoneCode])) {
                             $data = $data[$metazoneCode];
-                            if (array_key_exists($width, $data)) {
+                            if (isset($data[$width])) {
                                 $data = $data[$width];
                                 $lookFor = array();
                                 if (!empty($kind)) {
@@ -490,7 +490,7 @@ class Calendar
                                 $lookFor[] = 'standard';
                                 $lookFor[] = 'daylight';
                                 foreach ($lookFor as $lf) {
-                                    if (array_key_exists($lf, $data)) {
+                                    if (isset($data[$lf])) {
                                         $result = $data[$lf];
                                         break;
                                     }
@@ -538,7 +538,7 @@ class Calendar
                     $chunks = array_merge(array('zone'), explode('/', $phpName));
                     $data = $timeZoneNames;
                     foreach ($chunks as $chunk) {
-                        if (array_key_exists($chunk, $data)) {
+                        if (isset($data[$chunk])) {
                             $data = $data[$chunk];
                         } else {
                             $data = null;
@@ -547,7 +547,7 @@ class Calendar
                             break;
                         }
                     }
-                    if (is_array($data) && array_key_exists('exemplarCity', $data)) {
+                    if (is_array($data) && isset($data['exemplarCity'])) {
                         $result = $data['exemplarCity'];
                         break;
                     }
@@ -575,7 +575,7 @@ class Calendar
     {
         static $cache = array();
         $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
-        if (!array_key_exists($locale, $cache)) {
+        if (!isset($cache[$locale])) {
             $format = static::getTimeFormat('short', $locale);
             $format = str_replace("''", '', $format);
             $cache[$locale] = (strpos($format, 'a') === false) ? false : true;
@@ -593,7 +593,7 @@ class Calendar
     {
         static $cache = array();
         $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
-        if (!array_key_exists($locale, $cache)) {
+        if (!isset($cache[$locale])) {
             $result = 0;
             $data = \Punic\Data::getGeneric('weekData');
             $i = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
@@ -650,7 +650,7 @@ class Calendar
     {
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateFormats'];
-        if (!array_key_exists($width, $data)) {
+        if (!isset($data[$width])) {
             throw new Exception\ValueNotInList($width, array_keys($data));
         }
 
@@ -671,7 +671,7 @@ class Calendar
     {
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['timeFormats'];
-        if (!array_key_exists($width, $data)) {
+        if (!isset($data[$width])) {
             throw new Exception\ValueNotInList($width, array_keys($data));
         }
 
@@ -733,7 +733,7 @@ class Calendar
         }
         $data = \Punic\Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
-        if (!array_key_exists($wholeWidth, $data)) {
+        if (!isset($data[$wholeWidth])) {
             throw new Exception\ValueNotInList($wholeWidth, array_keys($data));
         }
 
@@ -1083,10 +1083,10 @@ class Calendar
                 throw new Exception\BadArgumentType($format, 'date/time ISO format');
             }
             $cacheKey = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
-            if (!array_key_exists($cacheKey, $decodeCache)) {
+            if (!isset($decodeCache[$cacheKey])) {
                 $decodeCache[$cacheKey] = array();
             }
-            if (!array_key_exists($format, $decodeCache[$cacheKey])) {
+            if (!isset($decodeCache[$cacheKey][$format])) {
                 $decoder = array();
                 $lengthM1 = $length - 1;
                 $quoted = false;
@@ -1109,7 +1109,7 @@ class Calendar
                             $count++;
                             $index++;
                         }
-                        if (array_key_exists($char, $decoderFunctions)) {
+                        if (isset($decoderFunctions[$char])) {
                             $decoder[] = array($decoderFunctions[$char], $count);
                         } else {
                             $decoder[] = str_repeat($char, $count);
@@ -1159,17 +1159,17 @@ class Calendar
      * @param \DateTime $datetime The date for which you want the relative day name
      * @param bool $ucFirst=false Force first letter to be upper case?
      * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return Returns the relative name if available, otherwise returns an empty string
+     * @return string Returns the relative name if available, otherwise returns an empty string
      */
     public static function getDateRelativeName($datetime, $ucFirst = false, $locale = '')
     {
         $result = '';
         $deltaDays = static::getDeltaDays($datetime);
         $data = \Punic\Data::get('dateFields', $locale);
-        if (array_key_exists('day', $data)) {
+        if (isset($data['day'])) {
             $data = $data['day'];
             $key = "relative-type-$deltaDays";
-            if (array_key_exists($key, $data)) {
+            if (isset($data[$key])) {
                 $result = $data[$key];
                 if ($ucFirst) {
                     $result = \Punic\Misc::fixCase($result, 'titlecase-firstword');
@@ -1383,7 +1383,7 @@ class Calendar
         $seconds -= $hours * 3600;
         $minutes = intval(floor($seconds / 60));
         $data = \Punic\Data::get('timeZoneNames', $locale);
-        $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
+        $format = isset($data['gmtFormat']) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
                 return sprintf($format, $sign . $hours . (($minutes === 0) ? '' : (':' . substr('0' . $minutes, -2))));
@@ -1551,7 +1551,7 @@ class Calendar
                 return implode('', $partsMaybeWithSeconds);
             case 4:
                 $data = \Punic\Data::get('timeZoneNames', $locale);
-                $format = array_key_exists('gmtFormat', $data) ? $data['gmtFormat'] : 'GMT%1$s';
+                $format = isset($data['gmtFormat']) ? $data['gmtFormat'] : 'GMT%1$s';
 
                 return sprintf($format, implode(':', $partsWithoutSeconds));
             case 5:

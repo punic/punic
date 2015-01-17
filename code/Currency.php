@@ -17,7 +17,7 @@ class Currency
     {
         $result = array();
         foreach (Data::get('currencies', $locale) as $code => $info) {
-            if (!\array_key_exists('name', $info)) {
+            if (!isset($info['name'])) {
                 echo "\nlocale=\n";
                 var_export($locale);
                 echo "\ncode=\n";
@@ -34,10 +34,10 @@ class Currency
             $tenderCurrencies = array();
             foreach ($data['regions'] as $usages) {
                 foreach ($usages as $usage) {
-                    if (!array_key_exists('to', $usage)) {
+                    if (!isset($usage['to'])) {
                         $usedCurrencies[$usage['currency']] = true;
                     }
-                    if ((!array_key_exists('notTender', $usage)) || (!$usage['notTender'])) {
+                    if ((!isset($usage['notTender'])) || (!$usage['notTender'])) {
                         $tenderCurrencies[$usage['currency']] = true;
                     }
                 }
@@ -72,13 +72,13 @@ class Currency
         $data = static::getLocaleData($currencyCode, $locale);
         if (is_array($data)) {
             $result = $data['name'];
-            if ((!is_null($quantity)) && array_key_exists('pluralName', $data)) {
+            if ((!is_null($quantity)) && isset($data['pluralName'])) {
                 if (is_string($data) && in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
                     $pluralRule = $quantity;
                 } else {
                     $pluralRule = \Punic\Plural::getRule($quantity, $locale);
                 }
-                if (!array_key_exists($pluralRule, $data['pluralName'])) {
+                if (!isset($data['pluralName'][$pluralRule])) {
                     $pluralRule = 'other';
                 }
                 $result = $data['pluralName'][$pluralRule];
@@ -102,19 +102,19 @@ class Currency
         if (is_array($data)) {
             switch ($which) {
                 case 'narrow':
-                    if (array_key_exists('symbolNarrow', $data)) {
+                    if (isset($data['symbolNarrow'])) {
                         $result = $data['symbolNarrow'];
                     }
 
                     break;
                 case 'alt':
-                    if (array_key_exists('symbolAlt', $data)) {
+                    if (isset($data['symbolAlt'])) {
                         $result = $data['symbolAlt'];
                     }
                     break;
             }
             if ((strlen($result) === 0) && ($which !== 'alt')) {
-                if (array_key_exists('symbol', $data)) {
+                if (isset($data['symbol'])) {
                     $result = $data['symbol'];
                 }
                 if (!strlen($result)) {
@@ -142,9 +142,9 @@ class Currency
         $result = array();
         if (preg_match('/^[A-Z]{2}|[0-9]{3}$/', $territoryCode)) {
             $data = Data::getGeneric('currencyData');
-            if (array_key_exists($territoryCode, $data['regions'])) {
+            if (isset($data['regions'][$territoryCode])) {
                 foreach ($data['regions'][$territoryCode] as $c) {
-                    if (array_key_exists('notTender', $c)) {
+                    if (isset($c['notTender'])) {
                         $c['tender'] = !$c['notTender'];
                         unset($c['notTender']);
                     } else {
@@ -170,7 +170,7 @@ class Currency
         if (!empty($history)) {
             $today = @date('Y-m-d');
             foreach ($history as $c) {
-                if ((!array_key_exists('to', $c)) || (strcmp($c['to'], $today) >= 0)) {
+                if ((!isset($c['to'])) || (strcmp($c['to'], $today) >= 0)) {
                     $result = $c['currency'];
                     if ($c['tender']) {
                         break;
@@ -187,7 +187,7 @@ class Currency
         $result = null;
         if (is_string($currencyCode) && (strlen($currencyCode) === 3)) {
             $data = \Punic\Data::get('currencies', $locale);
-            if (array_key_exists($currencyCode, $data)) {
+            if (isset($data[$currencyCode])) {
                 $result = $data[$currencyCode];
             }
         }
