@@ -14,6 +14,9 @@ namespace Punic;
  */
 class Calendar
 {
+    /** @var array */
+    protected static $timezoneCache;
+
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance \DateTime or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
@@ -402,6 +405,11 @@ class Calendar
      */
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
+        $cacheKey = json_encode(array($value, $width, $kind, $locale));
+        if(isset(self::$timezoneCache[$cacheKey])) {
+            return self::$timezoneCache[$cacheKey];
+        }
+
         $result = '';
         if (!empty($value)) {
             $receivedPhpName = '';
@@ -501,6 +509,8 @@ class Calendar
                 }
             }
         }
+
+        self::$timezoneCache[$cacheKey] = $result;
 
         return $result;
     }
