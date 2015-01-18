@@ -52,7 +52,7 @@ class Number
         $number = null;
         if (is_int($value) || is_float($value)) {
             $number = $value;
-        } elseif (is_string($value) && strlen($value)) {
+        } elseif (is_string($value) && isset($value[0])) {
             if (preg_match('/^[\\-+]?\\d+$/', $value)) {
                 $number = intval($value);
             } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
@@ -62,7 +62,7 @@ class Number
                 if (!isset($m[2])) {
                     $m[2] = '';
                 }
-                if ((strlen($m[1]) > 0) || (strlen($m[2]) > 0)) {
+                if ((isset($m[1][0])) || (isset($m[2][0]))) {
                     $number = floatval($value);
                     if (!is_numeric($precision)) {
                         $precision = strlen($m[2]);
@@ -96,7 +96,7 @@ class Number
             }
             $result = $sign . $intPart;
             if (is_null($precision)) {
-                if (strlen($floatPath)) {
+                if (isset($floatPath[0])) {
                     $result .= $decimal . $floatPath;
                 }
             } elseif ($precision > 0) {
@@ -119,7 +119,7 @@ class Number
         $result = null;
         if (is_int($value) || is_float($value)) {
             $result = $value;
-        } elseif (is_string($value) && strlen($value)) {
+        } elseif (is_string($value) && isset($value[0])) {
             $data = \Punic\Data::get('numbers', $locale);
             $plus = $data['symbols']['plusSign'];
             $plusQ = preg_quote($plus);

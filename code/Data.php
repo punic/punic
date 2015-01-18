@@ -109,7 +109,7 @@ class Data
      */
     public static function get($identifier, $locale = '')
     {
-        if (!(is_string($identifier) && strlen($identifier))) {
+        if (!(is_string($identifier) && isset($identifier[0]))) {
             throw new Exception\InvalidDataFile($identifier);
         }
         if (empty($locale)) {
@@ -123,7 +123,7 @@ class Data
                 throw new Exception\InvalidDataFile($identifier);
             }
             $dir = static::getLocaleFolder($locale);
-            if (!strlen($dir)) {
+            if (!isset($dir[0])) {
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
             $file = $dir . DIRECTORY_SEPARATOR . $identifier . '.json';
@@ -159,7 +159,7 @@ class Data
      */
     public static function getGeneric($identifier)
     {
-        if (!(is_string($identifier) && strlen($identifier))) {
+        if (!(is_string($identifier) && isset($identifier[0]))) {
             throw new Exception\InvalidDataFile($identifier);
         }
         if (isset(static::$cacheGeneric[$identifier])) {
@@ -212,7 +212,7 @@ class Data
                         if (is_array($info)) {
                             if ((!$allowGroups) && preg_match('/^[0-9]{3}$/', $info['territory'])) {
                                 foreach (\Punic\Territory::getChildTerritoryCodes($info['territory'], true) as $territory) {
-                                    if (strlen($info['script'])) {
+                                    if (isset($info['script'][0])) {
                                         $locales[] = "{$info['language']}-{$info['script']}-$territory";
                                     } else {
                                         $locales[] = "{$info['language']}-$territory";
@@ -254,7 +254,7 @@ class Data
         foreach ($keys as $key) {
             if (isset($data[$key])) {
                 $result = $data[$key];
-                if ((strlen($script) > 0) && (stripos($result, "$language-$script-") !== 0)) {
+                if (isset($script[1]) && (stripos($result, "$language-$script-") !== 0)) {
                     $parts = static::explodeLocale($result);
                     if (!is_null($parts)) {
                         $result = "{$parts['language']}-$script-{$parts['territory']}";
@@ -281,13 +281,13 @@ class Data
         }
         $info = static::explodeLocale($locale);
         if (is_array($info)) {
-            if (!strlen($info['territory'])) {
+            if (!isset($info['territory'][0])) {
                 $fullLocale = static::guessFullLocale($info['language'], $info['script']);
                 if (strlen($fullLocale)) {
                     $info = static::explodeLocale($fullLocale);
                 }
             }
-            if (strlen($info['territory'])) {
+            if (isset($info['territory'][0])) {
                 $result = $info['territory'];
             } elseif ($checkFallbackLocale) {
                 $result = static::getTerritory(static::$fallbackLocale, false);
@@ -324,7 +324,7 @@ class Data
     {
         $result = null;
         $territory = static::getTerritory($locale);
-        while (strlen($territory)) {
+        while (isset($territory[0])) {
             if (isset($data[$territory])) {
                 $result = $data[$territory];
                 break;
@@ -407,13 +407,13 @@ class Data
                     $chunkCount = count($chunks);
                     for ($i = 1; $ok && ($i < $chunkCount); $i++) {
                         if (preg_match('/^[a-z]{4}$/', $chunks[$i])) {
-                            if (strlen($script) > 0) {
+                            if (isset($script[1])) {
                                 $ok = false;
                             } else {
                                 $script = ucfirst($chunks[$i]);
                             }
                         } elseif (preg_match('/^([a-z]{2})|([0-9]{3})$/', $chunks[$i])) {
-                            if (strlen($territory) > 0) {
+                            if (isset($territory[1])) {
                                 $ok = false;
                             } else {
                                 $territory = strtoupper($chunks[$i]);
@@ -424,11 +424,11 @@ class Data
                     }
                     if ($ok) {
                         $parentLocales = static::getGeneric('parentLocales');
-                        if (strlen($script) && strlen($territory) && isset($parentLocales["$language-$script-$territory"])) {
+                        if (isset($script[0]) && isset($territory[0]) && isset($parentLocales["$language-$script-$territory"])) {
                             $parentLocale = $parentLocales["$language-$script-$territory"];
-                        } elseif (strlen($script) && isset($parentLocales["$language-$script"])) {
+                        } elseif (isset($script[0]) && isset($parentLocales["$language-$script"])) {
                             $parentLocale = $parentLocales["$language-$script"];
-                        } elseif (strlen($territory) && isset($parentLocales["$language-$territory"])) {
+                        } elseif (isset($territory[0]) && isset($parentLocales["$language-$territory"])) {
                             $parentLocale = $parentLocales["$language-$territory"];
                         } elseif (isset($parentLocales[$language])) {
                             $parentLocale = $parentLocales[$language];
@@ -488,23 +488,23 @@ class Data
             throw new Exception\InvalidLocale($locale);
         }
         extract($localeInfo);
-        if (!strlen($territory)) {
+        if (!isset($territory[0])) {
             $fullLocale = static::guessFullLocale($language, $script);
-            if (strlen($fullLocale)) {
+            if (isset($fullLocale[0])) {
                 extract(static::explodeLocale($fullLocale));
             }
         }
         $territories = array();
-        while (strlen($territory) > 0) {
+        while (isset($territory[1])) {
             $territories[] = $territory;
             $territory = \Punic\Territory::getParentTerritoryCode($territory);
         }
-        if (strlen($script)) {
+        if (isset($script[0])) {
             foreach ($territories as $territory) {
                 $result[] = "{$language}-{$script}-{$territory}";
             }
         }
-        if (strlen($script)) {
+        if (isset($script[0])) {
             $result[] = "{$language}-{$script}";
         }
         foreach ($territories as $territory) {
@@ -513,7 +513,7 @@ class Data
                 $result[] = 'root';
             }
         }
-        if (strlen($parentLocale)) {
+        if (isset($parentLocale[0])) {
             $result = array_merge($result, static::getLocaleAlternatives($parentLocale, false));
         }
         $result[] = $language;

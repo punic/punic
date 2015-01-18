@@ -55,12 +55,12 @@ class Language
         if (!is_null($info)) {
             extract($info);
             $lookFor = array();
-            if (strlen($script)) {
-                if (strlen($territory)) {
+            if (isset($script[0])) {
+                if (isset($territory[0])) {
                     $lookFor[] = "$language-$script-$territory";
                 }
                 $lookFor[] = "$language-$script";
-            } elseif (strlen($territory)) {
+            } elseif (isset($territory[0])) {
                 $lookFor[] = "$language-$territory";
             }
             $lookFor[] = $language;
@@ -71,9 +71,9 @@ class Language
                     break;
                 }
             }
-            if (strlen($territory)) {
+            if (isset($territory[0])) {
                 $territoryName = Territory::getName($territory, $locale);
-                if (strlen($territoryName)) {
+                if (isset($territoryName[0])) {
                     $patternData = Data::get('localeDisplayNames');
                     $pattern = $patternData['localeDisplayPattern']['localePattern'];
                     $result = sprintf($pattern, $result, $territoryName);
