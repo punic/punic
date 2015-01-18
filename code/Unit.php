@@ -131,7 +131,7 @@ class Unit
     public static function getCountriesWithMeasurementSystem($measurementSystem)
     {
         $result = array();
-        if (is_string($measurementSystem) && (isset($measurementSystem[1]))) {
+        if (is_string($measurementSystem) && (isset($measurementSystem[0]))) {
             $someGroup = false;
             $data = \Punic\Data::getGeneric('measurementData');
             foreach ($data['measurementSystem'] as $territory => $ms) {
@@ -195,7 +195,7 @@ class Unit
     public static function getCountriesWithPaperSize($paperSize)
     {
         $result = array();
-        if (is_string($paperSize) && (isset($paperSize[1]))) {
+        if (is_string($paperSize) && (isset($paperSize[0]))) {
             $someGroup = false;
             $data = \Punic\Data::getGeneric('measurementData');
             foreach ($data['paperSize'] as $territory => $ms) {

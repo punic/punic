@@ -169,7 +169,7 @@ class Misc
     public static function parseHttpAcceptLanguage($httpAcceptLanguages)
     {
         $result = array();
-        if (is_string($httpAcceptLanguages) && (isset($httpAcceptLanguages[1]))) {
+        if (is_string($httpAcceptLanguages) && (isset($httpAcceptLanguages[0]))) {
             foreach (explode(',', $httpAcceptLanguages) as $httpAcceptLanguage) {
                 if (preg_match('/^([a-z]{2,3}(?:[_\\-][a-z]+)*)(?:\\s*;(?:\\s*q(?:\\s*=(?:\\s*([\\d.]+))?)?)?)?$/', strtolower(trim($httpAcceptLanguage, " \t")), $m)) {
                     if (count($m) > 2) {

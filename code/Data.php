@@ -254,7 +254,7 @@ class Data
         foreach ($keys as $key) {
             if (isset($data[$key])) {
                 $result = $data[$key];
-                if (isset($script[1]) && (stripos($result, "$language-$script-") !== 0)) {
+                if (isset($script[0]) && (stripos($result, "$language-$script-") !== 0)) {
                     $parts = static::explodeLocale($result);
                     if (!is_null($parts)) {
                         $result = "{$parts['language']}-$script-{$parts['territory']}";
@@ -407,13 +407,13 @@ class Data
                     $chunkCount = count($chunks);
                     for ($i = 1; $ok && ($i < $chunkCount); $i++) {
                         if (preg_match('/^[a-z]{4}$/', $chunks[$i])) {
-                            if (isset($script[1])) {
+                            if (isset($script[0])) {
                                 $ok = false;
                             } else {
                                 $script = ucfirst($chunks[$i]);
                             }
                         } elseif (preg_match('/^([a-z]{2})|([0-9]{3})$/', $chunks[$i])) {
-                            if (isset($territory[1])) {
+                            if (isset($territory[0])) {
                                 $ok = false;
                             } else {
                                 $territory = strtoupper($chunks[$i]);
@@ -495,7 +495,7 @@ class Data
             }
         }
         $territories = array();
-        while (isset($territory[1])) {
+        while (isset($territory[0])) {
             $territories[] = $territory;
             $territory = \Punic\Territory::getParentTerritoryCode($territory);
         }
