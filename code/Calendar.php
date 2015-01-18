@@ -16,6 +16,8 @@ class Calendar
 {
     /** @var array */
     protected static $timezoneCache;
+    /** @var string[] */
+    protected static $weekdayDictionary = array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
 
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
@@ -272,7 +274,6 @@ class Calendar
      */
     public static function getWeekdayName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
-        static $dictionary = array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $weekday = null;
@@ -290,7 +291,7 @@ class Calendar
             if (is_null($weekday) || (($weekday < 0) || ($weekday > 6))) {
                 throw new Exception\BadArgumentType($value, 'weekday number');
             }
-            $weekday = $dictionary[$weekday];
+            $weekday = self::$weekdayDictionary[$weekday];
             $data = \Punic\Data::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
             if (!isset($data[$width])) {
