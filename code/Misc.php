@@ -102,7 +102,7 @@ class Misc
     public static function fixCase($string, $case)
     {
         $result = $string;
-        if (is_string($string) && is_string($case) && (strlen($string) > 0)) {
+        if (is_string($string) && is_string($case) && (isset($string[0]))) {
             switch ($case) {
                 case 'titlecase-words':
                     if (function_exists('mb_strtoupper') && (@preg_match('/\pL/u', 'a'))) {
@@ -169,7 +169,7 @@ class Misc
     public static function parseHttpAcceptLanguage($httpAcceptLanguages)
     {
         $result = array();
-        if (is_string($httpAcceptLanguages) && (strlen($httpAcceptLanguages) > 0)) {
+        if (is_string($httpAcceptLanguages) && (isset($httpAcceptLanguages[0]))) {
             foreach (explode(',', $httpAcceptLanguages) as $httpAcceptLanguage) {
                 if (preg_match('/^([a-z]{2,3}(?:[_\\-][a-z]+)*)(?:\\s*;(?:\\s*q(?:\\s*=(?:\\s*([\\d.]+))?)?)?)?$/', strtolower(trim($httpAcceptLanguage, " \t")), $m)) {
                     if (count($m) > 2) {

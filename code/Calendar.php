@@ -430,11 +430,11 @@ class Calendar
             } elseif (is_a($value, '\\DateTimeZone')) {
                 $receivedPhpName = $value->getName();
             }
-            if (strlen($receivedPhpName)) {
+            if (isset($receivedPhpName[0])) {
                 $metazoneCode = '';
                 $data = \Punic\Data::getGeneric('metaZones');
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
-                if (!strlen($metazoneCode)) {
+                if (!isset($metazoneCode[0])) {
                     foreach ($phpNames as $phpName) {
                         $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
                         $tzInfo = $data;
@@ -449,7 +449,7 @@ class Calendar
                         if (is_array($tzInfo)) {
                             foreach ($tzInfo as $tz) {
                                 if (is_array($tz) && isset($tz['mzone'])) {
-                                    if (strlen($date)) {
+                                    if (isset($date[0])) {
                                         if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
                                             continue;
                                         }
@@ -462,12 +462,12 @@ class Calendar
                                 }
                             }
                         }
-                        if (strlen($metazoneCode)) {
+                        if (isset($metazoneCode[0])) {
                             break;
                         }
                     }
                 }
-                if (!strlen($metazoneCode)) {
+                if (!isset($metazoneCode[0])) {
                     foreach ($phpNames as $phpName) {
                         foreach ($data['metazones'] as $metazone) {
                             if (strcasecmp($phpName, $metazone['type']) === 0) {
@@ -475,15 +475,15 @@ class Calendar
                                 break;
                             }
                         }
-                        if (strlen($metazoneCode)) {
+                        if (isset($metazoneCode[0])) {
                             break;
                         }
                     }
                 }
-                if (!strlen($metazoneCode)) {
+                if (!isset($metazoneCode[0])) {
                     $metazoneCode = $receivedPhpName;
                 }
-                if (strlen($metazoneCode)) {
+                if (isset($metazoneCode[0])) {
                     $data = \Punic\Data::get('timeZoneNames', $locale);
                     if (isset($data['metazone'])) {
                         $data = $data['metazone'];
@@ -542,7 +542,7 @@ class Calendar
             } elseif (is_a($value, '\\DateTimeZone')) {
                 $receivedPhpName = $value->getName();
             }
-            if (strlen($receivedPhpName)) {
+            if (isset($receivedPhpName[0])) {
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
                 $timeZoneNames = \Punic\Data::get('timeZoneNames', $locale);
                 foreach ($phpNames as $phpName) {
@@ -565,10 +565,10 @@ class Calendar
                 }
             }
         }
-        if ((!strlen($result)) && $returnUnknownIfNotFound) {
+        if ((!isset($result[0])) && $returnUnknownIfNotFound) {
             $result = 'Unknown City';
             $s = static::getTimezoneExemplarCity('Etc/Unknown', false, $locale);
-            if (strlen($s)) {
+            if (isset($s[0])) {
                 $result = $s;
             }
         }
@@ -750,8 +750,8 @@ class Calendar
 
         return sprintf(
             $data[$wholeWidth],
-            strlen($overrideTimeFormat) ? $overrideTimeFormat : static::getTimeFormat($timeWidth, $locale),
-            strlen($overrideDateFormat) ? $overrideDateFormat : static::getDateFormat($dateWidth, $locale)
+            isset($overrideTimeFormat[0]) ? $overrideTimeFormat : static::getTimeFormat($timeWidth, $locale),
+            isset($overrideDateFormat[0]) ? $overrideDateFormat : static::getDateFormat($dateWidth, $locale)
         );
     }
 
@@ -888,7 +888,7 @@ class Calendar
         $c = is_string($width) ? @substr($width, -1) : '';
         if (($c === '^') || ($c === '*')) {
             $dayName = static::getDateRelativeName($value, ($c === '^') ? true : false, $locale);
-            if (strlen($dayName)) {
+            if (isset($dayName[0])) {
                 return $dayName;
             }
             $width = substr($width, 0, -1);
@@ -993,10 +993,10 @@ class Calendar
                     $dateFormat = $chunks[1];
                     break;
             }
-            $c = strlen($dateFormat) ? @substr($dateFormat, -1) : '';
+            $c = isset($dateFormat[0]) ? @substr($dateFormat, -1) : '';
             if (($c === '^') || ($c === '*')) {
                 $dayName = static::getDateRelativeName($value, ($c === '^') ? true : false, $locale);
-                if (strlen($dayName)) {
+                if (isset($dayName[0])) {
                     $overrideDateFormat = "'$dayName'";
                 }
 
@@ -1273,7 +1273,7 @@ class Calendar
                 return $value->format('y');
             default:
                 $s = $value->format('Y');
-                if ($count > strlen($s)) {
+                if (!isset($s[$count])) {
                     $s = str_pad($s, $count, '0', STR_PAD_LEFT);
                 }
 
@@ -1368,13 +1368,13 @@ class Calendar
             case 2:
             case 3:
                 $tz = static::getTimezoneNameNoLocationSpecific($value, 'short', '', $locale);
-                if (!strlen($tz)) {
+                if (!isset($tz[0])) {
                     $tz = static::decodeTimezoneShortGMT($value, 1, $locale);
                 }
                 break;
             case 4:
                 $tz = static::getTimezoneNameNoLocationSpecific($value, 'long', '', $locale);
-                if (!strlen($tz)) {
+                if (!isset($tz[0])) {
                     $tz = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
                 break;
@@ -1427,7 +1427,7 @@ class Calendar
         if ($count === 2) {
             $y = substr('0' . $y, -2);
         } else {
-            if ($count > strlen($y)) {
+            if (!isset($y[$count])) {
                 $y = str_pad($y, $count, '0', STR_PAD_LEFT);
             }
         }
@@ -1577,13 +1577,13 @@ class Calendar
         switch ($count) {
             case 1:
                 $tz = static::getTimezoneNameNoLocationSpecific($value, 'short', 'generic', $locale);
-                if (!strlen($tz)) {
+                if (!isset($tz[0])) {
                     $tz = static::decodeTimezoneID($value, 4, $locale);
                 }
                 break;
             case 4:
                 $tz = static::getTimezoneNameNoLocationSpecific($value, 'long', 'generic', $locale);
-                if (!strlen($tz)) {
+                if (!isset($tz[0])) {
                     $tz = static::decodeTimezoneID($value, 4, $locale);
                 }
                 break;
@@ -1609,7 +1609,7 @@ class Calendar
                 break;
             case 4:
                 $result = static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
-                if (!strlen($result)) {
+                if (!isset($result[0])) {
                     $result = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
                 break;

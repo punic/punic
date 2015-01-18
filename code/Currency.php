@@ -108,7 +108,7 @@ class Currency
                 if (isset($data['symbol'])) {
                     $result = $data['symbol'];
                 }
-                if (!strlen($result)) {
+                if (!isset($result[0])) {
                     $result = $currencyCode;
                 }
             }

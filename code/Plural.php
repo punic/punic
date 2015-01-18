@@ -44,7 +44,7 @@ class Plural
                 list($intPart, $floatPart) = explode('.', $s);
             }
             $intPartAbs = strval(abs(intval($intPart)));
-        } elseif (is_string($number) && strlen($number)) {
+        } elseif (is_string($number) && isset($number[0])) {
             if (preg_match('/^[+|\\-]?\\d+\\.?$/', $number)) {
                 $v = intval($number);
                 $intPartAbs = strval(abs($v));
@@ -71,7 +71,7 @@ class Plural
         $v5 = strlen($floatPart) ? strval(intval($floatPart)) : '0';
         // 't' => '%6$s', // visible fractional digits in n, without trailing zeros.
         $v6 = trim($floatPart, '0');
-        if (!strlen($v6)) {
+        if (!isset($v6[0])) {
             $v6 = '0';
         }
         $result = 'other';

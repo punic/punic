@@ -25,7 +25,7 @@ class Unit
         } elseif (is_string($width) && preg_match('/^(?:(.*),)?([+\\-]?\\d+)$/', $width, $m)) {
             $precision = intval($m[2]);
             $width = $m[1];
-            if (!strlen($width)) {
+            if (!isset($width[0])) {
                 $width = 'short';
             }
         }
@@ -111,7 +111,7 @@ class Unit
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
-            while (strlen($territoryCode)) {
+            while (isset($territoryCode[0])) {
                 if (isset($data['measurementSystem'][$territoryCode])) {
                     $result = $data['measurementSystem'][$territoryCode];
                     break;
@@ -131,7 +131,7 @@ class Unit
     public static function getCountriesWithMeasurementSystem($measurementSystem)
     {
         $result = array();
-        if (is_string($measurementSystem) && (strlen($measurementSystem) > 0)) {
+        if (is_string($measurementSystem) && (isset($measurementSystem[0]))) {
             $someGroup = false;
             $data = \Punic\Data::getGeneric('measurementData');
             foreach ($data['measurementSystem'] as $territory => $ms) {
@@ -175,7 +175,7 @@ class Unit
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
-            while (strlen($territoryCode)) {
+            while (isset($territoryCode[0])) {
                 if (isset($data['paperSize'][$territoryCode])) {
                     $result = $data['paperSize'][$territoryCode];
                     break;
@@ -195,7 +195,7 @@ class Unit
     public static function getCountriesWithPaperSize($paperSize)
     {
         $result = array();
-        if (is_string($paperSize) && (strlen($paperSize) > 0)) {
+        if (is_string($paperSize) && (isset($paperSize[0]))) {
             $someGroup = false;
             $data = \Punic\Data::getGeneric('measurementData');
             foreach ($data['paperSize'] as $territory => $ms) {
