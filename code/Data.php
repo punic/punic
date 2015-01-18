@@ -386,7 +386,7 @@ class Data
     /**
      * Parse a string representing a locale and extract its components.
      * @param string $locale
-     * @return null|string[] Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
+     * @return null|string[] Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory', 'parentLocale'
      * @internal
      */
     public static function explodeLocale($locale)
@@ -487,11 +487,18 @@ class Data
         if (!is_array($localeInfo)) {
             throw new Exception\InvalidLocale($locale);
         }
-        extract($localeInfo);
+        $language = $localeInfo['language'];
+        $script = $localeInfo['script'];
+        $territory = $localeInfo['territory'];
+        $parentLocale = $localeInfo['parentLocale'];
         if (!isset($territory[0])) {
             $fullLocale = static::guessFullLocale($language, $script);
             if (isset($fullLocale[0])) {
-                extract(static::explodeLocale($fullLocale));
+                $localeInfo = static::explodeLocale($fullLocale);
+                $language = $localeInfo['language'];
+                $script = $localeInfo['script'];
+                $territory = $localeInfo['territory'];
+                $parentLocale = $localeInfo['parentLocale'];
             }
         }
         $territories = array();
