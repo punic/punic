@@ -386,7 +386,7 @@ class Data
     /**
      * Parse a string representing a locale and extract its components.
      * @param string $locale
-     * @return null]string[] Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
+     * @return null|string[] Return null if $locale is not valid; if $locale is valid returns an array with keys 'language', 'script', 'territory'
      * @internal
      */
     public static function explodeLocale($locale)
