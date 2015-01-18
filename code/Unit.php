@@ -12,6 +12,8 @@ class Unit
      * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
      * @param string $width='short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
      * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string
+     * @throws Exception\ValueNotInList
      */
     public static function format($number, $unit, $width = 'short', $locale = '')
     {
@@ -27,7 +29,7 @@ class Unit
                 $width = 'short';
             }
         }
-        if ((strpos($width, '_') === 0) || (!array_key_exists($width, $data))) {
+        if ((strpos($width, '_') === 0) || (!isset($data[$width]))) {
             $widths = array();
             foreach (array_keys($data) as $w) {
                 if (strpos($w, '_') !== 0) {
@@ -42,7 +44,7 @@ class Unit
             $unitID = null;
             foreach (array_keys($data) as $c) {
                 if (strpos($c, '_') === false) {
-                    if (array_key_exists($unit, $data[$c])) {
+                    if (isset($data[$c][$unit])) {
                         if (is_null($unitCategory)) {
                             $unitCategory = $c;
                             $unitID = $unit;
@@ -57,7 +59,7 @@ class Unit
             list($unitCategory, $unitID) = explode('/', $unit, 2);
         }
         $rules = null;
-        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && (!is_null($unitID)) && array_key_exists($unitCategory, $data) && array_key_exists($unitID, $data[$unitCategory])) {
+        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && (!is_null($unitID)) && isset($data[$unitCategory]) && array_key_exists($unitID, $data[$unitCategory])) {
             $rules = $data[$unitCategory][$unitID];
         }
         if (is_null($rules)) {
@@ -76,8 +78,8 @@ class Unit
         $pluralRule = \Punic\Plural::getRule($number, $locale);
         //@codeCoverageIgnoreStart
         // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)
-        if (!array_key_exists($pluralRule, $rules)) {
-            if (array_key_exists('other', $rules)) {
+        if (!isset($rules[$pluralRule])) {
+            if (isset($rules['other'])) {
                 $pluralRule = 'other';
             } else {
                 $availableRules = array_keys($rules);
@@ -110,7 +112,7 @@ class Unit
             $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
             while (strlen($territoryCode)) {
-                if (array_key_exists($territoryCode, $data['measurementSystem'])) {
+                if (isset($data['measurementSystem'][$territoryCode])) {
                     $result = $data['measurementSystem'][$territoryCode];
                     break;
                 }
@@ -174,7 +176,7 @@ class Unit
             $territoryCode = strtoupper($territoryCode);
             $data = \Punic\Data::getGeneric('measurementData');
             while (strlen($territoryCode)) {
-                if (array_key_exists($territoryCode, $data['paperSize'])) {
+                if (isset($data['paperSize'][$territoryCode])) {
                     $result = $data['paperSize'][$territoryCode];
                     break;
                 }

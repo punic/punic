@@ -77,7 +77,7 @@ class Number
             }
             $data = \Punic\Data::get('numbers', $locale);
             $decimal = $data['symbols']['decimal'];
-            $groupLength = (array_key_exists('groupLength', $data) && is_numeric($data['groupLength'])) ? intval($data['groupLength']) : 3;
+            $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? intval($data['groupLength']) : 3;
             if ($value < 0) {
                 $sign = $data['symbols']['minusSign'];
                 $value = abs($value);

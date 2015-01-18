@@ -61,7 +61,7 @@ class Misc
                     $data = null;
                     if (!empty($keys)) {
                         foreach ($keys as $key) {
-                            if (array_key_exists($key, $allData)) {
+                            if (isset($allData[$key])) {
                                 $data = $allData[$key];
                                 break;
                             }
@@ -70,7 +70,7 @@ class Misc
                     if (is_null($data)) {
                         $data = $allData['standard'];
                     }
-                    if (array_key_exists($n, $data)) {
+                    if (isset($data[$n])) {
                         $result = vsprintf($data[$n], $list);
                     } else {
                         $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
@@ -151,7 +151,7 @@ class Misc
         if (!isset($result) || $ignoreCache) {
             $httpAcceptLanguages = @getenv('HTTP_ACCEPT_LANGUAGE');
             if ((!is_string($httpAcceptLanguages)) || (strlen($httpAcceptLanguages) === 0)) {
-                if (isset($_SERVER) && is_array($_SERVER) && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+                if (isset($_SERVER) && is_array($_SERVER) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                     $httpAcceptLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
                 }
             }
@@ -210,7 +210,7 @@ class Misc
                             }
                         }
                         foreach ($found as $f) {
-                            if (array_key_exists($f, $result)) {
+                            if (isset($result[$f])) {
                                 if ($result[$f] < $quality) {
                                     $result[$f] = $quality;
                                 }
