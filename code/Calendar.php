@@ -405,7 +405,7 @@ class Calendar
      */
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
-        $cacheKey = json_encode(array($value, $width, $kind, $locale));
+        $cacheKey = json_encode(array($value, $width, $kind, empty($locale) ? \Punic\Data::getDefaultLocale() : $locale));
         if(isset(self::$timezoneCache[$cacheKey])) {
             return self::$timezoneCache[$cacheKey];
         }
