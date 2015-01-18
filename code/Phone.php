@@ -8,8 +8,8 @@ class Phone
 {
     /**
      * Retrieve the list of the country calling codes for a specific country
-     * @param string $territoryCode The country identifier ('001' for global systems, for instance satellite communications like Iridium)
-     * @return array Returns the list of country calling codes found for the specified country (eg: for 'US' you'll get array('1'))
+     * @param  string $territoryCode The country identifier ('001' for global systems, for instance satellite communications like Iridium)
+     * @return array  Returns the list of country calling codes found for the specified country (eg: for 'US' you'll get array('1'))
      */
     public static function getPrefixesForTerritory($territoryCode)
     {
@@ -27,8 +27,8 @@ class Phone
 
     /**
      * Retrieve the list of territory codes for a specific prefix
-     * @param string $prefix The country calling code (for instance: '1')
-     * @return array Returns the list of territories for which the specified prefix is applicable (eg: for '1' you'll get array('US', 'AG', 'AI', 'CA', ...))
+     * @param  string $prefix The country calling code (for instance: '1')
+     * @return array  Returns the list of territories for which the specified prefix is applicable (eg: for '1' you'll get array('US', 'AG', 'AI', 'CA', ...))
      */
     public static function getTerritoriesForPrefix($prefix)
     {

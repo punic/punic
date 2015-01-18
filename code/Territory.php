@@ -8,8 +8,8 @@ class Territory
 {
     /**
      * Retrieve the name of a territory (country, continent, ...)
-     * @param string $territoryCode The territory code
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $territoryCode The territory code
+     * @param  string $locale=''     The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns the localized territory name (returns $territoryCode if not found)
      */
     public static function getName($territoryCode, $locale = '')
@@ -28,7 +28,7 @@ class Territory
 
     /**
      * Return the list of continents in the form of an array with key=ID, value=name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getContinents($locale = '')
@@ -38,7 +38,7 @@ class Territory
 
     /**
      * Return the list of countries in the form of an array with key=ID, value=name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getCountries($locale = '')
@@ -70,7 +70,7 @@ class Territory
      * }
      * ```
      * The arrays are sorted by territory name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getContinentsAndCountries($locale = '')
@@ -89,8 +89,8 @@ class Territory
      * </ul>
      * If only one level is specified you'll get a flat list (like the one returned by {@link getContinents}).
      * If one or more levels are specified, you'll get a structured list (like the one returned by {@link getContinentsAndCountries}).
-     * @param string $levels A string with one or more of the characters: 'W' (for world), 'C' (for continents), 'S' (for sub-continents), 'c' (for countries)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string                    $levels    A string with one or more of the characters: 'W' (for world), 'C' (for continents), 'S' (for sub-continents), 'c' (for countries)
+     * @param  string                    $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      * @link http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
      * @throws Exception\BadArgumentType
@@ -113,7 +113,7 @@ class Territory
             }
         }
         if (count($decodedLevels) === 0) {
-            throw new \Punic\Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '" . implode("', '", array_keys($levelMap)) . "'");
+            throw new \Punic\Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '".implode("', '", array_keys($levelMap))."'");
         }
         $struct = self::filterStructure(self::getStructure(), $decodedLevels, 0);
         $flatList = (count($decodedLevels) > 1) ? false : true;
@@ -139,23 +139,23 @@ class Territory
 
     /**
      * Return the list of languages spoken in a territory
-     * @param string $territoryCode The territory code
-     * @param string $filterStatuses='' Filter language status.
-     * <ul>
-     *     <li>If empty no filter will be applied</li>
-     *     <li>'o' to include official languages</li>
-     *     <li>'r' to include official regional languages</li>
-     *     <li>'f' to include de facto official languages</li>
-     *     <li>'m' to include official minority languages</li>
-     *     <li>'u' to include unofficial or unknown languages</li>
-     * </ul>
-     * @param string $onlyCodes=false Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
-     * <ul>
-     *     <li>string id: the language identifier</li>
-     *     <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
-     *     <li>number population: the amount of people speaking the language (%)</li>
-     *     <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
-     * </ul>
+     * @param  string     $territoryCode     The territory code
+     * @param  string     $filterStatuses='' Filter language status.
+     *                                       <ul>
+     *                                       <li>If empty no filter will be applied</li>
+     *                                       <li>'o' to include official languages</li>
+     *                                       <li>'r' to include official regional languages</li>
+     *                                       <li>'f' to include de facto official languages</li>
+     *                                       <li>'m' to include official minority languages</li>
+     *                                       <li>'u' to include unofficial or unknown languages</li>
+     *                                       </ul>
+     * @param  string     $onlyCodes=false   Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
+     *                                       <ul>
+     *                                       <li>string id: the language identifier</li>
+     *                                       <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
+     *                                       <li>number population: the amount of people speaking the language (%)</li>
+     *                                       <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
+     *                                       </ul>
      * @return array|null Return the languages spoken in the specified territory, as described by the $onlyCodes parameter (or null if $territoryCode is not valid or no data is available)
      */
     public static function getLanguages($territoryCode, $filterStatuses = '', $onlyCodes = false)
@@ -186,7 +186,7 @@ class Territory
 
     /**
      * Return the population of a specific territory
-     * @param string $territoryCode The territory code
+     * @param  string      $territoryCode The territory code
      * @return number|null Return the size of the population of the specified territory (or null if $territoryCode is not valid or no data is available)
      */
     public static function getPopulation($territoryCode)
@@ -202,7 +202,7 @@ class Territory
 
     /**
      * Return the literacy level for a specific territory, in %
-     * @param string $territoryCode The territory code
+     * @param  string      $territoryCode The territory code
      * @return number|null Return the % of literacy lever of the specified territory (or null if $territoryCode is not valid or no data is available)
      */
     public static function getLiteracyLevel($territoryCode)
@@ -218,7 +218,7 @@ class Territory
 
     /**
      * Return the GDP (Gross Domestic Product) for a specific territory, in US$
-     * @param string $territoryCode The territory code
+     * @param  string      $territoryCode The territory code
      * @return number|null Return the GDP of the specified territory (or null if $territoryCode is not valid or no data is available)
      */
     public static function getGrossDomesticProduct($territoryCode)
@@ -234,7 +234,7 @@ class Territory
 
     /**
      * Return a list of territory IDs where a specific language is spoken, sorted by the total number of people speaking that language.
-     * @param string $languageID The language identifier
+     * @param  string $languageID The language identifier
      * @return array
      */
     public static function getTerritoriesForLanguage($languageID)
@@ -242,7 +242,7 @@ class Territory
         $langPeople = array();
         foreach (Data::getGeneric('territoryInfo') as $territoryID => $territoryInfo) {
             foreach ($territoryInfo['languages'] as $langID => $langInfo) {
-                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID . '_') === 0)) {
+                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID.'_') === 0)) {
                     $langPeople[] = array('territoryID' => $territoryID, 'people' => $territoryInfo['population'] * $langInfo['population']);
                 }
             }
@@ -267,7 +267,7 @@ class Territory
 
     /**
      * Return the code of the territory that contains a territory
-     * @param string $childTerritoryCode
+     * @param  string $childTerritoryCode
      * @return string Return the parent territory code, or an empty string if $childTerritoryCode is the World (001) or if it's invalid.
      */
     public static function getParentTerritoryCode($childTerritoryCode)
@@ -277,7 +277,7 @@ class Territory
             $childTerritoryCode = strtoupper($childTerritoryCode);
             foreach (\Punic\Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
-                    $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
+                    $result = is_int($parentTerritoryCode) ? substr('00'.$parentTerritoryCode, -3) : $parentTerritoryCode;
                     if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
                         break;
                     }
@@ -290,9 +290,9 @@ class Territory
 
     /**
      * Retrieve the child territories of a parent territory
-     * @param string $parentTerritoryCode
-     * @param bool $expandSubGroups=false Set to true to expand the sub-groups, false to retrieve them.
-     * @return array Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
+     * @param  string $parentTerritoryCode
+     * @param  bool   $expandSubGroups=false Set to true to expand the sub-groups, false to retrieve them.
+     * @return array  Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
      */
     public static function getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups = false)
     {

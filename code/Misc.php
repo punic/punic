@@ -8,20 +8,20 @@ class Misc
 {
     /**
      * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian)
-     * @param array $list The list to concatenate
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  array  $list      The list to concatenate
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
-    public static function join($list, $locale = '')
+    public static function implode($list, $locale = '')
     {
         return static::joinInternal($list, null, $locale);
     }
 
     /**
      * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'
-     * @param array $list The list to concatenate
-     * @param string $width='' The preferred width ('' for default, or 'short' or 'narrow')
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  array  $list      The list to concatenate
+     * @param  string $width=''  The preferred width ('' for default, or 'short' or 'narrow')
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
     public static function joinUnits($list, $width = '', $locale = '')
@@ -90,12 +90,12 @@ class Misc
 
     /**
      * Fix the case of a string.
-     * @param string $string The string whose case needs to be fixed
-     * @param string $case How to fix case. Allowed values:
-     *   <li>`'titlecase-words'` all words in the phrase should be title case</li>
-     *   <li>`'titlecase-firstword'` the first word should be title case</li>
-     *   <li>`'lowercase-words'` all words in the phrase should be lower case</li>
-     * </ul>
+     * @param  string $string The string whose case needs to be fixed
+     * @param  string $case   How to fix case. Allowed values:
+     *                        <li>`'titlecase-words'` all words in the phrase should be title case</li>
+     *                        <li>`'titlecase-firstword'` the first word should be title case</li>
+     *                        <li>`'lowercase-words'` all words in the phrase should be lower case</li>
+     *                        </ul>
      * @return string
      * @link http://cldr.unicode.org/development/development-process/design-proposals/consistent-casing
      */
@@ -112,7 +112,7 @@ class Misc
                             if ($l === 1) {
                                 $s = mb_strtoupper($s, 'UTF-8');
                             } else {
-                                $s = mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($s, 1, $l - 1, 'UTF-8');
+                                $s = mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8').mb_substr($s, 1, $l - 1, 'UTF-8');
                             }
 
                             return $s;
@@ -125,7 +125,7 @@ class Misc
                         if ($l === 1) {
                             $result = mb_strtoupper($string, 'UTF-8');
                         } elseif ($l > 1) {
-                            $result = mb_strtoupper(mb_substr($string, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($string, 1, $l - 1, 'UTF-8');
+                            $result = mb_strtoupper(mb_substr($string, 0, 1, 'UTF-8'), 'UTF-8').mb_substr($string, 1, $l - 1, 'UTF-8');
                         }
                     }
                     break;
@@ -142,8 +142,8 @@ class Misc
 
     /**
      * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
-     * @param boolean $ignoreCache=false Set to true if you want to ignore the cache
-     * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
+     * @param  boolean $ignoreCache=false Set to true if you want to ignore the cache
+     * @return array   Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function getBrowserLocales($ignoreCache = false)
     {
@@ -163,8 +163,8 @@ class Misc
 
     /**
      * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
-     * @param string $httpAcceptLanguages
-     * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
+     * @param  string $httpAcceptLanguages
+     * @return array  Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function parseHttpAcceptLanguage($httpAcceptLanguages)
     {
@@ -174,7 +174,7 @@ class Misc
                 if (preg_match('/^([a-z]{2,3}(?:[_\\-][a-z]+)*)(?:\\s*;(?:\\s*q(?:\\s*=(?:\\s*([\\d.]+))?)?)?)?$/', strtolower(trim($httpAcceptLanguage, " \t")), $m)) {
                     if (count($m) > 2) {
                         if (strpos($m[2], '.') === 0) {
-                            $m[2] = '0' . $m[2];
+                            $m[2] = '0'.$m[2];
                         }
                         if (preg_match('/^[01](\\.\\d*)?$/', $m[2])) {
                             $quality = round(@floatval($m[2]), 4);
@@ -194,15 +194,15 @@ class Misc
                             $base = $chunks[0];
                             for ($i = 1; $i < $numChunks; $i++) {
                                 if (strlen($chunks[$i]) === 4) {
-                                    $base .= '-' . ucfirst($chunks[$i]);
+                                    $base .= '-'.ucfirst($chunks[$i]);
                                     break;
                                 }
                             }
                             for ($i = 1; $i < $numChunks; $i++) {
                                 if (preg_match('/^[a-z][a-z]$/', $chunks[$i])) {
-                                    $found[] = $base . '-' . strtoupper($chunks[$i]);
+                                    $found[] = $base.'-'.strtoupper($chunks[$i]);
                                 } elseif (preg_match('/^\\d{3}$/', $chunks[$i])) {
-                                    $found[] = $base . '-' . $chunks[$i];
+                                    $found[] = $base.'-'.$chunks[$i];
                                 }
                             }
                             if (empty($found)) {
@@ -229,7 +229,7 @@ class Misc
 
     /**
      * Retrieve the character order (right-to-left or left-to-right)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Return 'left-to-right' or 'right-to-left'
      */
     public static function getCharacterOrder($locale = '')
@@ -241,7 +241,7 @@ class Misc
 
     /**
      * Retrieve the line order (top-to-bottom or bottom-to-top)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Return 'top-to-bottom' or 'bottom-to-top'
      */
     public static function getLineOrder($locale = '')

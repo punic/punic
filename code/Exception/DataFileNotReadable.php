@@ -10,7 +10,7 @@ class DataFileNotReadable extends \Punic\Exception
 
     /**
      * Initializes the instance
-     * @param string $dataFilePath The path to the unreadable file
+     * @param string     $dataFilePath  The path to the unreadable file
      * @param \Exception $previous=null The previous exception used for the exception chaining
      */
     public function __construct($dataFilePath, $previous = null)
@@ -28,5 +28,4 @@ class DataFileNotReadable extends \Punic\Exception
     {
         return $this->dataFilePath;
     }
-
 }

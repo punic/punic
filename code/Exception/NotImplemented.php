@@ -9,7 +9,7 @@ class NotImplemented extends \Punic\Exception
     protected $function;
     /**
      * Initializes the instance
-     * @param string $function The function/method that's not implemented
+     * @param string     $function      The function/method that's not implemented
      * @param \Exception $previous=null The previous exception used for the exception chaining
      */
     public function __construct($function, $previous = null)

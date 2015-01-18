@@ -12,9 +12,9 @@ class BadDataFileContents extends \Punic\Exception
 
     /**
      * Initializes the instance
-     * @param string $dataFilePath The path to the file with bad contents
-     * @param string $dataFileContents The malformed of the file
-     * @param \Exception $previous=null The previous exception used for the exception chaining
+     * @param string     $dataFilePath     The path to the file with bad contents
+     * @param string     $dataFileContents The malformed of the file
+     * @param \Exception $previous=null    The previous exception used for the exception chaining
      */
     public function __construct($dataFilePath, $dataFileContents, $previous = null)
     {

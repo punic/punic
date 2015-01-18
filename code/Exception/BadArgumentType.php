@@ -11,9 +11,9 @@ class BadArgumentType extends \Punic\Exception
     protected $destinationTypeDescription;
     /**
      * Initializes the instance
-     * @param mixed $argumentValue The value of the invalid argument
-     * @param string $destinationTypeDescription The description of the destination type
-     * @param \Exception $previous=null The previous exception used for the exception chaining
+     * @param mixed      $argumentValue              The value of the invalid argument
+     * @param string     $destinationTypeDescription The description of the destination type
+     * @param \Exception $previous=null              The previous exception used for the exception chaining
      */
     public function __construct($argumentValue, $destinationTypeDescription, $previous = null)
     {

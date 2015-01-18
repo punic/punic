@@ -6,10 +6,9 @@ namespace Punic;
  */
 class Plural
 {
-
     /**
      * Return the list of applicable plural rule for a locale
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  string        $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array[string] Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
      */
     public static function getRules($locale = '')
@@ -24,11 +23,11 @@ class Plural
 
     /**
      * Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale
-     * @param string|int|float $number The number to check the plural rule for for
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
+     * @param  string|int|float                 $number    The number to check the plural rule for for
+     * @param  string                           $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return string                           Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
-     * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
+     * @throws \Exception                       Throws a \Exception if there were problems calculating the plural rule
      */
     public static function getRule($number, $locale = '')
     {
@@ -60,7 +59,7 @@ class Plural
             throw new Exception\BadArgumentType($number, 'number');
         }
         // 'n' => '%1$s', // absolute value of the source number (integer and decimals).
-        $v1 = $intPartAbs . (strlen($floatPart) ? ".$floatPart" : '');
+        $v1 = $intPartAbs.(strlen($floatPart) ? ".$floatPart" : '');
         // 'i' => '%2$s', // integer digits of n
         $v2 = $intPartAbs;
         // 'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
@@ -88,9 +87,9 @@ class Plural
                 $decimals = strlen(rtrim($decimalPart, '0'));
                 if ($decimals > 0) {
                     $pow = intval(pow(10, $decimals));
-                    $repl = '(' . strval(intval(floatval($m[1]) * $pow)) . ' % ' . strval(intval(floatval($m[2] * $pow))) . ') / ' . $pow;
+                    $repl = '('.strval(intval(floatval($m[1]) * $pow)).' % '.strval(intval(floatval($m[2] * $pow))).') / '.$pow;
                 } else {
-                    $repl = strval(intval($m[1])) . ' % ' . $m[2];
+                    $repl = strval(intval($m[1])).' % '.$m[2];
                 }
                 $formula = str_replace($m[0], $repl, $formula);
             }
@@ -99,7 +98,7 @@ class Plural
                 $result = $rule;
                 break;
             } elseif ($formulaResult !== 'no') {
-                throw new \Exception('There was a problem in the formula ' . $formulaPattern);
+                throw new \Exception('There was a problem in the formula '.$formulaPattern);
             }
         }
 
@@ -120,7 +119,6 @@ class Plural
         foreach ($rangeValues as $rangeValue) {
             if (is_array($rangeValue)) {
                 if ($isInt && ($value >= $rangeValue[0]) && ($value <= $rangeValue[1])) {
-
                     $included = true;
                     break;
                 }

@@ -8,10 +8,10 @@ class Currency
 {
     /**
      * Returns all the currencies
-     * @param bool $alsoUnused=false Set to true to receive also currencies not currently used by any country, false otherwise
-     * @param bool $alsoNotTender=false Set to true to receive also currencies that aren't legal tender in any country
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
-     * @return array Array keys are the currency code, array values are the currency name. It's sorted by currency values
+     * @param  bool   $alsoUnused=false    Set to true to receive also currencies not currently used by any country, false otherwise
+     * @param  bool   $alsoNotTender=false Set to true to receive also currencies that aren't legal tender in any country
+     * @param  string $locale=''           The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @return array  Array keys are the currency code, array values are the currency name. It's sorted by currency values
      */
     public static function getAllCurrencies($alsoUnused = false, $alsoNotTender = false, $locale = '')
     {
@@ -56,14 +56,14 @@ class Currency
 
     /**
      * Returns the name of a currency given its code.
-     * @param string $currencyCode The currency code
+     * @param  string $currencyCode The currency code
      * @param null|number|string=null The quantity identifier. Allowed values:
-     * <ul>
-     *     <li>`null` to return the standard name, not associated to any quantity</li>
-     *     <li>`number` to return the name following the plural rule for the specified quantity</li>
-     *     <li>string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
-     * </ul>
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *                              <ul>
+     *                              <li>`null` to return the standard name, not associated to any quantity</li>
+     *                              <li>`number` to return the name following the plural rule for the specified quantity</li>
+     *                              <li>string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
+     *                              </ul>
+     * @param  string $locale=''    The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
      */
     public static function getName($currencyCode, $quantity = null, $locale = '')
@@ -90,9 +90,9 @@ class Currency
 
     /**
      * Returns the name of a currency given its code.
-     * @param string $currencyCode The currency code
-     * @param string $which='' Which symbol flavor do you prefer? 'narrow' for narrow symbols, 'alt' for alternative. Other values: standard/default symbol
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param  string $currencyCode The currency code
+     * @param  string $which=''     Which symbol flavor do you prefer? 'narrow' for narrow symbols, 'alt' for alternative. Other values: standard/default symbol
+     * @param  string $locale=''    The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
      */
     public static function getSymbol($currencyCode, $which = '', $locale = '')
@@ -128,14 +128,14 @@ class Currency
 
     /**
      * Return the history for the currencies used in a territory
-     * @param string $territoryCode The territoy code
-     * @return array Return a list of items with these keys:
-     * <ul>
-     *     <li>string `currency`: the currency code (always present)</li>
-     *     <li>string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD</li>
-     *     <li>string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD</li>
-     *     <li>bool `tender`: true if the currency was or is legal tender, false otherwise (always present)</li>
-     * </ul>
+     * @param  string $territoryCode The territoy code
+     * @return array  Return a list of items with these keys:
+     *                              <ul>
+     *                              <li>string `currency`: the currency code (always present)</li>
+     *                              <li>string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD</li>
+     *                              <li>string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD</li>
+     *                              <li>bool `tender`: true if the currency was or is legal tender, false otherwise (always present)</li>
+     *                              </ul>
      */
     public static function getCurrencyHistoryForTerritory($territoryCode)
     {
@@ -160,7 +160,7 @@ class Currency
 
     /**
      * Return the currency to be used in a territory
-     * @param string $territoryCode The territoy code
+     * @param  string $territoryCode The territoy code
      * @return string Returns an empty string if $territoryCode is not valid or we don't have info about it, the currency code otherwise
      */
     public static function getCurrencyForTerritory($territoryCode)

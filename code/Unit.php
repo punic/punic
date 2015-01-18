@@ -8,10 +8,10 @@ class Unit
 {
     /**
      * Format a unit string
-     * @param int|float|string $number The unit amount
-     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
-     * @param string $width='short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param  int|float|string         $number        The unit amount
+     * @param  string                   $unit          The unit identifier (eg 'duration/millisecond' or 'millisecond')
+     * @param  string                   $width='short' The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
+     * @param  string                   $locale=''     The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string
      * @throws Exception\ValueNotInList
      */
@@ -92,8 +92,8 @@ class Unit
 
     /**
      * Retrieve the measurement systems and their localized names
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return array The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
+     * @param  string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @return array  The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
      */
     public static function getMeasurementSystems($locale = '')
     {
@@ -102,7 +102,7 @@ class Unit
 
     /**
      * Retrieve the measurement system for a specific territory
-     * @param string $territoryCode The territory code (eg. 'US' for 'United States of America').
+     * @param  string $territoryCode The territory code (eg. 'US' for 'United States of America').
      * @return string Return the measurement system code (eg: 'metric') for the specified territory. If $territoryCode is not valid we'll return an empty string.
      */
     public static function getMeasurementSystemFor($territoryCode)
@@ -125,8 +125,8 @@ class Unit
 
     /**
      * Returns the list of countries that use a specific measurement system
-     * @param string $measurementSystem The measurement system identifier ('metric', 'US' or 'UK')
-     * @return array The list of country IDs that use the specified measurement system (if $measurementSystem is invalid you'll get an empty array)
+     * @param  string $measurementSystem The measurement system identifier ('metric', 'US' or 'UK')
+     * @return array  The list of country IDs that use the specified measurement system (if $measurementSystem is invalid you'll get an empty array)
      */
     public static function getCountriesWithMeasurementSystem($measurementSystem)
     {
@@ -166,7 +166,7 @@ class Unit
 
     /**
      * Retrieve the standard paper size for a specific territory
-     * @param string $territoryCode The territory code (eg. 'US' for 'United States of America').
+     * @param  string $territoryCode The territory code (eg. 'US' for 'United States of America').
      * @return string Return the standard paper size (eg: 'A4' or 'US-Letter') for the specified territory. If $territoryCode is not valid we'll return an empty string.
      */
     public static function getPaperSizeFor($territoryCode)
@@ -189,8 +189,8 @@ class Unit
 
     /**
      * Returns the list of countries that use a specific paper size by default
-     * @param string $paperSize The paper size identifier ('A4' or 'US-Letter')
-     * @return array The list of country IDs that use the specified paper size (if $paperSize is invalid you'll get an empty array)
+     * @param  string $paperSize The paper size identifier ('A4' or 'US-Letter')
+     * @return array  The list of country IDs that use the specified paper size (if $paperSize is invalid you'll get an empty array)
      */
     public static function getCountriesWithPaperSize($paperSize)
     {
