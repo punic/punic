@@ -276,19 +276,31 @@ class Calendar
     {
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
-            $weekday = null;
-            if (is_int($value)) {
-                $weekday = $value;
-            } elseif (is_float($value)) {
-                $weekday = intval($value);
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
+            switch (gettype($value)) {
+                case 'integer':
+                    $weekday = $value;
+                    break;
+                case 'double':
                     $weekday = intval($value);
-                }
-            } elseif (is_a($value, '\DateTime')) {
-                $weekday = intval($value->format('w'));
+                    break;
+                case 'string':
+                    if (is_numeric($value)) {
+                        $weekday = intval($value);
+                    } else {
+                        throw new Exception\BadArgumentType($value, 'weekday number');
+                    }
+                    break;
+                case 'object':
+                    if (is_a($value, '\DateTime')) {
+                        $weekday = intval($value->format('w'));
+                    } else {
+                        throw new Exception\BadArgumentType($value, 'weekday number');
+                    }
+                    break;
+                default:
+                    throw new Exception\BadArgumentType($value, 'weekday number');
             }
-            if (is_null($weekday) || (($weekday < 0) || ($weekday > 6))) {
+            if (($weekday < 0) || ($weekday > 6)) {
                 throw new Exception\BadArgumentType($value, 'weekday number');
             }
             $weekday = self::$weekdayDictionary[$weekday];
@@ -407,7 +419,7 @@ class Calendar
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
         $cacheKey = json_encode(array($value, $width, $kind, empty($locale) ? \Punic\Data::getDefaultLocale() : $locale));
-        if(isset(self::$timezoneCache[$cacheKey])) {
+        if (isset(self::$timezoneCache[$cacheKey])) {
             return self::$timezoneCache[$cacheKey];
         }
 
@@ -796,7 +808,6 @@ class Calendar
      */
     public static function describeInterval($dateEnd, $dateStart = null, $maxParts = 2, $width = 'short', $locale = '')
     {
-
         if (!is_a($dateEnd, '\\DateTime')) {
             throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
         }
@@ -999,7 +1010,6 @@ class Calendar
                 if (isset($dayName[0])) {
                     $overrideDateFormat = "'$dayName'";
                 }
-
             }
         }
 
@@ -1674,11 +1684,20 @@ class Calendar
     }
 
     /** @todo */
-    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale)
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
     /** @todo */
-    protected static function decodeYearCyclicName() { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeYearCyclicName()
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
     /** @todo */
-    protected static function decodeModifiedGiulianDay() { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeModifiedGiulianDay()
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
 
     protected static function getTimezonesAliases($phpTimezoneName)
     {
