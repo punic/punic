@@ -17,15 +17,6 @@ class Currency
     {
         $result = array();
         foreach (Data::get('currencies', $locale) as $code => $info) {
-            if (!isset($info['name'])) {
-                echo "\nlocale=\n";
-                var_export($locale);
-                echo "\ncode=\n";
-                var_export($code);
-                echo "\ninfo=\n";
-                var_export($info);
-                die();
-            }
             $result[$code] = $info['name'];
         }
         if ((!$alsoUnused) || (!$alsoNotTender)) {
