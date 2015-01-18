@@ -119,7 +119,7 @@ class Data
             static::$cache[$locale] = array();
         }
         if (!isset(static::$cache[$locale][$identifier])) {
-            if (!@preg_match('/^[a-zA-Z0-1_\\-]+$/i', $identifier)) {
+            if (!@preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
                 throw new Exception\InvalidDataFile($identifier);
             }
             $dir = static::getLocaleFolder($locale);
@@ -165,7 +165,7 @@ class Data
         if (isset(static::$cacheGeneric[$identifier])) {
             return static::$cacheGeneric[$identifier];
         }
-        if (!preg_match('/^[a-zA-Z0-1_\\-]+$/', $identifier)) {
+        if (!preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
             throw new Exception\InvalidDataFile($identifier);
         }
         $file = 'data' . DIRECTORY_SEPARATOR . "$identifier.json";
