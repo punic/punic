@@ -4,4 +4,13 @@
 Punic - PHP Unicode CLDR Toolkit
 ================================
 
+Documentation
+-------------
+
 See [punic.github.io](http://punic.github.io) for more info.
+
+Contributing
+------------
+
+We are always happy to get feedback or even pull requests. In order to keep the code consistent, please use the wonderful [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) with these settings:
+`php-cs-fixer fix --fixers=-psr0,-phpdoc_params,-concat_without_spaces`
