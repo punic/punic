@@ -67,7 +67,7 @@ class Currency
                 if (is_string($data) && in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
                     $pluralRule = $quantity;
                 } else {
-                    $pluralRule = \Punic\Plural::getRule($quantity, $locale);
+                    $pluralRule = Plural::getRule($quantity, $locale);
                 }
                 if (!isset($data['pluralName'][$pluralRule])) {
                     $pluralRule = 'other';
@@ -177,7 +177,7 @@ class Currency
     {
         $result = null;
         if (is_string($currencyCode) && (strlen($currencyCode) === 3)) {
-            $data = \Punic\Data::get('currencies', $locale);
+            $data = Data::get('currencies', $locale);
             if (isset($data[$currencyCode])) {
                 $result = $data[$currencyCode];
             }

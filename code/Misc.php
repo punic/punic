@@ -57,7 +57,7 @@ class Misc
                     $result = strval($list[0]);
                     break;
                 default:
-                    $allData = \Punic\Data::get('listPatterns', $locale);
+                    $allData = Data::get('listPatterns', $locale);
                     $data = null;
                     if (!empty($keys)) {
                         foreach ($keys as $key) {
@@ -234,7 +234,7 @@ class Misc
      */
     public static function getCharacterOrder($locale = '')
     {
-        $data = \Punic\Data::get('layout', $locale);
+        $data = Data::get('layout', $locale);
 
         return $data['characterOrder'];
     }
@@ -246,7 +246,7 @@ class Misc
      */
     public static function getLineOrder($locale = '')
     {
-        $data = \Punic\Data::get('layout', $locale);
+        $data = Data::get('layout', $locale);
 
         return $data['lineOrder'];
     }

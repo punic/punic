@@ -17,7 +17,7 @@ class Unit
      */
     public static function format($number, $unit, $width = 'short', $locale = '')
     {
-        $data = \Punic\Data::get('units', $locale);
+        $data = Data::get('units', $locale);
         $precision = null;
         if (is_int($width)) {
             $precision = $width;
@@ -75,7 +75,7 @@ class Unit
             }
             throw new \Punic\Exception\ValueNotInList($unit, $units);
         }
-        $pluralRule = \Punic\Plural::getRule($number, $locale);
+        $pluralRule = Plural::getRule($number, $locale);
         //@codeCoverageIgnoreStart
         // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)
         if (!isset($rules[$pluralRule])) {
@@ -87,7 +87,7 @@ class Unit
             }
         }
         //@codeCoverageIgnoreEnd
-        return sprintf($rules[$pluralRule], \Punic\Number::format($number, $precision, $locale));
+        return sprintf($rules[$pluralRule], Number::format($number, $precision, $locale));
     }
 
     /**
@@ -97,7 +97,7 @@ class Unit
      */
     public static function getMeasurementSystems($locale = '')
     {
-        return \Punic\Data::get('measurementSystemNames', $locale);
+        return Data::get('measurementSystemNames', $locale);
     }
 
     /**
@@ -110,13 +110,13 @@ class Unit
         $result = '';
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
-            $data = \Punic\Data::getGeneric('measurementData');
+            $data = Data::getGeneric('measurementData');
             while (isset($territoryCode[0])) {
                 if (isset($data['measurementSystem'][$territoryCode])) {
                     $result = $data['measurementSystem'][$territoryCode];
                     break;
                 }
-                $territoryCode = \Punic\Territory::getParentTerritoryCode($territoryCode);
+                $territoryCode = Territory::getParentTerritoryCode($territoryCode);
             }
         }
 
@@ -133,10 +133,10 @@ class Unit
         $result = array();
         if (is_string($measurementSystem) && (isset($measurementSystem[0]))) {
             $someGroup = false;
-            $data = \Punic\Data::getGeneric('measurementData');
+            $data = Data::getGeneric('measurementData');
             foreach ($data['measurementSystem'] as $territory => $ms) {
                 if (strcasecmp($measurementSystem, $ms) === 0) {
-                    $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                    $children = Territory::getChildTerritoryCodes($territory, true);
                     if (empty($children)) {
                         $result[] = $territory;
                     } else {
@@ -149,7 +149,7 @@ class Unit
                 $otherCountries = array();
                 foreach ($data['measurementSystem'] as $territory => $ms) {
                     if (($territory !== '001') && (strcasecmp($measurementSystem, $ms) !== 0)) {
-                        $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                        $children = Territory::getChildTerritoryCodes($territory, true);
                         if (empty($children)) {
                             $otherCountries[] = $territory;
                         } else {
@@ -174,13 +174,13 @@ class Unit
         $result = '';
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
-            $data = \Punic\Data::getGeneric('measurementData');
+            $data = Data::getGeneric('measurementData');
             while (isset($territoryCode[0])) {
                 if (isset($data['paperSize'][$territoryCode])) {
                     $result = $data['paperSize'][$territoryCode];
                     break;
                 }
-                $territoryCode = \Punic\Territory::getParentTerritoryCode($territoryCode);
+                $territoryCode = Territory::getParentTerritoryCode($territoryCode);
             }
         }
 
@@ -197,10 +197,10 @@ class Unit
         $result = array();
         if (is_string($paperSize) && (isset($paperSize[0]))) {
             $someGroup = false;
-            $data = \Punic\Data::getGeneric('measurementData');
+            $data = Data::getGeneric('measurementData');
             foreach ($data['paperSize'] as $territory => $ms) {
                 if (strcasecmp($paperSize, $ms) === 0) {
-                    $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                    $children = Territory::getChildTerritoryCodes($territory, true);
                     if (empty($children)) {
                         $result[] = $territory;
                     } else {
@@ -213,7 +213,7 @@ class Unit
                 $otherCountries = array();
                 foreach ($data['paperSize'] as $territory => $ms) {
                     if (($territory !== '001') && (strcasecmp($paperSize, $ms) !== 0)) {
-                        $children = \Punic\Territory::getChildTerritoryCodes($territory, true);
+                        $children = Territory::getChildTerritoryCodes($territory, true);
                         if (empty($children)) {
                             $otherCountries[] = $territory;
                         } else {

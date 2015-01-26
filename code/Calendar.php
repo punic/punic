@@ -209,7 +209,7 @@ class Calendar
             if (is_null($year)) {
                 throw new Exception\BadArgumentType($value, 'year number');
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = Data::get('calendar', $locale);
             $data = $data['eras'];
             if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
@@ -250,7 +250,7 @@ class Calendar
             if (is_null($month) || (($month < 1) || ($month > 12))) {
                 throw new Exception\BadArgumentType($value, 'month number');
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = Data::get('calendar', $locale);
             $data = $data['months'][$standAlone ? 'stand-alone' : 'format'];
             if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
@@ -292,7 +292,7 @@ class Calendar
                 throw new Exception\BadArgumentType($value, 'weekday number');
             }
             $weekday = self::$weekdayDictionary[$weekday];
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = Data::get('calendar', $locale);
             $data = $data['days'][$standAlone ? 'stand-alone' : 'format'];
             if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
@@ -333,7 +333,7 @@ class Calendar
             if (is_null($quarter) || (($quarter < 1) || ($quarter > 4))) {
                 throw new Exception\BadArgumentType($value, 'quarter number');
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = Data::get('calendar', $locale);
             $data = $data['quarters'][$standAlone ? 'stand-alone' : 'format'];
             if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
@@ -384,7 +384,7 @@ class Calendar
             if (is_null($dayperiod)) {
                 throw new Exception\BadArgumentType($value, 'day period');
             }
-            $data = \Punic\Data::get('calendar', $locale);
+            $data = Data::get('calendar', $locale);
             $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
             if (!isset($data[$width])) {
                 throw new Exception\ValueNotInList($width, array_keys($data));
@@ -406,7 +406,7 @@ class Calendar
      */
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
-        $cacheKey = json_encode(array($value, $width, $kind, empty($locale) ? \Punic\Data::getDefaultLocale() : $locale));
+        $cacheKey = json_encode(array($value, $width, $kind, empty($locale) ? Data::getDefaultLocale() : $locale));
         if(isset(self::$timezoneCache[$cacheKey])) {
             return self::$timezoneCache[$cacheKey];
         }
@@ -432,7 +432,7 @@ class Calendar
             }
             if (isset($receivedPhpName[0])) {
                 $metazoneCode = '';
-                $data = \Punic\Data::getGeneric('metaZones');
+                $data = Data::getGeneric('metaZones');
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
                 if (!isset($metazoneCode[0])) {
                     foreach ($phpNames as $phpName) {
@@ -484,7 +484,7 @@ class Calendar
                     $metazoneCode = $receivedPhpName;
                 }
                 if (isset($metazoneCode[0])) {
-                    $data = \Punic\Data::get('timeZoneNames', $locale);
+                    $data = Data::get('timeZoneNames', $locale);
                     if (isset($data['metazone'])) {
                         $data = $data['metazone'];
                         if (isset($data[$metazoneCode])) {
@@ -532,7 +532,7 @@ class Calendar
     public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '')
     {
         $result = '';
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? Data::getDefaultLocale() : $locale;
         if (!empty($value)) {
             $receivedPhpName = '';
             if (is_string($value)) {
@@ -544,7 +544,7 @@ class Calendar
             }
             if (isset($receivedPhpName[0])) {
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
-                $timeZoneNames = \Punic\Data::get('timeZoneNames', $locale);
+                $timeZoneNames = Data::get('timeZoneNames', $locale);
                 foreach ($phpNames as $phpName) {
                     $chunks = array_merge(array('zone'), explode('/', $phpName));
                     $data = $timeZoneNames;
@@ -585,7 +585,7 @@ class Calendar
     public static function has12HoursClock($locale = '')
     {
         static $cache = array();
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? Data::getDefaultLocale() : $locale;
         if (!isset($cache[$locale])) {
             $format = static::getTimeFormat('short', $locale);
             $format = str_replace("''", '', $format);
@@ -603,11 +603,11 @@ class Calendar
     public static function getFirstWeekday($locale = '')
     {
         static $cache = array();
-        $locale = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+        $locale = empty($locale) ? Data::getDefaultLocale() : $locale;
         if (!isset($cache[$locale])) {
             $result = 0;
-            $data = \Punic\Data::getGeneric('weekData');
-            $i = \Punic\Data::getTerritoryNode($data['firstDay'], $locale);
+            $data = Data::getGeneric('weekData');
+            $i = Data::getTerritoryNode($data['firstDay'], $locale);
             if (is_int($i)) {
                 $result = $i;
             }
@@ -659,7 +659,7 @@ class Calendar
      */
     public static function getDateFormat($width, $locale = '')
     {
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = Data::get('calendar', $locale);
         $data = $data['dateFormats'];
         if (!isset($data[$width])) {
             throw new Exception\ValueNotInList($width, array_keys($data));
@@ -680,7 +680,7 @@ class Calendar
      */
     public static function getTimeFormat($width, $locale = '')
     {
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = Data::get('calendar', $locale);
         $data = $data['timeFormats'];
         if (!isset($data[$width])) {
             throw new Exception\ValueNotInList($width, array_keys($data));
@@ -742,7 +742,7 @@ class Calendar
             default:
                 throw new Exception\BadArgumentType($width, 'pipe-separated list of strings (from 1 to 3 chunks)');
         }
-        $data = \Punic\Data::get('calendar', $locale);
+        $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!isset($data[$wholeWidth])) {
             throw new Exception\ValueNotInList($wholeWidth, array_keys($data));
@@ -814,7 +814,7 @@ class Calendar
         $dateStartUTC = new \DateTime($dateStart->format('Y-m-d H:i:s'), $utc);
 
         $parts = array();
-        $data = \Punic\Data::get('dateFields', $locale);
+        $data = Data::get('dateFields', $locale);
         if ($dateEndUTC->getTimestamp() == $dateStartUTC->getTimestamp()) {
             $parts[] = $data['second']['relative-type-0'];
         } else {
@@ -822,37 +822,37 @@ class Calendar
             $mostFar = 0;
             $maxDistance = 3;
             if (($mostFar < $maxDistance) && ($diff->y > 0)) {
-                $parts[] = \Punic\Unit::format($diff->y, 'duration/year', $width, $locale);
+                $parts[] = Unit::format($diff->y, 'duration/year', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
                 $mostFar++;
             }
             if (($mostFar < $maxDistance) && ($diff->m > 0)) {
-                $parts[] = \Punic\Unit::format($diff->m, 'duration/month', $width, $locale);
+                $parts[] = Unit::format($diff->m, 'duration/month', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
                 $mostFar++;
             }
             if (($mostFar < $maxDistance) && ($diff->d > 0)) {
-                $parts[] = \Punic\Unit::format($diff->d, 'duration/day', $width, $locale);
+                $parts[] = Unit::format($diff->d, 'duration/day', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
                 $mostFar++;
             }
             if (($mostFar < $maxDistance) && ($diff->h > 0)) {
-                $parts[] = \Punic\Unit::format($diff->h, 'duration/hour', $width, $locale);
+                $parts[] = Unit::format($diff->h, 'duration/hour', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
                 $mostFar++;
             }
             if (($mostFar < $maxDistance) && ($diff->i > 0)) {
-                $parts[] = \Punic\Unit::format($diff->i, 'duration/minute', $width, $locale);
+                $parts[] = Unit::format($diff->i, 'duration/minute', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
                 $mostFar++;
             }
             if (empty($parts) || ($diff->s > 0)) {
-                $parts[] = \Punic\Unit::format($diff->s, 'duration/second', $width, $locale);
+                $parts[] = Unit::format($diff->s, 'duration/second', $width, $locale);
             }
             if (count($parts) > $maxParts) {
                 $parts = array_slice($parts, 0, $maxParts);
@@ -861,10 +861,10 @@ class Calendar
         switch ($width) {
             case 'narrow':
             case 'short':
-                $joined = \Punic\Misc::joinUnits($parts, $width, $locale);
+                $joined = Misc::joinUnits($parts, $width, $locale);
                 break;
             default:
-                $joined = \Punic\Misc::join($parts, $locale);
+                $joined = Misc::join($parts, $locale);
                 break;
         }
 
@@ -1093,7 +1093,7 @@ class Calendar
             if ($length === 0) {
                 throw new Exception\BadArgumentType($format, 'date/time ISO format');
             }
-            $cacheKey = empty($locale) ? \Punic\Data::getDefaultLocale() : $locale;
+            $cacheKey = empty($locale) ? Data::getDefaultLocale() : $locale;
             if (!isset($decodeCache[$cacheKey])) {
                 $decodeCache[$cacheKey] = array();
             }
@@ -1176,14 +1176,14 @@ class Calendar
     {
         $result = '';
         $deltaDays = static::getDeltaDays($datetime);
-        $data = \Punic\Data::get('dateFields', $locale);
+        $data = Data::get('dateFields', $locale);
         if (isset($data['day'])) {
             $data = $data['day'];
             $key = "relative-type-$deltaDays";
             if (isset($data[$key])) {
                 $result = $data[$key];
                 if ($ucFirst) {
-                    $result = \Punic\Misc::fixCase($result, 'titlecase-firstword');
+                    $result = Misc::fixCase($result, 'titlecase-firstword');
                 }
             }
         }
@@ -1393,7 +1393,7 @@ class Calendar
         $hours = intval(floor($seconds / 3600));
         $seconds -= $hours * 3600;
         $minutes = intval(floor($seconds / 60));
-        $data = \Punic\Data::get('timeZoneNames', $locale);
+        $data = Data::get('timeZoneNames', $locale);
         $format = isset($data['gmtFormat']) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
@@ -1561,7 +1561,7 @@ class Calendar
             case 3:
                 return implode('', $partsMaybeWithSeconds);
             case 4:
-                $data = \Punic\Data::get('timeZoneNames', $locale);
+                $data = Data::get('timeZoneNames', $locale);
                 $format = isset($data['gmtFormat']) ? $data['gmtFormat'] : 'GMT%1$s';
 
                 return sprintf($format, implode(':', $partsWithoutSeconds));

@@ -75,7 +75,7 @@ class Number
             if (!is_null($precision)) {
                 $value = round($value, $precision);
             }
-            $data = \Punic\Data::get('numbers', $locale);
+            $data = Data::get('numbers', $locale);
             $decimal = $data['symbols']['decimal'];
             $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? intval($data['groupLength']) : 3;
             if ($value < 0) {
@@ -120,7 +120,7 @@ class Number
         if (is_int($value) || is_float($value)) {
             $result = $value;
         } elseif (is_string($value) && isset($value[0])) {
-            $data = \Punic\Data::get('numbers', $locale);
+            $data = Data::get('numbers', $locale);
             $plus = $data['symbols']['plusSign'];
             $plusQ = preg_quote($plus);
             $minus = $data['symbols']['minusSign'];
