@@ -275,7 +275,7 @@ class Territory
         $result = '';
         if (is_string($childTerritoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $childTerritoryCode)) {
             $childTerritoryCode = strtoupper($childTerritoryCode);
-            foreach (\Punic\Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
+            foreach (Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
                     $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
                     if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
@@ -299,7 +299,7 @@ class Territory
         $result = array();
         if (is_string($parentTerritoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $parentTerritoryCode)) {
             $parentTerritoryCode = strtoupper($parentTerritoryCode);
-            $data = \Punic\Data::getGeneric('territoryContainment');
+            $data = Data::getGeneric('territoryContainment');
             if (isset($data[$parentTerritoryCode])) {
                 $children = $data[$parentTerritoryCode]['contains'];
                 if ($expandSubGroups) {

@@ -211,7 +211,7 @@ class Data
                         $info = static::explodeLocale($item);
                         if (is_array($info)) {
                             if ((!$allowGroups) && preg_match('/^[0-9]{3}$/', $info['territory'])) {
-                                foreach (\Punic\Territory::getChildTerritoryCodes($info['territory'], true) as $territory) {
+                                foreach (Territory::getChildTerritoryCodes($info['territory'], true) as $territory) {
                                     if (isset($info['script'][0])) {
                                         $locales[] = "{$info['language']}-{$info['script']}-$territory";
                                     } else {
@@ -302,7 +302,7 @@ class Data
      */
     protected static function getParentTerritory($territory)
     {
-        return \Punic\Territory::getParentTerritoryCode($territory);
+        return Territory::getParentTerritoryCode($territory);
     }
 
     /**
@@ -310,7 +310,7 @@ class Data
      */
     protected static function expandTerritoryGroup($parentTerritory)
     {
-        return \Punic\Territory::getChildTerritoryCodes($parentTerritory, true);
+        return Territory::getChildTerritoryCodes($parentTerritory, true);
     }
 
     /**
@@ -329,7 +329,7 @@ class Data
                 $result = $data[$territory];
                 break;
             }
-            $territory = \Punic\Territory::getParentTerritoryCode($territory);
+            $territory = Territory::getParentTerritoryCode($territory);
         }
 
         return $result;
@@ -504,7 +504,7 @@ class Data
         $territories = array();
         while (isset($territory[0])) {
             $territories[] = $territory;
-            $territory = \Punic\Territory::getParentTerritoryCode($territory);
+            $territory = Territory::getParentTerritoryCode($territory);
         }
         if (isset($script[0])) {
             foreach ($territories as $territory) {

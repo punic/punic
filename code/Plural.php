@@ -14,7 +14,7 @@ class Plural
      */
     public static function getRules($locale = '')
     {
-        $node = \Punic\Data::getLanguageNode(\Punic\Data::getGeneric('plurals'), $locale);
+        $node = Data::getLanguageNode(Data::getGeneric('plurals'), $locale);
 
         return array_merge(
             array_keys($node),
@@ -75,7 +75,7 @@ class Plural
             $v6 = '0';
         }
         $result = 'other';
-        $node = \Punic\Data::getLanguageNode(\Punic\Data::getGeneric('plurals'), $locale);
+        $node = Data::getLanguageNode(Data::getGeneric('plurals'), $locale);
         foreach ($node as $rule => $formulaPattern) {
             $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6);
             $check = str_replace(array('static::inRange(', ' and ', ' or ', ', false, ', ', true, ', ', array('), ' , ', $formula);
