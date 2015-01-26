@@ -9,7 +9,7 @@ class Misc
     /**
      * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian)
      * @param array $list The list to concatenate
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
     public static function join($list, $locale = '')
@@ -20,8 +20,8 @@ class Misc
     /**
      * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'
      * @param array $list The list to concatenate
-     * @param string $width='' The preferred width ('' for default, or 'short' or 'narrow')
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
     public static function joinUnits($list, $width = '', $locale = '')
@@ -142,7 +142,7 @@ class Misc
 
     /**
      * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
-     * @param boolean $ignoreCache=false Set to true if you want to ignore the cache
+     * @param boolean $ignoreCache Set to true if you want to ignore the cache
      * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function getBrowserLocales($ignoreCache = false)
@@ -229,7 +229,7 @@ class Misc
 
     /**
      * Retrieve the character order (right-to-left or left-to-right)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Return 'left-to-right' or 'right-to-left'
      */
     public static function getCharacterOrder($locale = '')
@@ -241,7 +241,7 @@ class Misc
 
     /**
      * Retrieve the line order (top-to-bottom or bottom-to-top)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Return 'top-to-bottom' or 'bottom-to-top'
      */
     public static function getLineOrder($locale = '')

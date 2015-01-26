@@ -10,7 +10,7 @@ class Number
     /**
      * Check if a variable contains a valid number for the specified locale
      * @param string $value The string value to check
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return bool
      */
     public static function isNumeric($value, $locale = '')
@@ -21,7 +21,7 @@ class Number
     /**
      * Check if a variable contains a valid integer number for the specified locale
      * @param string $value The string value to check
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return bool
      */
     public static function isInteger($value, $locale = '')
@@ -42,8 +42,8 @@ class Number
     /**
      * Localize a number representation (for instance, converts 1234.5 to '1,234.5' in case of English and to '1.234,5' in case of Italian)
      * @param numeric $value The string value to convert
-     * @param int|null $precision=null The wanted precision (well use {@link http://php.net/manual/function.round.php})
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the number
      */
     public static function format($value, $precision = null, $locale = '')
@@ -111,7 +111,7 @@ class Number
     /**
      * Convert a localized representation of a number to a number (for instance, converts the string '1,234' to 1234 in case of English and to 1.234 in case of Italian)
      * @param string $value The string value to convert
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return int|float|null Returns null if $value is not valid, the numeric value otherwise
      */
     public static function unformat($value, $locale = '')

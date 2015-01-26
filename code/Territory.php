@@ -9,7 +9,7 @@ class Territory
     /**
      * Retrieve the name of a territory (country, continent, ...)
      * @param string $territoryCode The territory code
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns the localized territory name (returns $territoryCode if not found)
      */
     public static function getName($territoryCode, $locale = '')
@@ -28,7 +28,7 @@ class Territory
 
     /**
      * Return the list of continents in the form of an array with key=ID, value=name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getContinents($locale = '')
@@ -38,7 +38,7 @@ class Territory
 
     /**
      * Return the list of countries in the form of an array with key=ID, value=name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getCountries($locale = '')
@@ -70,7 +70,7 @@ class Territory
      * }
      * ```
      * The arrays are sorted by territory name
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      */
     public static function getContinentsAndCountries($locale = '')
@@ -90,7 +90,7 @@ class Territory
      * If only one level is specified you'll get a flat list (like the one returned by {@link getContinents}).
      * If one or more levels are specified, you'll get a structured list (like the one returned by {@link getContinentsAndCountries}).
      * @param string $levels A string with one or more of the characters: 'W' (for world), 'C' (for continents), 'S' (for sub-continents), 'c' (for countries)
-     * @param string $locale='' The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return array
      * @link http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
      * @throws Exception\BadArgumentType
@@ -140,7 +140,7 @@ class Territory
     /**
      * Return the list of languages spoken in a territory
      * @param string $territoryCode The territory code
-     * @param string $filterStatuses='' Filter language status.
+     * @param string $filterStatuses Filter language status.
      * <ul>
      *     <li>If empty no filter will be applied</li>
      *     <li>'o' to include official languages</li>
@@ -149,7 +149,7 @@ class Territory
      *     <li>'m' to include official minority languages</li>
      *     <li>'u' to include unofficial or unknown languages</li>
      * </ul>
-     * @param string $onlyCodes=false Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
+     * @param string $onlyCodes Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
      * <ul>
      *     <li>string id: the language identifier</li>
      *     <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
@@ -291,7 +291,7 @@ class Territory
     /**
      * Retrieve the child territories of a parent territory
      * @param string $parentTerritoryCode
-     * @param bool $expandSubGroups=false Set to true to expand the sub-groups, false to retrieve them.
+     * @param bool $expandSubGroups Set to true to expand the sub-groups, false to retrieve them.
      * @return array Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
      */
     public static function getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups = false)

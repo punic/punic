@@ -13,9 +13,9 @@ class DataFileNotFound extends \Punic\Exception
     /**
      * Initializes the instance
      * @param string $identifier The data file identifier
-     * @param string $locale='' The preferred locale (if the data file is locale-specific)
-     * @param string $fallbackLocale='' The fallback locale (if the data file is locale-specific)
-     * @param \Exception $previous=null The previous exception used for the exception chaining
+     * @param string $locale The preferred locale (if the data file is locale-specific)
+     * @param string $fallbackLocale The fallback locale (if the data file is locale-specific)
+     * @param \Exception $previous The previous exception used for the exception chaining
      */
     public function __construct($identifier, $locale = '', $fallbackLocale = '', $previous = null)
     {
