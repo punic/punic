@@ -12,7 +12,7 @@ class InvalidDataFile extends \Punic\Exception
     /**
      * Initializes the instance
      * @param mixed $identifier The bad data file identifier
-     * @param \Exception $previous=null The previous exception used for the exception chaining
+     * @param \Exception $previous The previous exception used for the exception chaining
      */
     public function __construct($identifier, $previous = null)
     {
