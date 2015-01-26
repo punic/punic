@@ -10,7 +10,7 @@ class Plural
     /**
      * Return the list of applicable plural rule for a locale
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @return array[string] Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
+     * @return array<string> Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
      */
     public static function getRules($locale = '')
     {
