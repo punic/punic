@@ -12,7 +12,7 @@ class ValueNotInList extends \Punic\Exception
     /**
      * Initializes the instance
      * @param string|numeric $value The invalid value
-     * @param array[string|numeric] $allowedValues The list of valid values
+     * @param array<string|numeric> $allowedValues The list of valid values
      * @param \Exception $previous The previous exception used for the exception chaining
      */
     public function __construct($value, $allowedValues, $previous = null)
@@ -34,7 +34,7 @@ class ValueNotInList extends \Punic\Exception
 
     /**
      * Retrieves the list of valid values
-     * @return array[string|numeric]
+     * @return array<string|numeric>
      */
     public function getAllowedValues()
     {

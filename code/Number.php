@@ -148,6 +148,7 @@ class Number
                 $float = $m[2];
             } else {
                 $ok = false;
+                $float = $int = $sign = null;
             }
             if ($ok) {
                 if ($sign === $minus) {
