@@ -1293,7 +1293,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('2 years', $now, $before1, 1, 'long', 'en'),
             array('2y 4d', $now, $before1, 2, 'narrow', 'en'),
             array('2 years, 4 days, and 6 hours', $now, $before1, 3, 'long', 'en'),
-            array('2 yrs, 4 days, 6 hrs', $now, $before1, 3, 'short', 'en'),
+            array('2 yrs, 4 days, 6 hr', $now, $before1, 3, 'short', 'en'),
             array('2y 4d 6h', $now, $before1, 3, 'narrow', 'en'),
             array('2 years, 4 days, 6 hours, and 8 minutes', $now, $before1, 4, 'long', 'en'),
             array('2 years and 3 months', $now, $before2, 2, 'long', 'en'),

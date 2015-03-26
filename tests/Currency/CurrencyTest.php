@@ -19,13 +19,13 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     public function providerGetInfo()
     {
         return array(
-            array('en', 'USD', null, 'US Dollar', 'US$', '$', ''),
+            array('en', 'USD', null, 'US Dollar', '$', '$', ''),
             array('it', 'USD', null, 'dollaro statunitense', 'US$', '$', ''),
             array('en', 'Invalid currency code', null, '', '', '', ''),
             array('de', 'RUB', null, 'Russischer Rubel', 'RUB', 'RUB', '₽'),
-            array('en', 'USD', 0, 'US dollars', 'US$', '$', ''),
-            array('en', 'USD', 1, 'US dollar', 'US$', '$', ''),
-            array('en', 'USD', 2, 'US dollars', 'US$', '$', ''),
+            array('en', 'USD', 0, 'US dollars', '$', '$', ''),
+            array('en', 'USD', 1, 'US dollar', '$', '$', ''),
+            array('en', 'USD', 2, 'US dollars', '$', '$', ''),
         );
     }
     /**
