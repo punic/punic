@@ -20,7 +20,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('en', 'USD', null, 'US Dollar', 'US$', '$', ''),
-            array('it', 'USD', null, 'Dollaro Statunitense', 'US$', '$', ''),
+            array('it', 'USD', null, 'dollaro statunitense', 'US$', '$', ''),
             array('en', 'Invalid currency code', null, '', '', '', ''),
             array('de', 'RUB', null, 'Russischer Rubel', 'RUB', 'RUB', '₽'),
             array('en', 'USD', 0, 'US dollars', 'US$', '$', ''),

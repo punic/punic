@@ -119,7 +119,7 @@ class ListTest extends PHPUnit_Framework_TestCase
             Misc::joinUnits(array('Uno', 'due', 'tre'), 'short', 'it')
         );
         $this->assertSame(
-            'Uno, due e tre',
+            'Uno due tre',
             Misc::joinUnits(array('Uno', 'due', 'tre'), 'narrow', 'it')
         );
         $this->assertSame(
