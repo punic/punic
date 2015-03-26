@@ -94,9 +94,9 @@ class DataTest extends PHPUnit_Framework_TestCase
     public function testGetAvailableLocales()
     {
         $locales = Data::getAvailableLocales();
-        // this list isn't static, we assume that something between 280 and 320 locales is okay
+        // this list isn't static, we assume that something between 1 and 320 locales is okay
         $this->assertLessThan(2000, count($locales));
-        $this->assertGreaterThan(280, count($locales));
+        $this->assertGreaterThan(1, count($locales));
     }
 
     public function providerGuessFullLocale()
