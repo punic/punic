@@ -370,7 +370,7 @@ function copyData()
     if ($locales === false) {
         throw new Exception("Failed to retrieve the file list of $src");
     }
-    $locales = array_diff($locales, array('.', '..'));
+    $locales = array_diff($locales, array('.', '..', 'en-001'));
     foreach ($locales as $locale) {
         if (is_dir($src.DIRECTORY_SEPARATOR.$locale)) {
             echo "Parsing locale $locale... ";
