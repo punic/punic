@@ -10,7 +10,7 @@ set_error_handler('handleError');
 
 try {
     echo "Initializing... ";
-    define('CLDR_VERSION', 26);
+    define('CLDR_VERSION', 27);
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'source-data');
     define('DESTINATION_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'code'.DIRECTORY_SEPARATOR.'data');
@@ -34,6 +34,7 @@ try {
     defined('DEBUG') or define('DEBUG', false);
     defined('FULL_JSON') or define('FULL_JSON', false);
     define('LOCAL_ZIP_FILE', SOURCE_DIR.DIRECTORY_SEPARATOR.(FULL_JSON ? 'cldr_full' : 'cldr').'-'.CLDR_VERSION.'.zip');
+    define('LOCAL_VCS_DIR', SOURCE_DIR.DIRECTORY_SEPARATOR.'cldr-'.CLDR_VERSION.'-source');
     define('SOURCE_DIR_DATA', SOURCE_DIR.DIRECTORY_SEPARATOR.(FULL_JSON ? 'cldr_full' : 'cldr').'-'.CLDR_VERSION);
     defined('POST_CLEAN') or define('POST_CLEAN', false);
 
@@ -66,10 +67,20 @@ try {
     }
 
     if (!is_dir(SOURCE_DIR_DATA)) {
-        if (!is_file(LOCAL_ZIP_FILE)) {
-            downloadCLDR();
+        if (version_compare(CLDR_VERSION, '27') >= 0) {
+            if (!is_dir(LOCAL_VCS_DIR)) {
+                checkoutCLDR();
+            }
+            if (!is_file(LOCAL_VCS_DIR.'/tools/java/cldr.jar')) {
+                buildCLDRJar();
+            }
+            buildCLDRJson();
+        } else {
+            if (!is_file(LOCAL_ZIP_FILE)) {
+                downloadCLDR();
+            }
+            extractCLDR();
         }
-        ExtractCLDR();
     }
     copyData();
     if (POST_CLEAN) {
@@ -81,6 +92,164 @@ try {
 } catch (Exception $x) {
     echo $x->getMessage(), "\n";
     die(1);
+}
+
+function checkoutCLDR()
+{
+    if (file_exists(LOCAL_VCS_DIR)) {
+        deleteFromFilesystem(LOCAL_VCS_DIR);
+    }
+    try {
+        echo "Checking out the CLDR repository (this may take a while)... ";
+        $output = array();
+        $rc = null;
+        @exec('svn co http://www.unicode.org/repos/cldr/tags/release-'.CLDR_VERSION.'/ '.escapeshellarg(LOCAL_VCS_DIR).' 2>&1', $output, $rc);
+        if ($rc === 0) {
+            if (!is_dir(LOCAL_VCS_DIR)) {
+                $rc = -1;
+            }
+        }
+        if ($rc !== 0) {
+            $msg = "Error!\n";
+            if (stripos(PHP_OS, 'WIN') !== false) {
+                $msg .= "Please make sure that SVN is installed and in your path. You can install TortoiseSVN for instance.";
+            } else {
+                $msg .= "You need the svn command line tool: under Ubuntu and Debian systems you can for instance run 'sudo apt-get install subversion'";
+            }
+            $msg .= "\nError details:\n".implode("\n", $output);
+            throw new Exception($msg);
+        }
+        echo "done.\n";
+    } catch (Exception $x) {
+        if (file_exists(LOCAL_VCS_DIR)) {
+            try {
+                deleteFromFilesystem(LOCAL_VCS_DIR);
+            } catch (Exception $foo) {
+            }
+        }
+        throw $x;
+    }
+}
+
+function buildCLDRJar()
+{
+    echo "Creating the CLDR jar file... ";
+    $output = array();
+    $rc = null;
+    @exec('ant -f '.escapeshellarg(LOCAL_VCS_DIR.'/tools/java/build.xml').' jar 2>&1', $output, $rc);
+    if ($rc === 0) {
+        if (!is_file(LOCAL_VCS_DIR.'/tools/java/cldr.jar')) {
+            $rc = -1;
+        }
+    }
+    if ($rc !== 0) {
+        $msg = "Error!\n";
+        if (stripos(PHP_OS, 'WIN') !== false) {
+            $msg .= "Please make sure that the ant tool is installed and in your path, and that Java JDK is installed and configured correctly.";
+        } else {
+            $msg .= "You need the ant command line tool and JDK: under Ubuntu and Debian systems you can for instance run 'sudo apt-get install ant openjdk-7-jdk'";
+        }
+        $msg .= "\nError details:\n".implode("\n", $output);
+        throw new Exception($msg);
+    }
+    echo "done.\n";
+}
+
+function buildCLDRJson()
+{
+    if (file_exists(SOURCE_DIR_DATA)) {
+        deleteFromFilesystem(SOURCE_DIR_DATA);
+    }
+    @mkdir(SOURCE_DIR_DATA);
+    if (!is_dir(SOURCE_DIR_DATA)) {
+        throw new Exception('Error creating directory '.SOURCE_DIR_DATA);
+    }
+    try {
+        echo "Determining the list of the available locales... ";
+        $availableLocales = array();
+        $contents = @scandir(LOCAL_VCS_DIR.'/common/main');
+        if ($contents === false) {
+            throw new Exception('Error reading contents of the directory '.LOCAL_VCS_DIR.'/common/main');
+        }
+        foreach ($contents as $item) {
+            if (preg_match('/^(.+)\.xml$/', $item, $match)) {
+                $availableLocales[] = str_replace('_', '-', $match[1]);
+            }
+        }
+        if (empty($availableLocales)) {
+            throw new Exception('no locales found!');
+        }
+        sort($availableLocales);
+        echo count($availableLocales)." locales found.\n";
+        if (FULL_JSON) {
+            $locales = $availableLocales;
+        } else {
+            echo "Checking standard locales... ";
+            // Same locales as of CLDR 26 not-full distribution
+            $locales = array('ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'en-001', 'en-AU', 'en-CA', 'en-GB', 'en-HK', 'en-IN', 'es', 'fi', 'fr', 'he', 'hi', 'hr', 'hu', 'it', 'ja', 'ko', 'nb', 'nl', 'pl', 'pt', 'pt-PT', 'ro', 'root', 'ru', 'sk', 'sl', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh', 'zh-Hant');
+            $diff = array_diff($locales, $availableLocales);
+            if (!empty($diff)) {
+                throw new Exception("The following locales were not found:\n- ".implode("\n- ", $diff));
+            }
+            echo "done.\n";
+        }
+        foreach ($locales as $locale) {
+            echo "Building json data for $locale... ";
+            $cmd = 'java';
+            $cmd .= ' -DCLDR_DIR='.escapeshellarg(LOCAL_VCS_DIR);
+            $cmd .= ' -DCLDR_GEN_DIR='.escapeshellarg(SOURCE_DIR_DATA.'/main/'.$locale);
+            $cmd .= ' -jar '.escapeshellarg(LOCAL_VCS_DIR.'/tools/java/cldr.jar');
+            $cmd .= ' ldml2json';
+            $cmd .= ' -o true'; // (true|false) Whether to write out the 'other' section, which contains any unmatched paths
+            $cmd .= ' -t main'; // (main|supplemental|segments) Type of CLDR data being generated, main, supplemental, or segments.
+            $cmd .= ' -r true'; // (true|false) Whether the output JSON for the main directory should be based on resolved or unresolved data
+            $cmd .= ' -m '.escapeshellarg(str_replace('-', '_', $locale)); // Regular expression to define only specific locales or files to be generated
+            $output = array();
+            $rc = null;
+            @exec($cmd.' 2>&1', $output, $rc);
+            if ($rc !== 0) {
+                throw new Exception("Error!\n".implode("\n", $output));
+            }
+            if (!is_dir(SOURCE_DIR_DATA.'/main/'.$locale)) {
+                throw new Exception("No data generated!\nTool output:\n".implode("\n", $output));
+            }
+            echo "done.\n";
+        }
+        echo "Building json supplemental data... ";
+        $cmd = 'java';
+        $cmd .= ' -DCLDR_DIR='.escapeshellarg(LOCAL_VCS_DIR);
+        $cmd .= ' -DCLDR_GEN_DIR='.escapeshellarg(SOURCE_DIR_DATA.'/supplemental');
+        $cmd .= ' -jar '.escapeshellarg(LOCAL_VCS_DIR.'/tools/java/cldr.jar');
+        $cmd .= ' ldml2json';
+        $cmd .= ' -o true'; // (true|false) Whether to write out the 'other' section, which contains any unmatched paths
+        $cmd .= ' -t supplemental'; // (main|supplemental|segments) Type of CLDR data being generated, main, supplemental, or segments.
+        $output = array();
+        @exec($cmd.' 2>&1', $output, $rc);
+        if ($rc !== 0) {
+            throw new Exception("Error!\n".implode("\n", $output));
+        }
+        echo "done.\n";
+        echo "Building json segments data... ";
+        $cmd = 'java';
+        $cmd .= ' -DCLDR_DIR='.escapeshellarg(LOCAL_VCS_DIR);
+        $cmd .= ' -DCLDR_GEN_DIR='.escapeshellarg(SOURCE_DIR_DATA.'/segments');
+        $cmd .= ' -jar '.escapeshellarg(LOCAL_VCS_DIR.'/tools/java/cldr.jar');
+        $cmd .= ' ldml2json';
+        $cmd .= ' -o true'; // (true|false) Whether to write out the 'other' section, which contains any unmatched paths
+        $cmd .= ' -t segments'; // (main|supplemental|segments) Type of CLDR data being generated, main, supplemental, or segments.
+        $output = array();
+        @exec($cmd.' 2>&1', $output, $rc);
+        if ($rc !== 0) {
+            throw new Exception("Error!\n".implode("\n", $output));
+        }
+        echo "done.\n";
+    } catch (Exception $x) {
+        try {
+            deleteFromFilesystem(SOURCE_DIR_DATA);
+        } catch (Exception $foo) {
+        }
+        throw $x;
+    }
 }
 
 function downloadCLDR()
@@ -201,7 +370,7 @@ function copyData()
     if ($locales === false) {
         throw new Exception("Failed to retrieve the file list of $src");
     }
-    $locales = array_diff($locales, array('.', '..'));
+    $locales = array_diff($locales, array('.', '..', 'en-001'));
     foreach ($locales as $locale) {
         if (is_dir($src.DIRECTORY_SEPARATOR.$locale)) {
             echo "Parsing locale $locale... ";
@@ -480,7 +649,6 @@ function copyDataFile($srcFile, $info, $dstFile)
                             break;
                         default:
                             throw new Exception("Unknown node: $k2");
-                            die($k2);
                     }
                 }
                 if (!array_key_exists('gdp', $D)) {
