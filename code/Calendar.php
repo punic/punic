@@ -1228,11 +1228,13 @@ class Calendar
             if ($length === 0) {
                 throw new Exception\BadArgumentType($format, 'date/time ISO format');
             }
-            $cacheKey = empty($locale) ? Data::getDefaultLocale() : $locale;
-            if (!isset($decodeCache[$cacheKey])) {
-                $decodeCache[$cacheKey] = array();
+            if (empty($locale)) {
+                $locale = Data::getDefaultLocale();
             }
-            if (!isset($decodeCache[$cacheKey][$format])) {
+            if (!isset($decodeCache[$locale])) {
+                $decodeCache[$locale] = array();
+            }
+            if (!isset($decodeCache[$locale][$format])) {
                 $decoder = array();
                 $lengthM1 = $length - 1;
                 $quoted = false;
@@ -1262,9 +1264,9 @@ class Calendar
                         }
                     }
                 }
-                $decodeCache[$cacheKey][$format] = $decoder;
+                $decodeCache[$locale][$format] = $decoder;
             } else {
-                $decoder = $decodeCache[$cacheKey][$format];
+                $decoder = $decodeCache[$locale][$format];
             }
             foreach ($decoder as $chunk) {
                 if (is_string($chunk)) {
