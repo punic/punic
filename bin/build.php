@@ -1,4 +1,5 @@
 <?php
+
 function handleError($errno, $errstr, $errfile, $errline)
 {
     if ($errno == E_NOTICE || $errno == E_WARNING) {
@@ -171,6 +172,7 @@ function buildCLDRJson()
         if ($contents === false) {
             throw new Exception('Error reading contents of the directory '.LOCAL_VCS_DIR.'/common/main');
         }
+        $match = null;
         foreach ($contents as $item) {
             if (preg_match('/^(.+)\.xml$/', $item, $match)) {
                 $availableLocales[] = str_replace('_', '-', $match[1]);
@@ -704,7 +706,6 @@ function copyDataFile($srcFile, $info, $dstFile)
             checkOneKey($data['metazoneInfo'], 'timezone');
             $data['metazoneInfo'] = $data['metazoneInfo']['timezone'];
             foreach ($data['metazoneInfo'] as $id0 => $info0) {
-                $values1 = null;
                 foreach ($info0 as $id1 => $info1) {
                     if (is_int($id1)) {
                         $info1 = fixMetazoneInfo($info1);
@@ -761,6 +762,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             break;
         case 'listPatterns.json':
             $keys = array_keys($data);
+            $m = null;
             foreach ($keys as $key) {
                 if (!preg_match('/^listPattern-type-(.+)$/', $key, $m)) {
                     throw new Exception("Invalid node '$key' in ".$dstFile);
@@ -870,7 +872,6 @@ function copyDataFile($srcFile, $info, $dstFile)
             saveJsonFile($testData, TESTS_DIR.DIRECTORY_SEPARATOR.basename($dstFile));
             break;
         case 'units.json':
-            $compounds = array();
             foreach (array_keys($data) as $width) {
                 switch ($width) {
                     case 'long':
@@ -1330,6 +1331,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
         '-' => (count($p) == 1) ? "-{$p[0]}" : $p[1],
     );
     $result = array();
+    $m = null;
     foreach ($patterns as $patternKey => $pattern) {
         $rxPost = $rxPre = '';
         if (preg_match('/(-)?([^0#E,\\.\\-+]*)(.+?)([^0#E,\\.\\-+]*)(-)?$/', $pattern, $m)) {
@@ -1428,8 +1430,8 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
                     $rx .= '(('.preg_quote($symbols['decimal']).')[0-9]+)?('.preg_quote($symbols['minusSign']).')';
                     break;
                 default:
+                    $m = null;
                     if (preg_match('/^(0+)(-?)$/', $decimalPattern, $m)) {
-                        $n = strlen($m[1]);
                         $rx .= '('.preg_quote($symbols['decimal']).')[0-9]{'.strlen($m[1]).'}';
                         if (substr($decimalPattern, -1) === '-') {
                             $rx .= '('.preg_quote($symbols['minusSign']).')';
