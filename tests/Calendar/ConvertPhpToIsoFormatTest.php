@@ -31,8 +31,8 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
             'c', 'r', 'U',
         );
         $dateTimeNow = self::timestampToGMDateTime($timestampNow = time());
-        $dateTimeFirstDay = self::timestampToGMDateTime($timestampFirstDay = strtotime('2000-01-01 00:00:00'));
-        $dateTimeLastDay = self::timestampToGMDateTime($timestampLastDay = strtotime('2000-31-12 23:59:59'));
+        $dateTimeFirstDay = self::timestampToGMDateTime($timestampFirstDay = strtotime('2000-01-01T00:00:00+00:00'));
+        $dateTimeLastDay = self::timestampToGMDateTime($timestampLastDay = strtotime('2000-12-31T23:59:59+00:00'));
 
         $result = array();
         foreach ($chunks as $chunk) {
@@ -52,7 +52,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             gmdate($phpFormat, $timestamp),
             Calendar::format($dateTime, $punicFormat),
-            "PHP date/time format chunk '$phpFormat' converted as '$punicFormat' and rendered for ".$dateTime->format('C')
+            "PHP date/time format chunk '$phpFormat' converted as '$punicFormat' and rendered for ".$dateTime->format('c')
         );
     }
 }
