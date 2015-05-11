@@ -1,4 +1,5 @@
 <?php
+
 function handleError($errno, $errstr, $errfile, $errline)
 {
     if ($errno == E_NOTICE || $errno == E_WARNING) {
@@ -16,7 +17,7 @@ try {
     define('WEBSITE_DIR', TEMP_DIR . DIRECTORY_SEPARATOR . 'website');
     define('DEST_DIR', WEBSITE_DIR . DIRECTORY_SEPARATOR . 'docs');
     if (!is_dir(TEMP_DIR)) {
-            @mkdir(TEMP_DIR, 0777, true);
+        @mkdir(TEMP_DIR, 0777, true);
         if (!is_dir(TEMP_DIR)) {
             throw new Exception('Unable to create the directory ' . TEMP_DIR);
         }
@@ -26,6 +27,7 @@ try {
     if (!is_dir(WEBSITE_DIR)) {
         echo "Fetching repository... ";
         $output = array();
+        $rc = null;
         exec('git clone git@github.com:punic/punic.github.io.git ' . escapeshellarg(WEBSITE_DIR) . ' 2>&1', $output, $rc);
         if ($rc !== 0) {
             throw new Exception("Failed to clone website repository:\n" . trim(implode("\n", $output)));
