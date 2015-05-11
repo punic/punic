@@ -118,6 +118,20 @@ class Calendar
 
     /**
      * Converts a format string from {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
+     * The following extra format chunks are introduced:
+     * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
+     * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
+     * - 'PPP': English ordinal suffix for the day of the month
+     * - 'PPPP': The day of the year (starting from 0)
+     * - 'PPPPP': Number of days in the given month
+     * - 'PPPPPP': Whether it's a leap year: 1 if it is a leap year, 0 otherwise.
+     * - 'PPPPPPP': Lowercase Ante meridiem and Post meridiem (English only, for other locales it's the same as 'a')
+     * - 'PPPPPPPP': Swatch Internet time
+     * - 'PPPPPPPPP': Microseconds
+     * - 'PPPPPPPPPP': Whether or not the date is in daylight saving time	1 if Daylight Saving Time, 0 otherwise.
+     * - 'PPPPPPPPPPP': Timezone offset in seconds
+     * - 'PPPPPPPPPPPP': RFC 2822 formatted date (Example: 'Thu, 21 Dec 2000 16:01:07 +0200')
+     * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
      * @param string $format The PHP date/time format string to convert.
      * @return string Returns the ISO date/time format corresponding to the specified PHP date/time format.
      */
@@ -125,16 +139,45 @@ class Calendar
     {
         static $cache = array();
         static $convert = array(
-            'd' => 'dd'  , 'D' => 'EE'  , 'j' => 'd'   , 'l' => 'EEEE',
-            'N' => 'eee' , 'S' => 'SS'  , 'w' => 'e'   , 'z' => 'D'   ,
-            'W' => 'ww'  , 'F' => 'MMMM', 'm' => 'MM'  , 'M' => 'MMM' ,
-            'n' => 'M'   , 't' => 'ddd' , 'L' => 'l'   , 'o' => 'YYYY',
-            'Y' => 'yyyy', 'y' => 'yy'  , 'a' => 'a'   , 'A' => 'a'   ,
-            'B' => 'B'   , 'g' => 'h'   , 'G' => 'H'   , 'h' => 'hh'  ,
-            'H' => 'HH'  , 'i' => 'mm'  , 's' => 'ss'  , 'e' => 'zzzz',
-            'I' => 'I'   , 'O' => 'Z'   , 'P' => 'ZZZZ', 'T' => 'z'   ,
-            'Z' => 'X'   , 'c' => 'yyyy-MM-ddTHH:mm:ssZZZZ', 'r' => 'r',
+            'd' => 'dd',
+            'D' => 'EE',
+            'j' => 'd',
+            'l' => 'EEEE',
+            'N' => 'P',
+            'S' => 'PPP',
+            'w' => 'PP',
+            'z' => 'PPPP',
+            'W' => 'ww',
+            'F' => 'MMMM',
+            'm' => 'MM',
+            'M' => 'MMM',
+            'n' => 'M',
+            't' => 'PPPPP',
+            'L' => 'PPPPPP',
+            'o' => 'YYYY',
+            'Y' => 'yyyy',
+            'y' => 'yy',
+            'a' => 'PPPPPPP',
+            'A' => 'a',
+            'B' => 'PPPPPPPP',
+            'g' => 'h',
+            'G' => 'H',
+            'h' => 'hh',
+            'H' => 'HH',
+            'i' => 'mm',
+            's' => 'ss',
+            'e' => 'VV',
+            'I' => 'I',
+            'O' => 'Z',
+            'P' => 'ZZZZZ',
+            'T' => 'z',
+            'Z' => 'PPPPPPPPPPP',
+            'c' => 'yyyy-MM-ddTHH:mm:ssZZZZZ',
+            'r' => 'PPPPPPPPPPPP',
             'U' => 'U',
+            'u' => 'PPPPPPPPP',
+            'I' => 'PPPPPPPPPP',
+            'U' => 'PPPPPPPPPPPPP'
         );
         if (!is_string($format)) {
             return '';
@@ -1036,7 +1079,20 @@ class Calendar
     /**
      * Format a date and/or time
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
-     * @param string $format The ISO format that specify how to render the date/time
+     * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are available:
+     * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
+     * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
+     * - 'PPP': English ordinal suffix for the day of the month
+     * - 'PPPP': The day of the year (starting from 0)
+     * - 'PPPPP': Number of days in the given month
+     * - 'PPPPPP': Whether it's a leap year: 1 if it is a leap year, 0 otherwise.
+     * - 'PPPPPPP': Lowercase Ante meridiem and Post meridiem (English only, for other locales it's the same as 'a')
+     * - 'PPPPPPPP': Swatch Internet time
+     * - 'PPPPPPPPP': Microseconds
+     * - 'PPPPPPPPPP': Whether or not the date is in daylight saving time	1 if Daylight Saving Time, 0 otherwise.
+     * - 'PPPPPPPPPPP': Timezone offset in seconds
+     * - 'PPPPPPPPPPPP': RFC 2822 formatted date (Example: 'Thu, 21 Dec 2000 16:01:07 +0200')
+     * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      * @throws \Punic\Exception Throws an exception in case of problems
@@ -1083,6 +1139,7 @@ class Calendar
             'V' => 'decodeTimezoneID',
             'X' => 'decodeTimezoneWithTimeZ',
             'x' => 'decodeTimezoneWithTime',
+            'P' => 'decodePunicExtension',
         );
         $result = '';
         if (!empty($value)) {
@@ -1147,7 +1204,20 @@ class Calendar
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime())
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param string $format The ISO format that specify how to render the date/time
+     * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
+     * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
+     * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
+     * - 'PPP': English ordinal suffix for the day of the month
+     * - 'PPPP': The day of the year (starting from 0)
+     * - 'PPPPP': Number of days in the given month
+     * - 'PPPPPP': Whether it's a leap year: 1 if it is a leap year, 0 otherwise.
+     * - 'PPPPPPP': Lowercase Ante meridiem and Post meridiem (English only, for other locales it's the same as 'a')
+     * - 'PPPPPPPP': Swatch Internet time
+     * - 'PPPPPPPPP': Microseconds
+     * - 'PPPPPPPPPP': Whether or not the date is in daylight saving time	1 if Daylight Saving Time, 0 otherwise.
+     * - 'PPPPPPPPPPP': Timezone offset in seconds
+     * - 'PPPPPPPPPPPP': RFC 2822 formatted date (Example: 'Thu, 21 Dec 2000 16:01:07 +0200')
+     * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
@@ -1733,5 +1803,43 @@ class Calendar
         }
 
         return $result;
+    }
+
+    protected static function decodePunicExtension(\DateTime $value, $count, $locale)
+    {
+        switch($count) {
+            case 1:
+                return $value->format('N');
+            case 2:
+                return $value->format('w');
+            case 3:
+                return (stripos($locale, 'en') === 0) ? $value->format('S') : '';
+            case 4:
+                return $value->format('z');
+            case 5:
+                return $value->format('t');
+            case 6:
+                return $value->format('L');
+            case 7:
+                $result = self::decodeDayperiod($value, 1, $locale);
+                if (stripos($locale, 'en') === 0) {
+                    $result = strtolower($result);
+                }
+                return $result;
+            case 8:
+                return $value->format('B');
+            case 9:
+                return $value->format('u');
+            case 10:
+                return $value->format('I');
+            case 11:
+                return $value->format('Z');
+            case 12:
+                return $value->format('r');
+            case 13:
+                return $value->format('U');
+            default:
+                throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
+        }
     }
 }
