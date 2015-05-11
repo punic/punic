@@ -1,9 +1,9 @@
 <?php
+
 use \Punic\Number;
 
 class NumberTest extends PHPUnit_Framework_TestCase
 {
-
     public function providerIsNumeric()
     {
         return array(

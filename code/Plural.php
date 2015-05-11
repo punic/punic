@@ -1,15 +1,17 @@
 <?php
+
 namespace Punic;
 
 /**
- * Plural helper stuff
+ * Plural helper stuff.
  */
 class Plural
 {
-
     /**
-     * Return the list of applicable plural rule for a locale
+     * Return the list of applicable plural rule for a locale.
+     *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return array<string> Returns a list containing some the following values: 'zero', 'one', 'two', 'few', 'many', 'other' ('other' will be always there)
      */
     public static function getRules($locale = '')
@@ -23,10 +25,13 @@ class Plural
     }
 
     /**
-     * Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale
+     * Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale.
+     *
      * @param string|int|float $number The number to check the plural rule for for
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
      * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
      */
@@ -120,7 +125,6 @@ class Plural
         foreach ($rangeValues as $rangeValue) {
             if (is_array($rangeValue)) {
                 if ($isInt && ($value >= $rangeValue[0]) && ($value <= $rangeValue[1])) {
-
                     $included = true;
                     break;
                 }

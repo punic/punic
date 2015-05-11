@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Language;
 
 class LanguageTest extends PHPUnit_Framework_TestCase
@@ -56,7 +57,8 @@ class LanguageTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getName
+     * test getName.
+     *
      * @dataProvider providerGetName
      */
     public function testGetName($result, $languageCode, $forLocale)

@@ -1,4 +1,5 @@
 <?php
+
 class ExceptionTest extends PHPUnit_Framework_TestCase
 {
     public function testExceptions()
@@ -85,5 +86,4 @@ class ExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertSame(1, $ex->getValue());
         $this->assertSame(array(2, 3, 4), $ex->getAllowedValues());
     }
-
 }

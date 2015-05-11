@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Calendar;
 
 class CalendarTest extends PHPUnit_Framework_TestCase
@@ -173,7 +174,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     /**
      * test convertPhpToIso
-     * expected boolean
+     * expected boolean.
+     *
      * @dataProvider providerConvertPhpToIso
      */
     public function testConvertPhpToIso($a, $b)
@@ -1270,7 +1272,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test describeInterval
+     * Test describeInterval.
+     *
      * @dataProvider providerDescribeInterval
      */
     public function testDescribeInterval($expected, $dateEnd, $dateStart, $maxParts, $width, $locale)
@@ -1282,7 +1285,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test describeInterval
+     * Test describeInterval.
+     *
      * @dataProvider providerDescribeInterval
      */
     public function testDescribeInterval2()
@@ -1296,11 +1300,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     public function testGetSortedWeekdays()
     {
         $this->assertSame(
-            array(0,1,2,3,4,5,6),
+            array(0, 1, 2, 3, 4, 5, 6),
             Calendar::getSortedWeekdays(null, 'en')
         );
         $this->assertSame(
-            array(1,2,3,4,5,6,0),
+            array(1, 2, 3, 4, 5, 6, 0),
             Calendar::getSortedWeekdays(null, 'it')
         );
         $this->assertSame(
@@ -1311,7 +1315,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
                 array('id' => 3, 'name' => 'We'),
                 array('id' => 4, 'name' => 'Th'),
                 array('id' => 5, 'name' => 'Fr'),
-                array('id' => 6, 'name' => 'Sa')
+                array('id' => 6, 'name' => 'Sa'),
             ),
             Calendar::getSortedWeekdays('short', 'en')
         );
@@ -1323,7 +1327,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
                 array('id' => 4, 'name' => 'gio'),
                 array('id' => 5, 'name' => 'ven'),
                 array('id' => 6, 'name' => 'sab'),
-                array('id' => 0, 'name' => 'dom')
+                array('id' => 0, 'name' => 'dom'),
             ),
             Calendar::getSortedWeekdays('short', 'it')
         );
@@ -1335,7 +1339,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
                 array('id' => 4, 'name' => 'gio'),
                 array('id' => 5, 'name' => 'ven'),
                 array('id' => 6, 'name' => 'sab'),
-                array('id' => 0, 'name' => 'dom')
+                array('id' => 0, 'name' => 'dom'),
             ),
             Calendar::getSortedWeekdays('short', 'it')
         );
@@ -1351,7 +1355,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
     /**
-     * Test getDeltaDays
+     * Test getDeltaDays.
+     *
      * @dataProvider providerGetDeltaDays
      */
     public function testGetDeltaDays($expected, $arguments)
@@ -1396,7 +1401,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
        );
     }
     /**
-     * Test getTimezonesAliases
+     * Test getTimezonesAliases.
+     *
      * @dataProvider providerGetTimezonesAliases
      */
     public function testGetTimezonesAliases($expected, $phpTimezoneName)
@@ -1406,5 +1412,4 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             \Punic\Calendar::getTimezoneExemplarCity($phpTimezoneName, true, 'en')
         );
     }
-
 }

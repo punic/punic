@@ -1,89 +1,90 @@
 <?php
+
 use \Punic\Unit;
 
 class UnitTest extends PHPUnit_Framework_TestCase
 {
-
     public function providerFormat()
     {
         return array(
             array(
                 '1 millisecond',
-                array(1, 'millisecond', 'long', 'en')
+                array(1, 'millisecond', 'long', 'en'),
             ),
             array(
                 '1 millisecond',
-                array(1, 'duration/millisecond', 'long', 'en')
+                array(1, 'duration/millisecond', 'long', 'en'),
             ),
             array(
                 '2 milliseconds',
-                array(2, 'millisecond', 'long', 'en')
+                array(2, 'millisecond', 'long', 'en'),
             ),
             array(
                 '0 milliseconds',
-                array(0, 'millisecond', 'long', 'en')
+                array(0, 'millisecond', 'long', 'en'),
             ),
             array(
                 '0 milliseconde',
-                array(0, 'millisecond', 'long', 'fr')
+                array(0, 'millisecond', 'long', 'fr'),
             ),
             array(
                 '1 milliseconde',
-                array(1, 'millisecond', 'long', 'fr')
+                array(1, 'millisecond', 'long', 'fr'),
             ),
             array(
                 '2 millisecondes',
-                array(2, 'millisecond', 'long', 'fr')
+                array(2, 'millisecond', 'long', 'fr'),
             ),
             array(
                 '2 ms',
-                array(2, 'millisecond', 'short', 'en')
+                array(2, 'millisecond', 'short', 'en'),
             ),
             array(
                 '2ms',
-                array(2, 'millisecond', 'narrow', 'en')
+                array(2, 'millisecond', 'narrow', 'en'),
             ),
             array(
                 '0.2ms',
-                array(.2, 'millisecond', 'narrow', 'en')
+                array(.2, 'millisecond', 'narrow', 'en'),
             ),
             array(
                 '2.0ms',
-                array('2.0', 'millisecond', 'narrow', 'en')
+                array('2.0', 'millisecond', 'narrow', 'en'),
             ),
             array(
                 '2.0 milliseconds',
-                array(2, 'millisecond', 'long,1', 'en')
+                array(2, 'millisecond', 'long,1', 'en'),
             ),
             array(
                 '2.0 milliseconds',
-                array(2., 'millisecond', 'long,1', 'en')
+                array(2., 'millisecond', 'long,1', 'en'),
             ),
             array(
                 '2.0 milliseconds',
-                array('2.', 'millisecond', 'long,1', 'en')
+                array('2.', 'millisecond', 'long,1', 'en'),
             ),
             array(
                 '2.0 milliseconds',
-                array('2.0123', 'millisecond', 'long,1', 'en')
+                array('2.0123', 'millisecond', 'long,1', 'en'),
             ),
             array(
                 '2.0 ms',
-                array('2.0123', 'millisecond', '1', 'en')
+                array('2.0123', 'millisecond', '1', 'en'),
             ),
             array(
                 '2.0 ms',
-                array('2.0123', 'millisecond', 1, 'en')
+                array('2.0123', 'millisecond', 1, 'en'),
             ),
             array(
                 '2,0 millisecondi',
-                array('2.0123', 'millisecond', 'long,1', 'it')
+                array('2.0123', 'millisecond', 'long,1', 'it'),
             ),
         );
     }
 
     /**
-     * test format
+     * test format.
+     *
      * @dataProvider providerFormat
      */
     public function testFormat($result, $parameters)
@@ -115,5 +116,4 @@ class UnitTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'invalid-unit');
     }
-
 }

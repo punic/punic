@@ -1,9 +1,9 @@
 <?php
+
 use \Punic\Misc;
 
 class ListTest extends PHPUnit_Framework_TestCase
 {
-
     public function testJoin()
     {
         $this->assertSame(
@@ -133,11 +133,11 @@ class ListTest extends PHPUnit_Framework_TestCase
     }
 
     public function testValueNotInListException()
-	{
-		$this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
-		Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');	
-	}
-    
+    {
+        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');
+    }
+
     public function providerFixCase()
     {
         return array(
@@ -154,7 +154,7 @@ class ListTest extends PHPUnit_Framework_TestCase
             array('test test', 'Test test', 'lowercase-words'),
         );
     }
-    
+
     /**
      * @dataProvider providerFixCase
      */

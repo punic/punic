@@ -1,4 +1,5 @@
 <?php
+
 class CurrencyTest extends PHPUnit_Framework_TestCase
 {
     public function testAvailability()

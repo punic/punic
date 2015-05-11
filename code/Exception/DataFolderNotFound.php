@@ -1,8 +1,9 @@
 <?php
+
 namespace Punic\Exception;
 
 /**
- * An exception raised when an data folder has not been found
+ * An exception raised when an data folder has not been found.
  */
 class DataFolderNotFound extends \Punic\Exception
 {
@@ -10,7 +11,8 @@ class DataFolderNotFound extends \Punic\Exception
     protected $fallbackLocale;
 
     /**
-     * Initializes the instance
+     * Initializes the instance.
+     *
      * @param string $locale The preferred locale
      * @param string $fallbackLocale The fallback locale
      * @param \Exception $previous The previous exception used for the exception chaining
@@ -28,7 +30,8 @@ class DataFolderNotFound extends \Punic\Exception
     }
 
     /**
-     * Retrieves the preferred locale
+     * Retrieves the preferred locale.
+     *
      * @return string
      */
     public function getLocale()
@@ -37,7 +40,8 @@ class DataFolderNotFound extends \Punic\Exception
     }
 
     /**
-     * Retrieves the fallback locale
+     * Retrieves the fallback locale.
+     *
      * @return string
      */
     public function getFallbackLocale()

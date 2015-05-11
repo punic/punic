@@ -1,4 +1,5 @@
 <?php
+
 namespace Punic;
 
 /*
@@ -10,7 +11,7 @@ namespace Punic;
  */
 
 /**
- * Date and time related functions
+ * Date and time related functions.
  */
 class Calendar
 {
@@ -21,11 +22,15 @@ class Calendar
 
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
+     *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance \DateTime or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTime`).
      * @param string|\DateTimeZone $fromTimezone The original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTime`).
+     *
      * @return \DateTime|null Returns null if $value is empty, a `\DateTime` instance otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws an exception if $value is not empty and can't be converted to a `\DateTime` instance or if $toTimezone is not empty and is not valid.
+     *
      * @example Convert a Unix timestamp to a \DateTime instance with the current time zone:
      * ```php
      * \Punic\Calendar::toDateTime(1409648286);
@@ -131,8 +136,10 @@ class Calendar
      * - 'PPPPPPPPPP': Whether or not the date is in daylight saving time	1 if Daylight Saving Time, 0 otherwise.
      * - 'PPPPPPPPPPP': Timezone offset in seconds
      * - 'PPPPPPPPPPPP': RFC 2822 formatted date (Example: 'Thu, 21 Dec 2000 16:01:07 +0200')
-     * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
+     * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT).
+     *
      * @param string $format The PHP date/time format string to convert.
+     *
      * @return string Returns the ISO date/time format corresponding to the specified PHP date/time format.
      */
     public static function convertPhpToIsoFormat($format)
@@ -177,7 +184,7 @@ class Calendar
             'U' => 'U',
             'u' => 'PPPPPPPPP',
             'I' => 'PPPPPPPPPP',
-            'U' => 'PPPPPPPPPPPPP'
+            'U' => 'PPPPPPPPPPPPP',
         );
         if (!is_string($format)) {
             return '';
@@ -225,10 +232,13 @@ class Calendar
 
     /**
      * Get the name of an era.
+     *
      * @param number|\DateTime $value The year number or the \DateTime instance for which you want the name of the era.
      * @param string $width The format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B').
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
      * @return string Returns an empty string if $value is empty, the name of the era otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
      * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
@@ -265,11 +275,14 @@ class Calendar
 
     /**
      * Get the name of a month.
+     *
      * @param number|\DateTime $value The month number (1-12) or a \DateTime instance for which you want the name of the month.
      * @param string $width The format name; it can be 'wide' (eg 'January'), 'abbreviated' (eg 'Jan') or 'narrow' (eg 'J').
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone Set to true to return the form used independently (such as in calendar header), set to false if the month name will be part of a date.
+     *
      * @return string Returns an empty string if $value is empty, the name of the month otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
      * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
@@ -306,11 +319,14 @@ class Calendar
 
     /**
      * Get the name of a week day.
+     *
      * @param number|\DateTime $value A week day number (from 0-Sunday to 6-Saturnday) or a \DateTime instance for which you want the name of the day of the week.
      * @param string $width The format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S').
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone Set to true to return the form used independently (such as in calendar header), set to false if the week day name will be part of a date.
+     *
      * @return string Returns an empty string if $value is empty, the name of the week day name otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
      * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
@@ -348,11 +364,14 @@ class Calendar
 
     /**
      * Get the name of a quarter.
+     *
      * @param number|\DateTime $value A quarter number (from 1 to 4) or a \DateTime instance for which you want the name of the day of the quarter.
      * @param string $width The format name; it can be 'wide' (eg '1st quarter'), 'abbreviated' (eg 'Q1') or 'narrow' (eg '1').
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone Set to true to return the form used independently (such as in calendar header), set to false if the quarter name will be part of a date.
+     *
      * @return string Returns an empty string if $value is empty, the name of the quarter name otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
      * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
@@ -389,11 +408,14 @@ class Calendar
 
     /**
      * Get the name of a day period (AM/PM).
+     *
      * @param number|string|\DateTime $value An hour (from 0 to 23), a standard period name ('am' or 'pm', lower or upper case) a \DateTime instance for which you want the name of the day period.
      * @param string $width The format name; it can be 'wide' (eg 'AM'), 'abbreviated' (eg 'AM') or 'narrow' (eg 'a').
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone Set to true to return the form used independently (such as in calendar header), set to false if the day period name will be part of a date.
+     *
      * @return string Returns an empty string if $value is empty, the name of the day period name otherwise.
+     *
      * @throws \Punic\Exception\BadArgumentType Throws a BadArgumentType exception if $value is not valid.
      * @throws \Punic\Exception\ValueNotInList Throws a ValueNotInList exception if $width is not valid.
      * @throws \Punic\Exception Throws a generic exception in case of other problems (for instance if you specify an invalid locale).
@@ -440,17 +462,20 @@ class Calendar
 
     /**
      * Returns the localized name of a timezone, no location-specific.
+     *
      * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name.
      * @param string $width The format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT').
      * @param string $kind Set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise).
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
      * @return string Returns an empty string if the timezone has not been found (maybe we don't have the data in the specified $width), the timezone name otherwise.
+     *
      * @throws \Punic\Exception Throws a generic exception in case of problems (for instance if you specify an invalid locale).
      */
     public static function getTimezoneNameNoLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
     {
         $cacheKey = json_encode(array($value, $width, $kind, empty($locale) ? Data::getDefaultLocale() : $locale));
-        if(isset(self::$timezoneCache[$cacheKey])) {
+        if (isset(self::$timezoneCache[$cacheKey])) {
             return self::$timezoneCache[$cacheKey];
         }
 
@@ -566,10 +591,12 @@ class Calendar
     }
 
     /**
-     * Returns the localized name of an exemplar city for a specific timezone
+     * Returns the localized name of an exemplar city for a specific timezone.
+     *
      * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance
      * @param bool $returnUnknownIfNotFound true If the exemplar city is not found, shall we return the translation of 'Unknown City'?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if the exemplar city hasn't been found and $returnUnknownIfNotFound is false
      */
     public static function getTimezoneExemplarCity($value, $returnUnknownIfNotFound = true, $locale = '')
@@ -620,9 +647,12 @@ class Calendar
     }
 
     /**
-     * Returns true if a locale has a 12-hour clock, false if 24-hour clock
+     * Returns true if a locale has a 12-hour clock, false if 24-hour clock.
+     *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return bool
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
      */
     public static function has12HoursClock($locale = '')
@@ -639,8 +669,10 @@ class Calendar
     }
 
     /**
-     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturnday)
+     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturnday).
+     *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return int Returns a number from 0 (Sunday) to 7 (Saturnday)
      */
     public static function getFirstWeekday($locale = '')
@@ -661,10 +693,12 @@ class Calendar
     }
 
     /**
-     * Returns the sorted list of weekdays, starting from {@link getFirstWeekday}
+     * Returns the sorted list of weekdays, starting from {@link getFirstWeekday}.
+     *
      * @param string|false $namesWidth If false you'll get only the list of weekday identifiers (for instance: [0, 1, 2, 3, 4, 5, 6]),
      * If it's a string it must be one accepted by {@link getWeekdayName}, and you'll get an array like this: [{id: 0, name: 'Monday', ..., {id: 6, name: 'Sunday'}]
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return array
      */
     public static function getSortedWeekdays($namesWidth = false, $locale = '')
@@ -691,11 +725,15 @@ class Calendar
     }
 
     /**
-     * Get the ISO format for a date
+     * Get the ISO format for a date.
+     *
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns the requested ISO format
+     *
      * @throws Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -712,11 +750,15 @@ class Calendar
     }
 
     /**
-     * Get the ISO format for a time
+     * Get the ISO format for a time.
+     *
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns the requested ISO format
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -733,11 +775,15 @@ class Calendar
     }
 
     /**
-     * Get the ISO format for a date/time
+     * Get the ISO format for a date/time.
+     *
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns the requested ISO format
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -799,10 +845,13 @@ class Calendar
     }
 
     /**
-     * Returns the difference in days between two dates (or between a date and today)
+     * Returns the difference in days between two dates (or between a date and today).
+     *
      * @param \DateTime $dateEnd The first date
      * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     *
      * @return int Returns the diffence $dateEnd - $dateStart in days
+     *
      * @throws Exception\BadArgumentType
      */
     public static function getDeltaDays($dateEnd, $dateStart = null)
@@ -829,17 +878,19 @@ class Calendar
 
     /**
      * Describe an interval between two dates (eg '2 days and 4 hours').
+     *
      * @param \DateTime $dateEnd The first date
      * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
      * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
      * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string
+     *
      * @throws Exception\BadArgumentType
      */
     public static function describeInterval($dateEnd, $dateStart = null, $maxParts = 2, $width = 'short', $locale = '')
     {
-
         if (!is_a($dateEnd, '\\DateTime')) {
             throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
         }
@@ -915,13 +966,17 @@ class Calendar
     }
 
     /**
-     * Format a date
+     * Format a date.
+     *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14').
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -945,14 +1000,18 @@ class Calendar
     }
 
     /**
-     * Format a date (extended version: various date/time representations - see toDateTime())
+     * Format a date (extended version: various date/time representations - see toDateTime()).
+     *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -968,12 +1027,16 @@ class Calendar
     }
 
     /**
-     * Format a time
+     * Format a time.
+     *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -988,13 +1051,17 @@ class Calendar
     }
 
     /**
-     * Format a time (extended version: various date/time representations - see toDateTime())
+     * Format a time (extended version: various date/time representations - see toDateTime()).
+     *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -1010,13 +1077,17 @@ class Calendar
     }
 
     /**
-     * Format a date/time
+     * Format a date/time.
+     *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -1042,7 +1113,6 @@ class Calendar
                 if (isset($dayName[0])) {
                     $overrideDateFormat = "'$dayName'";
                 }
-
             }
         }
 
@@ -1054,14 +1124,18 @@ class Calendar
     }
 
     /**
-     * Format a date/time (extended version: various date/time representations - see toDateTime())
+     * Format a date/time (extended version: various date/time representations - see toDateTime()).
+     *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @see toDateTime()
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
@@ -1077,7 +1151,8 @@ class Calendar
     }
 
     /**
-     * Format a date and/or time
+     * Format a date and/or time.
+     *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are available:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
@@ -1094,8 +1169,11 @@ class Calendar
      * - 'PPPPPPPPPPPP': RFC 2822 formatted date (Example: 'Thu, 21 Dec 2000 16:01:07 +0200')
      * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -1202,7 +1280,8 @@ class Calendar
         return $result;
     }
     /**
-     * Format a date and/or time (extended version: various date/time representations - see toDateTime())
+     * Format a date and/or time (extended version: various date/time representations - see toDateTime()).
+     *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
@@ -1220,8 +1299,11 @@ class Calendar
      * - 'PPPPPPPPPPPPP': Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
+     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
      * @link http://cldr.unicode.org/translation/date-time-patterns
      * @link http://cldr.unicode.org/translation/date-time
      * @link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
@@ -1236,10 +1318,12 @@ class Calendar
     }
 
     /**
-     * Retrieve the relative day name (eg 'yesterday', 'tomorrow'), if available
+     * Retrieve the relative day name (eg 'yesterday', 'tomorrow'), if available.
+     *
      * @param \DateTime $datetime The date for which you want the relative day name
      * @param bool $ucFirst Force first letter to be upper case?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns the relative name if available, otherwise returns an empty string
      */
     public static function getDateRelativeName($datetime, $ucFirst = false, $locale = '')
@@ -1506,7 +1590,7 @@ class Calendar
     }
 
     /**
-     * Note: we assume Gregorian calendar here
+     * Note: we assume Gregorian calendar here.
      */
     protected static function decodeYearExtended(\DateTime $value, $count, $locale)
     {
@@ -1514,7 +1598,7 @@ class Calendar
     }
 
     /**
-     * Note: we assume Gregorian calendar here
+     * Note: we assume Gregorian calendar here.
      */
     protected static function decodeYearRelatedGregorian(\DateTime $value, $count, $locale)
     {
@@ -1745,11 +1829,20 @@ class Calendar
     }
 
     /** @todo */
-    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale) { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale)
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
     /** @todo */
-    protected static function decodeYearCyclicName() { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeYearCyclicName()
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
     /** @todo */
-    protected static function decodeModifiedGiulianDay() { throw new Exception\NotImplemented(__METHOD__); }
+    protected static function decodeModifiedGiulianDay()
+    {
+        throw new Exception\NotImplemented(__METHOD__);
+    }
 
     protected static function getTimezonesAliases($phpTimezoneName)
     {
@@ -1807,7 +1900,7 @@ class Calendar
 
     protected static function decodePunicExtension(\DateTime $value, $count, $locale)
     {
-        switch($count) {
+        switch ($count) {
             case 1:
                 return $value->format('N');
             case 2:
@@ -1825,6 +1918,7 @@ class Calendar
                 if (stripos($locale, 'en') === 0) {
                     $result = strtolower($result);
                 }
+
                 return $result;
             case 8:
                 return $value->format('B');
