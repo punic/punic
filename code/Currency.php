@@ -1,16 +1,19 @@
 <?php
+
 namespace Punic;
 
 /**
- * Currency-related stuff
+ * Currency-related stuff.
  */
 class Currency
 {
     /**
-     * Returns all the currencies
+     * Returns all the currencies.
+     *
      * @param bool $alsoUnused Set to true to receive also currencies not currently used by any country, false otherwise
      * @param bool $alsoNotTender Set to true to receive also currencies that aren't legal tender in any country
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
      * @return array Array keys are the currency code, array values are the currency name. It's sorted by currency values
      */
     public static function getAllCurrencies($alsoUnused = false, $alsoNotTender = false, $locale = '')
@@ -47,6 +50,7 @@ class Currency
 
     /**
      * Returns the name of a currency given its code.
+     *
      * @param string $currencyCode The currency code
      * @param null|number|string The quantity identifier. Allowed values:
      * <ul>
@@ -55,6 +59,7 @@ class Currency
      *     <li>string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
      * </ul>
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
      * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
      */
     public static function getName($currencyCode, $quantity = null, $locale = '')
@@ -81,9 +86,11 @@ class Currency
 
     /**
      * Returns the name of a currency given its code.
+     *
      * @param string $currencyCode The currency code
      * @param string $which Which symbol flavor do you prefer? 'narrow' for narrow symbols, 'alt' for alternative. Other values: standard/default symbol
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
      * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
      */
     public static function getSymbol($currencyCode, $which = '', $locale = '')
@@ -118,8 +125,10 @@ class Currency
     }
 
     /**
-     * Return the history for the currencies used in a territory
+     * Return the history for the currencies used in a territory.
+     *
      * @param string $territoryCode The territoy code
+     *
      * @return array Return a list of items with these keys:
      * <ul>
      *     <li>string `currency`: the currency code (always present)</li>
@@ -150,8 +159,10 @@ class Currency
     }
 
     /**
-     * Return the currency to be used in a territory
+     * Return the currency to be used in a territory.
+     *
      * @param string $territoryCode The territoy code
+     *
      * @return string Returns an empty string if $territoryCode is not valid or we don't have info about it, the currency code otherwise
      */
     public static function getCurrencyForTerritory($territoryCode)

@@ -1,9 +1,9 @@
 <?php
+
 use \Punic\Plural;
 
 class PluralTest extends PHPUnit_Framework_TestCase
 {
-
     protected static function joinPluralRules($rules)
     {
         usort($rules, function ($a, $b) {
@@ -56,7 +56,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
             }
             $parameters[] = array(
                 static::joinPluralRules($rules),
-                $language
+                $language,
             );
         }
 
@@ -65,7 +65,8 @@ class PluralTest extends PHPUnit_Framework_TestCase
 
     /**
      * test getRules
-     * expected boolean
+     * expected boolean.
+     *
      * @dataProvider providerGetRules
      */
     public function testGetRules($rules, $language)
@@ -85,29 +86,30 @@ class PluralTest extends PHPUnit_Framework_TestCase
                 foreach ($values as $value) {
                     $parameters[] = array(
                         $rule,
-                        array($value, $language)
+                        array($value, $language),
                     );
                 }
             }
         }
 
-		// add custom rules to test some edge cases
-		$rules = array(
-			array('other', array(0, 'en')),
-			array('one', array(1, 'en')),
-			array('one', array(1.0, 'en')),
-			array('other', array(1.1, 'en')),
-			array('one', array('1', 'en')),
-			array('other', array('1.0', 'en')),
-			array('other', array('1.1', 'en')),
-		);
+        // add custom rules to test some edge cases
+        $rules = array(
+            array('other', array(0, 'en')),
+            array('one', array(1, 'en')),
+            array('one', array(1.0, 'en')),
+            array('other', array(1.1, 'en')),
+            array('one', array('1', 'en')),
+            array('other', array('1.0', 'en')),
+            array('other', array('1.1', 'en')),
+        );
 
         return array_merge($parameters, $rules);
     }
 
     /**
      * test getRule
-     * expected boolean
+     * expected boolean.
+     *
      * @dataProvider providerGetRule
      */
     public function testGetRule($rule, $parameters)
@@ -117,15 +119,15 @@ class PluralTest extends PHPUnit_Framework_TestCase
             Plural::getRule($parameters[0], $parameters[1])
         );
     }
-	
+
     public function testExceptionsProvider()
     {
         return array(
             array('getRule', array('not-a-number'), '\\Punic\\Exception\\BadArgumentType'),
             array('getRule', array(true), '\\Punic\\Exception\\BadArgumentType'),
-		);
-	}
-	
+        );
+    }
+
     /**
      * @dataProvider testExceptionsProvider
      */
@@ -134,5 +136,4 @@ class PluralTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException($exception);
         call_user_func_array(array('\Punic\Plural', $method), $parameters);
     }
-
 }

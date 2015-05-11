@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Territory;
 
 class TerritoryTest extends PHPUnit_Framework_TestCase
@@ -14,7 +15,8 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getName
+     * test getName.
+     *
      * @dataProvider providerGetName
      */
     public function testGetName($result, $territoryCode, $forLocale)

@@ -1,16 +1,17 @@
 <?php
+
 namespace Punic\Exception;
 
 /**
- * An exception raised when an data file has been hit
+ * An exception raised when an data file has been hit.
  */
-
 class InvalidDataFile extends \Punic\Exception
 {
     protected $identifier;
 
     /**
-     * Initializes the instance
+     * Initializes the instance.
+     *
      * @param mixed $identifier The bad data file identifier
      * @param \Exception $previous The previous exception used for the exception chaining
      */
@@ -27,7 +28,8 @@ class InvalidDataFile extends \Punic\Exception
     }
 
     /**
-     * Retrieves the bad data file identifier
+     * Retrieves the bad data file identifier.
+     *
      * @return mixed
      */
     public function getIdentifier()

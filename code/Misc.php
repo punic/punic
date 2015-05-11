@@ -1,15 +1,18 @@
 <?php
+
 namespace Punic;
 
 /**
- * Various helper stuff
+ * Various helper stuff.
  */
 class Misc
 {
     /**
-     * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian)
+     * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian).
+     *
      * @param array $list The list to concatenate
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
     public static function join($list, $locale = '')
@@ -18,10 +21,12 @@ class Misc
     }
 
     /**
-     * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'
+     * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'.
+     *
      * @param array $list The list to concatenate
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
      */
     public static function joinUnits($list, $width = '', $locale = '')
@@ -75,7 +80,7 @@ class Misc
                     } else {
                         $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
                         if ($n > 2) {
-                            for ($index = $n - 3; $index > 0; $index --) {
+                            for ($index = $n - 3; $index > 0; $index--) {
                                 $result = sprintf($data['middle'], $list[$index], $result);
                             }
                             $result = sprintf($data['start'], $list[0], $result);
@@ -90,13 +95,16 @@ class Misc
 
     /**
      * Fix the case of a string.
+     *
      * @param string $string The string whose case needs to be fixed
      * @param string $case How to fix case. Allowed values:
      *   <li>`'titlecase-words'` all words in the phrase should be title case</li>
      *   <li>`'titlecase-firstword'` the first word should be title case</li>
      *   <li>`'lowercase-words'` all words in the phrase should be lower case</li>
      * </ul>
+     *
      * @return string
+     *
      * @link http://cldr.unicode.org/development/development-process/design-proposals/consistent-casing
      */
     public static function fixCase($string, $case)
@@ -141,8 +149,10 @@ class Misc
     }
 
     /**
-     * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
-     * @param boolean $ignoreCache Set to true if you want to ignore the cache
+     * Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.
+     *
+     * @param bool $ignoreCache Set to true if you want to ignore the cache
+     *
      * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function getBrowserLocales($ignoreCache = false)
@@ -162,8 +172,10 @@ class Misc
     }
 
     /**
-     * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values
+     * Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.
+     *
      * @param string $httpAcceptLanguages
+     *
      * @return array Array keys are the found locales, array values are the relative quality value (from 0 to 1)
      */
     public static function parseHttpAcceptLanguage($httpAcceptLanguages)
@@ -228,8 +240,10 @@ class Misc
     }
 
     /**
-     * Retrieve the character order (right-to-left or left-to-right)
+     * Retrieve the character order (right-to-left or left-to-right).
+     *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Return 'left-to-right' or 'right-to-left'
      */
     public static function getCharacterOrder($locale = '')
@@ -240,8 +254,10 @@ class Misc
     }
 
     /**
-     * Retrieve the line order (top-to-bottom or bottom-to-top)
+     * Retrieve the line order (top-to-bottom or bottom-to-top).
+     *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
      * @return string Return 'top-to-bottom' or 'bottom-to-top'
      */
     public static function getLineOrder($locale = '')

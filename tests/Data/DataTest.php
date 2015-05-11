@@ -1,9 +1,9 @@
 <?php
+
 use \Punic\Data;
 
 class DataTest extends PHPUnit_Framework_TestCase
 {
-
     public function testInvalidLocalesProvider()
     {
         return array(
@@ -111,14 +111,14 @@ class DataTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerGuessFullLocale
-    */
+     * @dataProvider providerGuessFullLocale
+     */
     public function testGuessFullLocale($result, $parameters)
     {
         $locale = call_user_func_array(array('\Punic\Data', 'guessFullLocale'), $parameters);
         $this->assertSame($result, $locale);
     }
-    
+
     public function testGuessFullDefaultLocale()
     {
         Data::setDefaultLocale('de_DE');
@@ -139,12 +139,11 @@ class DataTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerGetTerritory
-    */
+     * @dataProvider providerGetTerritory
+     */
     public function testGetTerritory($result, $parameters)
     {
         $locale = call_user_func_array(array('\Punic\Data', 'getTerritory'), $parameters);
         $this->assertSame($result, $locale);
     }
-    
 }

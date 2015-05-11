@@ -1,8 +1,9 @@
 <?php
+
 namespace Punic\Exception;
 
 /**
- * An exception raised when a function meets an argument of an unsupported type
+ * An exception raised when a function meets an argument of an unsupported type.
  */
 class BadArgumentType extends \Punic\Exception
 {
@@ -10,7 +11,8 @@ class BadArgumentType extends \Punic\Exception
 
     protected $destinationTypeDescription;
     /**
-     * Initializes the instance
+     * Initializes the instance.
+     *
      * @param mixed $argumentValue The value of the invalid argument
      * @param string $destinationTypeDescription The description of the destination type
      * @param \Exception $previous The previous exception used for the exception chaining
@@ -43,7 +45,8 @@ class BadArgumentType extends \Punic\Exception
     }
 
     /**
-     * Retrieves the value of the invalid argument
+     * Retrieves the value of the invalid argument.
+     *
      * @return mixed
      */
     public function getArgumentValue()
@@ -52,7 +55,8 @@ class BadArgumentType extends \Punic\Exception
     }
 
     /**
-     * Retrieves the destination type (or a list of destination types)
+     * Retrieves the destination type (or a list of destination types).
+     *
      * @return string|array<string>
      */
     public function getDestinationTypeDescription()

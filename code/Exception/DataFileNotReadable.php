@@ -1,15 +1,17 @@
 <?php
+
 namespace Punic\Exception;
 
 /**
- * An exception raised when an data file was not read
+ * An exception raised when an data file was not read.
  */
 class DataFileNotReadable extends \Punic\Exception
 {
     protected $dataFilePath;
 
     /**
-     * Initializes the instance
+     * Initializes the instance.
+     *
      * @param string $dataFilePath The path to the unreadable file
      * @param \Exception $previous The previous exception used for the exception chaining
      */
@@ -21,12 +23,12 @@ class DataFileNotReadable extends \Punic\Exception
     }
 
     /**
-     * Retrieves the path to the unreadable file
+     * Retrieves the path to the unreadable file.
+     *
      * @return string
      */
     public function getDataFilePath()
     {
         return $this->dataFilePath;
     }
-
 }

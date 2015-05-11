@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Misc;
 
 class TextDirectionsTest extends PHPUnit_Framework_TestCase

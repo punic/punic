@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Misc;
 
 class BrowserLocaleTest extends PHPUnit_Framework_TestCase
@@ -15,7 +16,7 @@ class BrowserLocaleTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $locales = Misc::getBrowserLocales(true);
-        $this->assertSame(array('en' => 1), $locales);        
+        $this->assertSame(array('en' => 1), $locales);
     }
 
     public function providerParseHttpAcceptLanguage()

@@ -1,4 +1,5 @@
 <?php
+
 use \Punic\Phone;
 
 class PhoneTest extends PHPUnit_Framework_TestCase

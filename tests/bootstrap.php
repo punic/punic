@@ -1,8 +1,9 @@
 <?php
+
 error_reporting(E_ALL);
 
 $timezone_identifier = @date_default_timezone_get();
-if(empty($timezone_identifier)) {
+if (empty($timezone_identifier)) {
     $timezone_identifier = 'UTC';
 }
 date_default_timezone_set($timezone_identifier);

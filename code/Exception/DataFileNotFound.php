@@ -1,8 +1,9 @@
 <?php
+
 namespace Punic\Exception;
 
 /**
- * An exception raised when an data file has not been found
+ * An exception raised when an data file has not been found.
  */
 class DataFileNotFound extends \Punic\Exception
 {
@@ -11,7 +12,8 @@ class DataFileNotFound extends \Punic\Exception
     protected $fallbackLocale;
 
     /**
-     * Initializes the instance
+     * Initializes the instance.
+     *
      * @param string $identifier The data file identifier
      * @param string $locale The preferred locale (if the data file is locale-specific)
      * @param string $fallbackLocale The fallback locale (if the data file is locale-specific)
@@ -37,7 +39,8 @@ class DataFileNotFound extends \Punic\Exception
     }
 
     /**
-     * Retrieves the bad data file identifier
+     * Retrieves the bad data file identifier.
+     *
      * @return string
      */
     public function getIdentifier()
@@ -46,7 +49,8 @@ class DataFileNotFound extends \Punic\Exception
     }
 
     /**
-     * Retrieves the preferred locale
+     * Retrieves the preferred locale.
+     *
      * @return string
      */
     public function getLocale()
@@ -55,7 +59,8 @@ class DataFileNotFound extends \Punic\Exception
     }
 
     /**
-     * Retrieves the fallback locale
+     * Retrieves the fallback locale.
+     *
      * @return string
      */
     public function getFallbackLocale()
