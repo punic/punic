@@ -1956,7 +1956,7 @@ class Calendar
     protected static function getTimezoneNameFromTimezone(\DateTimeZone $tz)
     {
         if (defined('\HHVM_VERSION')) {
-            $testDT = new \DateTime('now', $dt);
+            $testDT = new \DateTime('now', $tz);
             $result = $testDT->format('e');
             if (!preg_match('/[0-9][0-9]/', $result)) {
                 $result = $tz->getName();
