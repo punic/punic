@@ -486,7 +486,7 @@ class Calendar
             if (is_string($value)) {
                 $receivedPhpName = $value;
             } elseif (is_a($value, '\\DateTime')) {
-                $receivedPhpName = $value->getTimezone()->getName();
+                $receivedPhpName = static::getTimezoneNameFromDatetime($value);
                 $date = $value->format('Y-m-d H:i');
                 if (empty($kind)) {
                     if (intval($value->format('I')) === 1) {
@@ -496,7 +496,7 @@ class Calendar
                     }
                 }
             } elseif (is_a($value, '\\DateTimeZone')) {
-                $receivedPhpName = $value->getName();
+                $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if (isset($receivedPhpName[0])) {
                 $metazoneCode = '';
@@ -608,9 +608,9 @@ class Calendar
             if (is_string($value)) {
                 $receivedPhpName = $value;
             } elseif (is_a($value, '\\DateTime')) {
-                $receivedPhpName = $value->getTimezone()->getName();
+                $receivedPhpName = static::getTimezoneNameFromDatetime($value);
             } elseif (is_a($value, '\\DateTimeZone')) {
-                $receivedPhpName = $value->getName();
+                $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if (isset($receivedPhpName[0])) {
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
@@ -1759,7 +1759,7 @@ class Calendar
                 $result = 'unk';
                 break;
             case 2:
-                $result = $value->getTimezone()->getName();
+                $result = static::getTimezoneNameFromDatetime($value);
                 break;
             case 3:
                 $result = static::getTimezoneExemplarCity($value, true, $locale);
@@ -1937,5 +1937,34 @@ class Calendar
             default:
                 throw new Exception\ValueNotInList($count, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
         }
+    }
+
+    protected static function getTimezoneNameFromDatetime(\DateTime $dt)
+    {
+        if (defined('\HHVM_VERSION')) {
+            $result = $dt->format('e');
+            if (!preg_match('/[0-9][0-9]/', $result)) {
+                $result = $dt->getTimezone()->getName();
+            }
+        } else {
+            $result = $dt->getTimezone()->getName();
+        }
+
+        return $result;
+    }
+
+    protected static function getTimezoneNameFromTimezone(\DateTimeZone $tz)
+    {
+        if (defined('\HHVM_VERSION')) {
+            $testDT = new \DateTime('now', $tz);
+            $result = $testDT->format('e');
+            if (!preg_match('/[0-9][0-9]/', $result)) {
+                $result = $tz->getName();
+            }
+        } else {
+            $result = $tz->getName();
+        }
+
+        return $result;
     }
 }
