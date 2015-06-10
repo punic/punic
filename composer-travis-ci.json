@@ -6,6 +6,7 @@
     },
     "require": {
         "php": ">=5.3",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/phpunit": "4.6.10"
     }
 }
