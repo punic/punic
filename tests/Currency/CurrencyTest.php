@@ -56,4 +56,15 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($currencyCode, \Punic\Currency::getCurrencyForTerritory($territoryCode));
     }
+
+    public function testGetAllCurrencies()
+    {
+        $currencies = \Punic\Currency::getAllCurrencies();
+        $this->assertArrayHasKey('USD', $currencies);
+        $this->assertArrayHasKey('CHF', $currencies);
+
+        // this list isn't static, we assume that something between 140 and 170 currenciess is okay
+        $this->assertLessThan(170, count($currencies));
+        $this->assertGreaterThan(140, count($currencies));
+    }
 }
