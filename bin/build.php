@@ -449,7 +449,7 @@ function readJsonFile($file)
         throw new Exception("Failed to read from $file");
     }
     $data = json_decode($json, true);
-    if (is_null($data)) {
+    if ($data === null) {
         throw new Exception("Failed to decode data in $file");
     }
 
@@ -967,14 +967,14 @@ function copyDataFile($srcFile, $info, $dstFile)
                         $unitPattern = null;
                         foreach ($value as $k2 => $v2) {
                             if (preg_match('/^unitPattern-(.+)$/i', $k2, $m)) {
-                                if (is_null($unitPattern)) {
+                                if ($unitPattern === null) {
                                     $unitPattern = array();
                                 }
                                 $unitPattern[$m[1]] = toPhpSprintf($v2);
                                 unset($value[$k2]);
                             }
                         }
-                        if (!is_null($unitPattern)) {
+                        if ($unitPattern !== null) {
                             $value['unitPattern'] = $unitPattern;
                         }
                     }

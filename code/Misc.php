@@ -72,7 +72,7 @@ class Misc
                             }
                         }
                     }
-                    if (is_null($data)) {
+                    if ($data === null) {
                         $data = $allData['standard'];
                     }
                     if (isset($data[$n])) {
