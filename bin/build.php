@@ -10,7 +10,7 @@ function handleError($errno, $errstr, $errfile, $errline)
 set_error_handler('handleError');
 
 try {
-    echo "Initializing... ";
+    echo 'Initializing... ';
     define('CLDR_VERSION', 27);
     define('ROOT_DIR', dirname(__DIR__));
     define('SOURCE_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'source-data');
@@ -41,27 +41,27 @@ try {
 
     if (!is_dir(SOURCE_DIR)) {
         if (mkdir(SOURCE_DIR, 0777, true) === false) {
-            echo "Failed to create ".SOURCE_DIR."\n";
+            echo 'Failed to create '.SOURCE_DIR."\n";
             die(1);
         }
     }
     echo "done.\n";
 
     if (is_dir(DESTINATION_DIR)) {
-        echo "Cleanup old data folder... ";
+        echo 'Cleanup old data folder... ';
         deleteFromFilesystem(DESTINATION_DIR);
         echo "done.\n";
     }
-    echo "Creating data folder... ";
+    echo 'Creating data folder... ';
     if (mkdir(DESTINATION_DIR, 0777, false) === false) {
-        echo "Failed to create ".DESTINATION_DIR."\n";
+        echo 'Failed to create '.DESTINATION_DIR."\n";
         die(1);
     }
     echo "done.\n";
     if (!is_dir(TESTS_DIR)) {
-        echo "Creating tests folder... ";
+        echo 'Creating tests folder... ';
         if (mkdir(TESTS_DIR, 0777, false) === false) {
-            echo "Failed to create ".TESTS_DIR."\n";
+            echo 'Failed to create '.TESTS_DIR."\n";
             die(1);
         }
         echo "done.\n";
@@ -85,7 +85,7 @@ try {
     }
     copyData();
     if (POST_CLEAN) {
-        echo "Cleanup temporary data folder... ";
+        echo 'Cleanup temporary data folder... ';
         deleteFromFilesystem(SOURCE_DIR_DATA);
         echo "done.\n";
     }
@@ -101,7 +101,7 @@ function checkoutCLDR()
         deleteFromFilesystem(LOCAL_VCS_DIR);
     }
     try {
-        echo "Checking out the CLDR repository (this may take a while)... ";
+        echo 'Checking out the CLDR repository (this may take a while)... ';
         $output = array();
         $rc = null;
         @exec('svn co http://www.unicode.org/repos/cldr/tags/release-'.CLDR_VERSION.'/ '.escapeshellarg(LOCAL_VCS_DIR).' 2>&1', $output, $rc);
@@ -113,7 +113,7 @@ function checkoutCLDR()
         if ($rc !== 0) {
             $msg = "Error!\n";
             if (stripos(PHP_OS, 'WIN') !== false) {
-                $msg .= "Please make sure that SVN is installed and in your path. You can install TortoiseSVN for instance.";
+                $msg .= 'Please make sure that SVN is installed and in your path. You can install TortoiseSVN for instance.';
             } else {
                 $msg .= "You need the svn command line tool: under Ubuntu and Debian systems you can for instance run 'sudo apt-get install subversion'";
             }
@@ -134,7 +134,7 @@ function checkoutCLDR()
 
 function buildCLDRJar()
 {
-    echo "Creating the CLDR jar file... ";
+    echo 'Creating the CLDR jar file... ';
     $output = array();
     $rc = null;
     @exec('ant -f '.escapeshellarg(LOCAL_VCS_DIR.'/tools/java/build.xml').' jar 2>&1', $output, $rc);
@@ -146,7 +146,7 @@ function buildCLDRJar()
     if ($rc !== 0) {
         $msg = "Error!\n";
         if (stripos(PHP_OS, 'WIN') !== false) {
-            $msg .= "Please make sure that the ant tool is installed and in your path, and that Java JDK is installed and configured correctly.";
+            $msg .= 'Please make sure that the ant tool is installed and in your path, and that Java JDK is installed and configured correctly.';
         } else {
             $msg .= "You need the ant command line tool and JDK: under Ubuntu and Debian systems you can for instance run 'sudo apt-get install ant openjdk-7-jdk'";
         }
@@ -166,7 +166,7 @@ function buildCLDRJson()
         throw new Exception('Error creating directory '.SOURCE_DIR_DATA);
     }
     try {
-        echo "Determining the list of the available locales... ";
+        echo 'Determining the list of the available locales... ';
         $availableLocales = array();
         $contents = @scandir(LOCAL_VCS_DIR.'/common/main');
         if ($contents === false) {
@@ -186,7 +186,7 @@ function buildCLDRJson()
         if (FULL_JSON) {
             $locales = $availableLocales;
         } else {
-            echo "Checking standard locales... ";
+            echo 'Checking standard locales... ';
             // Same locales as of CLDR 26 not-full distribution
             $locales = array('ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'en-001', 'en-AU', 'en-CA', 'en-GB', 'en-HK', 'en-IN', 'es', 'fi', 'fr', 'he', 'hi', 'hr', 'hu', 'it', 'ja', 'ko', 'nb', 'nl', 'pl', 'pt', 'pt-PT', 'ro', 'root', 'ru', 'sk', 'sl', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh', 'zh-Hant');
             $diff = array_diff($locales, $availableLocales);
@@ -217,7 +217,7 @@ function buildCLDRJson()
             }
             echo "done.\n";
         }
-        echo "Building json supplemental data... ";
+        echo 'Building json supplemental data... ';
         $cmd = 'java';
         $cmd .= ' -DCLDR_DIR='.escapeshellarg(LOCAL_VCS_DIR);
         $cmd .= ' -DCLDR_GEN_DIR='.escapeshellarg(SOURCE_DIR_DATA.'/supplemental');
@@ -231,7 +231,7 @@ function buildCLDRJson()
             throw new Exception("Error!\n".implode("\n", $output));
         }
         echo "done.\n";
-        echo "Building json segments data... ";
+        echo 'Building json segments data... ';
         $cmd = 'java';
         $cmd .= ' -DCLDR_DIR='.escapeshellarg(LOCAL_VCS_DIR);
         $cmd .= ' -DCLDR_GEN_DIR='.escapeshellarg(SOURCE_DIR_DATA.'/segments');
@@ -271,7 +271,7 @@ function downloadCLDR()
         }
         $zipTo = fopen(LOCAL_ZIP_FILE, 'wb');
         if ($zipTo === false) {
-            throw new Exception("Failed to create ".LOCAL_ZIP_FILE);
+            throw new Exception('Failed to create '.LOCAL_ZIP_FILE);
         }
         while (!feof($zipFrom)) {
             $buffer = fread($zipFrom, 4096);
@@ -279,7 +279,7 @@ function downloadCLDR()
                 throw new Exception("Failed to fetch data from $remoteURL");
             }
             if (fwrite($zipTo, $buffer) === false) {
-                throw new Exception("Failed to write data to ".LOCAL_ZIP_FILE);
+                throw new Exception('Failed to write data to '.LOCAL_ZIP_FILE);
             }
         }
         fclose($zipTo);
@@ -306,12 +306,12 @@ function downloadCLDR()
 function extractCLDR()
 {
     $zip = null;
-    echo "Extracting ".LOCAL_ZIP_FILE."... ";
+    echo 'Extracting '.LOCAL_ZIP_FILE.'... ';
     try {
         $zip = new ZipArchive();
         $rc = $zip->open(LOCAL_ZIP_FILE);
         if ($rc !== true) {
-            throw new Exception("Opening ".LOCAL_ZIP_FILE." failed with return code $rc");
+            throw new Exception('Opening '.LOCAL_ZIP_FILE." failed with return code $rc");
         }
         $zip->extractTo(SOURCE_DIR_DATA);
         $zip->close();
@@ -420,7 +420,7 @@ function copyData()
             }
         }
     }
-    echo "Parsing supplemental files... ";
+    echo 'Parsing supplemental files... ';
     $src = SOURCE_DIR_DATA.DIRECTORY_SEPARATOR.'supplemental';
     foreach ($copy as $copyFrom => $info) {
         if ($info['kind'] === 'supplemental') {
@@ -524,7 +524,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                 }
                 $data[$k] = array();
                 $n = count($d);
-                for ($i = 0; $i < $n; $i++) {
+                for ($i = 0; $i < $n; ++$i) {
                     if (!isset($d[$i])) {
                         throw new Exception("Invalid array for $k");
                     }
@@ -841,7 +841,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                                         $ranges[$j] = "array({$m[1]}, {$m[2]})";
                                     }
                                 }
-                                $v = str_replace($found, "static::inRange($leftyPart, {$map[$operator]}, ".implode(', ', $ranges).")", $v);
+                                $v = str_replace($found, "static::inRange($leftyPart, {$map[$operator]}, ".implode(', ', $ranges).')', $v);
                             }
                         }
                         if (strpos($v, '..') !== false) {
@@ -1013,7 +1013,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             $data = $final;
             $symbols = array_key_exists('symbols', $data) ? $data['symbols'] : null;
             if (empty($symbols) || (!is_array($symbols))) {
-                throw new Exception("Missing symbols in ".$dstFile);
+                throw new Exception('Missing symbols in '.$dstFile);
             }
             foreach (array_keys($data) as $key) {
                 if (is_array($data[$key]) && preg_match('/\\w+Formats$/', $key) && array_key_exists('standard', $data[$key])) {
@@ -1192,7 +1192,7 @@ function copyDataFile($srcFile, $info, $dstFile)
                     }
                 }
                 if (!empty($currencyInfo)) {
-                    throw new Exception('Unknown currency info keys found: ' . implode(', ', array_keys($currencyInfo)));
+                    throw new Exception('Unknown currency info keys found: '.implode(', ', array_keys($currencyInfo)));
                 }
                 if (empty($result)) {
                     throw new Exception('Empty currency info');
@@ -1203,7 +1203,7 @@ function copyDataFile($srcFile, $info, $dstFile)
             $final['regions'] = array();
             foreach ($data['region'] as $territoryCode => $territoryInfos) {
                 if (is_int($territoryCode)) {
-                    $territoryCode = substr('00' . $territoryCode, -3);
+                    $territoryCode = substr('00'.$territoryCode, -3);
                 }
                 $final['regions'][$territoryCode] = array();
                 foreach ($territoryInfos as $territoryInfo) {
@@ -1335,7 +1335,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
     foreach ($patterns as $patternKey => $pattern) {
         $rxPost = $rxPre = '';
         if (preg_match('/(-)?([^0#E,\\.\\-+]*)(.+?)([^0#E,\\.\\-+]*)(-)?$/', $pattern, $m)) {
-            for ($i = 1; $i < 6; $i++) {
+            for ($i = 1; $i < 6; ++$i) {
                 if (!isset($m[$i])) {
                     $m[$i] = '';
                 }
@@ -1372,7 +1372,7 @@ function numberFormatToRegularExpressions($symbols, $isoPattern)
             $chunks = explode(',', $intPattern);
             $maxChunkIndex = count($chunks) - 1;
             $prevChunk = null;
-            for ($chunkIndex = 0; $chunkIndex <= $maxChunkIndex; $chunkIndex++) {
+            for ($chunkIndex = 0; $chunkIndex <= $maxChunkIndex; ++$chunkIndex) {
                 $chunk = $chunks[$chunkIndex];
                 $nextChunk = ($chunkIndex == $maxChunkIndex) ? null : $chunks[$chunkIndex + 1];
                 switch ($chunk) {

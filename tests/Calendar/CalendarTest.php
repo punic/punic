@@ -609,7 +609,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight')
         );
         $this->assertSame(
-            "Ora legale dell’Europa centrale",
+            'Ora legale dell’Europa centrale',
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'daylight', 'it')
         );
         $this->assertSame(
@@ -802,11 +802,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDatetimeFormat('long')
         );
         $this->assertSame(
-            "MMM d, y, h:mm:ss a",
+            'MMM d, y, h:mm:ss a',
             Calendar::getDatetimeFormat('medium')
         );
         $this->assertSame(
-            "M/d/yy, h:mm a",
+            'M/d/yy, h:mm a',
             Calendar::getDatetimeFormat('short')
         );
         $this->assertSame(
@@ -822,7 +822,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDatetimeFormat('full|short|short')
         );
         $this->assertSame(
-            "EEEE, MMMM d, y, h:mm:ss a zzzz",
+            'EEEE, MMMM d, y, h:mm:ss a zzzz',
             Calendar::getDatetimeFormat('short|full|full')
         );
     }

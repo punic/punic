@@ -65,7 +65,7 @@ class Plural
             throw new Exception\BadArgumentType($number, 'number');
         }
         // 'n' => '%1$s', // absolute value of the source number (integer and decimals).
-        $v1 = $intPartAbs . (strlen($floatPart) ? ".$floatPart" : '');
+        $v1 = $intPartAbs.(strlen($floatPart) ? ".$floatPart" : '');
         // 'i' => '%2$s', // integer digits of n
         $v2 = $intPartAbs;
         // 'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
@@ -93,9 +93,9 @@ class Plural
                 $decimals = strlen(rtrim($decimalPart, '0'));
                 if ($decimals > 0) {
                     $pow = intval(pow(10, $decimals));
-                    $repl = '(' . strval(intval(floatval($m[1]) * $pow)) . ' % ' . strval(intval(floatval($m[2] * $pow))) . ') / ' . $pow;
+                    $repl = '('.strval(intval(floatval($m[1]) * $pow)).' % '.strval(intval(floatval($m[2] * $pow))).') / '.$pow;
                 } else {
-                    $repl = strval(intval($m[1])) . ' % ' . $m[2];
+                    $repl = strval(intval($m[1])).' % '.$m[2];
                 }
                 $formula = str_replace($m[0], $repl, $formula);
             }
@@ -104,7 +104,7 @@ class Plural
                 $result = $rule;
                 break;
             } elseif ($formulaResult !== 'no') {
-                throw new \Exception('There was a problem in the formula ' . $formulaPattern);
+                throw new \Exception('There was a problem in the formula '.$formulaPattern);
             }
         }
 

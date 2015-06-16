@@ -21,7 +21,7 @@ class ValueNotInList extends \Punic\Exception
     {
         $this->value = $value;
         $this->allowedValues = $allowedValues;
-        $message = "'$value' is not valid. Acceptable values are: '" . implode("', '", $allowedValues) . "'";
+        $message = "'$value' is not valid. Acceptable values are: '".implode("', '", $allowedValues)."'";
         parent::__construct($message, \Punic\Exception::VALUE_NOT_IN_LIST, $previous);
     }
 

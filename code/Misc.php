@@ -80,7 +80,7 @@ class Misc
                     } else {
                         $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
                         if ($n > 2) {
-                            for ($index = $n - 3; $index > 0; $index--) {
+                            for ($index = $n - 3; $index > 0; --$index) {
                                 $result = sprintf($data['middle'], $list[$index], $result);
                             }
                             $result = sprintf($data['start'], $list[0], $result);
@@ -120,7 +120,7 @@ class Misc
                             if ($l === 1) {
                                 $s = mb_strtoupper($s, 'UTF-8');
                             } else {
-                                $s = mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($s, 1, $l - 1, 'UTF-8');
+                                $s = mb_strtoupper(mb_substr($s, 0, 1, 'UTF-8'), 'UTF-8').mb_substr($s, 1, $l - 1, 'UTF-8');
                             }
 
                             return $s;
@@ -133,7 +133,7 @@ class Misc
                         if ($l === 1) {
                             $result = mb_strtoupper($string, 'UTF-8');
                         } elseif ($l > 1) {
-                            $result = mb_strtoupper(mb_substr($string, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($string, 1, $l - 1, 'UTF-8');
+                            $result = mb_strtoupper(mb_substr($string, 0, 1, 'UTF-8'), 'UTF-8').mb_substr($string, 1, $l - 1, 'UTF-8');
                         }
                     }
                     break;
@@ -186,7 +186,7 @@ class Misc
                 if (preg_match('/^([a-z]{2,3}(?:[_\\-][a-z]+)*)(?:\\s*;(?:\\s*q(?:\\s*=(?:\\s*([\\d.]+))?)?)?)?$/', strtolower(trim($httpAcceptLanguage, " \t")), $m)) {
                     if (count($m) > 2) {
                         if (strpos($m[2], '.') === 0) {
-                            $m[2] = '0' . $m[2];
+                            $m[2] = '0'.$m[2];
                         }
                         if (preg_match('/^[01](\\.\\d*)?$/', $m[2])) {
                             $quality = round(@floatval($m[2]), 4);
@@ -204,17 +204,17 @@ class Misc
                             $found[] = $m[1];
                         } else {
                             $base = $chunks[0];
-                            for ($i = 1; $i < $numChunks; $i++) {
+                            for ($i = 1; $i < $numChunks; ++$i) {
                                 if (strlen($chunks[$i]) === 4) {
-                                    $base .= '-' . ucfirst($chunks[$i]);
+                                    $base .= '-'.ucfirst($chunks[$i]);
                                     break;
                                 }
                             }
-                            for ($i = 1; $i < $numChunks; $i++) {
+                            for ($i = 1; $i < $numChunks; ++$i) {
                                 if (preg_match('/^[a-z][a-z]$/', $chunks[$i])) {
-                                    $found[] = $base . '-' . strtoupper($chunks[$i]);
+                                    $found[] = $base.'-'.strtoupper($chunks[$i]);
                                 } elseif (preg_match('/^\\d{3}$/', $chunks[$i])) {
-                                    $found[] = $base . '-' . $chunks[$i];
+                                    $found[] = $base.'-'.$chunks[$i];
                                 }
                             }
                             if (empty($found)) {
