@@ -98,15 +98,15 @@ class Number
                 $groupSign = $data['symbols']['group'];
                 $preLength = 1 + (($len - 1) % 3);
                 $pre = substr($intPart, 0, $preLength);
-                $intPart = $pre . $groupSign . implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
+                $intPart = $pre.$groupSign.implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
             }
-            $result = $sign . $intPart;
+            $result = $sign.$intPart;
             if ($precision === null) {
                 if (isset($floatPath[0])) {
-                    $result .= $decimal . $floatPath;
+                    $result .= $decimal.$floatPath;
                 }
             } elseif ($precision > 0) {
-                $result .= $decimal . substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
+                $result .= $decimal.substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
             }
         }
 
@@ -137,19 +137,19 @@ class Number
             $group = $data['symbols']['group'];
             $groupQ = preg_quote($group);
             $ok = true;
-            if (preg_match('/^' . "($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)" . '$/', $value, $m)) {
+            if (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)".'$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = null;
-            } elseif (preg_match('/^' . "($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ" . '$/', $value, $m)) {
+            } elseif (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ".'$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = '';
-            } elseif (preg_match('/^' . "($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ(\\d+)" . '$/', $value, $m)) {
+            } elseif (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ(\\d+)".'$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = $m[3];
-            } elseif (preg_match('/^' . "($plusQ|$minusQ)?$decimalQ(\\d+)" . '$/', $value, $m)) {
+            } elseif (preg_match('/^'."($plusQ|$minusQ)?$decimalQ(\\d+)".'$/', $value, $m)) {
                 $sign = $m[1];
                 $int = '0';
                 $float = $m[2];

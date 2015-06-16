@@ -143,11 +143,11 @@ class Data
             if (!isset($dir[0])) {
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
-            $file = $dir . DIRECTORY_SEPARATOR . $identifier . '.json';
-            if (!is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
+            $file = $dir.DIRECTORY_SEPARATOR.$identifier.'.json';
+            if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
-            $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+            $json = @file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
             //@codeCoverageIgnoreStart
             // In test enviro we can't replicate this problem
             if ($json === false) {
@@ -189,11 +189,11 @@ class Data
         if (!preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
             throw new Exception\InvalidDataFile($identifier);
         }
-        $file = 'data' . DIRECTORY_SEPARATOR . "$identifier.json";
-        if (!is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
+        $file = 'data'.DIRECTORY_SEPARATOR."$identifier.json";
+        if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
             throw new Exception\DataFileNotFound($identifier);
         }
-        $json = @file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $file);
+        $json = @file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
         //@codeCoverageIgnoreStart
         // In test enviro we can't replicate this problem
         if ($json === false) {
@@ -222,12 +222,12 @@ class Data
     public static function getAvailableLocales($allowGroups = false)
     {
         $locales = array();
-        $dir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+        $dir = __DIR__.DIRECTORY_SEPARATOR.'data';
         if (is_dir($dir) && is_readable($dir)) {
             $contents = @scandir($dir);
             if (is_array($contents)) {
                 foreach (array_diff($contents, array('.', '..')) as $item) {
-                    if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+                    if (is_dir($dir.DIRECTORY_SEPARATOR.$item)) {
                         if ($item === 'root') {
                             $item = 'en-US';
                         }
@@ -444,7 +444,7 @@ class Data
                     $parentLocale = '';
                     $ok = true;
                     $chunkCount = count($chunks);
-                    for ($i = 1; $ok && ($i < $chunkCount); $i++) {
+                    for ($i = 1; $ok && ($i < $chunkCount); ++$i) {
                         if (preg_match('/^[a-z]{4}$/', $chunks[$i])) {
                             if (isset($script[0])) {
                                 $ok = false;
@@ -498,11 +498,11 @@ class Data
         static $cache = array();
         $result = '';
         if (is_string($locale)) {
-            $key = $locale . '/' . static::$fallbackLocale;
+            $key = $locale.'/'.static::$fallbackLocale;
             if (!isset($cache[$key])) {
                 foreach (static::getLocaleAlternatives($locale) as $alternative) {
-                    $dir = 'data' . DIRECTORY_SEPARATOR . $alternative;
-                    if (is_dir(__DIR__ . DIRECTORY_SEPARATOR . $dir)) {
+                    $dir = 'data'.DIRECTORY_SEPARATOR.$alternative;
+                    if (is_dir(__DIR__.DIRECTORY_SEPARATOR.$dir)) {
                         $result = $dir;
                         break;
                     }
@@ -570,8 +570,8 @@ class Data
         if ($addFallback && ($locale !== static::$fallbackLocale)) {
             $result = array_merge($result, static::getLocaleAlternatives(static::$fallbackLocale, false));
         }
-        for ($i = count($result) - 1; $i > 1; $i--) {
-            for ($j = 0; $j < $i; $j++) {
+        for ($i = count($result) - 1; $i > 1; --$i) {
+            for ($j = 0; $j < $i; ++$j) {
                 if ($result[$i] === $result[$j]) {
                     array_splice($result, $i, 1);
                     break;

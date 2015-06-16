@@ -73,11 +73,11 @@ class ExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertSame('xxxxx', $ex->getLocale());
 
         $ex = new \Punic\Exception\InvalidLocale(array());
-        $this->assertSame("A valid locale should be a string, array received", $ex->getMessage());
+        $this->assertSame('A valid locale should be a string, array received', $ex->getMessage());
 
         $ex = new \Punic\Exception\NotImplemented('className::methodName');
         $this->assertSame(\Punic\Exception::NOT_IMPLEMENTED, $ex->getCode());
-        $this->assertSame("className::methodName is not implemented", $ex->getMessage());
+        $this->assertSame('className::methodName is not implemented', $ex->getMessage());
         $this->assertSame('className::methodName', $ex->getFunction());
 
         $ex = new \Punic\Exception\ValueNotInList(1, array(2, 3, 4));

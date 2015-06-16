@@ -114,7 +114,7 @@ class Territory
         $decodedLevels = array();
         $n = is_string($levels) ? strlen($levels) : 0;
         if ($n > 0) {
-            for ($i = 0; $i < $n; $i++) {
+            for ($i = 0; $i < $n; ++$i) {
                 $l = substr($levels, $i, 1);
                 if (!isset($levelMap[$l])) {
                     $decodedLevels = array();
@@ -126,7 +126,7 @@ class Territory
             }
         }
         if (count($decodedLevels) === 0) {
-            throw new \Punic\Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '" . implode("', '", array_keys($levelMap)) . "'");
+            throw new \Punic\Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '".implode("', '", array_keys($levelMap))."'");
         }
         $struct = self::filterStructure(self::getStructure(), $decodedLevels, 0);
         $flatList = (count($decodedLevels) > 1) ? false : true;
@@ -267,7 +267,7 @@ class Territory
         $langPeople = array();
         foreach (Data::getGeneric('territoryInfo') as $territoryID => $territoryInfo) {
             foreach ($territoryInfo['languages'] as $langID => $langInfo) {
-                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID . '_') === 0)) {
+                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID.'_') === 0)) {
                     $langPeople[] = array('territoryID' => $territoryID, 'people' => $territoryInfo['population'] * $langInfo['population']);
                 }
             }
@@ -304,7 +304,7 @@ class Territory
             $childTerritoryCode = strtoupper($childTerritoryCode);
             foreach (Data::getGeneric('territoryContainment') as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
-                    $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
+                    $result = is_int($parentTerritoryCode) ? substr('00'.$parentTerritoryCode, -3) : $parentTerritoryCode;
                     if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
                         break;
                     }
@@ -439,7 +439,7 @@ class Territory
             }
         }
         $sorter = new \Punic\Comparer();
-        uasort($list, function ($a, $b) use($sorter) {
+        uasort($list, function ($a, $b) use ($sorter) {
             return $sorter->compare($a['name'], $b['name']);
         });
 

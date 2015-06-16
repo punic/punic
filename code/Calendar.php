@@ -705,7 +705,7 @@ class Calendar
     {
         $codes = array();
         $code = static::getFirstWeekday($locale);
-        for ($count = 0; $count < 7; $count++) {
+        for ($count = 0; $count < 7; ++$count) {
             $codes[] = $code;
             $code += 1;
             if ($code === 7) {
@@ -919,31 +919,31 @@ class Calendar
                 $parts[] = Unit::format($diff->y, 'duration/year', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
-                $mostFar++;
+                ++$mostFar;
             }
             if (($mostFar < $maxDistance) && ($diff->m > 0)) {
                 $parts[] = Unit::format($diff->m, 'duration/month', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
-                $mostFar++;
+                ++$mostFar;
             }
             if (($mostFar < $maxDistance) && ($diff->d > 0)) {
                 $parts[] = Unit::format($diff->d, 'duration/day', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
-                $mostFar++;
+                ++$mostFar;
             }
             if (($mostFar < $maxDistance) && ($diff->h > 0)) {
                 $parts[] = Unit::format($diff->h, 'duration/hour', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
-                $mostFar++;
+                ++$mostFar;
             }
             if (($mostFar < $maxDistance) && ($diff->i > 0)) {
                 $parts[] = Unit::format($diff->i, 'duration/minute', $width, $locale);
                 $mostFar = 0;
             } elseif (!empty($parts)) {
-                $mostFar++;
+                ++$mostFar;
             }
             if (empty($parts) || ($diff->s > 0)) {
                 $parts[] = Unit::format($diff->s, 'duration/second', $width, $locale);
@@ -1238,14 +1238,14 @@ class Calendar
                 $decoder = array();
                 $lengthM1 = $length - 1;
                 $quoted = false;
-                for ($index = 0; $index < $length; $index++) {
+                for ($index = 0; $index < $length; ++$index) {
                     $char = $format[$index];
                     if ($char === "'") {
                         if ($quoted) {
                             $quoted = false;
                         } elseif (($index < $lengthM1) && ($format[$index + 1] === "'")) {
                             $decoder[] = "'";
-                            $index++;
+                            ++$index;
                         } else {
                             $quoted = true;
                         }
@@ -1253,9 +1253,9 @@ class Calendar
                         $decoder[] = $char;
                     } else {
                         $count = 1;
-                        for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); $j++) {
-                            $count++;
-                            $index++;
+                        for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); ++$j) {
+                            ++$count;
+                            ++$index;
                         }
                         if (isset($decoderFunctions[$char])) {
                             $decoder[] = array($decoderFunctions[$char], $count);
@@ -1553,9 +1553,9 @@ class Calendar
         $format = isset($data['gmtFormat']) ? $data['gmtFormat'] : 'GMT%1$s';
         switch ($count) {
             case 1:
-                return sprintf($format, $sign . $hours . (($minutes === 0) ? '' : (':' . substr('0' . $minutes, -2))));
+                return sprintf($format, $sign.$hours.(($minutes === 0) ? '' : (':'.substr('0'.$minutes, -2))));
             case 4:
-                return sprintf($format, $sign . $hours . ':' . substr('0' . $minutes, -2));
+                return sprintf($format, $sign.$hours.':'.substr('0'.$minutes, -2));
             default:
                 throw new Exception\ValueNotInList($count, array(1, 4));
         }
@@ -1581,7 +1581,7 @@ class Calendar
     {
         $y = $value->format('o');
         if ($count === 2) {
-            $y = substr('0' . $y, -2);
+            $y = substr('0'.$y, -2);
         } else {
             if (!isset($y[$count])) {
                 $y = str_pad($y, $count, '0', STR_PAD_LEFT);
@@ -1614,7 +1614,7 @@ class Calendar
             case 1:
                 return strval($quarter);
             case 2:
-                return '0' . strval($quarter);
+                return '0'.strval($quarter);
             case 3:
                 return static::getQuarterName($quarter, 'abbreviated', $locale, $standAlone);
             case 4:
@@ -1705,8 +1705,8 @@ class Calendar
         $minutes = intval(floor($seconds / 60));
         $seconds -= $minutes * 60;
         $partsWithoutSeconds = array();
-        $partsWithoutSeconds[] = $sign . substr('0' . strval($hours), -2);
-        $partsWithoutSeconds[] = substr('0' . strval($minutes), -2);
+        $partsWithoutSeconds[] = $sign.substr('0'.strval($hours), -2);
+        $partsWithoutSeconds[] = substr('0'.strval($minutes), -2);
         $partsMaybeWithSeconds = $partsWithoutSeconds;
         /* @TZWS
         if ($seconds > 0) {
@@ -1787,8 +1787,8 @@ class Calendar
         $seconds -= $hours * 3600;
         $minutes = intval(floor($seconds / 60));
         $seconds -= $minutes * 60;
-        $hours2 = $sign . substr('0' . strval($hours), -2);
-        $minutes2 = substr('0' . strval($minutes), -2);
+        $hours2 = $sign.substr('0'.strval($hours), -2);
+        $minutes2 = substr('0'.strval($minutes), -2);
         /* @TZWS
         $seconds2 = substr('0' . strval($seconds), -2);
         */
