@@ -40,7 +40,8 @@ class Language
         foreach (array_filter(array_keys($data), $filter) as $languageID) {
             $result[$languageID] = $data[$languageID];
         }
-        natcasesort($result);
+        $sorter = new \Punic\Comparer();
+        $sorter->sort($result, true);
 
         return $result;
     }

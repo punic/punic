@@ -133,7 +133,8 @@ class Territory
         $finalized = self::finalizeWithNames(Data::get('territories', $locale), $struct, $flatList);
 
         if ($flatList) {
-            natcasesort($finalized);
+            $sorter = new \Punic\Comparer();
+            $sorter->sort($finalized, true);
         } else {
             $finalized = static::sort($finalized);
         }
@@ -437,8 +438,9 @@ class Territory
                 $list[$i]['children'] = static::sort($list[$i]['children']);
             }
         }
-        uasort($list, function ($a, $b) {
-            return strcasecmp($a['name'], $b['name']);
+        $sorter = new \Punic\Comparer();
+        uasort($list, function ($a, $b) use($sorter) {
+            return $sorter->compare($a['name'], $b['name']);
         });
 
         return $list;
