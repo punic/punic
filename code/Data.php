@@ -66,7 +66,7 @@ class Data
      */
     public static function setDefaultLocale($locale)
     {
-        if (null ==(static::explodeLocale($locale))) {
+        if (is_null(static::explodeLocale($locale))) {
             throw new Exception\InvalidLocale($locale);
         }
         static::$defaultLocale = $locale;
@@ -103,7 +103,7 @@ class Data
      */
     public static function setFallbackLocale($locale)
     {
-        if (null ==(static::explodeLocale($locale))) {
+        if (is_null(static::explodeLocale($locale))) {
             throw new Exception\InvalidLocale($locale);
         }
         if (static::$fallbackLocale !== $locale) {
@@ -281,7 +281,7 @@ class Data
                 $result = $data[$key];
                 if (isset($script[0]) && (stripos($result, "$language-$script-") !== 0)) {
                     $parts = static::explodeLocale($result);
-                    if (null !=($parts)) {
+                    if (!is_null($parts)) {
                         $result = "{$parts['language']}-$script-{$parts['territory']}";
                     }
                 }

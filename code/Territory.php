@@ -365,7 +365,7 @@ class Territory
     protected static function getStructure()
     {
         static $cache = null;
-        if (null ==($cache)) {
+        if (is_null($cache)) {
             $data = Data::getGeneric('territoryContainment');
             $result = static::fillStructure($data, '001', 0);
             $cache = $result;
