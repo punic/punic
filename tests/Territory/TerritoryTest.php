@@ -201,6 +201,6 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $indexCyprus = array_search(array_search('Zypern', $countries), $countryKeys);
         $indexAustria = array_search(array_search('Österreich', $countries), $countryKeys);
 
-        $this->assertGreaterThan($indexAustria, $indexCyprus, 'Österreich was not listed before Zypren');
+        $this->assertGreaterThan($indexAustria, $indexCyprus, 'Österreich was not listed before Zypern');
     }
 }
