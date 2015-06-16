@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/code/Calendar.php';
+require_once __DIR__.'/code/Comparer.php';
 require_once __DIR__.'/code/Currency.php';
 require_once __DIR__.'/code/Data.php';
 require_once __DIR__.'/code/Exception.php';
