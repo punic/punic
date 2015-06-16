@@ -44,7 +44,7 @@ class Currency
             }
         }
         $sorter = new \Punic\Comparer();
-        $result = $sorter->sort($result, true);
+        $sorter->sort($result, true);
 
         return $result;
     }

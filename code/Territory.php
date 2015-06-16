@@ -134,7 +134,7 @@ class Territory
 
         if ($flatList) {
             $sorter = new \Punic\Comparer();
-            $finalized = $sorter->sort($finalized, true);
+            $sorter->sort($finalized, true);
         } else {
             $finalized = static::sort($finalized);
         }
