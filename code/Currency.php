@@ -68,7 +68,7 @@ class Currency
         $data = static::getLocaleData($currencyCode, $locale);
         if (is_array($data)) {
             $result = $data['name'];
-            if ((!is_null($quantity)) && isset($data['pluralName'])) {
+            if ((null !=($quantity)) && isset($data['pluralName'])) {
                 if (is_string($data) && in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
                     $pluralRule = $quantity;
                 } else {

@@ -72,24 +72,24 @@ class Calendar
             if (is_int($value) || is_float($value)) {
                 $result = new \DateTime();
                 $result->setTimestamp($value);
-                if (!is_null($tzFrom)) {
+                if (null !=($tzFrom)) {
                     $result->setTimezone($tzFrom);
                 }
             } elseif ($value instanceof \DateTime) {
                 $result = clone $value;
-                if (!is_null($tzFrom)) {
+                if (null !=($tzFrom)) {
                     $result->setTimezone($tzFrom);
                 }
             } elseif (is_string($value)) {
                 if (is_numeric($value)) {
                     $result = new \DateTime();
                     $result->setTimestamp($value);
-                    if (!is_null($tzFrom)) {
+                    if (null !=($tzFrom)) {
                         $result->setTimezone($tzFrom);
                     }
                 } else {
                     try {
-                        if (is_null($tzFrom)) {
+                        if (null ==($tzFrom)) {
                             $result = new \DateTime($value);
                         } else {
                             $result = new \DateTime($value, $tzFrom);
@@ -259,7 +259,7 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $year = intval($value->format('Y'));
             }
-            if (is_null($year)) {
+            if (null ==($year)) {
                 throw new Exception\BadArgumentType($value, 'year number');
             }
             $data = Data::get('calendar', $locale);
@@ -303,7 +303,7 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $month = intval($value->format('n'));
             }
-            if (is_null($month) || (($month < 1) || ($month > 12))) {
+            if (null ==($month) || (($month < 1) || ($month > 12))) {
                 throw new Exception\BadArgumentType($value, 'month number');
             }
             $data = Data::get('calendar', $locale);
@@ -347,7 +347,7 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $weekday = intval($value->format('w'));
             }
-            if (is_null($weekday) || (($weekday < 0) || ($weekday > 6))) {
+            if (null ==($weekday) || (($weekday < 0) || ($weekday > 6))) {
                 throw new Exception\BadArgumentType($value, 'weekday number');
             }
             $weekday = self::$weekdayDictionary[$weekday];
@@ -392,7 +392,7 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
             }
-            if (is_null($quarter) || (($quarter < 1) || ($quarter > 4))) {
+            if (null ==($quarter) || (($quarter < 1) || ($quarter > 4))) {
                 throw new Exception\BadArgumentType($value, 'quarter number');
             }
             $data = Data::get('calendar', $locale);
@@ -443,10 +443,10 @@ class Calendar
             } elseif (is_a($value, '\DateTime')) {
                 $dayperiod = $value->format('a');
             }
-            if ((!is_null($hours)) && ($hours >= 0) && ($hours <= 23)) {
+            if ((null !=($hours)) && ($hours >= 0) && ($hours <= 23)) {
                 $dayperiod = ($hours < 12) ? 'am' : 'pm';
             }
-            if (is_null($dayperiod)) {
+            if (null ==($dayperiod)) {
                 throw new Exception\BadArgumentType($value, 'day period');
             }
             $data = Data::get('calendar', $locale);
