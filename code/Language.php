@@ -58,7 +58,7 @@ class Language
     {
         $result = $languageCode;
         $info = Data::explodeLocale($languageCode);
-        if (!is_null($info)) {
+        if (null !== ($info)) {
             $language = $info['language'];
             $script = $info['script'];
             $territory = $info['territory'];
