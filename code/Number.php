@@ -17,7 +17,7 @@ class Number
      */
     public static function isNumeric($value, $locale = '')
     {
-        return is_null(static::unformat($value, $locale)) ? false : true;
+        return null === (static::unformat($value, $locale)) ? false : true;
     }
 
     /**
@@ -76,9 +76,9 @@ class Number
                 }
             }
         }
-        if (!is_null($number)) {
+        if (null !== ($number)) {
             $precision = is_numeric($precision) ? intval($precision) : null;
-            if (!is_null($precision)) {
+            if (null !== ($precision)) {
                 $value = round($value, $precision);
             }
             $data = Data::get('numbers', $locale);
@@ -101,7 +101,7 @@ class Number
                 $intPart = $pre . $groupSign . implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
             }
             $result = $sign . $intPart;
-            if (is_null($precision)) {
+            if (null === ($precision)) {
                 if (isset($floatPath[0])) {
                     $result .= $decimal . $floatPath;
                 }
@@ -164,7 +164,7 @@ class Number
                     $sign = '';
                 }
                 $int = str_replace($group, '', $int);
-                if (is_null($float)) {
+                if (null === ($float)) {
                     $result = intval("$sign$int");
                 } else {
                     $result = floatval("$sign$int.$float");

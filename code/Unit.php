@@ -49,7 +49,7 @@ class Unit
             foreach (array_keys($data) as $c) {
                 if (strpos($c, '_') === false) {
                     if (isset($data[$c][$unit])) {
-                        if (is_null($unitCategory)) {
+                        if (null === ($unitCategory)) {
                             $unitCategory = $c;
                             $unitID = $unit;
                         } else {
@@ -63,10 +63,10 @@ class Unit
             list($unitCategory, $unitID) = explode('/', $unit, 2);
         }
         $rules = null;
-        if ((strpos($unit, '_') === false) && (!is_null($unitCategory)) && (!is_null($unitID)) && isset($data[$unitCategory]) && array_key_exists($unitID, $data[$unitCategory])) {
+        if ((strpos($unit, '_') === false) && (null !== ($unitCategory)) && (null !== ($unitID)) && isset($data[$unitCategory]) && array_key_exists($unitID, $data[$unitCategory])) {
             $rules = $data[$unitCategory][$unitID];
         }
-        if (is_null($rules)) {
+        if (null === ($rules)) {
             $units = array();
             foreach ($data as $c => $us) {
                 if (strpos($c, '_') === false) {
