@@ -11,6 +11,7 @@ php:
   - hhvm
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - mv -f -v composer-travis-ci.json composer.json
   - composer self-update
   - composer install --no-interaction
