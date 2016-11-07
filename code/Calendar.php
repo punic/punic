@@ -1053,7 +1053,6 @@ class Calendar
 
         }
 
-        // print_r($parts);
         switch ($width) {
             case 'narrow':
             case 'short':
