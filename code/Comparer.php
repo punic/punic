@@ -38,8 +38,13 @@ class Comparer
         $this->cache = array();
         $this->locale = isset($locale) ? $locale : \Punic\Data::getDefaultLocale();
         $this->caseSensitive = (bool) $caseSensitive;
-        $this->collator = class_exists('\Collator') ? new \Collator($this->locale) : null;
         $this->iconv = function_exists('iconv');
+        
+        if (class_exists('\Collator') && extension_loaded('intl')) {
+            $this->collator = new \Collator($this->locale);
+        } else {
+            $this->collator = null;
+        }
     }
 
     /**
