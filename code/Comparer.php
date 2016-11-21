@@ -2,6 +2,9 @@
 
 namespace Punic;
 
+use Collator;
+use Exception as PHPException;
+
 /**
  * Various helper stuff.
  */
@@ -18,7 +21,7 @@ class Comparer
     private $caseSensitive;
 
     /**
-     * @var \Collator|null
+     * @var Collator|null
      */
     private $collator;
 
@@ -38,7 +41,13 @@ class Comparer
         $this->cache = array();
         $this->locale = isset($locale) ? $locale : \Punic\Data::getDefaultLocale();
         $this->caseSensitive = (bool) $caseSensitive;
-        $this->collator = class_exists('\Collator') ? new \Collator($this->locale) : null;
+        $this->collator = null;
+        if (class_exists('\Collator')) {
+            try {
+                $this->collator = new Collator($this->locale);
+            } catch (PHPException $x) {
+            }
+        }
         $this->iconv = function_exists('iconv');
     }
 
@@ -75,30 +84,35 @@ class Comparer
      */
     public function compare($a, $b)
     {
+        $result = null;
         if (isset($this->collator)) {
-            $a = (string) $a;
-            $b = (string) $b;
-            if ($this->caseSensitive) {
-                $result = $this->collator->compare($a, $b);
-            } else {
-                $array = array($a, $b);
-                if ($this->sort($array) === false) {
-                    $result = false;
+            try {
+                $a = (string) $a;
+                $b = (string) $b;
+                if ($this->caseSensitive) {
+                    $result = $this->collator->compare($a, $b);
                 } else {
-                    $ia = array_search($a, $array);
-                    if ($ia === 1) {
-                        $result = 1;
+                    $array = array($a, $b);
+                    if ($this->sort($array) === false) {
+                        $result = false;
                     } else {
-                        $ib = array_search($b, $array);
-                        if ($ib === 1) {
-                            $result = -1;
+                        $ia = array_search($a, $array);
+                        if ($ia === 1) {
+                            $result = 1;
                         } else {
-                            $result = 0;
+                            $ib = array_search($b, $array);
+                            if ($ib === 1) {
+                                $result = -1;
+                            } else {
+                                $result = 0;
+                            }
                         }
                     }
                 }
+            } catch (PHPException $x) {
             }
-        } else {
+        }
+        if ($result === null) {
             $a = $this->normalize($a);
             $b = $this->normalize($b);
 
@@ -117,20 +131,25 @@ class Comparer
     public function sort(&$array, $keepKeys = false)
     {
         $me = $this;
-        if ($keepKeys) {
-            if (isset($this->collator)) {
-                $result = $this->collator->asort($array);
-            } else {
+        $result = null;
+        if (isset($this->collator)) {
+            try {
+                if ($keepKeys) {
+                    $result = $this->collator->asort($array);
+                } else {
+                    $result = $this->collator->sort($array);
+                }
+            } catch (PHPException $x) {
+            }
+        }
+        if ($result === null) {
+            if ($keepKeys) {
                 $result = uasort(
                     $array,
                     function ($a, $b) use ($me) {
                         return $me->compare($a, $b);
                     }
                 );
-            }
-        } else {
-            if (isset($this->collator)) {
-                $result = $this->collator->sort($array);
             } else {
                 $result = usort(
                     $array,
