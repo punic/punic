@@ -142,9 +142,13 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     public function testTerritoriesForLanguage()
     {
         $this->assertEmpty(Territory::getTerritoriesForLanguage('fake'));
-        $us = Territory::getTerritoriesForLanguage('en');
-        $this->assertSame('US', $us[0]);
-        $this->assertContains('GB', $us);
+        $en = Territory::getTerritoriesForLanguage('en', 0);
+        $this->assertSame('US', $en[0]);
+        $this->assertContains('GB', $en);
+        $this->assertContains('IT', $en);
+        $enThreshold = Territory::getTerritoriesForLanguage('en', 80);
+        $this->assertSame('US', $enThreshold[0]);
+        $this->assertNotContains('IT', $enThreshold);
         $it = Territory::getTerritoriesForLanguage('it');
         $this->assertSame('IT', $it[0]);
         $this->assertContains('CH', $it);
