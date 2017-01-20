@@ -10,7 +10,7 @@ Punic - PHP Unicode CLDR Toolkit
 Documentation
 -------------
 
-See [punic.github.io](http://punic.github.io) for more info.
+See [punic.github.io](https://punic.github.io) for more info.
 
 Contributing
 ------------
