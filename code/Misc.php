@@ -13,7 +13,7 @@ class Misc
      * @param array $list The list to concatenate
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
     public static function join($list, $locale = '')
     {
@@ -27,7 +27,7 @@ class Misc
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return string Returns an empty string if $list is not an array of it it's empty, the joined items otherwise.
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
     public static function joinUnits($list, $width = '', $locale = '')
     {
@@ -105,7 +105,7 @@ class Misc
      *
      * @return string
      *
-     * @link http://cldr.unicode.org/development/development-process/design-proposals/consistent-casing
+     * @see http://cldr.unicode.org/development/development-process/design-proposals/consistent-casing
      */
     public static function fixCase($string, $case)
     {

@@ -10,6 +10,7 @@ class BadArgumentType extends \Punic\Exception
     protected $argumentValue;
 
     protected $destinationTypeDescription;
+
     /**
      * Initializes the instance.
      *

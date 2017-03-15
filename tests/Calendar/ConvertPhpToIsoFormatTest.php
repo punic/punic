@@ -6,6 +6,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 {
     const TEST_TIMEZONE = 'America/Los_Angeles';
     private $previousTimezone;
+
     protected function setUp()
     {
         $this->previousTimezone = @date_default_timezone_get();
@@ -14,6 +15,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
         }
         date_default_timezone_set(self::TEST_TIMEZONE);
     }
+
     protected function tearDown()
     {
         date_default_timezone_set($this->previousTimezone);
@@ -27,6 +29,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 
         return $dateTime;
     }
+
     public function providerConvertPhpToIsoFormat()
     {
         $chunks = array(
@@ -58,6 +61,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 
         return $result;
     }
+
     /**
      * @dataProvider providerConvertPhpToIsoFormat
      */

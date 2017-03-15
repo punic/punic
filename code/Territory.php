@@ -104,7 +104,7 @@ class Territory
      *
      * @return array
      *
-     * @link http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
+     * @see http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
      *
      * @throws Exception\BadArgumentType
      */
@@ -283,7 +283,7 @@ class Territory
         }
         arsort($peopleInTerritory, SORT_NUMERIC);
         $territoryIDs = array_keys($peopleInTerritory);
-        
+
         return $territoryIDs;
     }
 
@@ -292,7 +292,7 @@ class Territory
      *
      * @param string $childTerritoryCode
      *
-     * @return string Return the parent territory code, or an empty string if $childTerritoryCode is the World (001) or if it's invalid.
+     * @return string return the parent territory code, or an empty string if $childTerritoryCode is the World (001) or if it's invalid
      */
     public static function getParentTerritoryCode($childTerritoryCode)
     {
@@ -316,7 +316,7 @@ class Territory
      * Retrieve the child territories of a parent territory.
      *
      * @param string $parentTerritoryCode
-     * @param bool $expandSubGroups Set to true to expand the sub-groups, false to retrieve them.
+     * @param bool $expandSubGroups set to true to expand the sub-groups, false to retrieve them
      *
      * @return array Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
      */

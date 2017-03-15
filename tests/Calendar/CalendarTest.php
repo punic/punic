@@ -5,6 +5,7 @@ use \Punic\Calendar;
 class CalendarTest extends PHPUnit_Framework_TestCase
 {
     protected $initialTimezone;
+
     protected function setUp()
     {
         parent::setUp();
@@ -18,6 +19,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         \Punic\Data::setFallbackLocale('en_US');
         \Punic\Data::setDefaultLocale('en_US');
     }
+
     protected function tearDown()
     {
         if (isset($this->initialTimezone)) {
@@ -1354,6 +1356,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array(0, array(new \DateTime('now', new \DateTimeZone('Pacific/Pago_Pago')), new \DateTime('now', new \DateTimeZone('Pacific/Kiritimati')))),
         );
     }
+
     /**
      * Test getDeltaDays.
      *
@@ -1400,6 +1403,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
           array('Unknown City', 'America/Not_Existing_TimeZone_Name'),
        );
     }
+
     /**
      * Test getTimezonesAliases.
      *

@@ -8,6 +8,7 @@ namespace Punic\Exception;
 class NotImplemented extends \Punic\Exception
 {
     protected $function;
+
     /**
      * Initializes the instance.
      *

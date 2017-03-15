@@ -2,5 +2,7 @@
 /temp/
 /vendor/
 /.buildpath
+/.php_cs
+/.php_cs.cache
 /.project
 /composer.lock

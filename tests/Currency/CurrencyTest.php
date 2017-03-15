@@ -29,6 +29,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
             array('en', 'USD', 2, 'US dollars', '$', '$', ''),
         );
     }
+
     /**
      * @dataProvider providerGetInfo
      */
@@ -49,6 +50,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
             array('Invalid territory code', ''),
         );
     }
+
     /**
      * @dataProvider providerGetCurrencyForTerritory
      */

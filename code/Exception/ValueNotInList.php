@@ -10,6 +10,7 @@ class ValueNotInList extends \Punic\Exception
     protected $value;
 
     protected $allowedValues;
+
     /**
      * Initializes the instance.
      *

@@ -11,6 +11,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array(false, '1,234.56', 'it'),
         );
     }
+
     /**
      * @dataProvider providerIsNumeric
      */
@@ -31,6 +32,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array(true, '1,234.00', 'en'),
         );
     }
+
     /**
      * @dataProvider providerIsInteger
      */
@@ -67,6 +69,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array('', '.', null, 'en'),
         );
     }
+
     /**
      * @dataProvider providerFormat
      */
@@ -90,6 +93,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array(1234, 1234, 'en'),
         );
     }
+
     /**
      * @dataProvider providerUnformat
      */
