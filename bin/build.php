@@ -96,6 +96,9 @@ try {
     die(0);
 } catch (Exception $x) {
     echo "\n\n", $x->getMessage(), "\n";
+    if (method_exists($x, 'getTraceAsString')) {
+        echo "\nTRACE:\n", $x->getTraceAsString(), "\n";
+    }
     die(1);
 }
 
@@ -306,7 +309,7 @@ class BuildOptions
                     if ($nextOption === '') {
                         throw new Exception('Please specify the CLDR version to be processed');
                     }
-                    if (!preg_match('/^[1-9]\d*(\.d?\d+)*$/', $nextOption)) {
+                    if (!preg_match('/^[1-9]\d*(\.\d+)*(\.[dM]\d+|\.beta\.\d+)?$/', $nextOption)) {
                         throw new Exception("Invalid version specified ($nextOption)");
                     }
                     $result->cldrVersion = $nextOption;
@@ -515,6 +518,7 @@ Available options:
 
   --version=<version>|-v <version>
     Set the CLDR version to work on (default: $defaultCLDRVersion)
+    Examples: 31.d02  30.0.3  30  29.beta.1  25.M1  23.1.d01
 
   --reset-cldr-data|-c
     Reset the source CLDR data before the execution
@@ -1873,9 +1877,11 @@ class UnitsLocalePunicConversion extends LocalePunicConversion
                                 break;
                             case 'coordinateUnit':
                                 $this->checkExactKeys($data[$width][$unitKey], array('east', 'north', 'south', 'west'));
+                                $data[$width]['_coordinateUnit'] = array();
                                 foreach (array_keys($data[$width][$unitKey]) as $direction) {
-                                    $data[$width][$unitKey][$direction] = $this->toPhpSprintf($data[$width][$unitKey][$direction]);
+                                    $data[$width]['_coordinateUnit'][$direction] = $this->toPhpSprintf($data[$width][$unitKey][$direction]);
                                 }
+                                unset($data[$width][$unitKey]);
                                 break;
                             default:
                                 if (!preg_match('/^(\\w+)?-(.+)$/', $unitKey, $m)) {
@@ -1888,6 +1894,12 @@ class UnitsLocalePunicConversion extends LocalePunicConversion
                                 }
                                 if (!array_key_exists($unitName, $data[$width][$unitKind])) {
                                     $data[$width][$unitKind][$unitName] = array();
+                                }
+                                if (!isset($data[$width][$unitKey]['displayName'])) {
+                                    throw new Exception("Missing unit name in '$width/$unitKey'");
+                                }
+                                if (!isset($data[$width][$unitKey]['unitPattern-count-other'])) {
+                                    throw new Exception("Missing 'other' rule in '$width/$unitKey'");
                                 }
                                 foreach (array_keys($data[$width][$unitKey]) as $pluralRuleSrc) {
                                     switch ($pluralRuleSrc) {
@@ -1913,6 +1925,7 @@ class UnitsLocalePunicConversion extends LocalePunicConversion
                     break;
                 default:
                     if (preg_match('/^durationUnit-type-(.+)/', $width, $m)) {
+                        unset($data[$width]['durationUnitPattern-alt-variant']);
                         $this->checkExactKeys($data[$width], array('durationUnitPattern'));
                         $t = $m[1];
                         if (!array_key_exists('_durationPattern', $data)) {
