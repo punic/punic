@@ -8,32 +8,19 @@ namespace Punic;
 class Unit
 {
     /**
-     * Format a unit string.
+     * Get the width-specific unit data.
      *
-     * @param int|float|string $number The unit amount
-     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
-     * @param string $width The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
+     * @param string $width the data width
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return string
-     *
      * @throws Exception\ValueNotInList
+     *
+     * @return array
      */
-    public static function format($number, $unit, $width = 'short', $locale = '')
+    private static function getDataForWidth($width, $locale = '')
     {
         $data = Data::get('units', $locale);
-        $precision = null;
-        if (is_int($width)) {
-            $precision = $width;
-            $width = 'short';
-        } elseif (is_string($width) && preg_match('/^(?:(.*),)?([+\\-]?\\d+)$/', $width, $m)) {
-            $precision = intval($m[2]);
-            $width = $m[1];
-            if (!isset($width[0])) {
-                $width = 'short';
-            }
-        }
-        if ((strpos($width, '_') === 0) || (!isset($data[$width]))) {
+        if ($width[0] === '_' || !isset($data[$width])) {
             $widths = array();
             foreach (array_keys($data) as $w) {
                 if (strpos($w, '_') !== 0) {
@@ -42,12 +29,61 @@ class Unit
             }
             throw new Exception\ValueNotInList($width, $widths);
         }
-        $data = $data[$width];
-        if (strpos($unit, '/') === false) {
+
+        return $data[$width];
+    }
+
+    /**
+     * Get the list of all the available units.
+     *
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     */
+    public static function getAvailableUnits($locale = '')
+    {
+        $data = Data::get('units', $locale);
+        $categories = array();
+        foreach ($data as $width => $units) {
+            if ($width[0] !== '_') {
+                foreach ($units as $category => $units) {
+                    if ($category[0] !== '_') {
+                        $unitIDs = array_keys($units);
+                        if (isset($categories[$category])) {
+                            $categories[$category] = array_unique(array_merge($categories[$category], $unitIDs));
+                        } else {
+                            $categories[$category] = array_keys($units);
+                        }
+                    }
+                }
+            }
+        }
+        ksort($categories);
+        foreach (array_keys($categories) as $category) {
+            sort($categories[$category]);
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Get a unit-specific data.
+     *
+     * @param array $data the width-specific data
+     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
+     *
+     * @throws Exception\ValueNotInList
+     *
+     * @return array
+     */
+    private static function getDataForUnit(array $data, $unit)
+    {
+        $chunks = explode('/', $unit, 2);
+        if (isset($chunks[1])) {
+            list($unitCategory, $unitID) = $chunks;
+        } else {
             $unitCategory = null;
             $unitID = null;
             foreach (array_keys($data) as $c) {
-                if (strpos($c, '_') === false) {
+                if ($c[0] !== '_') {
                     if (isset($data[$c][$unit])) {
                         if ($unitCategory === null) {
                             $unitCategory = $c;
@@ -59,14 +95,13 @@ class Unit
                     }
                 }
             }
-        } else {
-            list($unitCategory, $unitID) = explode('/', $unit, 2);
         }
-        $rules = null;
-        if ((strpos($unit, '_') === false) && ($unitCategory !== null) && ($unitID !== null) && isset($data[$unitCategory]) && array_key_exists($unitID, $data[$unitCategory])) {
-            $rules = $data[$unitCategory][$unitID];
-        }
-        if ($rules === null) {
+        if (
+            $unitCategory === null || $unitCategory[0] === '_'
+            || !isset($data[$unitCategory])
+            || $unitID === null || $unitID[0] === '_'
+            || !isset($data[$unitCategory][$unitID])
+            ) {
             $units = array();
             foreach ($data as $c => $us) {
                 if (strpos($c, '_') === false) {
@@ -79,6 +114,55 @@ class Unit
             }
             throw new \Punic\Exception\ValueNotInList($unit, $units);
         }
+
+        return $data[$unitCategory][$unitID];
+    }
+
+    /**
+     * Get the localized name of a unit.
+     *
+     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
+     * @param string $width The format name; it can be 'long' ('milliseconds'), 'short' (eg 'millisecs') or 'narrow' (eg 'msec')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @throws Exception\ValueNotInList
+     *
+     * @return string
+     */
+    public static function getName($unit, $width = 'short', $locale = '')
+    {
+        $data = static::getDataForWidth($width, $locale);
+        $unitData = static::getDataForUnit($data, $unit);
+
+        return $unitData['_name'];
+    }
+    /**
+     * Format a unit string.
+     *
+     * @param int|float|string $number The unit amount
+     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
+     * @param string $width The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @throws Exception\ValueNotInList
+     *
+     * @return string
+     */
+    public static function format($number, $unit, $width = 'short', $locale = '')
+    {
+        $precision = null;
+        if (is_int($width)) {
+            $precision = $width;
+            $width = 'short';
+        } elseif (is_string($width) && preg_match('/^(?:(.*),)?([+\\-]?\\d+)$/', $width, $m)) {
+            $precision = intval($m[2]);
+            $width = (string) $m[1];
+            if ($width === '') {
+                $width = 'short';
+            }
+        }
+        $data = static::getDataForWidth($width, $locale);
+        $rules = static::getDataForUnit($data, $unit);
         $pluralRule = Plural::getRule($number, $locale);
         //@codeCoverageIgnoreStart
         // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)

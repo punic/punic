@@ -116,4 +116,32 @@ class UnitTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'invalid-unit');
     }
+
+    public function providerGetUnitName()
+    {
+        return array(
+            array('milliseconds', 'millisecond', 'long', 'en_US'),
+            array('millisecs', 'millisecond', 'short', 'en_US'),
+            array('msec', 'millisecond', 'narrow', 'en_US'),
+            array('millimetri', 'millimeter', 'long', 'it'),
+            array('mm', 'millimeter', 'short', 'it'),
+            array('mm', 'millimeter', 'narrow', 'it'),
+            array('millimetri', 'length/millimeter', 'long', 'it'),
+            array('mm', 'length/millimeter', 'short', 'it'),
+            array('mm', 'length/millimeter', 'narrow', 'it'),
+            array('Millisekunden', 'duration/millisecond', 'long', 'de'),
+            array('Millisekunden', 'millisecond', 'long', 'de'),
+            array('ms', 'millisecond', 'short', 'de'),
+            array('ms', 'millisecond', 'narrow', 'de'),
+        );
+    }
+
+    public function testGetAvailableUnits()
+    {
+        $categorizedUnits = Unit::getAvailableUnits('it');
+        $this->assertArrayHasKey('acceleration', $categorizedUnits);
+        $this->assertContains('g-force', $categorizedUnits['acceleration']);
+        $this->assertArrayHasKey('volume', $categorizedUnits);
+        $this->assertContains('teaspoon', $categorizedUnits['volume']);
+    }
 }
