@@ -136,6 +136,7 @@ class Unit
 
         return $unitData['_name'];
     }
+
     /**
      * Format a unit string.
      *
