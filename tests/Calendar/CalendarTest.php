@@ -286,7 +286,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getMonthName($dt, 'wide', 'it', false)
         );
         $this->assertSame(
-            'Marzo',
+            'marzo',
             Calendar::getMonthName($dt, 'wide', 'it', true)
         );
     }
@@ -419,7 +419,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getWeekdayName($dt, 'wide', 'it', false)
         );
         $this->assertSame(
-            'Domenica',
+            'domenica',
             Calendar::getWeekdayName($dt, 'wide', 'it', true)
         );
     }
@@ -1043,7 +1043,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('AD', Calendar::format($dt, 'GGG'));
         $this->assertSame('Anno Domini', Calendar::format($dt, 'GGGG'));
         $this->assertSame('A', Calendar::format($dt, 'GGGGG'));
-        $this->assertSame('d.C.', Calendar::format($dt, 'GGGG', 'it'));
+        $this->assertSame('d.C.', Calendar::format($dt, 'G', 'it'));
+        $this->assertSame('d.C.', Calendar::format($dt, 'GG', 'it'));
+        $this->assertSame('d.C.', Calendar::format($dt, 'GGG', 'it'));
+        $this->assertSame('dopo Cristo', Calendar::format($dt, 'GGGG', 'it'));
         // decodeYear
         $this->assertSame('2010', Calendar::format($dt, 'y'));
         $this->assertSame('10', Calendar::format($dt, 'yy'));
@@ -1103,7 +1106,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('Jan', Calendar::format($dt, 'LLL'));
         $this->assertSame('January', Calendar::format($dt, 'LLLL'));
         $this->assertSame('J', Calendar::format($dt, 'LLLLL'));
-        $this->assertSame('Gennaio', Calendar::format($dt, 'LLLL', 'it'));
+        $this->assertSame('gennaio', Calendar::format($dt, 'LLLL', 'it'));
         // decodeWeekOfYear
         $this->assertSame('53', Calendar::format($dt, 'w'));
         $this->assertSame('53', Calendar::format($dt, 'ww'));
@@ -1148,7 +1151,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('S', Calendar::format($dt, 'ccccc'));
         $this->assertSame('Sa', Calendar::format($dt, 'cccccc'));
         $this->assertSame('6', Calendar::format($dt, 'c', 'it'));
-        $this->assertSame('Sabato', Calendar::format($dt, 'cccc', 'it'));
+        $this->assertSame('sabato', Calendar::format($dt, 'cccc', 'it'));
         // decodeDayperiod
         $this->assertSame('PM', Calendar::format($dt, 'a'));
         $this->assertSame('nachm.', Calendar::format($dt, 'a', 'de'));
