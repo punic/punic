@@ -51,10 +51,11 @@ class Language
      *
      * @param string $languageCode The language code. If it contails also a terrotory code (eg: 'en-US'), the result will contain also the territory code (eg 'English (United States)')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param bool $allowCompoundNames Set to true to allow compound names (eg 'American English' instead of 'English '
      *
      * @return string Returns the localized language name (returns $languageCode if not found)
      */
-    public static function getName($languageCode, $locale = '')
+    public static function getName($languageCode, $locale = '', $allowCompoundNames = false)
     {
         $result = $languageCode;
         $info = Data::explodeLocale($languageCode);
@@ -63,12 +64,13 @@ class Language
             $script = $info['script'];
             $territory = $info['territory'];
             $lookFor = array();
-            if (isset($script[0])) {
-                if (isset($territory[0])) {
+            if ($script !== '') {
+                if ($allowCompoundNames && $territory !== '') {
                     $lookFor[] = "$language-$script-$territory";
                 }
                 $lookFor[] = "$language-$script";
-            } elseif (isset($territory[0])) {
+            }
+            if ($allowCompoundNames && $territory !== '') {
                 $lookFor[] = "$language-$territory";
             }
             $lookFor[] = $language;
@@ -79,9 +81,9 @@ class Language
                     break;
                 }
             }
-            if (isset($territory[0])) {
+            if ($territory !== '') {
                 $territoryName = Territory::getName($territory, $locale);
-                if (isset($territoryName[0])) {
+                if ($territoryName[0] !== '') {
                     $patternData = Data::get('localeDisplayNames');
                     $pattern = $patternData['localeDisplayPattern']['localePattern'];
                     $result = sprintf($pattern, $result, $territoryName);
