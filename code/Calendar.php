@@ -165,6 +165,7 @@ class Calendar
             'Y' => 'yyyy',
             'y' => 'yy',
             'a' => 'PPPPPPP',
+            'b' => 'PPPPPPP',
             'A' => 'a',
             'B' => 'PPPPPPPP',
             'g' => 'h',
@@ -228,6 +229,280 @@ class Calendar
         }
 
         return $cache[$format];
+    }
+
+    /**
+     * Try to convert a date, time or date/time {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format string} to a {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP date/time format}.
+     *
+     * @param string $isoDateTimeFormat The PHP date/time format
+     *
+     * @return string|null if the format is not possible (the ISO placeholders are much more than the PHP ones), null will be returned
+     */
+    public static function tryConvertIsoToPhpFormat($isoDateTimeFormat)
+    {
+        $result = null;
+        if (is_string($isoDateTimeFormat)) {
+            $result = '';
+            if (isset($isoDateTimeFormat[0])) {
+                $tokens = self::tokenizeFormat($isoDateTimeFormat);
+                foreach ($tokens as $token) {
+                    $chunk = null;
+                    if (is_string($token)) {
+                        $chunk = preg_replace('/([a-zA-Z\\\\])/', '\\\\\\1', $token);
+                    } else {
+                        switch ($token[0]) {
+                            case 'decodeYear':
+                                switch ($token[1]) {
+                                    case 2:
+                                        $chunk .= 'y';
+                                        break;
+                                    default:
+                                        $chunk .= 'Y';
+                                        break;
+                                }
+                                break;
+                            case 'decodeYearWeekOfYear':
+                                $chunk = 'o';
+                                break;
+                            case 'decodeYearExtended':
+                            case 'decodeYearRelatedGregorian':
+                                $chunk = 'Y';
+                                break;
+                            case 'decodeMonth':
+                            case 'decodeMonthAlone':
+                                switch ($token[1]) {
+                                    case 1:
+                                        $chunk = 'n';
+                                        break;
+                                    case 2:
+                                        $chunk = 'm';
+                                        break;
+                                    case 3:
+                                        $chunk = 'M';
+                                        break;
+                                    case 4:
+                                        $chunk = 'F';
+                                        break;
+                                }
+                                break;
+                            case 'decodeWeekOfYear':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                        $chunk = 'W';
+                                        break;
+                                }
+                                break;
+                            case 'decodeDayOfMonth':
+                                switch ($token[1]) {
+                                    case 1:
+                                        $chunk = 'j';
+                                        break;
+                                    case 2:
+                                        $chunk = 'd';
+                                        break;
+                                }
+                                break;
+                            case 'decodeDayOfYear':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                        $chunk = 'z';
+                                        break;
+                                }
+                                break;
+                            case 'decodeDayOfWeek':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                        $chunk = 'D';
+                                        break;
+                                    case 4:
+                                        $chunk = 'l';
+                                        break;
+                                }
+                                break;
+                            case 'decodeDayOfWeekLocal':
+                            case 'decodeDayOfWeekLocalAlone':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                        $chunk = 'N';
+                                        break;
+                                    case 3:
+                                        $chunk = 'D';
+                                        break;
+                                    case 4:
+                                        $chunk = 'l';
+                                        break;
+                                }
+                                break;
+                            case 'decodeDayperiod':
+                                if ($token[1] <= 4) {
+                                    $chunk = 'A';
+                                }
+                                break;
+                            case 'decodeHour12':
+                                switch ($token[1]) {
+                                    case 1:
+                                        $chunk = 'g';
+                                        break;
+                                    case 2:
+                                        $chunk = 'h';
+                                        break;
+                                }
+                                break;
+                            case 'decodeHour24':
+                                switch ($token[1]) {
+                                    case 1:
+                                        $chunk = 'G';
+                                        break;
+                                    case 2:
+                                        $chunk = 'H';
+                                        break;
+                                }
+                                break;
+                            case 'decodeMinute':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                        $chunk = 'i';
+                                        break;
+                                }
+                                break;
+                            case 'decodeSecond':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                        $chunk = 's';
+                                        break;
+                                }
+                                break;
+                            case 'decodeFranctionsOfSeconds':
+                                switch ($token[1]) {
+                                    case 3:
+                                        if (version_compare(PHP_VERSION, '7') >= 0) {
+                                            $chunk = 'v';
+                                        }
+                                        break;
+                                    case 6:
+                                        $chunk = 'u';
+                                        break;
+                                }
+                                break;
+                            case 'decodeTimezoneNoLocationSpecific':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                        $chunk = 'T';
+                                        break;
+                                    case 4:
+                                        $chunk = '\\G\\M\\TP';
+                                        break;
+                                }
+                                break;
+                            case 'decodeTimezoneDelta':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                        $chunk = 'O';
+                                        break;
+                                    case 4:
+                                        $chunk = '\\G\\M\\TP';
+                                        break;
+                                    case 5:
+                                        $chunk = 'P';
+                                        break;
+                                }
+                                break;
+                            case 'decodeTimezoneShortGMT':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 4:
+                                        $chunk = '\\G\\M\\TP';
+                                        break;
+                                }
+                                break;
+                            case 'decodeTimezoneID':
+                                switch ($token[1]) {
+                                    case 2:
+                                        $chunk = 'e';
+                                        break;
+                                }
+                                break;
+                            case 'decodeTimezoneWithTimeZ':
+                            case 'decodeTimezoneWithTime':
+                                switch ($token[1]) {
+                                    case 1:
+                                    case 2:
+                                    case 4:
+                                        $chunk = 'O';
+                                        break;
+                                    case 3:
+                                    case 5:
+                                        $chunk = 'P';
+                                        break;
+                                }
+                                break;
+                            case 'decodePunicExtension':
+                                switch ($token[1]) {
+                                    case 1:
+                                        $chunk = 'N';
+                                        break;
+                                    case 2:
+                                        $chunk = 'w';
+                                        break;
+                                    case 3:
+                                        $chunk = 'S';
+                                        break;
+                                    case 4:
+                                        $chunk = 'z';
+                                        break;
+                                    case 5:
+                                        $chunk = 't';
+                                        break;
+                                    case 6:
+                                        $chunk = 'L';
+                                        break;
+                                    case 7:
+                                        $chunk = 'a';
+                                        break;
+                                    case 8:
+                                        $chunk = 'B';
+                                        break;
+                                    case 9:
+                                        $chunk = 'u';
+                                        break;
+                                    case 10:
+                                        $chunk = 'I';
+                                        break;
+                                    case 11:
+                                        $chunk = 'Z';
+                                        break;
+                                    case 12:
+                                        $chunk = 'r';
+                                        break;
+                                    case 13:
+                                        $chunk = 'U';
+                                        break;
+                                }
+                                break;
+                        }
+                    }
+                    if ($chunk === null) {
+                        $result = null;
+                        break;
+                    }
+                    $result .= $chunk;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -1180,93 +1455,17 @@ class Calendar
      */
     public static function format($value, $format, $locale = '')
     {
-        static $decodeCache = array();
-        static $decoderFunctions = array(
-            'G' => 'decodeEra',
-            'y' => 'decodeYear',
-            'Y' => 'decodeYearWeekOfYear',
-            'u' => 'decodeYearExtended',
-            'U' => 'decodeYearCyclicName',
-            'r' => 'decodeYearRelatedGregorian',
-            'Q' => 'decodeQuarter',
-            'q' => 'decodeQuarterAlone',
-            'M' => 'decodeMonth',
-            'L' => 'decodeMonthAlone',
-            'w' => 'decodeWeekOfYear',
-            'W' => 'decodeWeekOfMonth',
-            'd' => 'decodeDayOfMonth',
-            'D' => 'decodeDayOfYear',
-            'F' => 'decodeWeekdayInMonth',
-            'g' => 'decodeModifiedGiulianDay',
-            'E' => 'decodeDayOfWeek',
-            'e' => 'decodeDayOfWeekLocal',
-            'c' => 'decodeDayOfWeekLocalAlone',
-            'a' => 'decodeDayperiod',
-            'h' => 'decodeHour12',
-            'H' => 'decodeHour24',
-            'K' => 'decodeHour12From0',
-            'k' => 'decodeHour24From1',
-            'm' => 'decodeMinute',
-            's' => 'decodeSecond',
-            'S' => 'decodeFranctionsOfSeconds',
-            'A' => 'decodeMsecInDay',
-            'z' => 'decodeTimezoneNoLocationSpecific',
-            'Z' => 'decodeTimezoneDelta',
-            'O' => 'decodeTimezoneShortGMT',
-            'v' => 'decodeTimezoneNoLocationGeneric',
-            'V' => 'decodeTimezoneID',
-            'X' => 'decodeTimezoneWithTimeZ',
-            'x' => 'decodeTimezoneWithTime',
-            'P' => 'decodePunicExtension',
-        );
         $result = '';
         if (!empty($value)) {
             if (!is_a($value, '\\DateTime')) {
                 throw new Exception\BadArgumentType($value, '\\DateTime');
             }
-            $length = is_string($format) ? strlen($format) : 0;
-            if ($length === 0) {
+            if (!is_string($format) || $format === '') {
                 throw new Exception\BadArgumentType($format, 'date/time ISO format');
             }
+            $decoder = self::tokenizeFormat($format);
             if (empty($locale)) {
                 $locale = Data::getDefaultLocale();
-            }
-            if (!isset($decodeCache[$locale])) {
-                $decodeCache[$locale] = array();
-            }
-            if (!isset($decodeCache[$locale][$format])) {
-                $decoder = array();
-                $lengthM1 = $length - 1;
-                $quoted = false;
-                for ($index = 0; $index < $length; ++$index) {
-                    $char = $format[$index];
-                    if ($char === "'") {
-                        if ($quoted) {
-                            $quoted = false;
-                        } elseif (($index < $lengthM1) && ($format[$index + 1] === "'")) {
-                            $decoder[] = "'";
-                            ++$index;
-                        } else {
-                            $quoted = true;
-                        }
-                    } elseif ($quoted) {
-                        $decoder[] = $char;
-                    } else {
-                        $count = 1;
-                        for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); ++$j) {
-                            ++$count;
-                            ++$index;
-                        }
-                        if (isset($decoderFunctions[$char])) {
-                            $decoder[] = array($decoderFunctions[$char], $count);
-                        } else {
-                            $decoder[] = str_repeat($char, $count);
-                        }
-                    }
-                }
-                $decodeCache[$locale][$format] = $decoder;
-            } else {
-                $decoder = $decodeCache[$locale][$format];
             }
             foreach ($decoder as $chunk) {
                 if (is_string($chunk)) {
@@ -1966,6 +2165,98 @@ class Calendar
             }
         } else {
             $result = $tz->getName();
+        }
+
+        return $result;
+    }
+
+    private static $decoderFunctions = array(
+        'G' => 'decodeEra',
+        'y' => 'decodeYear',
+        'Y' => 'decodeYearWeekOfYear',
+        'u' => 'decodeYearExtended',
+        'U' => 'decodeYearCyclicName',
+        'r' => 'decodeYearRelatedGregorian',
+        'Q' => 'decodeQuarter',
+        'q' => 'decodeQuarterAlone',
+        'M' => 'decodeMonth',
+        'L' => 'decodeMonthAlone',
+        'w' => 'decodeWeekOfYear',
+        'W' => 'decodeWeekOfMonth',
+        'd' => 'decodeDayOfMonth',
+        'D' => 'decodeDayOfYear',
+        'F' => 'decodeWeekdayInMonth',
+        'g' => 'decodeModifiedGiulianDay',
+        'E' => 'decodeDayOfWeek',
+        'e' => 'decodeDayOfWeekLocal',
+        'c' => 'decodeDayOfWeekLocalAlone',
+        'a' => 'decodeDayperiod',
+        'b' => 'decodeDayperiod',
+        'B' => 'decodeDayperiod',
+        'h' => 'decodeHour12',
+        'H' => 'decodeHour24',
+        'K' => 'decodeHour12From0',
+        'k' => 'decodeHour24From1',
+        'm' => 'decodeMinute',
+        's' => 'decodeSecond',
+        'S' => 'decodeFranctionsOfSeconds',
+        'A' => 'decodeMsecInDay',
+        'z' => 'decodeTimezoneNoLocationSpecific',
+        'Z' => 'decodeTimezoneDelta',
+        'O' => 'decodeTimezoneShortGMT',
+        'v' => 'decodeTimezoneNoLocationGeneric',
+        'V' => 'decodeTimezoneID',
+        'X' => 'decodeTimezoneWithTimeZ',
+        'x' => 'decodeTimezoneWithTime',
+        'P' => 'decodePunicExtension',
+    );
+
+    private static $tokenizerCache = array();
+
+    /**
+     * Tokenize an ISO date/time format string.
+     *
+     * @param string $format
+     * @param string $locale
+     *
+     * @return array
+     */
+    protected static function tokenizeFormat($format)
+    {
+        if (isset(static::$tokenizerCache[$format])) {
+            $result = static::$tokenizerCache[$format];
+        } else {
+            $result = array();
+            $length = strlen($format);
+            $lengthM1 = $length - 1;
+            $quoted = false;
+            for ($index = 0; $index < $length; ++$index) {
+                $char = $format[$index];
+                if ($char === "'") {
+                    if ($quoted) {
+                        $quoted = false;
+                    } elseif (($index < $lengthM1) && ($format[$index + 1] === "'")) {
+                        $result[] = "'";
+                        ++$index;
+                    } else {
+                        $quoted = true;
+                    }
+                } elseif ($quoted) {
+                    $result[] = $char;
+                } else {
+                    $count = 1;
+                    for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); ++$j) {
+                        ++$count;
+                        ++$index;
+                    }
+                    if (isset(self::$decoderFunctions[$char])) {
+                        $result[] = array(self::$decoderFunctions[$char], $count);
+                    } else {
+                        $result[] = str_repeat($char, $count);
+                    }
+                }
+            }
+            static::$tokenizerCache[$format] = $result;
         }
 
         return $result;
