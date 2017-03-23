@@ -2170,7 +2170,7 @@ class Calendar
         return $result;
     }
 
-    private static $decoderFunctions = array(
+    protected static $decoderFunctions = array(
         'G' => 'decodeEra',
         'y' => 'decodeYear',
         'Y' => 'decodeYearWeekOfYear',
@@ -2223,8 +2223,8 @@ class Calendar
      */
     protected static function tokenizeFormat($format)
     {
-        if (isset(static::$tokenizerCache[$format])) {
-            $result = static::$tokenizerCache[$format];
+        if (isset(self::$tokenizerCache[$format])) {
+            $result = self::$tokenizerCache[$format];
         } else {
             $result = array();
             $length = strlen($format);
@@ -2256,7 +2256,7 @@ class Calendar
                     }
                 }
             }
-            static::$tokenizerCache[$format] = $result;
+            self::$tokenizerCache[$format] = $result;
         }
 
         return $result;
