@@ -2217,7 +2217,6 @@ class Calendar
      * Tokenize an ISO date/time format string.
      *
      * @param string $format
-     * @param string $locale
      *
      * @return array
      */
