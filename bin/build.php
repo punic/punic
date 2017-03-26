@@ -1750,7 +1750,6 @@ class CalendarLocalePunicConversion extends LocalePunicConversion
     public function process(array $data, $localeID)
     {
         $data = parent::process($data, $localeID);
-        unset($data['dateTimeFormats']['availableFormats']);
         unset($data['dateTimeFormats']['appendItems']);
         unset($data['dateTimeFormats']['intervalFormats']);
         foreach (array_keys($data['dateTimeFormats']) as $width) {
