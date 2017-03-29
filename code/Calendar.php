@@ -1164,6 +1164,15 @@ class Calendar
 
         $match = self::getBestMatchingSkeleton($skeleton, array_keys($data));
 
+        // No match for combined date and time; try match date and time separately.
+        $dateLength = strspn($skeleton, 'GyYurUQqMLlwWEcedDFg');
+        if ($dateLength > 0 && $dateLength < strlen($skeleton)) {
+            $dateSkeleton = substr($skeleton, 0, $dateLength);
+            $timeSkeleton = substr($skeleton, $dateLength);
+
+            return self::getDatetimeFormat('~' . $dateSkeleton . '|~' . $timeSkeleton, $locale);
+        }
+
         if (!$match) {
             throw new Exception('Matching skeleton not found: ' . $skeleton);
         }

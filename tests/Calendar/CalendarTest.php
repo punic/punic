@@ -909,6 +909,20 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'h.mm.ss,SSS a v',
             Calendar::getSkeletonFormat('hmsSSSv', 'da')
         );
+
+        // Date and time in same skeleton.
+        $this->assertSame(
+            'M/d/y, h:mm a',
+            Calendar::getSkeletonFormat('yMdhm')
+        );
+        $this->assertSame(
+            'd.M.y, h:mm a',
+            Calendar::getSkeletonFormat('yMdhm', 'de')
+        );
+        $this->assertSame(
+            "MMM d, y 'at' h:mm a",
+            Calendar::getSkeletonFormat('yMMMMdhm')
+        );
     }
 
     public function testFormatDate()
