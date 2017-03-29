@@ -1159,6 +1159,15 @@ class Calendar
      */
     public static function getSkeletonFormat($skeleton, $locale = '')
     {
+        static $cache = array();
+        if (empty($locale)) {
+            $locale = Data::getDefaultLocale();
+        }
+        $cacheKey = $skeleton;
+        if (isset($cache[$locale][$skeleton])) {
+            return $cache[$locale][$skeleton];
+        }
+
         $replacements = array();
         if (strpbrk($skeleton, 'jJC') !== false) {
             $timeData = Data::getGeneric('timeData');
@@ -1207,8 +1216,8 @@ class Calendar
             for ($index = 0; $index < strlen($format); $index++) {
                 if ($format[$index] === "'") {
                     $quoted = !$quoted;
-                } elseif (!$quoted) {
-                    $format[$index] = strtr($format[$index], $replacements);
+                } elseif (!$quoted && isset($replacements[$format[$index]])) {
+                    $format[$index] = $replacements[$format[$index]];
                 }
             }
         }
@@ -1221,6 +1230,8 @@ class Calendar
             $index = strrpos($format, 's') + 1;
             $format = substr($format, 0, $index) . $decimal . str_repeat('S', $msWidth) . substr($format, $index);
         }
+
+        $cache[$locale][$cacheKey] = $format;
 
         return $format;
     }
