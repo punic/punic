@@ -299,6 +299,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getDateFormat', array('invalid-width'), '\\Punic\\Exception'),
             array('getDatetimeFormat', array('1|2|3|4'), '\\Punic\\Exception'),
             array('getSkeletonFormat', array('invalid-skeleton'), '\\Punic\\Exception'),
+            array('getSkeletonFormat', array('yE'), '\\Punic\\Exception'),
             array('format', array(new stdClass(), ''), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), '\\Punic\\Exception'),
@@ -883,6 +884,30 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'G y. MMM',
             Calendar::getSkeletonFormat('GyMMM', 'hu')
+        );
+
+        // Non-perfect matches.
+        $this->assertSame(
+            Calendar::getSkeletonFormat('MEd'),
+            Calendar::getSkeletonFormat('MMEd')
+        );
+        $this->assertNotSame(
+            Calendar::getSkeletonFormat('MMEd'),
+            Calendar::getSkeletonFormat('MMMEd')
+        );
+        $this->assertSame(
+            Calendar::getSkeletonFormat('MMMEd'),
+            Calendar::getSkeletonFormat('MMMMEd')
+        );
+
+        // Special millisecond handling.
+        $this->assertSame(
+            'h:mm:ss.SSS a v',
+            Calendar::getSkeletonFormat('hmsSSSv')
+        );
+        $this->assertSame(
+            'h.mm.ss,SSS a v',
+            Calendar::getSkeletonFormat('hmsSSSv', 'da')
         );
     }
 

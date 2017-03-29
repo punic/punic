@@ -1161,11 +1161,72 @@ class Calendar
     {
         $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats']['availableFormats'];
-        if (!isset($data[$skeleton])) {
-            throw new Exception\ValueNotInList($skeleton, array_keys($data));
+
+        $match = self::getBestMatchingSkeleton($skeleton, array_keys($data));
+
+        if (!$match) {
+            throw new Exception('Matching skeleton not found: ' . $skeleton);
         }
 
-        return $data[$skeleton];
+        list($matchSkeleton, $msWidth) = $match;
+
+        $format = $data[$matchSkeleton];
+
+        if ($msWidth) {
+            $data = Data::get('numbers', $locale);
+            $decimal = $data['symbols']['decimal'];
+
+            // Insert milliseconds after seconds.
+            $index = strrpos($format, 's') + 1;
+            $format = substr($format, 0, $index) . $decimal . str_repeat('S', $msWidth) . substr($format, $index);
+        }
+
+        return $format;
+    }
+
+    /**
+     * Rudimentary implementation of skeleton matching algorithm in #UTS 35, part 2, section 2.6.2.1.
+     *
+     * Limitations:
+     * - No matching of different but equivalent fields (e.g. H, k, h, K).
+     * - Distance calculation ignores difference betweeen numeric and text fields.
+     * - No support for appendItems.
+     */
+    protected static function getBestMatchingSkeleton($requestedSkeleton, $availableSkeletons)
+    {
+        if (in_array($requestedSkeleton, $availableSkeletons)) {
+            return array($requestedSkeleton, 0);
+        }
+
+        $requestedFields = array_values(array_unique(str_split($requestedSkeleton, 1)));
+        $requestedLength = strlen($requestedSkeleton);
+
+        // If patterns match apart from millisecond field, adjust for this afterwards.
+        $msWidth = substr_count($requestedSkeleton, 'S');
+        if ($msWidth) {
+            $requestedLengthWithoutMs = $requestedLength - $msWidth;
+            $requestedFieldsWithoutMs = array_values(array_diff($requestedFields, ['S']));
+        }
+
+        $matchingSkeletons = array();
+        foreach ($availableSkeletons as $skeleton) {
+            $fields = array_values(array_unique(str_split($skeleton, 1)));
+
+            if ($fields === $requestedFields) {
+                $matchingSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLength);
+            } elseif ($msWidth && $fields === $requestedFieldsWithoutMs) {
+                $matchingSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLengthWithoutMs);
+            }
+        }
+
+        if (!$matchingSkeletons) {
+            return false;
+        }
+
+        asort($matchingSkeletons);
+        $bestMatchingSkeleton = key($matchingSkeletons);
+
+        return array($bestMatchingSkeleton, strpos($bestMatchingSkeleton, 'S') === false ? $msWidth : 0);
     }
 
     /**
