@@ -900,7 +900,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSkeletonFormat('MMMMEd')
         );
 
-        // Special millisecond handling.
+        // Milliseconds.
         $this->assertSame(
             'h:mm:ss.SSS a v',
             Calendar::getSkeletonFormat('hmsSSSv')
@@ -908,6 +908,44 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'h.mm.ss,SSS a v',
             Calendar::getSkeletonFormat('hmsSSSv', 'da')
+        );
+
+        // Special input skeleton fields.
+        $this->assertSame(
+            'h:mm a',
+            Calendar::getSkeletonFormat('jm')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('j', 'de')
+        );
+        $this->assertSame(
+            'h:mm:ss a',
+            Calendar::getSkeletonFormat('jms', 'en_CN')
+        );
+        $this->assertSame(
+            'hh:mm',
+            Calendar::getSkeletonFormat('Jm')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('J', 'de')
+        );
+        $this->assertSame(
+            'hh',
+            Calendar::getSkeletonFormat('J', 'en_CN')
+        );
+        $this->assertSame(
+            'h a',
+            Calendar::getSkeletonFormat('C')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('C', 'de')
+        );
+        $this->assertSame(
+            'h B',
+            Calendar::getSkeletonFormat('C', 'en_CN')
         );
 
         // Date and time in same skeleton.

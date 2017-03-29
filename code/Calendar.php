@@ -1159,6 +1159,27 @@ class Calendar
      */
     public static function getSkeletonFormat($skeleton, $locale = '')
     {
+        $replacements = array();
+        if (strpbrk($skeleton, 'jJC') !== false) {
+            $timeData = Data::getGeneric('timeData');
+            $time = Data::getTerritoryNode($timeData, $locale);
+
+            if (strpos($skeleton, 'j') !== false) {
+                $skeleton = str_replace('j', $time['preferred'][0], $skeleton);
+            } elseif (strpos($skeleton, 'J') !== false) {
+                $skeleton = str_replace('J', 'H', $skeleton);
+                $replacements['h'] = $replacements['H'] = $time['preferred'][0];
+            }
+
+            if (strpos($skeleton, 'C') !== false) {
+                $skeleton = str_replace('C', $time['allowed'][0][0], $skeleton);
+                $daypart = strpbrk($time['allowed'][0], 'bB');
+                if ($daypart !== false) {
+                    $replacements['a'] = $daypart[0];
+                }
+            }
+        }
+
         $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats']['availableFormats'];
 
@@ -1180,6 +1201,17 @@ class Calendar
         list($matchSkeleton, $msWidth) = $match;
 
         $format = $data[$matchSkeleton];
+
+        if ($replacements) {
+            $quoted = false;
+            for ($index = 0; $index < strlen($format); $index++) {
+                if ($format[$index] === "'") {
+                    $quoted = !$quoted;
+                } elseif (!$quoted) {
+                    $format[$index] = strtr($format[$index], $replacements);
+                }
+            }
+        }
 
         if ($msWidth) {
             $data = Data::get('numbers', $locale);

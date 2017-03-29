@@ -1299,6 +1299,7 @@ class JSonConverter
         $converters = array(
             'telephoneCodeData.json' => TelephoneCodeDataSupplementalPunicConversion::create(),
             'territoryInfo.json' => TerritoryInfoSupplementalPunicConversion::create(),
+            'timeData.json' => TimeDataSupplementalPunicConversion::create(),
             'weekData.json' => WeekDataSupplementalPunicConversion::create(),
             'parentLocales.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'parentLocales', 'parentLocale')),
             'likelySubtags.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'likelySubtags')),
@@ -2370,6 +2371,36 @@ class TerritoryInfoSupplementalPunicConversion extends SupplementalPunicConversi
                 throw new Exception("Missing languagePopulation node in for $territoryID");
             }
             $data[$territoryID] = $finalTerritoryData;
+        }
+
+        return $data;
+    }
+}
+
+class TimeDataSupplementalPunicConversion extends SupplementalPunicConversion
+{
+    /**
+     * @return static
+     */
+    public static function create()
+    {
+        return new static(array('supplemental', 'timeData'));
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function process(array $data)
+    {
+        $data = parent::process($data);
+        foreach (array_keys($data) as $key) {
+            $data[$key]['preferred'] = $data[$key]['_preferred'];
+            unset($data[$key]['_preferred']);
+
+            $data[$key]['allowed'] = explode(' ', $data[$key]['_allowed']);
+            unset($data[$key]['_allowed']);
         }
 
         return $data;
