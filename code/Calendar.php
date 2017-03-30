@@ -2232,13 +2232,11 @@ class Calendar
             for ($index = 0; $index < $length; ++$index) {
                 $char = $format[$index];
                 if ($char === "'") {
-                    if ($quoted) {
-                        $quoted = false;
-                    } elseif (($index < $lengthM1) && ($format[$index + 1] === "'")) {
+                    if (($index < $lengthM1) && ($format[$index + 1] === "'")) {
                         $result[] = "'";
                         ++$index;
                     } else {
-                        $quoted = true;
+                        $quoted = !$quoted;
                     }
                 } elseif ($quoted) {
                     $result[] = $char;

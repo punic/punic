@@ -1239,8 +1239,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('+13:00', Calendar::format($dt, 'XXX'));
         $this->assertSame('+1300', Calendar::format($dt, 'XXXX'));
         $this->assertSame('+13:00', Calendar::format($dt, 'XXXXX'));
-        // Mixed
+        // Literal text
         $this->assertSame("2010'01", Calendar::format($dt, "yyyy''MM"));
+        $this->assertSame("2010''01", Calendar::format($dt, "yyyy''''MM"));
+        $this->assertSame("2010E'E01", Calendar::format($dt, "yyyy'E''E'MM"));
     }
 
     public function providerDescribeInterval()
