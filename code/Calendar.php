@@ -1257,7 +1257,7 @@ class Calendar
         $msWidth = substr_count($requestedSkeleton, 'S');
         if ($msWidth) {
             $requestedLengthWithoutMs = $requestedLength - $msWidth;
-            $requestedFieldsWithoutMs = array_values(array_diff($requestedFields, ['S']));
+            $requestedFieldsWithoutMs = array_values(array_diff($requestedFields, array('S')));
         }
 
         $matchingSkeletons = array();
