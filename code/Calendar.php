@@ -1872,17 +1872,7 @@ class Calendar
 
     protected static function decodeFranctionsOfSeconds(\DateTime $value, $count, $locale)
     {
-        $us = intval($value->format('u'));
-        if ($count >= 6) {
-            $result = str_pad(strval($us), $count, '0', STR_PAD_RIGHT);
-        } elseif ($count >= 1) {
-            $v = intval(floor($us / pow(10, 6 - $count)));
-            $result = str_pad(strval($v), $count, '0', STR_PAD_LEFT);
-        } else {
-            $result = '';
-        }
-
-        return $result;
+        return substr(str_pad($value->format('u'), $count, '0', STR_PAD_RIGHT), 0, $count);
     }
 
     protected static function decodeMsecInDay(\DateTime $value, $count, $locale)

@@ -1022,7 +1022,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      */
     public function testFormat()
     {
-        $dt = Calendar::toDateTime('2010-01-02 23:59:04.123');
+        $dt = Calendar::toDateTime('2010-01-02 23:59:04.0123');
         $dt2 = Calendar::toDateTime('2010-01-02 08:01:02');
         $dt3 = Calendar::toDateTime('2010-12-31 08:01:02');
         $this->assertSame(
@@ -1180,22 +1180,22 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('02', Calendar::format($dt2, 'ss'));
         $this->assertSame('2', Calendar::format($dt2, 's', 'it'));
         // decodeFranctionsOfSeconds
-        $this->assertSame('1', Calendar::format($dt, 'S'));
-        $this->assertSame('12', Calendar::format($dt, 'SS'));
-        $this->assertSame('123', Calendar::format($dt, 'SSS'));
-        $this->assertSame('1230', Calendar::format($dt, 'SSSS'));
-        $this->assertSame('12300', Calendar::format($dt, 'SSSSS'));
-        $this->assertSame('123000', Calendar::format($dt, 'SSSSSS'));
-        $this->assertSame('1230000', Calendar::format($dt, 'SSSSSSS'));
-        $this->assertSame('1', Calendar::format($dt, 'S', 'it'));
+        $this->assertSame('0', Calendar::format($dt, 'S'));
+        $this->assertSame('01', Calendar::format($dt, 'SS'));
+        $this->assertSame('012', Calendar::format($dt, 'SSS'));
+        $this->assertSame('0123', Calendar::format($dt, 'SSSS'));
+        $this->assertSame('01230', Calendar::format($dt, 'SSSSS'));
+        $this->assertSame('012300', Calendar::format($dt, 'SSSSSS'));
+        $this->assertSame('0123000', Calendar::format($dt, 'SSSSSSS'));
+        $this->assertSame('0', Calendar::format($dt, 'S', 'it'));
         // decodeMsecInDay
-        $this->assertSame('86344123', Calendar::format($dt, 'A'));
-        $this->assertSame('86344123', Calendar::format($dt, 'AA'));
-        $this->assertSame('86344123', Calendar::format($dt, 'AAA'));
-        $this->assertSame('86344123', Calendar::format($dt, 'AAAA'));
-        $this->assertSame('86344123', Calendar::format($dt, 'AAAAA'));
-        $this->assertSame('0086344123', Calendar::format($dt, 'AAAAAAAAAA'));
-        $this->assertSame('86344123', Calendar::format($dt, 'A', 'it'));
+        $this->assertSame('86344012', Calendar::format($dt, 'A'));
+        $this->assertSame('86344012', Calendar::format($dt, 'AA'));
+        $this->assertSame('86344012', Calendar::format($dt, 'AAA'));
+        $this->assertSame('86344012', Calendar::format($dt, 'AAAA'));
+        $this->assertSame('86344012', Calendar::format($dt, 'AAAAA'));
+        $this->assertSame('0086344012', Calendar::format($dt, 'AAAAAAAAAA'));
+        $this->assertSame('86344012', Calendar::format($dt, 'A', 'it'));
         // decodeTimezoneNoLocationSpecific
         $this->assertSame('GMT+13', Calendar::format($dt, 'z'));
         $this->assertSame('GMT+13', Calendar::format($dt, 'zz'));
