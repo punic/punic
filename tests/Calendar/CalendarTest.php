@@ -838,7 +838,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDatetimeFormat('full|short')
         );
         $this->assertSame(
-            "M/d/yy, h:mm:ss a zzzz",
+            'M/d/yy, h:mm:ss a zzzz',
             Calendar::getDatetimeFormat('short|full')
         );
         $this->assertSame(
@@ -888,19 +888,15 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
         // Non-perfect matches.
         $this->assertSame(
-            Calendar::getSkeletonFormat('MEd'),
-            Calendar::getSkeletonFormat('MMEd')
-        );
-        $this->assertNotSame(
-            Calendar::getSkeletonFormat('MMEd'),
-            Calendar::getSkeletonFormat('MMMEd')
+            'MMM d, y',
+            Calendar::getSkeletonFormat('yMMMMd')
         );
         $this->assertSame(
-            Calendar::getSkeletonFormat('MMMEd'),
-            Calendar::getSkeletonFormat('MMMMEd')
+            'QQQ y',
+            Calendar::getSkeletonFormat('yQ')
         );
 
-        // Milliseconds.
+        // Fractional second.
         $this->assertSame(
             'h:mm:ss.SSS a v',
             Calendar::getSkeletonFormat('hmsSSSv')

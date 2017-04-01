@@ -1126,11 +1126,9 @@ class Calendar
         $dateWidth = preg_replace("@'.*?'@", '', $dateWidth);
         if (strpos($dateWidth, 'MMMM') !== false && strpos($dateWidth, 'MMMMM') == false ||
             strpos($dateWidth, 'LLLL') !== false && strpos($dateWidth, 'LLLLL') == false) {
-
             if (strpos($dateWidth, 'E') !== false ||
                 strpos($dateWidth, 'e') !== false ||
                 strpos($dateWidth, 'c') !== false) {
-
                 $wholeWidth = 'full';
             } else {
                 $wholeWidth = 'long';
@@ -1163,75 +1161,35 @@ class Calendar
         if (empty($locale)) {
             $locale = Data::getDefaultLocale();
         }
-        $cacheKey = $skeleton;
         if (isset($cache[$locale][$skeleton])) {
             return $cache[$locale][$skeleton];
         }
 
-        $replacements = array();
-        if (strpbrk($skeleton, 'jJC') !== false) {
-            $timeData = Data::getGeneric('timeData');
-            $time = Data::getTerritoryNode($timeData, $locale);
-
-            if (strpos($skeleton, 'j') !== false) {
-                $skeleton = str_replace('j', $time['preferred'][0], $skeleton);
-            } elseif (strpos($skeleton, 'J') !== false) {
-                $skeleton = str_replace('J', 'H', $skeleton);
-                $replacements['h'] = $replacements['H'] = $time['preferred'][0];
-            }
-
-            if (strpos($skeleton, 'C') !== false) {
-                $skeleton = str_replace('C', $time['allowed'][0][0], $skeleton);
-                $daypart = strpbrk($time['allowed'][0], 'bB');
-                if ($daypart !== false) {
-                    $replacements['a'] = $daypart[0];
-                }
-            }
-        }
+        list($preprocessedSkeleton, $replacements) = self::preprocessSkeleton($skeleton, $locale);
 
         $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats']['availableFormats'];
 
-        $match = self::getBestMatchingSkeleton($skeleton, array_keys($data));
-
-        // No match for combined date and time; try match date and time separately.
-        $dateLength = strspn($skeleton, 'GyYurUQqMLlwWEcedDFg');
-        if ($dateLength > 0 && $dateLength < strlen($skeleton)) {
-            $dateSkeleton = substr($skeleton, 0, $dateLength);
-            $timeSkeleton = substr($skeleton, $dateLength);
-
-            return self::getDatetimeFormat('~' . $dateSkeleton . '|~' . $timeSkeleton, $locale);
-        }
+        $match = self::getBestMatchingSkeleton($preprocessedSkeleton, array_keys($data));
 
         if (!$match) {
-            throw new Exception('Matching skeleton not found: ' . $skeleton);
-        }
+            // If skeleton contains both date and time fields, try matching date and time separately.
+            $dateLength = strspn($preprocessedSkeleton, 'GyYurUQqMLlwWEcedDFg');
+            if ($dateLength > 0 && $dateLength < strlen($preprocessedSkeleton)) {
+                $dateSkeleton = substr($preprocessedSkeleton, 0, $dateLength);
+                $timeSkeleton = substr($preprocessedSkeleton, $dateLength);
 
-        list($matchSkeleton, $msWidth) = $match;
-
-        $format = $data[$matchSkeleton];
-
-        if ($replacements) {
-            $quoted = false;
-            for ($index = 0; $index < strlen($format); $index++) {
-                if ($format[$index] === "'") {
-                    $quoted = !$quoted;
-                } elseif (!$quoted && isset($replacements[$format[$index]])) {
-                    $format[$index] = $replacements[$format[$index]];
-                }
+                return self::getDatetimeFormat('~'.$dateSkeleton.'|~'.$timeSkeleton, $locale);
             }
+
+            throw new Exception('Matching skeleton not found: '.$skeleton);
         }
 
-        if ($msWidth) {
-            $data = Data::get('numbers', $locale);
-            $decimal = $data['symbols']['decimal'];
+        list($matchSkeleton, $sWidth) = $match;
 
-            // Insert milliseconds after seconds.
-            $index = strrpos($format, 's') + 1;
-            $format = substr($format, 0, $index) . $decimal . str_repeat('S', $msWidth) . substr($format, $index);
-        }
+        $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $sWidth, $replacements, $locale);
 
-        $cache[$locale][$cacheKey] = $format;
+        $cache[$locale][$skeleton] = $format;
 
         return $format;
     }
@@ -1253,32 +1211,97 @@ class Calendar
         $requestedFields = array_values(array_unique(str_split($requestedSkeleton, 1)));
         $requestedLength = strlen($requestedSkeleton);
 
-        // If patterns match apart from millisecond field, adjust for this afterwards.
-        $msWidth = substr_count($requestedSkeleton, 'S');
-        if ($msWidth) {
-            $requestedLengthWithoutMs = $requestedLength - $msWidth;
+        // If patterns match apart from second fraction field, adjust for this afterwards.
+        $sWidth = substr_count($requestedSkeleton, 'S');
+        if ($sWidth) {
+            $requestedLengthWithoutMs = $requestedLength - $sWidth;
             $requestedFieldsWithoutMs = array_values(array_diff($requestedFields, array('S')));
         }
 
-        $matchingSkeletons = array();
+        $candidateSkeletons = array();
         foreach ($availableSkeletons as $skeleton) {
             $fields = array_values(array_unique(str_split($skeleton, 1)));
 
             if ($fields === $requestedFields) {
-                $matchingSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLength);
-            } elseif ($msWidth && $fields === $requestedFieldsWithoutMs) {
-                $matchingSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLengthWithoutMs);
+                $candidateSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLength);
+            } elseif ($sWidth && $fields === $requestedFieldsWithoutMs) {
+                $candidateSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLengthWithoutMs);
             }
         }
 
-        if (!$matchingSkeletons) {
+        if (!$candidateSkeletons) {
             return false;
         }
 
-        asort($matchingSkeletons);
-        $bestMatchingSkeleton = key($matchingSkeletons);
+        asort($candidateSkeletons);
+        $matchSkeleton = key($candidateSkeletons);
 
-        return array($bestMatchingSkeleton, strpos($bestMatchingSkeleton, 'S') === false ? $msWidth : 0);
+        return array(
+            $matchSkeleton,
+            strpos($matchSkeleton, 'S') === false ? $sWidth : 0,
+        );
+    }
+
+    /**
+     * Replace special input skeleton fields (j, J, C) with locale-specific substitutions.
+     *
+     * @see  http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     */
+    protected static function preprocessSkeleton($skeleton, $locale)
+    {
+        $replacements = array();
+        if (strpbrk($skeleton, 'jJC') !== false) {
+            $timeData = Data::getGeneric('timeData');
+            $time = Data::getTerritoryNode($timeData, $locale);
+
+            if (strpos($skeleton, 'j') !== false) {
+                $skeleton = str_replace('j', $time['preferred'][0], $skeleton);
+            } elseif (strpos($skeleton, 'J') !== false) {
+                $skeleton = str_replace('J', 'H', $skeleton);
+                $replacements['h'] = $replacements['H'] = $time['preferred'][0];
+            }
+
+            if (strpos($skeleton, 'C') !== false) {
+                $skeleton = str_replace('C', $time['allowed'][0][0], $skeleton);
+                $daypart = strpbrk($time['allowed'][0], 'bB');
+                if ($daypart !== false) {
+                    $replacements['a'] = $daypart[0];
+                }
+            }
+        }
+
+        return array($skeleton, $replacements);
+    }
+
+    /**
+     * Handle special input skeleton fields and add second fraction to format pattern.
+     *
+     * @see  http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     */
+    protected static function postprocessSkeletonFormat($format, $sWidth, $replacements, $locale)
+    {
+        if ($sWidth) {
+            $data = Data::get('numbers', $locale);
+            $decimal = $data['symbols']['decimal'];
+        }
+
+        $quoted = false;
+        $length = strlen($format);
+        $lengthM1 = strlen($format) - 1;
+        for ($index = 0; $index < $length; ++$index) {
+            if ($format[$index] === "'") {
+                $quoted = !$quoted;
+            } elseif (!$quoted) {
+                if (isset($replacements[$format[$index]])) {
+                    $format[$index] = $replacements[$format[$index]];
+                } elseif ($sWidth && $format[$index] === 's' && ($index == $lengthM1 || $format[$index + 1] !== 's')) {
+                    $format = substr($format, 0, $index + 1).$decimal.str_repeat('S', $sWidth).substr($format, $index + 1);
+                    $index += $sWidth + 1;
+                }
+            }
+        }
+
+        return $format;
     }
 
     /**
