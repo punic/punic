@@ -328,6 +328,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'VVVVV'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'XXXXXX'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'xxxxxx'), '\\Punic\\Exception'),
+            array('getTimezoneNameLocationSpecific', array(1), '\\Punic\\Exception'),
             array('getWeekdayName', array(8), '\\Punic\\Exception'),
             array('getWeekdayName', array('test'), '\\Punic\\Exception'),
             array('getWeekdayName', array(1, 'invalid-width'), '\\Punic\\Exception'),
@@ -642,6 +643,86 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'Western European Standard Time',
             Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+    }
+
+    public function testGetTimezoneNameLocationSpecific()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific(false)
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameLocationSpecific($dt)
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone())
+        );
+        $this->assertSame(
+            'Fiji Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone()->getName())
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific('GMT')
+        );
+
+        $dt = Calendar::toDateTime('2000-01-01 11:12:13+14:15');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific($dt)
+        );
+
+        // Timezone in primaryZones.json.
+        $dt = Calendar::toDateTime('2010-03-07', 'Europe/Berlin');
+        $this->assertSame(
+            'Germany Time',
+            Calendar::getTimezoneNameLocationSpecific($dt)
+        );
+        $this->assertSame(
+            'Germany Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone())
+        );
+        $this->assertSame(
+            'Germany Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone()->getName())
+        );
+
+        // Country with multiple timezones.
+        $dt = Calendar::toDateTime('2010-03-07', 'America/New_York');
+        $this->assertSame(
+            'New York Time',
+            Calendar::getTimezoneNameLocationSpecific($dt)
+        );
+        $this->assertSame(
+            'New York Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone())
+        );
+        $this->assertSame(
+            'New York Time',
+            Calendar::getTimezoneNameLocationSpecific($dt->getTimezone()->getName())
+        );
+
+        // Timezone with alias.
+        $this->assertSame(
+            'Atikokan Time',
+            Calendar::getTimezoneNameLocationSpecific('America/Atikokan')
+        );
+        $this->assertSame(
+            'Atikokan Time',
+            Calendar::getTimezoneNameLocationSpecific('America/Coral_Harbour')
         );
     }
 
@@ -1425,16 +1506,17 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('GMT+13:00', Calendar::format($dt, 'OOOO'));
         $this->assertSame('UTC+13', Calendar::format($dt, 'O', 'fr'));
         // decodeTimezoneNoLocationGeneric
-        $this->assertSame('GMT+13:00', Calendar::format($dt, 'v'));
+        $this->assertSame('Fiji Time', Calendar::format($dt, 'v'));
         $this->assertSame('Fiji Time', Calendar::format($dt, 'vvvv'));
         $this->assertSame('GMT+14:15', Calendar::format(Calendar::toDateTime('2000-01-01 11:12:13+14:15'), 'vvvv'));
-        $this->assertSame('UTC+13:00', Calendar::format($dt, 'v', 'fr'));
+        $this->assertSame('heure : Fidji', Calendar::format($dt, 'v', 'fr'));
         $this->assertSame('heure des îles Fidji', Calendar::format($dt, 'vvvv', 'fr'));
         // decodeTimezoneID
         $this->assertSame('unk', Calendar::format($dt, 'V'));
         $this->assertSame('Pacific/Fiji', Calendar::format($dt, 'VV'));
         $this->assertSame('Fiji', Calendar::format($dt, 'VVV'));
-        $this->assertSame('GMT+13:00', Calendar::format($dt, 'VVVV'));
+        $this->assertSame('Fiji Time', Calendar::format($dt, 'VVVV'));
+        $this->assertSame('heure : Fidji', Calendar::format($dt, 'VVVV', 'fr'));
         // decodeTimezoneWithTime
         $this->assertSame('+13', Calendar::format($dt, 'x'));
         $this->assertSame('+1300', Calendar::format($dt, 'xx'));
