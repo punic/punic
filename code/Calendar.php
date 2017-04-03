@@ -380,7 +380,7 @@ class Calendar
                                         break;
                                 }
                                 break;
-                            case 'decodeFranctionsOfSeconds':
+                            case 'decodeFractionsOfSeconds':
                                 switch ($token[1]) {
                                     case 3:
                                         if (version_compare(PHP_VERSION, '7') >= 0) {
@@ -1870,7 +1870,7 @@ class Calendar
         }
     }
 
-    protected static function decodeFranctionsOfSeconds(\DateTime $value, $count, $locale)
+    protected static function decodeFractionsOfSeconds(\DateTime $value, $count, $locale)
     {
         return substr(str_pad($value->format('u'), $count, '0', STR_PAD_RIGHT), 0, $count);
     }
@@ -2189,7 +2189,7 @@ class Calendar
         'k' => 'decodeHour24From1',
         'm' => 'decodeMinute',
         's' => 'decodeSecond',
-        'S' => 'decodeFranctionsOfSeconds',
+        'S' => 'decodeFractionsOfSeconds',
         'A' => 'decodeMsecInDay',
         'z' => 'decodeTimezoneNoLocationSpecific',
         'Z' => 'decodeTimezoneDelta',

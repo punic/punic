@@ -1179,7 +1179,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('2', Calendar::format($dt2, 's'));
         $this->assertSame('02', Calendar::format($dt2, 'ss'));
         $this->assertSame('2', Calendar::format($dt2, 's', 'it'));
-        // decodeFranctionsOfSeconds
+        // decodeFractionsOfSeconds
         $this->assertSame('0', Calendar::format($dt, 'S'));
         $this->assertSame('01', Calendar::format($dt, 'SS'));
         $this->assertSame('012', Calendar::format($dt, 'SSS'));
