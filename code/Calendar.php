@@ -1002,7 +1002,8 @@ class Calendar
     /**
      * Get the ISO format for a date.
      *
-     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
+     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string Returns the requested ISO format
@@ -1015,6 +1016,10 @@ class Calendar
      */
     public static function getDateFormat($width, $locale = '')
     {
+        if ($width !== '' && $width[0] === '~') {
+            return self::getSkeletonFormat(substr($width, 1), $locale);
+        }
+
         $data = Data::get('calendar', $locale);
         $data = $data['dateFormats'];
         if (!isset($data[$width])) {
@@ -1027,7 +1032,8 @@ class Calendar
     /**
      * Get the ISO format for a time.
      *
-     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
+     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string Returns the requested ISO format
@@ -1040,6 +1046,10 @@ class Calendar
      */
     public static function getTimeFormat($width, $locale = '')
     {
+        if ($width !== '' && $width[0] === '~') {
+            return self::getSkeletonFormat(substr($width, 1), $locale);
+        }
+
         $data = Data::get('calendar', $locale);
         $data = $data['timeFormats'];
         if (!isset($data[$width])) {
@@ -1052,7 +1062,8 @@ class Calendar
     /**
      * Get the ISO format for a date/time.
      *
-     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
+     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short',
+     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string Returns the requested ISO format
@@ -1073,30 +1084,15 @@ class Calendar
         $chunks = explode('|', @str_replace(array('*', '^'), '', $width));
         switch (count($chunks)) {
             case 1:
+                if ($width !== '' && $width[0] === '~') {
+                    return self::getSkeletonFormat(substr($width, 1), $locale);
+                }
                 $timeWidth = $dateWidth = $wholeWidth = $chunks[0];
                 break;
             case 2:
-                $sortedChunks = $chunks;
-                usort($sortedChunks, function ($a, $b) {
-                    $cmp = 0;
-                    if ($a !== $b) {
-                        foreach (array('full', 'long', 'medium', 'short') as $w) {
-                            if ($a === $w) {
-                                $cmp = -1;
-                                break;
-                            }
-                            if ($b === $w) {
-                                $cmp = 1;
-                                break;
-                            }
-                        }
-                    }
-
-                    return $cmp;
-                });
-                $wholeWidth = $sortedChunks[0];
                 $dateWidth = $chunks[0];
                 $timeWidth = $chunks[1];
+                $wholeWidth = self::getDatetimeWidth($dateWidth, $timeWidth);
                 break;
             case 3:
                 $wholeWidth = $chunks[0];
@@ -1109,7 +1105,7 @@ class Calendar
         $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats'];
         if (!isset($data[$wholeWidth])) {
-            throw new Exception\ValueNotInList($wholeWidth, array_keys($data));
+            throw new Exception\ValueNotInList($wholeWidth, array_keys(array_filter($data, 'is_string')));
         }
 
         return sprintf(
@@ -1117,6 +1113,195 @@ class Calendar
             isset($overrideTimeFormat[0]) ? $overrideTimeFormat : static::getTimeFormat($timeWidth, $locale),
             isset($overrideDateFormat[0]) ? $overrideDateFormat : static::getDateFormat($dateWidth, $locale)
         );
+    }
+
+    protected static function getDatetimeWidth($dateWidth)
+    {
+        if ($dateWidth === '' || $dateWidth[0] !== '~') {
+            return $dateWidth;
+        }
+
+        // Select fullWidth according to UTS #35, part 4, section 2.6.2.2.
+        // Strip string literal text.
+        $dateWidth = preg_replace("@'.*?'@", '', $dateWidth);
+        if (strpos($dateWidth, 'MMMM') !== false && strpos($dateWidth, 'MMMMM') == false ||
+            strpos($dateWidth, 'LLLL') !== false && strpos($dateWidth, 'LLLLL') == false) {
+            if (strpos($dateWidth, 'E') !== false ||
+                strpos($dateWidth, 'e') !== false ||
+                strpos($dateWidth, 'c') !== false) {
+                $wholeWidth = 'full';
+            } else {
+                $wholeWidth = 'long';
+            }
+        } elseif (strpos($dateWidth, 'MMM') !== false || strpos($dateWidth, 'LLL') !== false) {
+            $wholeWidth = 'medium';
+        } else {
+            $wholeWidth = 'short';
+        }
+
+        return $wholeWidth;
+    }
+
+    /**
+     * Get the ISO format based on a skeleton.
+     *
+     * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string Returns the requested ISO format
+     *
+     * @throws \Punic\Exception Throws an exception in case of problems
+     *
+     * @see http://cldr.unicode.org/translation/date-time-patterns#TOC-Additional-Date-Time-Formats
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#availableFormats_appendItems
+     */
+    public static function getSkeletonFormat($skeleton, $locale = '')
+    {
+        static $cache = array();
+        if (empty($locale)) {
+            $locale = Data::getDefaultLocale();
+        }
+        if (isset($cache[$locale][$skeleton])) {
+            return $cache[$locale][$skeleton];
+        }
+
+        list($preprocessedSkeleton, $replacements) = self::preprocessSkeleton($skeleton, $locale);
+
+        $data = Data::get('calendar', $locale);
+        $data = $data['dateTimeFormats']['availableFormats'];
+
+        $match = self::getBestMatchingSkeleton($preprocessedSkeleton, array_keys($data));
+
+        if (!$match) {
+            // If skeleton contains both date and time fields, try matching date and time separately.
+            $dateLength = strspn($preprocessedSkeleton, 'GyYurUQqMLlwWEcedDFg');
+            if ($dateLength > 0 && $dateLength < strlen($preprocessedSkeleton)) {
+                $dateSkeleton = substr($preprocessedSkeleton, 0, $dateLength);
+                $timeSkeleton = substr($preprocessedSkeleton, $dateLength);
+
+                return self::getDatetimeFormat('~'.$dateSkeleton.'|~'.$timeSkeleton, $locale);
+            }
+
+            throw new Exception('Matching skeleton not found: '.$skeleton);
+        }
+
+        list($matchSkeleton, $sWidth) = $match;
+
+        $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $sWidth, $replacements, $locale);
+
+        $cache[$locale][$skeleton] = $format;
+
+        return $format;
+    }
+
+    /**
+     * Rudimentary implementation of skeleton matching algorithm in #UTS 35, part 2, section 2.6.2.1.
+     *
+     * Limitations:
+     * - No matching of different but equivalent fields (e.g. H, k, h, K).
+     * - Distance calculation ignores difference betweeen numeric and text fields.
+     * - No support for appendItems.
+     */
+    protected static function getBestMatchingSkeleton($requestedSkeleton, $availableSkeletons)
+    {
+        if (in_array($requestedSkeleton, $availableSkeletons)) {
+            return array($requestedSkeleton, 0);
+        }
+
+        $requestedFields = array_values(array_unique(str_split($requestedSkeleton, 1)));
+        $requestedLength = strlen($requestedSkeleton);
+
+        // If patterns match apart from second fraction field, adjust for this afterwards.
+        $sWidth = substr_count($requestedSkeleton, 'S');
+        if ($sWidth) {
+            $requestedLengthWithoutMs = $requestedLength - $sWidth;
+            $requestedFieldsWithoutMs = array_values(array_diff($requestedFields, array('S')));
+        }
+
+        $candidateSkeletons = array();
+        foreach ($availableSkeletons as $skeleton) {
+            $fields = array_values(array_unique(str_split($skeleton, 1)));
+
+            if ($fields === $requestedFields) {
+                $candidateSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLength);
+            } elseif ($sWidth && $fields === $requestedFieldsWithoutMs) {
+                $candidateSkeletons[$skeleton] = abs(strlen($skeleton) - $requestedLengthWithoutMs);
+            }
+        }
+
+        if (!$candidateSkeletons) {
+            return false;
+        }
+
+        asort($candidateSkeletons);
+        $matchSkeleton = key($candidateSkeletons);
+
+        return array(
+            $matchSkeleton,
+            strpos($matchSkeleton, 'S') === false ? $sWidth : 0,
+        );
+    }
+
+    /**
+     * Replace special input skeleton fields (j, J, C) with locale-specific substitutions.
+     *
+     * @see  http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     */
+    protected static function preprocessSkeleton($skeleton, $locale)
+    {
+        $replacements = array();
+        if (strpbrk($skeleton, 'jJC') !== false) {
+            $timeData = Data::getGeneric('timeData');
+            $time = Data::getTerritoryNode($timeData, $locale);
+
+            if (strpos($skeleton, 'j') !== false) {
+                $skeleton = str_replace('j', $time['preferred'][0], $skeleton);
+            } elseif (strpos($skeleton, 'J') !== false) {
+                $skeleton = str_replace('J', 'H', $skeleton);
+                $replacements['h'] = $replacements['H'] = $time['preferred'][0];
+            }
+
+            if (strpos($skeleton, 'C') !== false) {
+                $skeleton = str_replace('C', $time['allowed'][0][0], $skeleton);
+                $daypart = strpbrk($time['allowed'][0], 'bB');
+                if ($daypart !== false) {
+                    $replacements['a'] = $daypart[0];
+                }
+            }
+        }
+
+        return array($skeleton, $replacements);
+    }
+
+    /**
+     * Handle special input skeleton fields and add second fraction to format pattern.
+     *
+     * @see  http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     */
+    protected static function postprocessSkeletonFormat($format, $sWidth, $replacements, $locale)
+    {
+        if ($sWidth) {
+            $data = Data::get('numbers', $locale);
+            $decimal = $data['symbols']['decimal'];
+        }
+
+        $quoted = false;
+        $length = strlen($format);
+        $lengthM1 = strlen($format) - 1;
+        for ($index = 0; $index < $length; ++$index) {
+            if ($format[$index] === "'") {
+                $quoted = !$quoted;
+            } elseif (!$quoted) {
+                if (isset($replacements[$format[$index]])) {
+                    $format[$index] = $replacements[$format[$index]];
+                } elseif ($sWidth && $format[$index] === 's' && ($index == $lengthM1 || $format[$index + 1] !== 's')) {
+                    $format = substr($format, 0, $index + 1).$decimal.str_repeat('S', $sWidth).substr($format, $index + 1);
+                    $index += $sWidth + 1;
+                }
+            }
+        }
+
+        return $format;
     }
 
     /**
@@ -1244,7 +1429,8 @@ class Calendar
      * Format a date.
      *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
-     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14').
+     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1278,7 +1464,8 @@ class Calendar
      * Format a date (extended version: various date/time representations - see toDateTime()).
      *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14')
+     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -1305,7 +1492,8 @@ class Calendar
      * Format a time.
      *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
-     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
+     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
@@ -1329,7 +1517,8 @@ class Calendar
      * Format a time (extended version: various date/time representations - see toDateTime()).
      *
      * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM')
+     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1355,7 +1544,8 @@ class Calendar
      * Format a date/time.
      *
      * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
-     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
+     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a skeleton pattern prefixed by '~',
+     *                      or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *

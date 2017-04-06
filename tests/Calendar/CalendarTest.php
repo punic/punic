@@ -298,6 +298,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getTimeFormat', array('invalid-width'), '\\Punic\\Exception'),
             array('getDateFormat', array('invalid-width'), '\\Punic\\Exception'),
             array('getDatetimeFormat', array('1|2|3|4'), '\\Punic\\Exception'),
+            array('getSkeletonFormat', array('invalid-skeleton'), '\\Punic\\Exception'),
+            array('getSkeletonFormat', array('yE'), '\\Punic\\Exception'),
             array('format', array(new stdClass(), ''), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), '\\Punic\\Exception'),
@@ -720,6 +722,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDateFormat('full')
         );
         $this->assertSame(
+            'MMM y G',
+            Calendar::getTimeFormat('~GyMMM')
+        );
+        $this->assertSame(
             'EEEE, MMMM d, y',
             Calendar::getDateFormat('full', 'en_US')
         );
@@ -751,6 +757,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'dd/MM/yy',
             Calendar::getDateFormat('short', 'it_IT')
         );
+        $this->assertSame(
+            'G y. MMM',
+            Calendar::getTimeFormat('~GyMMM', 'hu')
+        );
     }
 
     public function testGetTimeFormat()
@@ -758,6 +768,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'h:mm:ss a zzzz',
             Calendar::getTimeFormat('full')
+        );
+        $this->assertSame(
+            'h:mm a',
+            Calendar::getTimeFormat('~hm')
         );
         $this->assertSame(
             'h:mm:ss a zzzz',
@@ -791,6 +805,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'HH:mm',
             Calendar::getTimeFormat('short', 'it_IT')
         );
+        $this->assertSame(
+            'a h:mm',
+            Calendar::getTimeFormat('~hm', 'hu')
+        );
     }
 
     public function testGetDatetimeFormat()
@@ -812,12 +830,28 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDatetimeFormat('short')
         );
         $this->assertSame(
+            'MMM y G',
+            Calendar::getDatetimeFormat('~GyMMM')
+        );
+        $this->assertSame(
             "EEEE, MMMM d, y 'at' h:mm a",
             Calendar::getDatetimeFormat('full|short')
         );
         $this->assertSame(
-            "M/d/yy 'at' h:mm:ss a zzzz",
+            'M/d/yy, h:mm:ss a zzzz',
             Calendar::getDatetimeFormat('short|full')
+        );
+        $this->assertSame(
+            "MMMM d 'at' h:mm a",
+            Calendar::getDatetimeFormat('~MMMMd|~hm')
+        );
+        $this->assertSame(
+            'E, MMM d, y, h:mm:ss a zzzz',
+            Calendar::getDatetimeFormat('~yMMMEd|full')
+        );
+        $this->assertSame(
+            "EEE, d 'de' MMMM 'de' y, h:mm a",
+            Calendar::getDatetimeFormat('~yMMMMEd|~hm', 'es')
         );
         $this->assertSame(
             "M/d/yy 'at' h:mm a",
@@ -826,6 +860,102 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'EEEE, MMMM d, y, h:mm:ss a zzzz',
             Calendar::getDatetimeFormat('short|full|full')
+        );
+        $this->assertSame(
+            "MMM y G 'at' h:mm a",
+            Calendar::getDatetimeFormat('full|~GyMMM|~hm')
+        );
+        $this->assertSame(
+            'MMM y G, h:mm a',
+            Calendar::getDatetimeFormat('short|~GyMMM|~hm')
+        );
+    }
+
+    public function testGetSkeletonFormat()
+    {
+        $this->assertSame(
+            'MMM y G',
+            Calendar::getSkeletonFormat('GyMMM')
+        );
+        $this->assertSame(
+            'MMM y G',
+            Calendar::getSkeletonFormat('GyMMM', 'en_US')
+        );
+        $this->assertSame(
+            'G y. MMM',
+            Calendar::getSkeletonFormat('GyMMM', 'hu')
+        );
+
+        // Non-perfect matches.
+        $this->assertSame(
+            'MMM d, y',
+            Calendar::getSkeletonFormat('yMMMMd')
+        );
+        $this->assertSame(
+            'QQQ y',
+            Calendar::getSkeletonFormat('yQ')
+        );
+
+        // Fractional second.
+        $this->assertSame(
+            'h:mm:ss.SSS a v',
+            Calendar::getSkeletonFormat('hmsSSSv')
+        );
+        $this->assertSame(
+            'h.mm.ss,SSS a v',
+            Calendar::getSkeletonFormat('hmsSSSv', 'da')
+        );
+
+        // Special input skeleton fields.
+        $this->assertSame(
+            'h:mm a',
+            Calendar::getSkeletonFormat('jm')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('j', 'de')
+        );
+        $this->assertSame(
+            'h:mm:ss a',
+            Calendar::getSkeletonFormat('jms', 'en_CN')
+        );
+        $this->assertSame(
+            'hh:mm',
+            Calendar::getSkeletonFormat('Jm')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('J', 'de')
+        );
+        $this->assertSame(
+            'hh',
+            Calendar::getSkeletonFormat('J', 'en_CN')
+        );
+        $this->assertSame(
+            'h a',
+            Calendar::getSkeletonFormat('C')
+        );
+        $this->assertSame(
+            "HH 'Uhr'",
+            Calendar::getSkeletonFormat('C', 'de')
+        );
+        $this->assertSame(
+            'h B',
+            Calendar::getSkeletonFormat('C', 'en_CN')
+        );
+
+        // Date and time in same skeleton.
+        $this->assertSame(
+            'M/d/y, h:mm a',
+            Calendar::getSkeletonFormat('yMdhm')
+        );
+        $this->assertSame(
+            'd.M.y, h:mm a',
+            Calendar::getSkeletonFormat('yMdhm', 'de')
+        );
+        $this->assertSame(
+            "MMM d, y 'at' h:mm a",
+            Calendar::getSkeletonFormat('yMMMMdhm')
         );
     }
 
@@ -852,6 +982,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDate($dt, 'short')
         );
         $this->assertSame(
+            '10/12/2010',
+            Calendar::formatDate($dt, '~yMd')
+        );
+        $this->assertSame(
             'martedì 12 ottobre 2010',
             Calendar::formatDate($dt, 'full', 'it')
         );
@@ -868,6 +1002,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDate($dt, 'short', 'it')
         );
         $this->assertSame(
+            '12/10/2010',
+            Calendar::formatDate($dt, '~yMd', 'it')
+        );
+        $this->assertSame(
             'today',
             Calendar::formatDate($today, 'short*', 'en')
         );
@@ -882,6 +1020,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'Tomorrow',
             Calendar::formatDate($tomorrow, 'narrow^', 'en')
+        );
+        $this->assertSame(
+            'Tomorrow',
+            Calendar::formatDate($tomorrow, '~yMd^', 'en')
         );
         $this->assertSame(
             'domani',
@@ -921,6 +1063,14 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatTime($dt, 'short')
         );
         $this->assertSame(
+            '11:59 PM',
+            Calendar::formatTime($dt, '~hm')
+        );
+        $this->assertSame(
+            '23:59',
+            Calendar::formatTime($dt, '~Hm')
+        );
+        $this->assertSame(
             '23:59:00 Ora standard delle Figi',
             Calendar::formatTime($dt, 'full', 'it')
         );
@@ -935,6 +1085,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '23:59',
             Calendar::formatTime($dt, 'short', 'it')
+        );
+        $this->assertSame(
+            '23:59',
+            Calendar::formatTime($dt, '~Hm', 'it')
         );
     }
 
@@ -972,8 +1126,24 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatDateTime($dt, 'short')
         );
         $this->assertSame(
+            '10/12/2010',
+            Calendar::formatDateTime($dt, '~yMd')
+        );
+        $this->assertSame(
+            '11:59 PM',
+            Calendar::formatDateTime($dt, '~hm')
+        );
+        $this->assertSame(
             'Tuesday, October 12, 2010 at 11:59 PM',
             Calendar::formatDateTime($dt, 'full|short')
+        );
+        $this->assertSame(
+            'Tuesday, October 12, 2010 at 23:59',
+            Calendar::formatDateTime($dt, 'full|~Hm')
+        );
+        $this->assertSame(
+            '10/12/2010, 11:59 PM',
+            Calendar::formatDateTime($dt, '~yMd|short')
         );
         $this->assertSame(
             'Tuesday, October 12, 2010, 11:59 PM',
@@ -994,6 +1164,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '12/10/10, 23:59',
             Calendar::formatDateTime($dt, 'short', 'it')
+        );
+        $this->assertSame(
+            'mar 12 ott',
+            Calendar::formatDateTime($dt, '~MMMEd', 'it')
         );
         $this->assertSame(
             'Yesterday at 2:15 PM',
