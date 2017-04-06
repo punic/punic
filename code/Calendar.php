@@ -1238,7 +1238,7 @@ class Calendar
 
         return array(
             $matchSkeleton,
-            strpos($matchSkeleton, 'S') === false ? $sWidth : 0,
+            $sWidth && strpos($matchSkeleton, 'S') === false ? $sWidth : 0,
         );
     }
 
