@@ -1164,30 +1164,32 @@ class Calendar
         if (isset($cache[$locale][$skeleton])) {
             return $cache[$locale][$skeleton];
         }
-
-        list($preprocessedSkeleton, $replacements) = self::preprocessSkeleton($skeleton, $locale);
-
         $data = Data::get('calendar', $locale);
         $data = $data['dateTimeFormats']['availableFormats'];
+        if (isset($data[$skeleton])) {
+            $format = $data[$skeleton];
+        } else {
+            list($preprocessedSkeleton, $replacements) = self::preprocessSkeleton($skeleton, $locale);
 
-        $match = self::getBestMatchingSkeleton($preprocessedSkeleton, array_keys($data));
+            $match = self::getBestMatchingSkeleton($preprocessedSkeleton, array_keys($data));
 
-        if (!$match) {
-            // If skeleton contains both date and time fields, try matching date and time separately.
-            $dateLength = strspn($preprocessedSkeleton, 'GyYurUQqMLlwWEcedDFg');
-            if ($dateLength > 0 && $dateLength < strlen($preprocessedSkeleton)) {
-                $dateSkeleton = substr($preprocessedSkeleton, 0, $dateLength);
-                $timeSkeleton = substr($preprocessedSkeleton, $dateLength);
+            if (!$match) {
+                // If skeleton contains both date and time fields, try matching date and time separately.
+                $dateLength = strspn($preprocessedSkeleton, 'GyYurUQqMLlwWEcedDFg');
+                if ($dateLength > 0 && $dateLength < strlen($preprocessedSkeleton)) {
+                    $dateSkeleton = substr($preprocessedSkeleton, 0, $dateLength);
+                    $timeSkeleton = substr($preprocessedSkeleton, $dateLength);
 
-                return self::getDatetimeFormat('~'.$dateSkeleton.'|~'.$timeSkeleton, $locale);
+                    return self::getDatetimeFormat('~'.$dateSkeleton.'|~'.$timeSkeleton, $locale);
+                }
+
+                throw new Exception('Matching skeleton not found: '.$skeleton);
             }
 
-            throw new Exception('Matching skeleton not found: '.$skeleton);
+            list($matchSkeleton, $sWidth) = $match;
+
+            $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $sWidth, $replacements, $locale);
         }
-
-        list($matchSkeleton, $sWidth) = $match;
-
-        $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $sWidth, $replacements, $locale);
 
         $cache[$locale][$skeleton] = $format;
 
