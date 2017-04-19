@@ -307,6 +307,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'EEEEEEE'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aa'), '\\Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'BBBBBB'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'kkk'), '\\Punic\\Exception'),
@@ -331,8 +332,12 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getWeekdayName', array(8), '\\Punic\\Exception'),
             array('getWeekdayName', array('test'), '\\Punic\\Exception'),
             array('getWeekdayName', array(1, 'invalid-width'), '\\Punic\\Exception'),
+            array('getDayperiodName', array(25), '\\Punic\\Exception'),
             array('getDayperiodName', array('test'), '\\Punic\\Exception'),
             array('getDayperiodName', array('am', 'invalid-width'), '\\Punic\\Exception'),
+            array('getVariableDayperiodName', array(25), '\\Punic\\Exception'),
+            array('getVariableDayperiodName', array('test'), '\\Punic\\Exception'),
+            array('getVariableDayperiodName', array('morning1', 'invalid-width'), '\\Punic\\Exception'),
             array('toDateTime', array(true), '\\Punic\\Exception'),
             array('toDateTime', array('this is an invalid date representation'), '\\Punic\\Exception'),
             array('toDateTime', array('now', 'this is an invalid timezone representation'), '\\Punic\\Exception'),
@@ -547,6 +552,108 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'AM',
             Calendar::getDayperiodName($dt, 'wide', 'it', true)
+        );
+    }
+
+    public function testGetVariableDayperiodName()
+    {
+        /* @var $dt \DateTime */
+        $dt = Calendar::toDateTime('2010-03-07 13:00');
+        $this->assertSame(
+            '',
+            Calendar::getVariableDayperiodName(null)
+        );
+        $this->assertSame(
+            '',
+            Calendar::getVariableDayperiodName('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getVariableDayperiodName(false)
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName(13)
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName(13.0)
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName('13')
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName($dt)
+        );
+        $this->assertSame(
+            'at night',
+            Calendar::getVariableDayperiodName(0)
+        );
+        $this->assertSame(
+            'in the morning',
+            Calendar::getVariableDayperiodName(6)
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName(12)
+        );
+        $this->assertSame(
+            'in the evening',
+            Calendar::getVariableDayperiodName(18)
+        );
+        $this->assertSame(
+            'in the evening',
+            Calendar::getVariableDayperiodName(23)
+        );
+        $this->assertSame(
+            'de la madrugada',
+            Calendar::getVariableDayperiodName(0, 'wide', 'es')
+        );
+        $this->assertSame(
+            'de la mañana',
+            Calendar::getVariableDayperiodName(6, 'wide', 'es')
+        );
+        $this->assertSame(
+            'de la tarde',
+            Calendar::getVariableDayperiodName(12, 'wide', 'es')
+        );
+        $this->assertSame(
+            'de la noche',
+            Calendar::getVariableDayperiodName(20, 'wide', 'es')
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName($dt, 'wide')
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName($dt, 'abbreviated')
+        );
+        $this->assertSame(
+            'in the afternoon',
+            Calendar::getVariableDayperiodName($dt, 'narrow')
+        );
+        $this->assertSame(
+            'på eftermiddagen',
+            Calendar::getVariableDayperiodName($dt, 'wide', 'sv')
+        );
+        $this->assertSame(
+            'på efterm.',
+            Calendar::getVariableDayperiodName($dt, 'narrow', 'sv')
+        );
+        $this->assertSame(
+            'på eftermiddagen',
+            Calendar::getVariableDayperiodName($dt, 'wide', 'sv', false)
+        );
+        $this->assertSame(
+            'efterm.',
+            Calendar::getVariableDayperiodName($dt, 'narrow', 'sv', true)
+        );
+        $this->assertSame(
+            'eftermiddag',
+            Calendar::getVariableDayperiodName($dt, 'wide', 'sv', true)
         );
     }
 
@@ -1365,6 +1472,15 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         // decodeDayperiod
         $this->assertSame('PM', Calendar::format($dt, 'a'));
         $this->assertSame('nachm.', Calendar::format($dt, 'a', 'de'));
+        // decodeVariableDayperiod
+        $this->assertSame('in the evening', Calendar::format($dt, 'B'));
+        $this->assertSame('in the evening', Calendar::format($dt, 'BB'));
+        $this->assertSame('in the evening', Calendar::format($dt, 'BBB'));
+        $this->assertSame('in the evening', Calendar::format($dt, 'BBBB'));
+        $this->assertSame('in the evening', Calendar::format($dt, 'BBBBB'));
+        $this->assertSame('in the morning', Calendar::format($dt2, 'BBBB'));
+        $this->assertSame('in the morning', Calendar::format($dt2, 'BBBBB'));
+        $this->assertSame('abends', Calendar::format($dt, 'B', 'de'));
         // decodeHour12
         $this->assertSame('11', Calendar::format($dt, 'h'));
         $this->assertSame('11', Calendar::format($dt, 'hh'));

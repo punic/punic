@@ -340,6 +340,7 @@ class Calendar
                                 }
                                 break;
                             case 'decodeDayperiod':
+                            case 'decodeVariableDayperiod':
                                 if ($token[1] <= 4) {
                                     $chunk = 'A';
                                 }
@@ -730,6 +731,67 @@ class Calendar
                 throw new Exception\ValueNotInList($width, array_keys($data));
             }
             $result = $data[$width][$dayperiod];
+        }
+        return $result;
+    }
+
+    /**
+     * Get the name of a variable day period ("morning", "afternoon", etc.).
+     *
+     * The available periods, their start/end time and their names are locale-specific.
+     *
+     * @param number|string|\DateTime $value an hour (from 0 to 23), a \DateTime instance for which you want the name of the day period
+     * @param string $width the format name; it can be 'wide', 'abbreviated' or 'narrow'
+     * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     * @param bool $standAlone set to true to return the form used independently (e.g. "morning"), set to false if the day period name will be part of a date (e.g. "in the morning")
+     *
+     * @return string returns an empty string if $value is empty, the name of the day period name otherwise
+     *
+     * @throws \Punic\Exception\BadArgumentType throws a BadArgumentType exception if $value is not valid
+     * @throws \Punic\Exception\ValueNotInList throws a ValueNotInList exception if $width is not valid
+     * @throws \Punic\Exception throws a generic exception in case of other problems (for instance if you specify an invalid locale)
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Variable_periods
+     */
+    public static function getVariableDayperiodName($value, $width = 'wide', $locale = '', $standAlone = false)
+    {
+        $result = '';
+        if ((!empty($value)) || ($value === 0) || ($value === '0')) {
+            $data = Data::get('calendar', $locale);
+            $data = $data['dayPeriods'][$standAlone ? 'stand-alone' : 'format'];
+            if (!isset($data[$width])) {
+                throw new Exception\ValueNotInList($width, array_keys($data));
+            }
+            $data = $data[$width];
+
+            $hours = null;
+            $dayperiod = null;
+            if (is_int($value)) {
+                $hours = $value;
+            } elseif (is_float($value)) {
+                $hours = intval($value);
+            } elseif (is_string($value)) {
+                if (is_numeric($value)) {
+                    $hours = intval($value);
+                }
+            } elseif (is_a($value, '\DateTime')) {
+                $hours = intval($value->format('G'));
+            }
+
+            if (($hours !== null) && ($hours >= 0) && ($hours <= 23)) {
+                $dayperiods = Data::getLanguageNode(Data::getGeneric('dayPeriods'), $locale);
+                $time = sprintf('%02d:00', $hours);
+                foreach ($dayperiods as $dayperiod => $rule) {
+                    if ($time < $rule['before']) {
+                        break;
+                    }
+                }
+            }
+            if ($dayperiod === null) {
+                throw new Exception\BadArgumentType($value, 'day period');
+            }
+
+            $result = $data[$dayperiod];
         }
 
         return $result;
@@ -1898,6 +1960,22 @@ class Calendar
         }
     }
 
+    protected static function decodeVariableDayperiod(\DateTime $value, $count, $locale)
+    {
+        switch ($count) {
+            case 1:
+            case 2:
+            case 3:
+                return static::getVariableDayperiodName($value, 'abbreviated', $locale);
+            case 4:
+                return static::getVariableDayperiodName($value, 'abbreviated', $locale);
+            case 5:
+                return static::getVariableDayperiodName($value, 'abbreviated', $locale);
+            default:
+                throw new Exception\ValueNotInList($count, array(1));
+        }
+    }
+
     protected static function decodeHour24(\DateTime $value, $count, $locale)
     {
         switch ($count) {
@@ -2421,7 +2499,7 @@ class Calendar
         'c' => 'decodeDayOfWeekLocalAlone',
         'a' => 'decodeDayperiod',
         'b' => 'decodeDayperiod',
-        'B' => 'decodeDayperiod',
+        'B' => 'decodeVariableDayperiod',
         'h' => 'decodeHour12',
         'H' => 'decodeHour24',
         'K' => 'decodeHour12From0',
