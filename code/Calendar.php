@@ -1186,9 +1186,9 @@ class Calendar
                 throw new Exception('Matching skeleton not found: '.$skeleton);
             }
 
-            list($matchSkeleton, $sWidth) = $match;
+            list($matchSkeleton, $countAdjustments) = $match;
 
-            $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $sWidth, $replacements, $locale);
+            $format = self::postprocessSkeletonFormat($data[$matchSkeleton], $countAdjustments, $replacements, $locale);
         }
 
         $cache[$locale][$skeleton] = $format;
@@ -1203,11 +1203,13 @@ class Calendar
      * - No matching of different but equivalent fields (e.g. H, k, h, K).
      * - Distance calculation ignores difference betweeen numeric and text fields.
      * - No support for appendItems.
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
      */
     protected static function getBestMatchingSkeleton($requestedSkeleton, $availableSkeletons)
     {
         if (in_array($requestedSkeleton, $availableSkeletons)) {
-            return array($requestedSkeleton, 0);
+            return array($requestedSkeleton, array());
         }
 
         $requestedFields = array_values(array_unique(str_split($requestedSkeleton, 1)));
@@ -1238,9 +1240,17 @@ class Calendar
         asort($candidateSkeletons);
         $matchSkeleton = key($candidateSkeletons);
 
+        $countAdjustments = array();
+        foreach ($requestedFields as $field) {
+            $count = substr_count($requestedSkeleton, $field);
+            if ($count !== substr_count($matchSkeleton, $field)) {
+                $countAdjustments[$field] = $count;
+            }
+        }
+
         return array(
             $matchSkeleton,
-            $sWidth && strpos($matchSkeleton, 'S') === false ? $sWidth : 0,
+            $countAdjustments,
         );
     }
 
@@ -1252,23 +1262,33 @@ class Calendar
     protected static function preprocessSkeleton($skeleton, $locale)
     {
         $replacements = array();
-        if (strpbrk($skeleton, 'jJC') !== false) {
+        $match = strpbrk($skeleton, 'jJC');
+        if (isset($match[0])) {
+            $field = $match[0];
             $timeData = Data::getGeneric('timeData');
             $time = Data::getTerritoryNode($timeData, $locale);
 
-            if (strpos($skeleton, 'j') !== false) {
-                $skeleton = str_replace('j', $time['preferred'][0], $skeleton);
-            } elseif (strpos($skeleton, 'J') !== false) {
+            if ($field === 'J') {
                 $skeleton = str_replace('J', 'H', $skeleton);
                 $replacements['h'] = $replacements['H'] = $time['preferred'][0];
-            }
-
-            if (strpos($skeleton, 'C') !== false) {
-                $skeleton = str_replace('C', $time['allowed'][0][0], $skeleton);
-                $daypart = strpbrk($time['allowed'][0], 'bB');
-                if ($daypart !== false) {
-                    $replacements['a'] = $daypart[0];
+            } else {
+                $index = strpos($skeleton, $field);
+                $count = strspn($skeleton, $field, $index);
+                $fieldA = 'a';
+                if ($field === 'j') {
+                    $fieldH = $time['preferred'][0];
+                } else { // $field === 'C'
+                    $fieldH = $time['allowed'][0][0];
+                    $match = strpbrk($time['allowed'][0], 'bB');
+                    if (isset($match[0])) {
+                        $fieldA = $match[0];
+                    }
                 }
+                // 'j' maps to 'h aaa', 'jj' to 'hh aaa', 'jjj' to 'h aaaa', etc.
+                $countH = 2 - $count % 2;
+                $countA = 2 + ceil($count / 2);
+                $skeleton = substr($skeleton, 0, $index).str_repeat($fieldH, $countH).substr($skeleton, $index + $count);
+                $replacements['a'] = str_repeat($fieldA, $countA);
             }
         }
 
@@ -1276,34 +1296,61 @@ class Calendar
     }
 
     /**
-     * Handle special input skeleton fields and add second fraction to format pattern.
+     * Replace special input skeleton fields, adjust field widths, and add second fraction to format pattern.
      *
-     * @see  http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
      */
-    protected static function postprocessSkeletonFormat($format, $sWidth, $replacements, $locale)
+    protected static function postprocessSkeletonFormat($format, $countAdjustments, $replacements, $locale)
     {
-        if ($sWidth) {
-            $data = Data::get('numbers', $locale);
-            $decimal = $data['symbols']['decimal'];
-        }
+        static $countFields = array(
+            'q' => 'Q',
+            'L' => 'M',
+            'e' => 'E',
+            'c' => 'E',
+            'b' => 'b',
+            'b' => 'B',
+            'K' => 'h',
+            'k' => 'H',
+        );
 
+        $postprocessedFormat = '';
         $quoted = false;
         $length = strlen($format);
         $lengthM1 = strlen($format) - 1;
         for ($index = 0; $index < $length; ++$index) {
-            if ($format[$index] === "'") {
+            $char = $format[$index];
+            if ($char === "'") {
                 $quoted = !$quoted;
+                $postprocessedFormat .= $char;
             } elseif (!$quoted) {
-                if (isset($replacements[$format[$index]])) {
-                    $format[$index] = $replacements[$format[$index]];
-                } elseif ($sWidth && $format[$index] === 's' && ($index == $lengthM1 || $format[$index + 1] !== 's')) {
-                    $format = substr($format, 0, $index + 1).$decimal.str_repeat('S', $sWidth).substr($format, $index + 1);
-                    $index += $sWidth + 1;
+                $count = 1;
+                for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); ++$j) {
+                    ++$count;
+                    ++$index;
                 }
+
+                $countField = isset($countFields[$char]) ? $countFields[$char] : $char;
+                if (isset($countAdjustments[$countField])) {
+                    $count = $countAdjustments[$countField];
+                }
+                if (isset($replacements[$char])) {
+                    $char = $replacements[$char];
+                }
+                $postprocessedFormat .= str_repeat($char, $count);
+
+                // Add second fraction if requested, and format does not contain it already.
+                if ($char === 's' && isset($countAdjustments['S']) && strpos($format, 'S') === false) {
+                    $data = Data::get('numbers', $locale);
+                    $decimal = $data['symbols']['decimal'];
+                    $postprocessedFormat .= $decimal.str_repeat('S', $countAdjustments['S']);
+                }
+            } else {
+                $postprocessedFormat .= $char;
             }
         }
 
-        return $format;
+        return $postprocessedFormat;
     }
 
     /**
