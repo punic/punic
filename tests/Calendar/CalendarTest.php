@@ -306,7 +306,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ddd'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'EEEEEEE'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aa'), '\\Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aaaaaa'), '\\Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'bbbbbb'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'kkk'), '\\Punic\\Exception'),
@@ -1365,6 +1366,20 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         // decodeDayperiod
         $this->assertSame('PM', Calendar::format($dt, 'a'));
         $this->assertSame('nachm.', Calendar::format($dt, 'a', 'de'));
+        $this->assertSame('PM', Calendar::format($dt, 'aa'));
+        $this->assertSame('PM', Calendar::format($dt, 'aaa'));
+        $this->assertSame('AM', Calendar::format($dt2, 'aaaa'));
+        $this->assertSame('PM', Calendar::format($dt, 'aaaa'));
+        $this->assertSame('a', Calendar::format($dt2, 'aaaaa'));
+        $this->assertSame('p', Calendar::format($dt, 'aaaaa'));
+        $this->assertSame('PM', Calendar::format($dt, 'b'));
+        $this->assertSame('PM', Calendar::format($dt, 'bb'));
+        $this->assertSame('PM', Calendar::format($dt, 'bbb'));
+        $this->assertSame('PM', Calendar::format($dt, 'bbbb'));
+        $this->assertSame('p', Calendar::format($dt, 'bbbbb'));
+        $this->assertSame('AM', Calendar::format($dt2, 'bbbb'));
+        $this->assertSame('a', Calendar::format($dt2, 'bbbbb'));
+        $this->assertSame('nachm.', Calendar::format($dt, 'b', 'de'));
         // decodeHour12
         $this->assertSame('11', Calendar::format($dt, 'h'));
         $this->assertSame('11', Calendar::format($dt, 'hh'));

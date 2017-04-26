@@ -1892,7 +1892,13 @@ class Calendar
     {
         switch ($count) {
             case 1:
+            case 2:
+            case 3:
                 return static::getDayperiodName($value, 'abbreviated', $locale);
+            case 4:
+                return static::getDayperiodName($value, 'wide', $locale);
+            case 5:
+                return static::getDayperiodName($value, 'narrow', $locale);
             default:
                 throw new Exception\ValueNotInList($count, array(1));
         }
