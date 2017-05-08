@@ -1,12 +1,30 @@
-checks:
-    php:
-        code_rating: true
-        duplication: true
-tools:
-    external_code_coverage: true
-    php_code_sniffer: true
-    php_mess_detector: true
-    php_cs_fixer:
-        config: { level: psr2 }
 filter:
-    paths: [code/*]
+    paths:
+        - code/*
+
+tools:
+    php_cs_fixer:
+        extensions:
+            - php
+        enabled: true
+        filter:
+            paths:
+                - code/* 
+        config:
+            level: all
+            fixers:
+                indentation: true
+                linefeed: true
+                trailing_spaces: true
+                unused_use: true
+                phpdoc_params: false
+                visibility: true
+                return: true
+                short_tag: true
+                braces: true
+                include: true
+                php_closing_tag: true
+                extra_empty_lines: true
+                controls_spaces: true
+                elseif: true
+                eof_ending: true
