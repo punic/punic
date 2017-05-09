@@ -1641,7 +1641,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('GMT+13', Calendar::format($dt, 'zzz'));
         $this->assertSame('Fiji Summer Time', Calendar::format($dt, 'zzzz'));
         $this->assertSame('Ora legale delle Figi', Calendar::format($dt, 'zzzz', 'it'));
-        $this->assertSame('GMT-1:02', Calendar::format(Calendar::toDateTime('10/Oct/2000:13:55:36 -0102'), 'zzzz'));
+        $this->assertSame('GMT-01:02', Calendar::format(Calendar::toDateTime('10/Oct/2000:13:55:36 -0102'), 'zzzz'));
         // decodeTimezoneDelta
         $this->assertSame('+1300', Calendar::format($dt, 'Z'));
         $this->assertSame('+1300', Calendar::format($dt, 'ZZ'));
