@@ -591,6 +591,18 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             'GMT',
             Calendar::getTimezoneNameNoLocationSpecific('GMT', 'short')
         );
+
+        $dt = Calendar::toDateTime('2000-01-01 11:12:13', 'Etc/GMT+2');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+        $dt = Calendar::toDateTime('2000-01-01 11:12:13+14:15');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
+        );
+
         $dt = Calendar::toDateTime('2010-03-07', 'Europe/Rome');
         $this->assertSame(
             'Central European Standard Time',
@@ -679,6 +691,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneNameLocationSpecific('GMT')
         );
 
+        $dt = Calendar::toDateTime('2000-01-01 11:12:13', 'Etc/GMT+2');
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific($dt)
+        );
         $dt = Calendar::toDateTime('2000-01-01 11:12:13+14:15');
         $this->assertSame(
             '',

@@ -886,8 +886,10 @@ class Calendar
                 if (!$timezone) {
                     return '';
                 }
+                $location = $timezone->getLocation();
             } elseif (is_a($value, '\\DateTime')) {
                 $timezone = $value->getTimezone();
+                $location = self::getTimezoneLocationFromDatetime($value);
                 if (empty($kind)) {
                     if (intval($value->format('I')) === 1) {
                         $kind = 'daylight';
@@ -897,12 +899,12 @@ class Calendar
                 }
             } elseif (is_a($value, '\\DateTimeZone')) {
                 $timezone = $value;
+                $location = $timezone->getLocation();
             } else {
                 throw new Exception\BadArgumentType($value, 'string, DateTime, or DateTimeZone');
             }
 
             $name = '';
-            $location = $timezone->getLocation();
             if (isset($location['country_code']) && $location['country_code'] !== '??') {
                 $data = Data::getGeneric('primaryZones');
                 if (isset($data[$location['country_code']]) ||
@@ -912,7 +914,7 @@ class Calendar
             }
 
             if (!isset($name[0])) {
-                $name = static::getTimezoneExemplarCity($timezone, false, $locale);
+                $name = static::getTimezoneExemplarCity($value, false, $locale);
             }
 
             if (isset($name[0])) {
@@ -2453,6 +2455,21 @@ class Calendar
             }
         } else {
             $result = $tz->getName();
+        }
+
+        return $result;
+    }
+
+    protected static function getTimezoneLocationFromDatetime(\DateTime $dt)
+    {
+        if (defined('\HHVM_VERSION')) {
+            if (!preg_match('/[0-9][0-9]/', $dt->format('e'))) {
+                $result = $dt->getTimezone()->getLocation();
+            } else {
+                $result = false;
+            }
+        } else {
+            $result = $dt->getTimezone()->getLocation();
         }
 
         return $result;
