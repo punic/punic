@@ -1333,6 +1333,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $dt = Calendar::toDateTime('2010-01-02 23:59:04.0123');
         $dt2 = Calendar::toDateTime('2010-01-02 08:01:02');
         $dt3 = Calendar::toDateTime('2010-12-31 08:01:02');
+        $dt4 = Calendar::toDateTime('2010-12-31 08:01:02', 'Etc/GMT-2');
+        $dt5 = Calendar::toDateTime('2010-12-31 08:01:02+02:00');
         $this->assertSame(
             '',
             Calendar::format(null, 'G')
@@ -1508,7 +1510,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('GMT+13', Calendar::format($dt, 'z'));
         $this->assertSame('GMT+13', Calendar::format($dt, 'zz'));
         $this->assertSame('GMT+13', Calendar::format($dt, 'zzz'));
+        $this->assertSame('GMT+2', Calendar::format($dt4, 'z'));
+        $this->assertSame('GMT+2', Calendar::format($dt5, 'z'));
         $this->assertSame('Fiji Summer Time', Calendar::format($dt, 'zzzz'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt4, 'zzzz'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt5, 'zzzz'));
         $this->assertSame('Ora legale delle Figi', Calendar::format($dt, 'zzzz', 'it'));
         $this->assertSame('GMT-01:02', Calendar::format(Calendar::toDateTime('10/Oct/2000:13:55:36 -0102'), 'zzzz'));
         // decodeTimezoneDelta
@@ -1524,15 +1530,22 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('UTC+13', Calendar::format($dt, 'O', 'fr'));
         // decodeTimezoneNoLocationGeneric
         $this->assertSame('Fiji Time', Calendar::format($dt, 'v'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt4, 'v'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt5, 'v'));
         $this->assertSame('Fiji Time', Calendar::format($dt, 'vvvv'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt4, 'vvvv'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt5, 'vvvv'));
         $this->assertSame('GMT+14:15', Calendar::format(Calendar::toDateTime('2000-01-01 11:12:13+14:15'), 'vvvv'));
         $this->assertSame('heure : Fidji', Calendar::format($dt, 'v', 'fr'));
         $this->assertSame('heure des îles Fidji', Calendar::format($dt, 'vvvv', 'fr'));
         // decodeTimezoneID
         $this->assertSame('unk', Calendar::format($dt, 'V'));
         $this->assertSame('Pacific/Fiji', Calendar::format($dt, 'VV'));
+        $this->assertSame('Etc/GMT-2', Calendar::format($dt4, 'VV'));
         $this->assertSame('Fiji', Calendar::format($dt, 'VVV'));
         $this->assertSame('Fiji Time', Calendar::format($dt, 'VVVV'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt4, 'VVVV'));
+        $this->assertSame('GMT+02:00', Calendar::format($dt5, 'VVVV'));
         $this->assertSame('heure : Fidji', Calendar::format($dt, 'VVVV', 'fr'));
         // decodeTimezoneWithTime
         $this->assertSame('+13', Calendar::format($dt, 'x'));

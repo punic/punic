@@ -913,7 +913,7 @@ class Calendar
                 }
             }
 
-            if (!isset($name[0])) {
+            if (!isset($name[0]) && substr($timezone->getName(), 0, 7) !== 'Etc/GMT') {
                 $name = static::getTimezoneExemplarCity($value, false, $locale);
             }
 
