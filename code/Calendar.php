@@ -2055,7 +2055,7 @@ class Calendar
             case 1:
                 return sprintf($format, $sign.$hours.(($minutes === 0) ? '' : (':'.substr('0'.$minutes, -2))));
             case 4:
-                return sprintf($format, $sign.$hours.':'.substr('0'.$minutes, -2));
+                return sprintf($format, $sign.substr('0'.$hours, -2).':'.substr('0'.$minutes, -2));
             default:
                 throw new Exception\ValueNotInList($count, array(1, 4));
         }
