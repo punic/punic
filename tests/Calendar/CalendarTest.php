@@ -565,6 +565,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             '',
+            Calendar::getTimezoneNameNoLocationSpecific('invalid timezone')
+        );
+        $this->assertSame(
+            '',
             Calendar::getTimezoneNameNoLocationSpecific(false)
         );
         $this->assertSame(
@@ -669,6 +673,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             '',
             Calendar::getTimezoneNameLocationSpecific('')
+        );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameLocationSpecific('invalid timezone')
         );
         $this->assertSame(
             '',
