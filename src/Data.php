@@ -143,22 +143,15 @@ class Data
             if (!isset($dir[0])) {
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
-            $file = $dir.DIRECTORY_SEPARATOR.$identifier.'.json';
+            $file = $dir.DIRECTORY_SEPARATOR.$identifier.'.php';
             if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
-            $json = @file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
-            //@codeCoverageIgnoreStart
-            // In test enviro we can't replicate this problem
-            if ($json === false) {
-                throw new Exception\DataFileNotReadable($file);
-            }
-            //@codeCoverageIgnoreEnd
-            $data = @json_decode($json, true);
+            $data = include $file;
             //@codeCoverageIgnoreStart
             // In test enviro we can't replicate this problem
             if (!is_array($data)) {
-                throw new Exception\BadDataFileContents($file, $json);
+                throw new Exception\BadDataFileContents($file, file_get_contents($file));
             }
             //@codeCoverageIgnoreEnd
             static::$cache[$locale][$identifier] = $data;
@@ -189,22 +182,15 @@ class Data
         if (!preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
             throw new Exception\InvalidDataFile($identifier);
         }
-        $file = 'data'.DIRECTORY_SEPARATOR."$identifier.json";
+        $file = 'data'.DIRECTORY_SEPARATOR."$identifier.php";
         if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
             throw new Exception\DataFileNotFound($identifier);
         }
-        $json = @file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
-        //@codeCoverageIgnoreStart
-        // In test enviro we can't replicate this problem
-        if ($json === false) {
-            throw new Exception\DataFileNotReadable($file);
-        }
-        //@codeCoverageIgnoreEnd
-        $data = @json_decode($json, true);
+        $data = include $file;
         //@codeCoverageIgnoreStart
         // In test enviro we can't replicate this problem
         if (!is_array($data)) {
-            throw new Exception\BadDataFileContents($file, $json);
+            throw new Exception\BadDataFileContents($file, file_get_contents($file));
         }
         //@codeCoverageIgnoreEnd
         static::$cacheGeneric[$identifier] = $data;
