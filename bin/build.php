@@ -72,8 +72,9 @@ try {
         echo "done.\n";
     }
 
-    $jsonFileHelper = new JsonFileHelper($fileUtils, $options);
-    $converter = new JSonConverter($fileUtils, $sourceData, $jsonFileHelper);
+    $jsonReader = new JsonReader();
+    $phpWriter = new PhpWriter($fileUtils, $options);
+    $converter = new JSonConverter($fileUtils, $sourceData, $jsonReader, $phpWriter);
     foreach ($locales as $localeID) {
         echo "Processing $localeID:\n";
         $destDir = $options->getOutputDirectory().'/'.str_replace('_', '-', $localeID);
@@ -1132,28 +1133,8 @@ class LocaleIdentifier
     }
 }
 
-class JsonFileHelper
+class JsonReader
 {
-    /**
-     * @var FileUtils
-     */
-    protected $fileUtils;
-
-    /**
-     * @var BuildOptions
-     */
-    protected $options;
-
-    /**
-     * @param FileUtils $fileUtils
-     * @param BuildOptions $options
-     */
-    public function __construct(FileUtils $fileUtils, BuildOptions $options)
-    {
-        $this->fileUtils = $fileUtils;
-        $this->options = $options;
-    }
-
     /**
      * Read a JSON-encoded data from a file.
      *
@@ -1176,9 +1157,32 @@ class JsonFileHelper
 
         return $data;
     }
+}
+
+class PhpWriter
+{
+    /**
+     * @var FileUtils
+     */
+    protected $fileUtils;
 
     /**
-     * Save data to file in JSON format.
+     * @var BuildOptions
+     */
+    protected $options;
+
+    /**
+     * @param FileUtils $fileUtils
+     * @param BuildOptions $options
+     */
+    public function __construct(FileUtils $fileUtils, BuildOptions $options)
+    {
+        $this->fileUtils = $fileUtils;
+        $this->options = $options;
+    }
+
+    /**
+     * Save data to file in PHP format.
      *
      * @param array $data
      * @param string $file
@@ -1187,23 +1191,46 @@ class JsonFileHelper
      */
     public function save(array $data, $file)
     {
-        $jsonFlags = 0;
-        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            $jsonFlags |= JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-            if ($this->options->getPrettyOutput()) {
-                $jsonFlags |= JSON_PRETTY_PRINT;
-            }
-        }
-        $json = json_encode($data, $jsonFlags);
-        if ($json === false) {
-            throw new Exception("Failed to serialize data for $file");
-        }
         if (@is_file($file)) {
             $this->fileUtils->deleteFromFilesystem($file);
         }
-        if (@file_put_contents($file, $json) === false) {
+        $php = "<?php\n// This file is auto-generated. Do not edit!\nreturn ".$this->phpEncode($data).";\n";
+        if (@file_put_contents($file, $php) === false) {
             throw new Exception("Failed write to $file");
         }
+    }
+
+    protected function phpEncode($data, $indent = 0)
+    {
+        static $tabWidth = 4;
+        $space = $this->options->getPrettyOutput() ? ' ' : '';
+        if (is_array($data)) {
+            $result = 'array(';
+            $index = 0;
+            $assoc = array_keys($data) !== range(0, count($data) - 1);
+            foreach ($data as $key => $value) {
+                if ($index++ !== 0) {
+                    $result .= ',';
+                }
+                if ($this->options->getPrettyOutput()) {
+                    $result .= "\n".str_repeat($space, $indent + $tabWidth);
+                }
+                if ($assoc) {
+                    $result .= $this->phpEncode($key).$space.'=>'.$space;
+                }
+                $result .= $this->phpEncode($value, $indent + $tabWidth);
+            }
+            if ($this->options->getPrettyOutput()) {
+                $result .= "\n".str_repeat($space, $indent);
+            }
+            $result .= ')';
+        } elseif (is_string($data)) {
+            $result = "'".addcslashes($data, "'\\")."'";
+        } else {
+            $result = $data;
+        }
+
+        return $result;
     }
 }
 
@@ -1220,19 +1247,27 @@ class JSonConverter
     protected $sourceData;
 
     /**
-     * @var JsonFileHelper
+     * @var JsonReader
      */
-    protected $jsonFileHelper;
+    protected $jsonReader;
 
     /**
-     * @param SourceData $sourceData
-     * @param JsonFileHelper $jsonFileHelper
+     * @var PhpWriter
      */
-    public function __construct(FileUtils $fileUtils, SourceData $sourceData, JsonFileHelper $jsonFileHelper)
+    protected $phpWriter;
+
+    /**
+     * @param FileUtils $fileUtils
+     * @param SourceData $sourceData
+     * @param JsonReader $jsonReader
+     * @param PhpWriter $phpWriter
+     */
+    public function __construct(FileUtils $fileUtils, SourceData $sourceData, JsonReader $jsonReader, PhpWriter $phpWriter)
     {
         $this->fileUtils = $fileUtils;
         $this->sourceData = $sourceData;
-        $this->jsonFileHelper = $jsonFileHelper;
+        $this->jsonReader = $jsonReader;
+        $this->phpWriter = $phpWriter;
     }
 
     /**
@@ -1248,37 +1283,42 @@ class JSonConverter
         $this->fileUtils->createDirectory($destinationDirectory);
         try {
             $converters = array(
-                'ca-gregorian.json' => CalendarLocalePunicConversion::create(),
-                'timeZoneNames.json' => TimeZoneNameslocalePunicConversion::create(),
-                'listPatterns.json' => ListPatternsLocalePunicConversion::create(),
-                'units.json' => UnitsLocalePunicConversion::create(),
-                'dateFields.json' => NoopLocalePunicConversion::create(array('dates', 'fields')),
-                'languages.json' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'languages')),
-                'territories.json' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'territories')),
-                'localeDisplayNames.json' => LocaleDisplayNamesLocalePunicConversion::create(),
-                'numbers.json' => NumbersLocalePunicConversion::create(),
-                'layout.json' => NoopLocalePunicConversion::create(array('layout', 'orientation')),
-                'measurementSystemNames.json' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'measurementSystemNames')),
-                'currencies.json' => CurrenciesLocalePunicConversion::create(),
+                'calendar' => CalendarLocalePunicConversion::create(),
+                'timeZoneNames' => TimeZoneNameslocalePunicConversion::create(),
+                'listPatterns' => ListPatternsLocalePunicConversion::create(),
+                'units' => UnitsLocalePunicConversion::create(),
+                'dateFields' => NoopLocalePunicConversion::create(array('dates', 'fields')),
+                'languages' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'languages')),
+                'territories' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'territories')),
+                'localeDisplayNames' => LocaleDisplayNamesLocalePunicConversion::create(),
+                'numbers' => NumbersLocalePunicConversion::create(),
+                'layout' => NoopLocalePunicConversion::create(array('layout', 'orientation')),
+                'measurementSystemNames' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'measurementSystemNames')),
+                'currencies' => CurrenciesLocalePunicConversion::create(),
             );
-            foreach ($converters as $copyFrom => $converter) {
-                $destinationFile = $destinationDirectory.'/'.$converter->getSaveAs($copyFrom);
+            foreach ($converters as $identifier => $converter) {
+                $destinationFile = $destinationDirectory.'/'.$identifier.'.php';
                 $useLocale = $localeID;
-                $sourceFile = $this->sourceData->getJsonDirectoryForLocale($useLocale).'/'.$copyFrom;
+                if ($identifier === 'calendar') {
+                    $sourceIdentifier = 'ca-gregorian';
+                } else {
+                    $sourceIdentifier = $identifier;
+                }
+                $sourceFile = $this->sourceData->getJsonDirectoryForLocale($useLocale).'/'.$sourceIdentifier.'.json';
                 if (!is_file($sourceFile)) {
                     list($useLocale) = preg_split('/[^a-zA-Z0-9]+/', $sourceFile);
-                    $sourceFile = $this->sourceData->getJsonDirectoryForLocale($useLocale).'/'.$copyFrom;
+                    $sourceFile = $this->sourceData->getJsonDirectoryForLocale($useLocale).'/'.$sourceIdentifier.'.json';
                     if (!is_file($sourceFile)) {
                         throw new Exception("File not found: $sourceFile");
                     }
                 }
-                $data = $this->jsonFileHelper->read($sourceFile);
+                $data = $this->jsonReader->read($sourceFile);
                 $data = $converter->process($data, $useLocale);
-                $this->jsonFileHelper->save($data, $destinationFile);
+                $this->phpWriter->save($data, $destinationFile);
             }
             if ($localeID !== 'en') {
                 $this->copyMissingData_currency(
-                    $destinationDirectory.'/currencies.json'
+                    $destinationDirectory.'/currencies.php'
                 );
             }
         } catch (Exception $x) {
@@ -1297,36 +1337,37 @@ class JSonConverter
     public function convertSupplemental($destinationDirectory)
     {
         $converters = array(
-            'telephoneCodeData.json' => TelephoneCodeDataSupplementalPunicConversion::create(),
-            'territoryInfo.json' => TerritoryInfoSupplementalPunicConversion::create(),
-            'timeData.json' => TimeDataSupplementalPunicConversion::create(),
-            'weekData.json' => WeekDataSupplementalPunicConversion::create(),
-            'parentLocales.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'parentLocales', 'parentLocale')),
-            'likelySubtags.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'likelySubtags')),
-            'territoryContainment.json' => TerritoryContainmentSupplementalPunicConversion::create(),
-            'metaZones.json' => MetaZonesSupplementalPunicConversion::create(),
-            'plurals.json' => PluralsSupplementalPunicConversion::create(),
-            'measurementData.json' => MeasurementDataSupplementalPunicConversion::create(),
-            'currencyData.json' => CurrencyDataSupplementalPunicConversion::create(),
+            'telephoneCodeData' => TelephoneCodeDataSupplementalPunicConversion::create(),
+            'territoryInfo' => TerritoryInfoSupplementalPunicConversion::create(),
+            'timeData' => TimeDataSupplementalPunicConversion::create(),
+            'weekData' => WeekDataSupplementalPunicConversion::create(),
+            'parentLocales' => NoopSupplementalPunicConversion::create(array('supplemental', 'parentLocales', 'parentLocale')),
+            'likelySubtags' => NoopSupplementalPunicConversion::create(array('supplemental', 'likelySubtags')),
+            'territoryContainment' => TerritoryContainmentSupplementalPunicConversion::create(),
+            'metaZones' => MetaZonesSupplementalPunicConversion::create(),
+            'plurals' => PluralsSupplementalPunicConversion::create(),
+            'measurementData' => MeasurementDataSupplementalPunicConversion::create(),
+            'currencyData' => CurrencyDataSupplementalPunicConversion::create(),
         );
-        foreach ($converters as $copyFrom => $converter) {
-            $destinationFile = $destinationDirectory.'/'.$converter->getSaveAs($copyFrom);
+        $sourceDirectory = $this->sourceData->getJsonDirectoryForGeneric('supplemental');
+        foreach ($converters as $identifier => $converter) {
+            $destinationFile = $destinationDirectory.'/'.$identifier.'.php';
             if (!is_file($destinationFile)) {
-                $sourceFile = $this->sourceData->getJsonDirectoryForGeneric('supplemental').'/'.$copyFrom;
+                $sourceFile = $sourceDirectory.'/'.$identifier.'.json';
                 if (!is_file($sourceFile)) {
                     throw new Exception("File not found: $sourceFile");
                 }
-                $data = $this->jsonFileHelper->read($sourceFile);
+                $data = $this->jsonReader->read($sourceFile);
                 $data = $converter->process($data);
-                $this->jsonFileHelper->save($data, $destinationFile);
+                $this->phpWriter->save($data, $destinationFile);
             }
-            if ($converter instanceof PluralsSupplementalPunicConversion) {
+            if ($identifier === 'plurals') {
                 $testDir = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(__FILE__))), '/').'/tests/dataFiles';
                 if (is_dir($testDir)) {
-                    $sourceFile = $this->sourceData->getJsonDirectoryForGeneric('supplemental').'/'.$copyFrom;
-                    $data = $this->jsonFileHelper->read($sourceFile);
+                    $sourceFile = $sourceDirectory.'/plurals.json';
+                    $data = $this->jsonReader->read($sourceFile);
                     $testData = $converter->getTestData($data);
-                    $this->jsonFileHelper->save($testData, $testDir.'/plurals.json');
+                    $this->phpWriter->save($testData, $testDir.'/plurals.php');
                 }
             }
         }
@@ -1495,9 +1536,9 @@ class JSonConverter
     private function copyMissingData_currency($destinationFile)
     {
         $sourceFile = $this->sourceData->getJsonDirectoryForLocale('en').'/currencies.json';
-        $sourceData = $this->jsonFileHelper->read($sourceFile);
+        $sourceData = $this->jsonReader->read($sourceFile);
         $sourceData = CurrenciesLocalePunicConversion::create()->process($sourceData, 'en');
-        $destinationData = $this->jsonFileHelper->read($destinationFile);
+        $destinationData = include $destinationFile;
         $someChanged = false;
         foreach ($sourceData as $currency => $currencyInfo) {
             if (!array_key_exists($currency, $destinationData)) {
@@ -1506,7 +1547,7 @@ class JSonConverter
             }
         }
         if ($someChanged) {
-            $this->jsonFileHelper->save($destinationData, $destinationFile);
+            $this->phpWriter->save($destinationData, $destinationFile);
         }
     }
 }
@@ -1739,7 +1780,7 @@ class CalendarLocalePunicConversion extends LocalePunicConversion
      */
     public static function create()
     {
-        return new static(array('dates', 'calendars', 'gregorian'), 'calendar.json');
+        return new static(array('dates', 'calendars', 'gregorian'));
     }
 
     /**

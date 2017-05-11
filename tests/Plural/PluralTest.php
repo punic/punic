@@ -24,17 +24,13 @@ class PluralTest extends PHPUnit_Framework_TestCase
 
     protected static function loadPluralRulesTestData()
     {
-        $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.json';
+        $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
         if (!is_file($testDataFile)) {
-            throw new \Exception('Test data file not found: plurals.json');
+            throw new \Exception('Test data file not found: plurals.php');
         }
-        $json = @file_get_contents($testDataFile);
-        if ($json === false) {
-            throw new \Exception('Test data file not readable: plurals.json');
-        }
-        $data = @json_decode($json, true);
+        $data = @include $testDataFile;
         if (!is_array($data)) {
-            throw new \Exception('Test data file not valid: plurals.json');
+            throw new \Exception('Test data file not valid: plurals.php');
         }
 
         return $data;
