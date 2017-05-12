@@ -39,6 +39,9 @@
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
 			<directory suffix=".php">./code</directory>
+			<exclude>
+				<directory suffix=".php">./code/data</directory>
+			</exclude>
 		</whitelist>
 	</filter>
 </phpunit>
