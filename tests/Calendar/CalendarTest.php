@@ -308,7 +308,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aaaaaa'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'bbbbbb'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aa'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'BBBBBB'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), '\\Punic\\Exception'),
