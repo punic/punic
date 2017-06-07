@@ -300,6 +300,8 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             array('getDatetimeFormat', array('1|2|3|4'), '\\Punic\\Exception'),
             array('getSkeletonFormat', array('invalid-skeleton'), '\\Punic\\Exception'),
             array('getSkeletonFormat', array('yE'), '\\Punic\\Exception'),
+            array('getIntervalFormat', array('E', 'y'), '\\Punic\\Exception'),
+            array('getIntervalFormat', array('_', 'y'), '\\Punic\\Exception'),
             array('format', array(new stdClass(), ''), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), '\\Punic\\Exception'),
             array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), '\\Punic\\Exception'),
@@ -1024,7 +1026,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
         // Special input skeleton fields.
         $this->assertSame(
-            'h:mm aaa',
+            'h:mm a',
             Calendar::getSkeletonFormat('jm')
         );
         $this->assertSame(
@@ -1036,11 +1038,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSkeletonFormat('j', 'de')
         );
         $this->assertSame(
-            'h:mm:ss aaa',
+            'h:mm:ss a',
             Calendar::getSkeletonFormat('jms', 'en_CN')
         );
         $this->assertSame(
-            'hh:mm:ss aaa',
+            'hh:mm:ss a',
             Calendar::getSkeletonFormat('jjms', 'en_CN')
         );
         $this->assertSame(
@@ -1064,11 +1066,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSkeletonFormat('J', 'en_CN')
         );
         $this->assertSame(
-            'h aaa',
+            'h a',
             Calendar::getSkeletonFormat('C')
         );
         $this->assertSame(
-            'hh aaa',
+            'hh a',
             Calendar::getSkeletonFormat('CC')
         );
         $this->assertSame(
@@ -1080,7 +1082,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSkeletonFormat('C', 'de')
         );
         $this->assertSame(
-            'h BBB',
+            'h B',
             Calendar::getSkeletonFormat('C', 'en_CN')
         );
         $this->assertSame(
@@ -1098,8 +1100,246 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getSkeletonFormat('yMdhm', 'de')
         );
         $this->assertSame(
+            'M/d/y, h:mm a',
+            Calendar::getSkeletonFormat('yMdjm')
+        );
+        $this->assertSame(
+            'd.M.y, HH:mm',
+            Calendar::getSkeletonFormat('yMdjm', 'de')
+        );
+        $this->assertSame(
+            'M/d/y, HH:mm',
+            Calendar::getSkeletonFormat('yMdJm')
+        );
+        $this->assertSame(
+            'd.M.y, HH:mm',
+            Calendar::getSkeletonFormat('yMdJm', 'de')
+        );
+        $this->assertSame(
+            'M/d/y, h:mm a',
+            Calendar::getSkeletonFormat('yMdCm')
+        );
+        $this->assertSame(
+            'd.M.y, HH:mm',
+            Calendar::getSkeletonFormat('yMdCm', 'de')
+        );
+        $this->assertSame(
             "MMMM d, y 'at' h:mm a",
             Calendar::getSkeletonFormat('yMMMMdhm')
+        );
+    }
+
+    public function testGetIntervalFormat()
+    {
+        $this->assertSame(
+            array('MMM d', null),
+            Calendar::getIntervalFormat('MMMd', 'H')
+        );
+        $this->assertSame(
+            array('MMM d – d', true),
+            Calendar::getIntervalFormat('MMMd', 'd')
+        );
+        $this->assertSame(
+            array('MMM d – MMM d', true),
+            Calendar::getIntervalFormat('MMMd', 'M')
+        );
+        $this->assertSame(
+            array('MMM d – MMM d', true),
+            Calendar::getIntervalFormat('MMMd', 'y')
+        );
+
+        $this->assertSame(
+            array('h:mm a v – h:mm a v', true),
+            Calendar::getIntervalFormat('hmv', 'd')
+        );
+        $this->assertSame(
+            array('h:mm a – h:mm a v', true),
+            Calendar::getIntervalFormat('hmv', 'a')
+        );
+        $this->assertSame(
+            array('h:mm – h:mm a v', true),
+            Calendar::getIntervalFormat('hmv', 'H')
+        );
+        $this->assertSame(
+            array('h:mm – h:mm a v', true),
+            Calendar::getIntervalFormat('hmv', 'm')
+        );
+        $this->assertSame(
+            array('h:mm a v', null),
+            Calendar::getIntervalFormat('hmv', 's')
+        );
+
+        $this->assertSame(
+            array('HH:mm v – HH:mm v', true),
+            Calendar::getIntervalFormat('Hmv', 'd')
+        );
+        $this->assertSame(
+            array('HH:mm – HH:mm v', true),
+            Calendar::getIntervalFormat('Hmv', 'a')
+        );
+        $this->assertSame(
+            array('HH:mm – HH:mm v', true),
+            Calendar::getIntervalFormat('Hmv', 'H')
+        );
+        $this->assertSame(
+            array('HH:mm – HH:mm v', true),
+            Calendar::getIntervalFormat('Hmv', 'm')
+        );
+        $this->assertSame(
+            array('HH:mm v', null),
+            Calendar::getIntervalFormat('Hmv', 's')
+        );
+
+        // Non-perfect matches.
+        $this->assertSame(
+            array('MMMM d, y – MMMM d, y', true),
+            Calendar::getIntervalFormat('yMMMMd', 'G')
+        );
+        $this->assertSame(
+            array('MMMM d, y – MMMM d, y', true),
+            Calendar::getIntervalFormat('yMMMMd', 'y')
+        );
+        $this->assertSame(
+            array('MMMM d – MMMM d, y', true),
+            Calendar::getIntervalFormat('yMMMMd', 'M')
+        );
+        $this->assertSame(
+            array('MMMM d – d, y', true),
+            Calendar::getIntervalFormat('yMMMMd', 'd')
+        );
+        $this->assertSame(
+            array('MMMM d, y', null),
+            Calendar::getIntervalFormat('yMMMMd', 'H')
+        );
+        $this->assertSame(
+            array('Q y – Q y', true),
+            Calendar::getIntervalFormat('yQ', 'G')
+        );
+        $this->assertSame(
+            array('Q y – Q y', true),
+            Calendar::getIntervalFormat('yQ', 'y')
+        );
+        $this->assertSame(
+            array('Q y – Q y', true),
+            Calendar::getIntervalFormat('yQ', 'Q')
+        );
+        $this->assertSame(
+            array('Q y', null),
+            Calendar::getIntervalFormat('yQ', 'M')
+        );
+
+        // Fractional second.
+        $this->assertSame(
+            array('h:mm:ss.SSS a – h:mm:ss.SSS a', true),
+            Calendar::getIntervalFormat('hmsSSS', 's')
+        );
+        $this->assertSame(
+            array('h:mm:ss.SSS a – h:mm:ss.SSS a', true),
+            Calendar::getIntervalFormat('hmsSSS', 'S')
+        );
+
+        // Special input skeleton fields.
+        $this->assertSame(
+            array('h:mm a v – h:mm a v', true),
+            Calendar::getIntervalFormat('jmv', 'd')
+        );
+        $this->assertSame(
+            array('h:mm a – h:mm a v', true),
+            Calendar::getIntervalFormat('jmv', 'a')
+        );
+        $this->assertSame(
+            array('h:mm – h:mm a v', true),
+            Calendar::getIntervalFormat('jmv', 'H')
+        );
+        $this->assertSame(
+            array('h:mm – h:mm a v', true),
+            Calendar::getIntervalFormat('jmv', 'm')
+        );
+        $this->assertSame(
+           array('h:mm a v', null),
+            Calendar::getIntervalFormat('jmv', 's')
+        );
+        $this->assertSame(
+            array('HH:mm v – HH:mm v', true),
+            Calendar::getIntervalFormat('jmv', 'd', 'de')
+        );
+        $this->assertSame(
+           array("HH:mm–HH:mm 'Uhr' v", true),
+            Calendar::getIntervalFormat('jmv', 'a', 'de')
+        );
+        $this->assertSame(
+           array("HH:mm–HH:mm 'Uhr' v", true),
+            Calendar::getIntervalFormat('jmv', 'H', 'de')
+        );
+        $this->assertSame(
+           array("HH:mm–HH:mm 'Uhr' v", true),
+            Calendar::getIntervalFormat('jmv', 'm', 'de')
+        );
+        $this->assertSame(
+            array('HH:mm v', null),
+            Calendar::getIntervalFormat('jmv', 's', 'de')
+        );
+        $this->assertSame(
+            array('h a', null),
+            Calendar::getIntervalFormat('C', 's')
+        );
+        $this->assertSame(
+            array("HH 'Uhr'", null),
+            Calendar::getIntervalFormat('C', 's', 'de')
+        );
+        $this->assertSame(
+            array('y G – y G', true),
+            Calendar::getIntervalFormat('Gy', 'G')
+        );
+        $this->assertSame(
+            array('y G – y G', true),
+            Calendar::getIntervalFormat('Gy', 'y')
+        );
+        $this->assertSame(
+            array('y G', null),
+            Calendar::getIntervalFormat('Gy', 'M')
+        );
+
+        // Combined date and time.
+        $this->assertSame(
+            array('M/d/y, HH:mm v – M/d/y, HH:mm v', true),
+            Calendar::getIntervalFormat('yMdHmv', 'y')
+        );
+        $this->assertSame(
+            array('M/d/y, HH:mm v – M/d/y, HH:mm v', true),
+            Calendar::getIntervalFormat('yMdHmv', 'd')
+        );
+        $this->assertSame(
+            array('M/d/y, HH:mm v – HH:mm v', true),
+            Calendar::getIntervalFormat('yMdHmv', 'H')
+        );
+        $this->assertSame(
+            array('M/d/y, HH:mm v – HH:mm v', true),
+            Calendar::getIntervalFormat('yMdHmv', 'm')
+        );
+        $this->assertSame(
+            array('M/d/y, HH:mm v', null),
+            Calendar::getIntervalFormat('yMdHmv', 's')
+        );
+        $this->assertSame(
+            array("MMMM d, y 'at' HH:mm v – MMMM d, y 'at' HH:mm v", true),
+            Calendar::getIntervalFormat('yMMMMdHmv', 'y')
+        );
+        $this->assertSame(
+            array("MMMM d, y 'at' HH:mm v – MMMM d, y 'at' HH:mm v", true),
+            Calendar::getIntervalFormat('yMMMMdHmv', 'd')
+        );
+        $this->assertSame(
+            array("MMMM d, y 'at' HH:mm v – HH:mm v", true),
+            Calendar::getIntervalFormat('yMMMMdHmv', 'H')
+        );
+        $this->assertSame(
+            array("MMMM d, y 'at' HH:mm v – HH:mm v", true),
+            Calendar::getIntervalFormat('yMMMMdHmv', 'm')
+        );
+        $this->assertSame(
+            array("MMMM d, y 'at' HH:mm v", null),
+            Calendar::getIntervalFormat('yMMMMdHmv', 's')
         );
     }
 
@@ -1332,6 +1572,172 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             'Monday, October 11, 2010 at 2:00:00 PM Central European Summer Time',
             Calendar::formatDateTimeEx('2010-10-12 00:00', 'full', 'Europe/Rome')
+        );
+    }
+
+    public function testFormatInterval()
+    {
+        $dt = Calendar::toDateTime('2010-10-12 22:58:00');
+        $dtMilliSecond = Calendar::toDateTime('2010-10-12 22:58:00.001');
+        $dtSecond = Calendar::toDateTime('2010-10-12 22:58:01');
+        $dtMinute = Calendar::toDateTime('2010-10-12 22:59:00');
+        $dtHour = Calendar::toDateTime('2010-10-12 23:57:00');
+        $dtDay = Calendar::toDateTime('2010-10-13 21:30:00');
+        $dtMonth = Calendar::toDateTime('2010-11-14 20:30:00');
+        $dtYear = Calendar::toDateTime('2011-09-15 19:30:00');
+        $dtEra = Calendar::toDateTime('-1000-01-01 15:30:00');
+
+        $this->assertSame(
+            'January 1, -1000 – October 12, 2010',
+            Calendar::formatInterval($dtEra, $dt, 'yMMMMd')
+        );
+        $this->assertSame(
+            'October 12, 2010 – September 15, 2011',
+            Calendar::formatInterval($dt, $dtYear, 'yMMMMd')
+        );
+        $this->assertSame(
+            'October 12 – 13, 2010',
+            Calendar::formatInterval($dt, $dtDay, 'yMMMMd')
+        );
+        $this->assertSame(
+            'October 12, 2010',
+            Calendar::formatInterval($dt, $dtHour, 'yMMMMd')
+        );
+
+        $this->assertSame(
+            '10/12/2010 – 9/15/2011',
+            Calendar::formatInterval($dt, $dtYear, 'yMd')
+        );
+        $this->assertSame(
+            '10/12/2010 – 10/13/2010',
+            Calendar::formatInterval($dt, $dtDay, 'yMd')
+        );
+        $this->assertSame(
+            '10/12/2010',
+            Calendar::formatInterval($dt, $dtHour, 'yMd')
+        );
+
+        $this->assertSame(
+            '22:58:00 – 23:57:00',
+            Calendar::formatInterval($dt, $dtHour, 'Hms')
+        );
+        $this->assertSame(
+            '22:58:00 – 22:59:00',
+            Calendar::formatInterval($dt, $dtMinute, 'Hms')
+        );
+        $this->assertSame(
+            '22:58:00 – 22:58:01',
+            Calendar::formatInterval($dt, $dtSecond, 'Hms')
+        );
+        $this->assertSame(
+            '22:58:00',
+            Calendar::formatInterval($dt, $dtMilliSecond, 'Hms')
+        );
+
+        $this->assertSame(
+            '22:58:00.00',
+            Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSS')
+        );
+        $this->assertSame(
+            '22:58:00.000 – 22:58:00.001',
+            Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSSS')
+        );
+        $this->assertSame(
+            '22:58:00.000000 – 22:58:00.001000',
+            Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSSSSSS')
+        );
+        $this->assertSame(
+            '22:58:00.000',
+            Calendar::formatInterval($dt, $dt, 'HmsSSS')
+        );
+
+        $this->assertSame(
+            '12.–13. Oktober 2010',
+            Calendar::formatInterval($dt, $dtDay, 'yMMMMd', 'de')
+        );
+        $this->assertSame(
+            '12.10.2010',
+            Calendar::formatInterval($dt, $dtHour, 'yMd', 'de')
+        );
+
+        // Combined date and time.
+        $this->assertSame(
+            '10/12/2010, 22:58:00 – 23:57:00',
+            Calendar::formatInterval($dt, $dtHour, 'yMdHms')
+        );
+        $this->assertSame(
+            'October 12, 2010 at 22:58:00 – 23:57:00',
+            Calendar::formatInterval($dt, $dtHour, 'yMMMMdHms')
+        );
+        $this->assertSame(
+            '10/12/2010, 22:58:00 – 10/13/2010, 21:30:00',
+            Calendar::formatInterval($dt, $dtDay, 'yMdHms')
+        );
+        $this->assertSame(
+            'October 12, 2010 at 22:58:00 – October 13, 2010 at 21:30:00',
+            Calendar::formatInterval($dt, $dtDay, 'yMMMMdHms')
+        );
+        $this->assertSame(
+            '12 ottobre 2010 22:58:00 - 13 ottobre 2010 21:30:00',
+            Calendar::formatInterval($dt, $dtDay, 'yMMMMdHms', 'it')
+        );
+        $this->assertSame(
+            '10/12/2010, 22:58:00',
+            Calendar::formatInterval($dt, $dt, 'yMdHms')
+        );
+
+        // Special input skeleton fields.
+        $this->assertSame(
+            '10:58 – 11:57 PM GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'jmv')
+        );
+        $this->assertSame(
+            '22:58–23:57 Uhr GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'jmv', 'de')
+        );
+        $this->assertSame(
+            '10:58 – 11:57 GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'Jmv')
+        );
+        $this->assertSame(
+            '22:58–23:57 Uhr GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'Jmv', 'de')
+        );
+        $this->assertSame(
+            '10:58 – 11:57 GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'Jmv', 'en_CN')
+        );
+        $this->assertSame(
+            '10:58 – 11:57 PM GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'Cmv')
+        );
+        $this->assertSame(
+            '22:58–23:57 Uhr GMT+12:00',
+            Calendar::formatInterval($dt, $dtHour, 'Cmv', 'de')
+        );
+    }
+
+    public function testFormatIntervalEx()
+    {
+        $dt = '2010-10-12 22:58:00 Europe/Berlin';
+        $dtMonth = '2010-11-14 20:30:00 Europe/Berlin';
+        $dtMilliSecond = '2010-10-12 22:58:00.001 Europe/Berlin';
+
+        $this->assertSame(
+            'October 12 – November 14, 2010',
+            Calendar::formatIntervalEx($dt, $dtMonth, 'yMMMMd')
+        );
+        $this->assertSame(
+            '12. Oktober – 14. November 2010',
+            Calendar::formatIntervalEx($dt, $dtMonth, 'yMMMMd', null, 'de')
+        );
+        $this->assertSame(
+            '22:58:00.00 GMT+2:00',
+            Calendar::formatIntervalEx($dt, $dtMilliSecond, 'HmsSSv', 'Europe/Berlin')
+        );
+        $this->assertSame(
+            '22:58:00.00 GMT+2:00',
+            Calendar::formatIntervalEx($dt, $dtMilliSecond, 'HmsSSv', 'Europe/Berlin')
         );
     }
 
