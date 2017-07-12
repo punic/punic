@@ -7,3 +7,5 @@
 /*.xml export-ignore
 /README.md
 /composer-travis-ci.json export-ignore
+
+.sh text eol=lf
