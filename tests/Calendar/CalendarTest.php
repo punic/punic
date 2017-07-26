@@ -1612,6 +1612,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('8', Calendar::format($dt2, 'H'));
         $this->assertSame('08', Calendar::format($dt2, 'HH'));
         $this->assertSame('8', Calendar::format($dt2, 'H', 'it'));
+        // decodeMinute
+        $this->assertSame('1', Calendar::format($dt2, 'm'));
+        $this->assertSame('01', Calendar::format($dt2, 'mm'));
         // decodeHour12From0
         $this->assertSame('8', Calendar::format($dt2, 'K'));
         $this->assertSame('08', Calendar::format($dt2, 'KK'));
