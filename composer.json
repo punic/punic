@@ -39,7 +39,8 @@
         "php": ">=5.3"
     },
     "require-dev": {
-        "apigen/apigen": "4.0.*"
+        "apigen/apigen": "4.0.*",
+        "phpbench/phpbench": "0.9.*"
     },
     "replace": {
         "punic/common": "*",

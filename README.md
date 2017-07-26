@@ -12,6 +12,11 @@ Documentation
 
 See [punic.github.io](https://punic.github.io) for more info.
 
+Benchmark
+---------
+
+Punic uses [phpBench](https://github.com/phpbench/phpbench) to test the runtime for each method. Simply execute `./vendor/bin/phpbench run benchmarks --report=default` to get a report about the performance. 
+
 Contributing
 ------------
 
