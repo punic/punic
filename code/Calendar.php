@@ -1508,6 +1508,196 @@ class Calendar
         return intval(round($seconds / 86400));
     }
 
+/**
+     * Formats a date difference into a human friendly date (eg 'in 4 months and 3 days')
+     *
+     * @param \DateTime $dateEnd The first date
+     * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
+     * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string
+     *
+     * @throws Exception\BadArgumentType
+     */
+
+    public static function getFriendlyDate($dateEnd, $dateStart = null, $maxParts = 2, $width = 'short', $locale = '')
+    {
+        if (!is_a($dateEnd, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
+        }
+        if (empty($dateStart) && ($dateStart !== 0) && ($dateStart !== '0')) {
+            $dateStart = new \DateTime('now', $dateEnd->getTimezone());
+        }
+        if (!is_a($dateStart, '\\DateTime')) {
+            throw new Exception\BadArgumentType($dateStart, '\\DateTime');
+        }
+        if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
+            $dateStart->setTimezone($dateEnd->getTimezone());
+        }
+        $utc = new \DateTimeZone('UTC');
+        $dateEndUTC = new \DateTime($dateEnd->format('Y-m-d H:i:s'), $utc);
+        $dateStartUTC = new \DateTime($dateStart->format('Y-m-d H:i:s'), $utc);
+
+        $parts = array();
+        $data = Data::get('dateFields', $locale);
+        if ($dateEndUTC->getTimestamp() == $dateStartUTC->getTimestamp()) {
+            $parts[] = $data['second']['relative-type-0'];
+        } else {
+
+            $tense = $dateEndUTC->getTimestamp() < $dateStartUTC->getTimestamp() ? 'future' : 'past' ;
+
+            $diff = $dateStartUTC->diff($dateEndUTC, true);
+            $mostFar = 0;
+
+            //  Year
+            if (($mostFar < $maxParts) && ($diff->y > 0)) {
+                $mostFar++;
+                $key = $diff->y == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->y, $data['year']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->y, 'duration/year', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->y, $data['year']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->y, 'duration/year', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+            //  Month
+            if (($mostFar < $maxParts) && ($diff->m > 0)) {
+                $mostFar++;
+                $key = $diff->m == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->m, $data['month']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->m, 'duration/month', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->m, $data['month']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->m, 'duration/month', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+            // Days
+            if (($mostFar < $maxParts) && ($diff->d > 0)) {
+                $mostFar++;
+                $key = $diff->d == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->d, $data['day']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->d, 'duration/day', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->d, $data['day']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->d, 'duration/day', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+            // Hours
+            if (($mostFar < $maxParts) && ($diff->h > 0)) {
+                $mostFar++;
+                $key = $diff->h == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->h, $data['hour']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->h, 'duration/hour', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->h, $data['hour']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->h, 'duration/hour', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+            // Minutes
+            if (($mostFar < $maxParts) && ($diff->m > 0)) {
+                $mostFar++;
+                $key = $diff->m == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->m, $data['minute']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->m, 'duration/minute', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->m, $data['minute']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->m, 'duration/minute', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+            // Seconds
+            if (($mostFar < $maxParts) && ($diff->s > 0)) {
+                $mostFar++;
+                $key = $diff->s == 1 ? "one" : "other" ;
+                switch($tense) {
+                    case 'past':
+                        if ($mostFar == $maxParts) {
+                            $parts[] = str_replace('{0}', $diff->s, $data['second']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->s, 'duration/second', $width, $locale);
+                        }
+                        break;
+                    case 'future':
+                        if ($mostFar == 1) {
+                            $parts[] = str_replace('{0}', $diff->s, $data['second']["relativeTime-type-$tense"]["relativeTimePattern-count-$key"]);
+                        } else {
+                            $parts[] = Unit::format($diff->s, 'duration/second', $width, $locale);
+                        }
+                        break;
+                }
+            }
+
+        }
+
+        switch ($width) {
+            case 'narrow':
+            case 'short':
+                $joined = Misc::joinUnits($parts, $width, $locale);
+                break;
+            default:
+                $joined = Misc::join($parts, $locale);
+                break;
+        }
+
+        return $joined;
+    }
+
     /**
      * Describe an interval between two dates (eg '2 days and 4 hours').
      *
