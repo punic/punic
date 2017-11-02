@@ -23,9 +23,9 @@ class Calendar
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
      *
-     * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance \DateTime or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param string|\DateTimeZone $toTimezone the timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTime`)
-     * @param string|\DateTimeZone $fromTimezone the original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTime`)
+     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param string|\DateTimeZone $toTimezone the timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTimeInterface`)
+     * @param string|\DateTimeZone $fromTimezone the original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTimeInterface`)
      *
      * @return \DateTime|null returns null if $value is empty, a `\DateTime` instance otherwise
      *
@@ -63,7 +63,7 @@ class Calendar
                     } catch (\Exception $x) {
                         throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone', $x);
                     }
-                } elseif (is_a($fromTimezone, '\DateTimeZone')) {
+                } elseif ($fromTimezone instanceof \DateTimeZone) {
                     $tzFrom = $fromTimezone;
                 } else {
                     throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone');
@@ -75,8 +75,9 @@ class Calendar
                 if ($tzFrom !== null) {
                     $result->setTimezone($tzFrom);
                 }
-            } elseif ($value instanceof \DateTime) {
-                $result = clone $value;
+            } elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
+                $result = new \DateTime(null, $value->getTimezone());
+                $result->setTimestamp($value->getTimestamp());
                 if ($tzFrom !== null) {
                     $result->setTimezone($tzFrom);
                 }
@@ -109,7 +110,7 @@ class Calendar
                         } catch (\Exception $x) {
                             throw new Exception\BadArgumentType($toTimezone, '\\DateTimeZone', $x);
                         }
-                    } elseif (is_a($toTimezone, '\DateTimeZone')) {
+                    } elseif ($toTimezone instanceof \DateTimeZone) {
                         $result->setTimezone($toTimezone);
                     } else {
                         throw new Exception\BadArgumentType($toTimezone, '\\DateTimeZone');
@@ -532,7 +533,7 @@ class Calendar
                 if (is_numeric($value)) {
                     $year = intval($value);
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $year = intval($value->format('Y'));
             }
             if ($year === null) {
@@ -576,7 +577,7 @@ class Calendar
                 if (is_numeric($value)) {
                     $month = intval($value);
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $month = intval($value->format('n'));
             }
             if (($month === null) || (($month < 1) || ($month > 12))) {
@@ -620,7 +621,7 @@ class Calendar
                 if (is_numeric($value)) {
                     $weekday = intval($value);
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $weekday = intval($value->format('w'));
             }
             if (($weekday === null) || (($weekday < 0) || ($weekday > 6))) {
@@ -665,7 +666,7 @@ class Calendar
                 if (is_numeric($value)) {
                     $quarter = intval($value);
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
             }
             if (($quarter === null) || (($quarter < 1) || ($quarter > 4))) {
@@ -716,7 +717,7 @@ class Calendar
                         $dayperiod = $s;
                     }
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $dayperiod = $value->format('a');
             }
             if (($hours !== null) && ($hours >= 0) && ($hours <= 23)) {
@@ -774,7 +775,7 @@ class Calendar
                 if (is_numeric($value)) {
                     $hours = intval($value);
                 }
-            } elseif (is_a($value, '\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $hours = intval($value->format('G'));
             }
 
@@ -800,7 +801,7 @@ class Calendar
     /**
      * Returns the localized name of a timezone, no location-specific.
      *
-     * @param string|\DateTime|\DateTimeZone $value the php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name
+     * @param string|\DateTimeInterface|\DateTimeZone $value the PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance for which you want the localized timezone name
      * @param string $width the format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT')
      * @param string $kind set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise)
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
@@ -822,7 +823,7 @@ class Calendar
             $date = '';
             if (is_string($value)) {
                 $receivedPhpName = $value;
-            } elseif (is_a($value, '\\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $receivedPhpName = static::getTimezoneNameFromDatetime($value);
                 $date = $value->format('Y-m-d H:i');
                 if (empty($kind)) {
@@ -832,7 +833,7 @@ class Calendar
                         $kind = 'standard';
                     }
                 }
-            } elseif (is_a($value, '\\DateTimeZone')) {
+            } elseif ($value instanceof \DateTimeZone) {
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if (isset($receivedPhpName[0])) {
@@ -930,7 +931,7 @@ class Calendar
     /**
      * Returns the localized name of an exemplar city for a specific timezone.
      *
-     * @param string|\DateTime|\DateTimeZone $value The php name of a timezone, or a \DateTime instance or a \DateTimeZone instance
+     * @param string|\DateTimeInterface|\DateTimeZone $value The PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance
      * @param bool $returnUnknownIfNotFound true If the exemplar city is not found, shall we return the translation of 'Unknown City'?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -944,9 +945,9 @@ class Calendar
             $receivedPhpName = '';
             if (is_string($value)) {
                 $receivedPhpName = $value;
-            } elseif (is_a($value, '\\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $receivedPhpName = static::getTimezoneNameFromDatetime($value);
-            } elseif (is_a($value, '\\DateTimeZone')) {
+            } elseif ($value instanceof \DateTimeZone) {
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if (isset($receivedPhpName[0])) {
@@ -1419,7 +1420,7 @@ class Calendar
      * Returns the difference in days between two dates (or between a date and today).
      *
      * @param \DateTime $dateEnd The first date
-     * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param \DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
      *
      * @return int Returns the diffence $dateEnd - $dateStart in days
      *
@@ -1427,13 +1428,13 @@ class Calendar
      */
     public static function getDeltaDays($dateEnd, $dateStart = null)
     {
-        if (!is_a($dateEnd, '\\DateTime')) {
+        if (!($dateEnd instanceof \DateTimeInterface || $dateEnd instanceof \DateTime)) {
             throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
         }
         if (empty($dateStart) && ($dateStart !== 0) && ($dateStart !== '0')) {
             $dateStart = new \DateTime('now', $dateEnd->getTimezone());
         }
-        if (!is_a($dateStart, '\\DateTime')) {
+        if (!($dateStart instanceof \DateTimeInterface || $dateStart instanceof \DateTime)) {
             throw new Exception\BadArgumentType($dateStart, '\\DateTime');
         }
         if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
@@ -1451,7 +1452,7 @@ class Calendar
      * Describe an interval between two dates (eg '2 days and 4 hours').
      *
      * @param \DateTime $dateEnd The first date
-     * @param \DateTime|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param \DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
      * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
      * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -1462,13 +1463,13 @@ class Calendar
      */
     public static function describeInterval($dateEnd, $dateStart = null, $maxParts = 2, $width = 'short', $locale = '')
     {
-        if (!is_a($dateEnd, '\\DateTime')) {
+        if (!($dateEnd instanceof \DateTimeInterface || $dateEnd instanceof \DateTime)) {
             throw new Exception\BadArgumentType($dateEnd, '\\DateTime');
         }
         if (empty($dateStart) && ($dateStart !== 0) && ($dateStart !== '0')) {
             $dateStart = new \DateTime('now', $dateEnd->getTimezone());
         }
-        if (!is_a($dateStart, '\\DateTime')) {
+        if (!($dateStart instanceof \DateTimeInterface || $dateStart instanceof \DateTime)) {
             throw new Exception\BadArgumentType($dateStart, '\\DateTime');
         }
         if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
@@ -1574,7 +1575,7 @@ class Calendar
     /**
      * Format a date (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
@@ -1627,7 +1628,7 @@ class Calendar
     /**
      * Format a time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1702,7 +1703,7 @@ class Calendar
     /**
      * Format a date/time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1758,7 +1759,7 @@ class Calendar
     {
         $result = '';
         if (!empty($value)) {
-            if (!is_a($value, '\\DateTime')) {
+            if (!($value instanceof \DateTimeInterface || $value instanceof \DateTime)) {
                 throw new Exception\BadArgumentType($value, '\\DateTime');
             }
             if (!is_string($format) || $format === '') {
@@ -1785,7 +1786,7 @@ class Calendar
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|string $value An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
      * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
