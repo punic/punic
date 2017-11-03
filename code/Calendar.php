@@ -1849,7 +1849,7 @@ class Calendar
         return $result;
     }
 
-    protected static function decodeDayOfWeek(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeDayOfWeek($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -1867,7 +1867,7 @@ class Calendar
         }
     }
 
-    protected static function decodeDayOfWeekLocal(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeDayOfWeekLocal($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -1882,12 +1882,12 @@ class Calendar
         }
     }
 
-    protected static function decodeDayOfWeekLocalAlone(\DateTime $value, $count, $locale)
+    protected static function decodeDayOfWeekLocalAlone($value, $count, $locale)
     {
         return static::decodeDayOfWeekLocal($value, $count, $locale, true);
     }
 
-    protected static function decodeDayOfMonth(\DateTime $value, $count, $locale)
+    protected static function decodeDayOfMonth($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1899,7 +1899,7 @@ class Calendar
         }
     }
 
-    protected static function decodeMonth(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeMonth($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
             case 1:
@@ -1917,12 +1917,12 @@ class Calendar
         }
     }
 
-    protected static function decodeMonthAlone(\DateTime $value, $count, $locale)
+    protected static function decodeMonthAlone($value, $count, $locale)
     {
         return static::decodeMonth($value, $count, $locale, true);
     }
 
-    protected static function decodeYear(\DateTime $value, $count, $locale)
+    protected static function decodeYear($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1939,7 +1939,7 @@ class Calendar
         }
     }
 
-    protected static function decodeHour12(\DateTime $value, $count, $locale)
+    protected static function decodeHour12($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1951,7 +1951,7 @@ class Calendar
         }
     }
 
-    protected static function decodeDayperiod(\DateTime $value, $count, $locale)
+    protected static function decodeDayperiod($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1967,7 +1967,7 @@ class Calendar
         }
     }
 
-    protected static function decodeVariableDayperiod(\DateTime $value, $count, $locale)
+    protected static function decodeVariableDayperiod($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1983,7 +1983,7 @@ class Calendar
         }
     }
 
-    protected static function decodeHour24(\DateTime $value, $count, $locale)
+    protected static function decodeHour24($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -1995,7 +1995,7 @@ class Calendar
         }
     }
 
-    protected static function decodeHour12From0(\DateTime $value, $count, $locale)
+    protected static function decodeHour12From0($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2006,7 +2006,7 @@ class Calendar
         }
     }
 
-    protected static function decodeHour24From1(\DateTime $value, $count, $locale)
+    protected static function decodeHour24From1($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2017,7 +2017,7 @@ class Calendar
         }
     }
 
-    protected static function decodeMinute(\DateTime $value, $count, $locale)
+    protected static function decodeMinute($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2029,7 +2029,7 @@ class Calendar
         }
     }
 
-    protected static function decodeSecond(\DateTime $value, $count, $locale)
+    protected static function decodeSecond($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2041,7 +2041,7 @@ class Calendar
         }
     }
 
-    protected static function decodeTimezoneNoLocationSpecific(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneNoLocationSpecific($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2065,7 +2065,7 @@ class Calendar
         return $tz;
     }
 
-    protected static function decodeTimezoneShortGMT(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneShortGMT($value, $count, $locale)
     {
         $offset = $value->getOffset();
         $sign = ($offset < 0) ? '-' : '+';
@@ -2085,7 +2085,7 @@ class Calendar
         }
     }
 
-    protected static function decodeEra(\DateTime $value, $count, $locale)
+    protected static function decodeEra($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2101,7 +2101,7 @@ class Calendar
         }
     }
 
-    protected static function decodeYearWeekOfYear(\DateTime $value, $count, $locale)
+    protected static function decodeYearWeekOfYear($value, $count, $locale)
     {
         $y = $value->format('o');
         if ($count === 2) {
@@ -2118,7 +2118,7 @@ class Calendar
     /**
      * Note: we assume Gregorian calendar here.
      */
-    protected static function decodeYearExtended(\DateTime $value, $count, $locale)
+    protected static function decodeYearExtended($value, $count, $locale)
     {
         return static::decodeYear($value, $count, $locale);
     }
@@ -2126,12 +2126,12 @@ class Calendar
     /**
      * Note: we assume Gregorian calendar here.
      */
-    protected static function decodeYearRelatedGregorian(\DateTime $value, $count, $locale)
+    protected static function decodeYearRelatedGregorian($value, $count, $locale)
     {
         return static::decodeYearExtended($value, $count, $locale);
     }
 
-    protected static function decodeQuarter(\DateTime $value, $count, $locale, $standAlone = false)
+    protected static function decodeQuarter($value, $count, $locale, $standAlone = false)
     {
         $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
         switch ($count) {
@@ -2150,12 +2150,12 @@ class Calendar
         }
     }
 
-    protected static function decodeQuarterAlone(\DateTime $value, $count, $locale)
+    protected static function decodeQuarterAlone($value, $count, $locale)
     {
         return static::decodeQuarter($value, $count, $locale, true);
     }
 
-    protected static function decodeWeekOfYear(\DateTime $value, $count, $locale)
+    protected static function decodeWeekOfYear($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2167,7 +2167,7 @@ class Calendar
         }
     }
 
-    protected static function decodeDayOfYear(\DateTime $value, $count, $locale)
+    protected static function decodeDayOfYear($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2179,7 +2179,7 @@ class Calendar
         }
     }
 
-    protected static function decodeWeekdayInMonth(\DateTime $value, $count, $locale)
+    protected static function decodeWeekdayInMonth($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2194,12 +2194,12 @@ class Calendar
         }
     }
 
-    protected static function decodeFractionsOfSeconds(\DateTime $value, $count, $locale)
+    protected static function decodeFractionsOfSeconds($value, $count, $locale)
     {
         return substr(str_pad($value->format('u'), $count, '0', STR_PAD_RIGHT), 0, $count);
     }
 
-    protected static function decodeMsecInDay(\DateTime $value, $count, $locale)
+    protected static function decodeMsecInDay($value, $count, $locale)
     {
         $hours = intval($value->format('G'));
         $minutes = $hours * 60 + intval($value->format('i'));
@@ -2209,7 +2209,7 @@ class Calendar
         return str_pad(strval($milliseconds), $count, '0', STR_PAD_LEFT);
     }
 
-    protected static function decodeTimezoneDelta(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneDelta($value, $count, $locale)
     {
         $offset = $value->getOffset();
         $sign = ($offset < 0) ? '-' : '+';
@@ -2244,7 +2244,7 @@ class Calendar
         }
     }
 
-    protected static function decodeTimezoneNoLocationGeneric(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneNoLocationGeneric($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2266,7 +2266,7 @@ class Calendar
         return $tz;
     }
 
-    protected static function decodeTimezoneID(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneID($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2291,7 +2291,7 @@ class Calendar
         return $result;
     }
 
-    protected static function decodeTimezoneWithTime(\DateTime $value, $count, $locale, $zForZero = false)
+    protected static function decodeTimezoneWithTime($value, $count, $locale, $zForZero = false)
     {
         $offset = $value->getOffset();
         $useZ = ($zForZero && ($offset === 0)) ? true : false;
@@ -2339,13 +2339,13 @@ class Calendar
         return $result;
     }
 
-    protected static function decodeTimezoneWithTimeZ(\DateTime $value, $count, $locale)
+    protected static function decodeTimezoneWithTimeZ($value, $count, $locale)
     {
         return static::decodeTimezoneWithTime($value, $count, $locale, true);
     }
 
     /** @todo */
-    protected static function decodeWeekOfMonth(\DateTime $value, $count, $locale)
+    protected static function decodeWeekOfMonth($value, $count, $locale)
     {
         throw new Exception\NotImplemented(__METHOD__);
     }
@@ -2416,7 +2416,7 @@ class Calendar
         return $result;
     }
 
-    protected static function decodePunicExtension(\DateTime $value, $count, $locale)
+    protected static function decodePunicExtension($value, $count, $locale)
     {
         switch ($count) {
             case 1:
@@ -2455,7 +2455,7 @@ class Calendar
         }
     }
 
-    protected static function getTimezoneNameFromDatetime(\DateTime $dt)
+    protected static function getTimezoneNameFromDatetime($dt)
     {
         if (defined('\HHVM_VERSION')) {
             $result = $dt->format('e');
