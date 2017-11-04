@@ -1,6 +1,8 @@
 +#!/usr/bin/env php
 <?php
 
+require __DIR__ . '/../code/Comparer.php';
+
 function handleError($errno, $errstr, $errfile, $errline)
 {
     if ($errno == E_NOTICE || $errno == E_WARNING) {
@@ -71,6 +73,9 @@ try {
         echo 'Building source JSON data for English... ';
         $sourceData->ensureJsonLocale('en');
         echo "done.\n";
+    }
+    if (!class_exists('\Collator')) {
+        throw new Exception('The PHP intl extension must be loaded');
     }
 
     $jsonFileHelper = new JsonFileHelper($fileUtils, $options);
@@ -1254,7 +1259,7 @@ class JSonConverter
                 'listPatterns.json' => ListPatternsLocalePunicConversion::create(),
                 'units.json' => UnitsLocalePunicConversion::create(),
                 'dateFields.json' => NoopLocalePunicConversion::create(array('dates', 'fields')),
-                'languages.json' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'languages')),
+                'languages.json' => LanguagesLocalePunicConversion::create(),
                 'territories.json' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'territories')),
                 'localeDisplayNames.json' => LocaleDisplayNamesLocalePunicConversion::create(),
                 'numbers.json' => NumbersLocalePunicConversion::create(),
@@ -1735,6 +1740,33 @@ class NoopLocalePunicConversion extends LocalePunicConversion
     }
 }
 
+class LanguagesLocalePunicConversion extends LocalePunicConversion
+{
+    /**
+     * @return static
+     */
+    public static function create()
+    {
+        return new static(array('localeDisplayNames', 'languages'));
+    }
+
+    /**
+     * @param array $data
+     * @param string $localeID
+     *
+     * @return array
+     */
+    public function process(array $data, $localeID)
+    {
+        $languages = parent::process($data, $localeID);
+
+        $comparer = new \Punic\Comparer($localeID);
+        $comparer->sort($languages, true);
+
+        return $languages;
+    }
+}
+
 class CalendarLocalePunicConversion extends LocalePunicConversion
 {
     /**
@@ -2154,6 +2186,11 @@ class CurrenciesLocalePunicConversion extends LocalePunicConversion
             $final[$currencyCode] = $currencyInfo;
         }
         $data = $final;
+
+        $comparer = new \Punic\Comparer($localeID);
+        uasort($data, function($a, $b) use ($comparer) {
+            return $comparer->compare($a['name'], $b['name']);
+        });
 
         return $data;
     }
