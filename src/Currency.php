@@ -43,8 +43,6 @@ class Currency
                 $result = array_intersect_key($result, $tenderCurrencies);
             }
         }
-        $sorter = new \Punic\Comparer();
-        $sorter->sort($result, true);
 
         return $result;
     }
