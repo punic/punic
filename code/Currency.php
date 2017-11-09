@@ -70,7 +70,7 @@ class Currency
         if (is_array($data)) {
             $result = $data['name'];
             if (($quantity !== null) && isset($data['pluralName'])) {
-                if (is_string($data) && in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
+                if (in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
                     $pluralRule = $quantity;
                 } else {
                     $pluralRule = Plural::getRule($quantity, $locale);

@@ -27,6 +27,8 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
             array('en', 'USD', 0, 'US dollars', '$', '$', ''),
             array('en', 'USD', 1, 'US dollar', '$', '$', ''),
             array('en', 'USD', 2, 'US dollars', '$', '$', ''),
+            array('en', 'USD', 'one', 'US dollar', '$', '$', ''),
+            array('en', 'USD', 'many', 'US dollars', '$', '$', ''),
         );
     }
 
