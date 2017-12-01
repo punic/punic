@@ -1794,31 +1794,31 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
         // Special input skeleton fields.
         $this->assertSame(
-            '10:58 – 11:57 PM GMT+12:00',
+            '10:58 – 11:57 PM Fiji Time',
             Calendar::formatInterval($dt, $dtHour, 'jmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr GMT+12:00',
+            '22:58–23:57 Uhr Fidschi Zeit',
             Calendar::formatInterval($dt, $dtHour, 'jmv', 'de')
         );
         $this->assertSame(
-            '10:58 – 11:57 GMT+12:00',
+            '10:58 – 11:57 Fiji Time',
             Calendar::formatInterval($dt, $dtHour, 'Jmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr GMT+12:00',
+            '22:58–23:57 Uhr Fidschi Zeit',
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'de')
         );
         $this->assertSame(
-            '10:58 – 11:57 GMT+12:00',
+            '10:58 – 11:57 Fiji Time',
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'en_CN')
         );
         $this->assertSame(
-            '10:58 – 11:57 PM GMT+12:00',
+            '10:58 – 11:57 PM Fiji Time',
             Calendar::formatInterval($dt, $dtHour, 'Cmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr GMT+12:00',
+            '22:58–23:57 Uhr Fidschi Zeit',
             Calendar::formatInterval($dt, $dtHour, 'Cmv', 'de')
         );
     }
@@ -1838,12 +1838,12 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::formatIntervalEx($dt, $dtMonth, 'yMMMMd', null, 'de')
         );
         $this->assertSame(
-            '22:58:00.00 GMT+2:00',
+            '22:58:00.00 Germany Time',
             Calendar::formatIntervalEx($dt, $dtMilliSecond, 'HmsSSv', 'Europe/Berlin')
         );
         $this->assertSame(
-            '22:58:00.00 GMT+2:00',
-            Calendar::formatIntervalEx($dt, $dtMilliSecond, 'HmsSSv', 'Europe/Berlin')
+            '22:58:00,00 heure : Allemagne',
+            Calendar::formatIntervalEx($dt, $dtMilliSecond, 'HmsSSv', 'Europe/Berlin', 'fr_FR')
         );
     }
 
