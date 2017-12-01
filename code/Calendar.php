@@ -921,10 +921,71 @@ class Calendar
         return $result;
     }
 
-    /** @todo I can't find data for this */
-    public static function getTimezoneNameLocationSpecific($value, $width = 'long', $kind = '', $locale = '')
+    /**
+     * Returns the localized name of a timezone, location-specific.
+     *
+     * @param string|\DateTime|\DateTimeZone $value the php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name
+     * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
+     *
+     * @return string returns an empty string if the timezone has not been found, the timezone name otherwise
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Time_Zone_Goals
+     */
+    public static function getTimezoneNameLocationSpecific($value, $locale = '')
     {
-        return '';
+        $result = '';
+        if (!empty($value)) {
+            if (is_string($value)) {
+                $phpNames = static::getTimezonesAliases($value);
+                $timezone = null;
+                foreach ($phpNames as $phpName) {
+                    try {
+                        $timezone = new \DateTimeZone($phpName);
+                        break;
+                    } catch (\Exception $x) {
+                    }
+                }
+                if (!$timezone) {
+                    return '';
+                }
+                $location = $timezone->getLocation();
+            } elseif (is_a($value, '\\DateTime')) {
+                $timezone = $value->getTimezone();
+                $location = self::getTimezoneLocationFromDatetime($value);
+                if (empty($kind)) {
+                    if (intval($value->format('I')) === 1) {
+                        $kind = 'daylight';
+                    } else {
+                        $kind = 'standard';
+                    }
+                }
+            } elseif (is_a($value, '\\DateTimeZone')) {
+                $timezone = $value;
+                $location = $timezone->getLocation();
+            } else {
+                throw new Exception\BadArgumentType($value, 'string, DateTime, or DateTimeZone');
+            }
+
+            $name = '';
+            if (isset($location['country_code']) && $location['country_code'] !== '??') {
+                $data = Data::getGeneric('primaryZones');
+                if (isset($data[$location['country_code']]) ||
+                    count(\DateTimeZone::listIdentifiers(\DateTimeZone::PER_COUNTRY, $location['country_code'])) === 1) {
+                    $name = Territory::getName($location['country_code'], $locale);
+                }
+            }
+
+            if (!isset($name[0]) && substr($timezone->getName(), 0, 7) !== 'Etc/GMT') {
+                $name = static::getTimezoneExemplarCity($value, false, $locale);
+            }
+
+            if (isset($name[0])) {
+                $data = Data::get('timeZoneNames', $locale);
+                $result = sprintf($data['regionFormat'], $name);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -2378,7 +2439,7 @@ class Calendar
             case 1:
                 return sprintf($format, $sign.$hours.(($minutes === 0) ? '' : (':'.substr('0'.$minutes, -2))));
             case 4:
-                return sprintf($format, $sign.$hours.':'.substr('0'.$minutes, -2));
+                return sprintf($format, $sign.substr('0'.$hours, -2).':'.substr('0'.$minutes, -2));
             default:
                 throw new Exception\ValueNotInList($count, array(1, 4));
         }
@@ -2578,7 +2639,7 @@ class Calendar
                 $result = static::getTimezoneExemplarCity($value, true, $locale);
                 break;
             case 4:
-                $result = static::getTimezoneNameLocationSpecific($value, 'short', 'generic', $locale);
+                $result = static::getTimezoneNameLocationSpecific($value, $locale);
                 if (!isset($result[0])) {
                     $result = static::decodeTimezoneShortGMT($value, 4, $locale);
                 }
@@ -2778,6 +2839,21 @@ class Calendar
             }
         } else {
             $result = $tz->getName();
+        }
+
+        return $result;
+    }
+
+    protected static function getTimezoneLocationFromDatetime(\DateTime $dt)
+    {
+        if (defined('\HHVM_VERSION')) {
+            if (!preg_match('/[0-9][0-9]/', $dt->format('e'))) {
+                $result = $dt->getTimezone()->getLocation();
+            } else {
+                $result = false;
+            }
+        } else {
+            $result = $dt->getTimezone()->getLocation();
         }
 
         return $result;
