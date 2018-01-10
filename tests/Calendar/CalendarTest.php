@@ -2114,7 +2114,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function providerDescribeInterval()
     {
-        $now = new \DateTime();
+        $now = new \DateTime('2017-11-01T16:18:44', new \DateTimeZone('Europe/Rome'));
         $before1 = clone $now;
         $before1->sub(new \DateInterval('P2Y4DT6H8M'));
         $before2 = clone $now;
