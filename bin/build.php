@@ -1754,7 +1754,6 @@ class CalendarLocalePunicConversion extends LocalePunicConversion
     {
         $data = parent::process($data, $localeID);
         unset($data['dateTimeFormats']['appendItems']);
-        unset($data['dateTimeFormats']['intervalFormats']);
         foreach (array_keys($data['dateTimeFormats']) as $width) {
             $data['dateTimeFormats'][$width] = $this->toPhpSprintf($data['dateTimeFormats'][$width]);
         }
@@ -1764,6 +1763,7 @@ class CalendarLocalePunicConversion extends LocalePunicConversion
                 unset($data['eras'][$keyFrom]);
             }
         }
+        $data['dateTimeFormats']['intervalFormats']['intervalFormatFallback'] = $this->toPhpSprintf($data['dateTimeFormats']['intervalFormats']['intervalFormatFallback']);
 
         return $data;
     }

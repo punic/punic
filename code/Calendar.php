@@ -1338,7 +1338,8 @@ class Calendar
         $requestedFields = array_values(array_unique(str_split($requestedSkeleton, 1)));
         $requestedLength = strlen($requestedSkeleton);
 
-        // If patterns match apart from second fraction field, adjust for this afterwards.
+        // UTS 35, part 2, section 2.6.2.1, step 4: If patterns match apart from second
+        // fraction field, adjust for this afterwards.
         $sWidth = substr_count($requestedSkeleton, 'S');
         if ($sWidth) {
             $requestedLengthWithoutMs = $requestedLength - $sWidth;
@@ -1407,9 +1408,9 @@ class Calendar
                         $fieldA = $match[0];
                     }
                 }
-                // 'j' maps to 'h aaa', 'jj' to 'hh aaa', 'jjj' to 'h aaaa', etc.
+                // 'j' maps to 'h a', 'jj' to 'hh a', 'jjj' to 'h aaaa', 'jjjj' to 'h aaaa', etc.
                 $countH = 2 - $count % 2;
-                $countA = 2 + ceil($count / 2);
+                $countA = ($count <= 2 ? 1 : ($count <= 4 ? 4 : 5));
                 $skeleton = substr($skeleton, 0, $index).str_repeat($fieldH, $countH).substr($skeleton, $index + $count);
                 $replacements['a'] = str_repeat($fieldA, $countA);
             }
@@ -1474,6 +1475,249 @@ class Calendar
         }
 
         return $postprocessedFormat;
+    }
+
+    /**
+     * Fields used to calculate the greatest difference ordered by significance (from era to second).
+     *
+     * @var string
+     */
+    protected static $differenceFields = 'GyQMdaHmsS';
+
+    /**
+     * Fields representing date symbols.
+     *
+     * @var string
+     */
+    protected static $dateFields = 'GyYurUQqMLlwWEcedDFg';
+
+    /**
+     * Get the ISO format for a date/time interval.
+     *
+     * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
+     * @param string $greatestDifference The calendar field with the greatest distance between the two dates. Must be one of the fields mentioned in $differenceFields.
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
+     *
+     * @return array an array with two entries:
+     *               - string: The ISO interval format
+     *               - bool|null: Whether the earliest date is the first of the two dates in the pattern,
+     *                 or null if the dates are identical within the granularity specified by the skeleton
+     *
+     * @throws \Punic\Exception Throws an exception in case of problems
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     */
+    public static function getIntervalFormat($skeleton, $greatestDifference, $locale = '')
+    {
+        static $cache = array();
+        if (empty($locale)) {
+            $locale = Data::getDefaultLocale();
+        }
+        if (isset($cache[$locale][$skeleton][$greatestDifference])) {
+            return $cache[$locale][$skeleton][$greatestDifference];
+        }
+
+        $data = Data::get('calendar', $locale);
+        $data = $data['dateTimeFormats']['intervalFormats'];
+
+        if (isset($data[$skeleton])) {
+            $preprocessedSkeleton = $skeleton;
+            $replacements = array();
+            $match = array($skeleton, 0);
+        } else {
+            list($preprocessedSkeleton, $replacements) = self::preprocessSkeleton($skeleton, $locale);
+
+            $match = self::getBestMatchingSkeleton($preprocessedSkeleton, array_keys($data));
+        }
+
+        if ($match) {
+            list($matchSkeleton, $sWidth) = $match;
+        }
+
+        // The spec does not unambiguously define "greatest difference".
+        $adjustedGreatestDifference = self::adjustGreatestDifference($greatestDifference, $preprocessedSkeleton);
+
+        if ($adjustedGreatestDifference === '') {
+            // Greatest difference is less than skeleton granularity, so we display the
+            // interval as a single date.
+            return array(self::getSkeletonFormat($skeleton, $locale), null);
+        }
+
+        $earliestFirst = null;
+        if ($match && isset($data[$matchSkeleton][$adjustedGreatestDifference])) {
+            $format = $data[$matchSkeleton][$adjustedGreatestDifference];
+
+            if (substr($format, 0, 12) === 'latestFirst:') {
+                $format = substr($format, 12);
+                $earliestFirst = false;
+            } elseif (substr($format, 0, 14) === 'earliestFirst:') {
+                $format = substr($format, 14);
+                $earliestFirst = true;
+            }
+
+            $format = self::postprocessSkeletonFormat($format, $sWidth, $replacements, $locale);
+        } else {
+            // Either there was no matching skeleton, or there was no pattern matching
+            // the specific greatest difference, so format using the fallback format.
+            // If skeleton contains both date and time fields, and the difference is les
+            // than a day, format using "date - date time", otherwise use "date time -
+            // date time". This is not mandated by UTS #35, but ICU4J does this.
+            $dateLength = strspn($preprocessedSkeleton, self::$dateFields);
+            if ($dateLength > 0 && $dateLength < strlen($preprocessedSkeleton) && strspn($adjustedGreatestDifference, self::$dateFields) === 0) {
+                $timeSkeleton = substr($preprocessedSkeleton, $dateLength);
+
+                $wholeFormat = self::getSkeletonFormat($preprocessedSkeleton, $locale);
+                $timeFormat = self::getSkeletonFormat($timeSkeleton, $locale);
+
+                $format = sprintf($data['intervalFormatFallback'], $wholeFormat, $timeFormat);
+            } else {
+                $wholeFormat = self::getSkeletonFormat($preprocessedSkeleton, $locale);
+                $format = sprintf($data['intervalFormatFallback'], $wholeFormat, $wholeFormat);
+            }
+        }
+
+        // If pattern does not declare an order, use the order define by the fallback pattern.
+        if ($earliestFirst === null) {
+            $earliestFirst = strpos($data['intervalFormatFallback'], '%1') < strpos($data['intervalFormatFallback'], '%2');
+        }
+
+        $result = array($format, $earliestFirst);
+
+        $cache[$locale][$skeleton][$greatestDifference] = $result;
+
+        return $result;
+    }
+
+    /**
+     * Return the most significant field where the two dates differ. For fractional seconds,
+     * 'S' is returned if the differ on the first decimal, 'SS' for the second decimal etc.
+     * If the dates are identical, the empty string is returned.
+
+     * @param \DateTime $value1
+     * @param \DateTime $value2
+     *
+     * @return string
+     */
+    protected static function getGreatestDifference($value1, $value2)
+    {
+        if (!is_a($value1, '\\DateTime')) {
+            throw new Exception\BadArgumentType($value1, '\\DateTime');
+        }
+        if (!is_a($value2, '\\DateTime')) {
+            throw new Exception\BadArgumentType($value2, '\\DateTime');
+        }
+
+        $length = strlen(self::$differenceFields);
+        for ($index = 0; $index < $length; ++$index) {
+            $field = self::$differenceFields[$index];
+            // We just need to check if this field is the same for the two dates,
+            // so any width and locale will do.
+            $function = self::$decoderFunctions[$field];
+            if (static::$function($value1, 1, 'en') !== static::$function($value2, 1, 'en')) {
+                return $field;
+            }
+        }
+
+        // Find the decimal where fractional seconds differ.
+        for ($count = 2; $count < 6; ++$count) {
+            if (static::$function($value1, $count, 'en') !== static::$function($value2, $count, 'en')) {
+                return str_repeat('S', $count);
+            }
+        }
+
+        // Dates are identical.
+        return '';
+    }
+
+    /**
+     * Adjust greatest difference to the fields used in the skeleton.
+     *
+     * The spec does not go into much detail on how to do this. This logic works
+     * with the skeletons currently provided in the data files but may need adjustment
+     * if e.g. skeletons including weeks (w) are added.
+     *
+     * @param string $greatestDifferencey
+     * @param string $skeleton
+     *
+     * @return string
+     */
+    protected static function adjustGreatestDifference($greatestDifference, $skeleton)
+    {
+        if ($greatestDifference === '') {
+            return '';
+        }
+
+        // Adjust index for fractional second width (S).
+        $greatestDifferenceIndex = strpos(self::$differenceFields, $greatestDifference[0]) + strlen($greatestDifference) - 1;
+        if ($greatestDifferenceIndex === false) {
+            throw new Exception\ValueNotInList($greatestDifference, str_split(self::$differenceFields, 1));
+        }
+
+        // Strip fields that do not represent an interval.
+        $normalizedSkeleton = str_replace(array('z', 'Z', 'O', 'v', 'V', 'X', 'x', 'P'), '', $skeleton);
+        $skeletonGranularity = substr($normalizedSkeleton, -1);
+        if ($skeletonGranularity === 'h') {
+            $skeletonGranularity = 'H';
+        }
+        $skeletonGranularityIndex = strpos(self::$differenceFields, $skeletonGranularity);
+        if ($skeletonGranularityIndex === false) {
+            throw new Exception\ValueNotInList($skeletonGranularity, str_split(self::$differenceFields, 1));
+        }
+
+        $adjustedGreatestDifference = $greatestDifference;
+        if ($adjustedGreatestDifference === 'a' && strpos($skeleton, 'H') !== false) {
+            // With a 24-hour clock we do not care about dayperiods.
+            $adjustedGreatestDifference = 'H';
+        } elseif ($adjustedGreatestDifference === 'H' && strpos($skeleton, 'h') !== false) {
+            // 12-hour clock skeletons use h to indicate hour.
+            $adjustedGreatestDifference = 'h';
+        } elseif ($adjustedGreatestDifference === 'Q' && strpos($skeleton, 'Q') === false) {
+            // Ignore quarter, if it is not part of the skeleton.
+            $adjustedGreatestDifference = 'm';
+        } elseif ($adjustedGreatestDifference[0] === 'S') {
+            $skeletonGranularityIndex += substr_count($skeleton, 'S') - 1;
+        }
+
+        if ($greatestDifferenceIndex > $skeletonGranularityIndex) {
+            // The dates are identical or only differ on less significant fields
+            // not included in the skeleton.
+            return '';
+        }
+
+        return $adjustedGreatestDifference;
+    }
+
+    /**
+     * Splits an interval format into two datetime formats.
+     *
+     * @param string $format
+     *
+     * @return array An array containing two entries, each representing a datetime format
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     */
+    protected static function splitIntervalFormat($format)
+    {
+        $functionNames[] = array();
+        $index = 0;
+
+        // Split on the first recurring field.
+        $tokens = self::tokenizeFormat($format);
+        foreach ($tokens as $token) {
+            if (is_array($token)) {
+                if (in_array($token[0], $functionNames)) {
+                    $index = $token[2];
+
+                    return array(
+                        substr($format, 0, $index),
+                        substr($format, $index),
+                    );
+                }
+                $functionNames[] = $token[0];
+            }
+        }
+
+        throw new \Punic\Exception('No recurring field found in format: '.$format);
     }
 
     /**
@@ -1783,6 +2027,62 @@ class Calendar
         return static::formatDatetime(
             static::toDateTime($value, $toTimezone),
             $width,
+            $locale
+        );
+    }
+
+    /**
+     * Format a date/time interval.
+     *
+     * @param \DateTime $earliest the first date of the interval
+     * @param \DateTime $latest The last date of the
+     * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
+     *
+     * @return string Returns the localized textual representation of the interval
+     *
+     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     */
+    public static function formatInterval($earliest, $latest, $skeleton, $locale = '')
+    {
+        $greatestDifference = self::getGreatestDifference($earliest, $latest);
+
+        list($format, $earliestFirst) = static::getIntervalFormat($skeleton, $greatestDifference, $locale);
+
+        if ($earliestFirst === null) {
+            return static::format($earliest, $format, $locale);
+        } else {
+            list($format1, $format2) = static::splitIntervalFormat($format);
+
+            return static::format(
+                $earliestFirst ? $earliest : $latest,
+                $format1,
+                $locale
+            ).static::format(
+                $earliestFirst ? $latest : $earliest,
+                $format2,
+                $locale
+            );
+        }
+    }
+
+    /**
+     * Format a date/time interval (extended version: various date/time representations - see toDateTime()).
+     *
+     * @param number|\DateTime|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
+     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
+     *
+     * @return string Returns the localized textual representation of the interval
+     */
+    public static function formatIntervalEx($earliest, $latest, $skeleton, $toTimezone = '', $locale = '')
+    {
+        return static::formatInterval(
+            static::toDateTime($earliest, $toTimezone),
+            static::toDateTime($latest, $toTimezone),
+            $skeleton,
             $locale
         );
     }
@@ -2633,13 +2933,13 @@ class Calendar
                     $count = 1;
                     for ($j = $index + 1; ($j < $length) && ($format[$j] === $char); ++$j) {
                         ++$count;
-                        ++$index;
                     }
                     if (isset(self::$decoderFunctions[$char])) {
-                        $result[] = array(self::$decoderFunctions[$char], $count);
+                        $result[] = array(self::$decoderFunctions[$char], $count, $index);
                     } else {
                         $result[] = str_repeat($char, $count);
                     }
+                    $index += $count - 1;
                 }
             }
             self::$tokenizerCache[$format] = $result;
