@@ -1306,6 +1306,7 @@ class JSonConverter
             'likelySubtags.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'likelySubtags')),
             'territoryContainment.json' => TerritoryContainmentSupplementalPunicConversion::create(),
             'metaZones.json' => MetaZonesSupplementalPunicConversion::create(),
+            'primaryZones.json' => NoopSupplementalPunicConversion::create(array('supplemental', 'primaryZones')),
             'plurals.json' => PluralsSupplementalPunicConversion::create(),
             'measurementData.json' => MeasurementDataSupplementalPunicConversion::create(),
             'currencyData.json' => CurrencyDataSupplementalPunicConversion::create(),
