@@ -23,7 +23,7 @@ class Calendar
     /**
      * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
      *
-     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string|\DateTimeZone $toTimezone the timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTimeInterface`)
      * @param string|\DateTimeZone $fromTimezone the original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTimeInterface`)
      *
@@ -75,7 +75,7 @@ class Calendar
                 if ($tzFrom !== null) {
                     $result->setTimezone($tzFrom);
                 }
-            } elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $result = new \DateTime(null, $value->getTimezone());
                 $result->setTimestamp($value->getTimestamp());
                 if ($tzFrom !== null) {
@@ -510,7 +510,7 @@ class Calendar
     /**
      * Get the name of an era.
      *
-     * @param number|\DateTime $value the year number or the \DateTime instance for which you want the name of the era
+     * @param number|\DateTime|\DateTimeInterface $value the year number or the \DateTimeInterface instance for which you want the name of the era
      * @param string $width the format name; it can be 'wide' (eg 'Before Christ'), 'abbreviated' (eg 'BC') or 'narrow' (eg 'B')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      *
@@ -553,7 +553,7 @@ class Calendar
     /**
      * Get the name of a month.
      *
-     * @param number|\DateTime $value the month number (1-12) or a \DateTime instance for which you want the name of the month
+     * @param number|\DateTime|\DateTimeInterface $value the month number (1-12) or a \DateTimeInterface instance for which you want the name of the month
      * @param string $width the format name; it can be 'wide' (eg 'January'), 'abbreviated' (eg 'Jan') or 'narrow' (eg 'J')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the month name will be part of a date
@@ -597,7 +597,7 @@ class Calendar
     /**
      * Get the name of a week day.
      *
-     * @param number|\DateTime $value a week day number (from 0-Sunday to 6-Saturnday) or a \DateTime instance for which you want the name of the day of the week
+     * @param number|\DateTime|\DateTimeInterface $value a week day number (from 0-Sunday to 6-Saturnday) or a \DateTimeInterface instance for which you want the name of the day of the week
      * @param string $width the format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the week day name will be part of a date
@@ -642,7 +642,7 @@ class Calendar
     /**
      * Get the name of a quarter.
      *
-     * @param number|\DateTime $value a quarter number (from 1 to 4) or a \DateTime instance for which you want the name of the day of the quarter
+     * @param number|\DateTime|\DateTimeInterface $value a quarter number (from 1 to 4) or a \DateTimeInterface instance for which you want the name of the day of the quarter
      * @param string $width the format name; it can be 'wide' (eg '1st quarter'), 'abbreviated' (eg 'Q1') or 'narrow' (eg '1')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the quarter name will be part of a date
@@ -686,7 +686,7 @@ class Calendar
     /**
      * Get the name of a day period (AM/PM).
      *
-     * @param number|string|\DateTime $value an hour (from 0 to 23), a standard period name ('am' or 'pm', lower or upper case) a \DateTime instance for which you want the name of the day period
+     * @param number|string|\DateTime|\DateTimeInterface $value an hour (from 0 to 23), a standard period name ('am' or 'pm', lower or upper case) a \DateTimeInterface instance for which you want the name of the day period
      * @param string $width the format name; it can be 'wide' (eg 'AM'), 'abbreviated' (eg 'AM') or 'narrow' (eg 'a')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the day period name will be part of a date
@@ -741,7 +741,7 @@ class Calendar
      *
      * The available periods, their start/end time and their names are locale-specific.
      *
-     * @param number|string|\DateTime $value an hour (from 0 to 23), a \DateTime instance for which you want the name of the day period
+     * @param number|string|\DateTime|\DateTimeInterface $value an hour (from 0 to 23), a \DateTimeInterface instance for which you want the name of the day period
      * @param string $width the format name; it can be 'wide', 'abbreviated' or 'narrow'
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (e.g. "morning"), set to false if the day period name will be part of a date (e.g. "in the morning")
@@ -801,7 +801,7 @@ class Calendar
     /**
      * Returns the localized name of a timezone, no location-specific.
      *
-     * @param string|\DateTimeInterface|\DateTimeZone $value the PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance for which you want the localized timezone name
+     * @param string|\DateTime|\DateTimeInterface|\DateTimeZone $value the PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance for which you want the localized timezone name
      * @param string $width the format name; it can be 'long' (eg 'Greenwich Mean Time') or 'short' (eg 'GMT')
      * @param string $kind set to 'daylight' to retrieve the daylight saving time name, set to 'standard' to retrieve the standard time, set to 'generic' to retrieve the generic name, set to '' to determine automatically the dst (if $value is \DateTime) or the generic (otherwise)
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
@@ -931,7 +931,7 @@ class Calendar
     /**
      * Returns the localized name of an exemplar city for a specific timezone.
      *
-     * @param string|\DateTimeInterface|\DateTimeZone $value The PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance
+     * @param string|\DateTime|\DateTimeInterface|\DateTimeZone $value The PHP name of a timezone, a `\DateTimeInterface` instance or a `\DateTimeZone` instance
      * @param bool $returnUnknownIfNotFound true If the exemplar city is not found, shall we return the translation of 'Unknown City'?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1419,8 +1419,8 @@ class Calendar
     /**
      * Returns the difference in days between two dates (or between a date and today).
      *
-     * @param \DateTime $dateEnd The first date
-     * @param \DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param \DateTime|\DateTimeInterface $dateEnd The first date
+     * @param \DateTime|\DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
      *
      * @return int Returns the diffence $dateEnd - $dateStart in days
      *
@@ -1438,6 +1438,7 @@ class Calendar
             throw new Exception\BadArgumentType($dateStart, '\\DateTime');
         }
         if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
+            $dateStart = new \DateTime('@' . $dateStart->getTimestamp());
             $dateStart->setTimezone($dateEnd->getTimezone());
         }
         $utc = new \DateTimeZone('UTC');
@@ -1451,8 +1452,8 @@ class Calendar
     /**
      * Describe an interval between two dates (eg '2 days and 4 hours').
      *
-     * @param \DateTime $dateEnd The first date
-     * @param \DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
+     * @param \DateTime|\DateTimeInterface $dateEnd The first date
+     * @param \DateTime|\DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
      * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
      * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -1473,6 +1474,7 @@ class Calendar
             throw new Exception\BadArgumentType($dateStart, '\\DateTime');
         }
         if ($dateStart->getOffset() !== $dateEnd->getOffset()) {
+            $dateStart = new \DateTime('@' . $dateStart->getTimestamp());
             $dateStart->setTimezone($dateEnd->getTimezone());
         }
         $utc = new \DateTimeZone('UTC');
@@ -1540,7 +1542,7 @@ class Calendar
     /**
      * Format a date.
      *
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
@@ -1575,7 +1577,7 @@ class Calendar
     /**
      * Format a date (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
@@ -1603,7 +1605,7 @@ class Calendar
     /**
      * Format a time.
      *
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -1628,7 +1630,7 @@ class Calendar
     /**
      * Format a time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1655,7 +1657,7 @@ class Calendar
     /**
      * Format a date/time.
      *
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a skeleton pattern prefixed by '~',
      *                      or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
@@ -1703,7 +1705,7 @@ class Calendar
     /**
      * Format a date/time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1730,7 +1732,7 @@ class Calendar
     /**
      * Format a date and/or time.
      *
-     * @param \DateTime $value The \DateTime instance for which you want the localized textual representation
+     * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are available:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
      * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -1786,7 +1788,7 @@ class Calendar
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
      * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -1824,7 +1826,7 @@ class Calendar
     /**
      * Retrieve the relative day name (eg 'yesterday', 'tomorrow'), if available.
      *
-     * @param \DateTime $datetime The date for which you want the relative day name
+     * @param \DateTime|\DateTimeInterface $datetime The date for which you want the relative day name
      * @param bool $ucFirst Force first letter to be upper case?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1849,6 +1851,14 @@ class Calendar
         return $result;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     * @param bool $standAlone
+     *
+     * @return string
+     */
     protected static function decodeDayOfWeek($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
@@ -1867,6 +1877,15 @@ class Calendar
         }
     }
 
+    /**
+     * 
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     * @param bool $standAlone
+     *
+     * @return string
+     */
     protected static function decodeDayOfWeekLocal($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
@@ -1882,11 +1901,25 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeDayOfWeekLocalAlone($value, $count, $locale)
     {
         return static::decodeDayOfWeekLocal($value, $count, $locale, true);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeDayOfMonth($value, $count, $locale)
     {
         switch ($count) {
@@ -1899,6 +1932,14 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     * @param bool $standAlone
+     *
+     * @return string
+     */
     protected static function decodeMonth($value, $count, $locale, $standAlone = false)
     {
         switch ($count) {
@@ -1917,11 +1958,25 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeMonthAlone($value, $count, $locale)
     {
         return static::decodeMonth($value, $count, $locale, true);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeYear($value, $count, $locale)
     {
         switch ($count) {
@@ -1939,6 +1994,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeHour12($value, $count, $locale)
     {
         switch ($count) {
@@ -1951,6 +2013,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeDayperiod($value, $count, $locale)
     {
         switch ($count) {
@@ -1967,6 +2036,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeVariableDayperiod($value, $count, $locale)
     {
         switch ($count) {
@@ -1983,6 +2059,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeHour24($value, $count, $locale)
     {
         switch ($count) {
@@ -1995,6 +2078,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeHour12From0($value, $count, $locale)
     {
         switch ($count) {
@@ -2006,6 +2096,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeHour24From1($value, $count, $locale)
     {
         switch ($count) {
@@ -2017,6 +2114,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeMinute($value, $count, $locale)
     {
         switch ($count) {
@@ -2029,6 +2133,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeSecond($value, $count, $locale)
     {
         switch ($count) {
@@ -2041,6 +2152,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneNoLocationSpecific($value, $count, $locale)
     {
         switch ($count) {
@@ -2065,6 +2183,13 @@ class Calendar
         return $tz;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneShortGMT($value, $count, $locale)
     {
         $offset = $value->getOffset();
@@ -2085,6 +2210,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeEra($value, $count, $locale)
     {
         switch ($count) {
@@ -2101,6 +2233,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeYearWeekOfYear($value, $count, $locale)
     {
         $y = $value->format('o');
@@ -2117,6 +2256,12 @@ class Calendar
 
     /**
      * Note: we assume Gregorian calendar here.
+     *
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
      */
     protected static function decodeYearExtended($value, $count, $locale)
     {
@@ -2125,12 +2270,26 @@ class Calendar
 
     /**
      * Note: we assume Gregorian calendar here.
+     *
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
      */
     protected static function decodeYearRelatedGregorian($value, $count, $locale)
     {
         return static::decodeYearExtended($value, $count, $locale);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     * @param bool $standAlone
+     *
+     * @return string
+     */
     protected static function decodeQuarter($value, $count, $locale, $standAlone = false)
     {
         $quarter = 1 + intval(floor((intval($value->format('n')) - 1) / 3));
@@ -2150,11 +2309,25 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeQuarterAlone($value, $count, $locale)
     {
         return static::decodeQuarter($value, $count, $locale, true);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeWeekOfYear($value, $count, $locale)
     {
         switch ($count) {
@@ -2167,6 +2340,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeDayOfYear($value, $count, $locale)
     {
         switch ($count) {
@@ -2179,6 +2359,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeWeekdayInMonth($value, $count, $locale)
     {
         switch ($count) {
@@ -2194,11 +2381,25 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeFractionsOfSeconds($value, $count, $locale)
     {
         return substr(str_pad($value->format('u'), $count, '0', STR_PAD_RIGHT), 0, $count);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeMsecInDay($value, $count, $locale)
     {
         $hours = intval($value->format('G'));
@@ -2209,6 +2410,13 @@ class Calendar
         return str_pad(strval($milliseconds), $count, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneDelta($value, $count, $locale)
     {
         $offset = $value->getOffset();
@@ -2244,6 +2452,13 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneNoLocationGeneric($value, $count, $locale)
     {
         switch ($count) {
@@ -2266,6 +2481,13 @@ class Calendar
         return $tz;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneID($value, $count, $locale)
     {
         switch ($count) {
@@ -2291,6 +2513,13 @@ class Calendar
         return $result;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneWithTime($value, $count, $locale, $zForZero = false)
     {
         $offset = $value->getOffset();
@@ -2339,29 +2568,53 @@ class Calendar
         return $result;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeTimezoneWithTimeZ($value, $count, $locale)
     {
         return static::decodeTimezoneWithTime($value, $count, $locale, true);
     }
 
-    /** @todo */
+    /**
+     * @todo
+     *
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodeWeekOfMonth($value, $count, $locale)
     {
         throw new Exception\NotImplemented(__METHOD__);
     }
 
-    /** @todo */
+    /**
+     * @todo
+     */
     protected static function decodeYearCyclicName()
     {
         throw new Exception\NotImplemented(__METHOD__);
     }
 
-    /** @todo */
+    /**
+     * @todo
+     */
     protected static function decodeModifiedGiulianDay()
     {
         throw new Exception\NotImplemented(__METHOD__);
     }
 
+    /**
+     * @param string $phpTimezoneName
+     *
+     * @return string[]
+     */
     protected static function getTimezonesAliases($phpTimezoneName)
     {
         $result = array($phpTimezoneName);
@@ -2416,6 +2669,13 @@ class Calendar
         return $result;
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $value
+     * @param int $count
+     * @param string $locale
+     *
+     * @return string
+     */
     protected static function decodePunicExtension($value, $count, $locale)
     {
         switch ($count) {
@@ -2455,6 +2715,11 @@ class Calendar
         }
     }
 
+    /**
+     * @param \DateTime|\DateTimeInterface $dt
+     *
+     * @return string
+     */
     protected static function getTimezoneNameFromDatetime($dt)
     {
         if (defined('\HHVM_VERSION')) {
@@ -2469,6 +2734,11 @@ class Calendar
         return $result;
     }
 
+    /**
+     * @param \DateTimeZone $tz
+     *
+     * @return string
+     */
     protected static function getTimezoneNameFromTimezone(\DateTimeZone $tz)
     {
         if (defined('\HHVM_VERSION')) {
