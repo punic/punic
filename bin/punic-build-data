@@ -1,3 +1,4 @@
++#!/usr/bin/env php
 <?php
 
 function handleError($errno, $errstr, $errfile, $errline)
