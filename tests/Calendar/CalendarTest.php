@@ -163,6 +163,14 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::toDateTime(new \DateTime('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
             'Calculating from timestamp'
         );
+
+        if (version_compare(PHP_VERSION, '5.5') >= 0) {
+            $this->assertSame(
+                '2017-03-08T03:00:00+10:30',
+                Calendar::toDateTime(new \DateTimeImmutable('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
+                'Calculating from timestamp'
+            );
+        }
     }
 
     public function providerConvertPhpToIso()
