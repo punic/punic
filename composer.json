@@ -39,10 +39,13 @@
         "php": ">=5.3"
     },
     "require-dev": {
-        "apigen/apigen": "4.0.*"
+        "phpunit/phpunit": "^4"
     },
     "replace": {
         "punic/common": "*",
         "punic/calendar": "*"
-    }
+    },
+    "bin": [
+        "bin/build-punic-data"
+    ]
 }
