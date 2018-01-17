@@ -40,8 +40,6 @@ class Language
         foreach (array_filter(array_keys($data), $filter) as $languageID) {
             $result[$languageID] = $data[$languageID];
         }
-        $sorter = new \Punic\Comparer();
-        $sorter->sort($result, true);
 
         return $result;
     }
