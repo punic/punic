@@ -12,7 +12,7 @@ set_error_handler('handleError');
 try {
     echo 'Initializing... ';
     define('ROOT_DIR', dirname(__DIR__));
-    define('SOURCE_DIR', dirname(__DIR__).DIRECTORY_SEPARATOR.'code');
+    define('SOURCE_DIR', dirname(__DIR__).DIRECTORY_SEPARATOR.'src');
     define('TEMP_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'temp');
     define('WEBSITE_DIR', TEMP_DIR.DIRECTORY_SEPARATOR.'website');
     define('DEST_DIR', WEBSITE_DIR.DIRECTORY_SEPARATOR.'docs');
