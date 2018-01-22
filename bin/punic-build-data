@@ -1294,12 +1294,14 @@ class JSonConverter
                 'listPatterns' => ListPatternsLocalePunicConversion::create(),
                 'units' => UnitsLocalePunicConversion::create(),
                 'dateFields' => NoopLocalePunicConversion::create(array('dates', 'fields')),
-                'languages' => LanguagesLocalePunicConversion::create(),                'territories' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'territories')),
+                'languages' => LanguagesLocalePunicConversion::create(),
+                'territories' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'territories')),
                 'localeDisplayNames' => LocaleDisplayNamesLocalePunicConversion::create(),
                 'numbers' => NumbersLocalePunicConversion::create(),
                 'layout' => NoopLocalePunicConversion::create(array('layout', 'orientation')),
                 'measurementSystemNames' => NoopLocalePunicConversion::create(array('localeDisplayNames', 'measurementSystemNames')),
-                'currencies' => CurrenciesLocalePunicConversion::create(),            );
+                'currencies' => CurrenciesLocalePunicConversion::create(),
+            );
             foreach ($converters as $identifier => $converter) {
                 $destinationFile = $destinationDirectory.'/'.$identifier.'.php';
                 $useLocale = $localeID;
