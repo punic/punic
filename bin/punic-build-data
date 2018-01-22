@@ -1289,7 +1289,7 @@ class JSonConverter
         $this->fileUtils->createDirectory($destinationDirectory);
         try {
             $converters = array(
-                'ca-gregorial' => CalendarLocalePunicConversion::create(),
+                'calendar' => CalendarLocalePunicConversion::create(),
                 'timeZoneNames' => TimeZoneNameslocalePunicConversion::create(),
                 'listPatterns' => ListPatternsLocalePunicConversion::create(),
                 'units' => UnitsLocalePunicConversion::create(),
@@ -1344,6 +1344,7 @@ class JSonConverter
             'telephoneCodeData' => TelephoneCodeDataSupplementalPunicConversion::create(),
             'territoryInfo' => TerritoryInfoSupplementalPunicConversion::create(),
             'timeData' => TimeDataSupplementalPunicConversion::create(),
+            'dayPeriods' => DayPeriodsSupplementalPunicConversion::create(),
             'weekData' => WeekDataSupplementalPunicConversion::create(),
             'parentLocales' => NoopSupplementalPunicConversion::create(array('supplemental', 'parentLocales', 'parentLocale')),
             'likelySubtags' => NoopSupplementalPunicConversion::create(array('supplemental', 'likelySubtags')),
@@ -1351,7 +1352,9 @@ class JSonConverter
             'metaZones' => MetaZonesSupplementalPunicConversion::create(),
             'primaryZones' => NoopSupplementalPunicConversion::create(array('supplemental', 'primaryZones')),
             'plurals' => PluralsSupplementalPunicConversion::create(),
-            'measurementData' => MeasurementDataSupplementalPunicConversion::create(),        );
+            'measurementData' => MeasurementDataSupplementalPunicConversion::create(),
+            'currencyData' => CurrencyDataSupplementalPunicConversion::create(),
+        );
         $sourceDirectory = $this->sourceData->getJsonDirectoryForGeneric('supplemental');
         foreach ($converters as $identifier => $converter) {
             $destinationFile = $destinationDirectory.'/'.$identifier.'.php';
