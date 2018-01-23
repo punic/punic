@@ -342,6 +342,9 @@ class Options
         foreach ($localeOptions as $localeOption) {
             if ($localeOption === '') {
                 throw new Exception('Empty locale detected');
+            }
+            if ($localeOption === 'root') {
+                $localeOption = 'en_US';
             } elseif ($localeOption === static::ALL_LOCALES_PLACEHOLDER) {
                 $allLocales = true;
             } else {
@@ -829,25 +832,30 @@ class LocaleIdentifier
     public static function fromString($localeIdentifier)
     {
         // http://unicode.org/reports/tr35/#Unicode_language_identifier
-        $rxLanguage = '(?:[a-z]{2,3})|(?:[a-z]{5,8}:)';
-        $rxScript = '[a-z]{4}';
-        $rxRegion = '(?:[a-z]{2})|(?:[0-9]{3})';
-        $rxVariant = '(?:[a-z0-9]{5,8})|(?:[0-9][a-z0-9]{3})';
-        $rxSep = '[-_]';
-        if (is_string($localeIdentifier) && preg_match("/^($rxLanguage)(?:$rxSep($rxScript))?(?:$rxSep($rxRegion))?((?:$rxSep(?:$rxVariant))*)$/i", $localeIdentifier, $matches)) {
+        if (strcasecmp($localeIdentifier, 'root') === 0) {
             $result = new static();
-            $result->language = strtolower($matches[1]);
-            if (isset($matches[2])) {
-                $result->script = ucfirst(strtolower($matches[2]));
-            }
-            if (isset($matches[3])) {
-                $result->region = strtoupper($matches[3]);
-            }
-            if ($matches[4] !== '') {
-                $result->variants = explode('_', strtoupper(str_replace('-', '_', substr($matches[4], 1))));
-            }
+            $result->language = 'root';
         } else {
-            $result = null;
+            $rxLanguage = '(?:[a-z]{2,3})|(?:[a-z]{5,8}:)';
+            $rxScript = '[a-z]{4}';
+            $rxRegion = '(?:[a-z]{2})|(?:[0-9]{3})';
+            $rxVariant = '(?:[a-z0-9]{5,8})|(?:[0-9][a-z0-9]{3})';
+            $rxSep = '[-_]';
+            if (is_string($localeIdentifier) && preg_match("/^($rxLanguage)(?:$rxSep($rxScript))?(?:$rxSep($rxRegion))?((?:$rxSep(?:$rxVariant))*)$/i", $localeIdentifier, $matches)) {
+                $result = new static();
+                $result->language = strtolower($matches[1]);
+                if (isset($matches[2])) {
+                    $result->script = ucfirst(strtolower($matches[2]));
+                }
+                if (isset($matches[3])) {
+                    $result->region = strtoupper($matches[3]);
+                }
+                if ($matches[4] !== '') {
+                    $result->variants = explode('_', strtoupper(str_replace('-', '_', substr($matches[4], 1))));
+                }
+            } else {
+                $result = null;
+            }
         }
 
         return $result;
