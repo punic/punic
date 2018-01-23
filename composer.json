@@ -46,6 +46,6 @@
         "punic/calendar": "*"
     },
     "bin": [
-        "bin/build-punic-data"
+        "bin/punic-data"
     ]
 }
