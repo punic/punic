@@ -11,13 +11,83 @@ class Misc
      * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian).
      *
      * @param array $list The list to concatenate
+     * @param string $type The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
+    public static function list($list, $type = 'standard', $width = '', $locale = '')
+    {
+        $result = '';
+        if (is_array($list)) {
+            switch ($width) {
+                case 'narrow':
+                    $suffixes = array('-narrow', '-short', '');
+                    break;
+                case 'short':
+                    $suffixes = array('-short', '-narrow', '');
+                    break;
+                case '':
+                    $suffixes = array('', '-short', '-narrow');
+                    break;
+                default:
+                    throw new \Punic\Exception\ValueNotInList($width, array('', 'short', 'narrow'));
+            }
+
+            $list = array_values($list);
+            $n = count($list);
+            switch ($n) {
+                case 0:
+                    break;
+                case 1:
+                    $result = (string) $list[0];
+                    break;
+                default:
+                    $allData = Data::get('listPatterns', $locale);
+                    $data = null;
+                    foreach ($suffixes as $suffix) {
+                        $key = $type . $suffix;
+                        if (isset($allData[$key])) {
+                            $data = $allData[$key];
+                            break;
+                        }
+                    }
+                    if ($data === null) {
+                        $types = array_unique(array_map(function($key) { return strtok($key, '-'); }, array_keys($allData)));
+                        throw new \Punic\Exception\ValueNotInList($type, $types);
+                    }
+                    if (isset($data[$n])) {
+                        $result = vsprintf($data[$n], $list);
+                    } else {
+                        $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
+                        if ($n > 2) {
+                            for ($index = $n - 3; $index > 0; --$index) {
+                                $result = sprintf($data['middle'], $list[$index], $result);
+                            }
+                            $result = sprintf($data['start'], $list[0], $result);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian).
+     *
+     * @param array $list The list to concatenate
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     *
+     * @deprecated Use list() instead.
+     */
     public static function join($list, $locale = '')
     {
-        return static::joinInternal($list, null, $locale);
+        return static::list($list, 'standard', '', $locale);
     }
 
     /**
@@ -28,25 +98,12 @@ class Misc
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     *
+     * @deprecated Use list() instead.
      */
     public static function joinUnits($list, $width = '', $locale = '')
     {
-        $keys = array();
-        if (!empty($width)) {
-            switch ($width) {
-                case 'narrow':
-                    $keys = array('unit-narrow', 'unit-short');
-                    break;
-                case 'short':
-                    $keys = array('unit-short', 'unit-narrow');
-                    break;
-                default:
-                    throw new \Punic\Exception\ValueNotInList($width, array('', 'short', 'narrow'));
-            }
-        }
-        $keys[] = 'unit';
-
-        return static::joinInternal($list, $keys, $locale);
+        return static::list($list, 'unit', $width, $locale);
     }
 
     /**

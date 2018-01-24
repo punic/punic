@@ -4,6 +4,131 @@ use Punic\Misc;
 
 class ListTest extends PHPUnit_Framework_TestCase
 {
+    public function testList()
+    {
+        $this->assertSame(
+            '',
+            Misc::list(false, 'standard', '', 'en')
+        );
+        $this->assertSame(
+            '',
+            Misc::list('', 'standard', '', 'en')
+        );
+        $this->assertSame(
+            '',
+            Misc::list(array(), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            '',
+            Misc::list(false, 'or', '', 'en')
+        );
+        $this->assertSame(
+            '',
+            Misc::list('', 'or', '', 'en')
+        );
+        $this->assertSame(
+            '',
+            Misc::list(array(), 'or', '', 'en')
+        );
+        $this->assertSame(
+            'One',
+            Misc::list(array('One'), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            'One',
+            Misc::list(array('One'), 'or', '', 'en')
+        );
+        $this->assertSame(
+            'One and Two',
+            Misc::list(array('One', 'Two'), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            'One and Two',
+            Misc::list(array('One', 'Two'), 'standard', 'short', 'en')
+        );
+        $this->assertSame(
+            'One and Two',
+            Misc::list(array('One', 'Two'), 'standard', 'narrow', 'en')
+        );
+        $this->assertSame(
+            'One or Two',
+            Misc::list(array('One', 'Two'), 'or', '', 'en')
+        );
+        $this->assertSame(
+            'One, Two, and Three',
+            Misc::list(array('One', 'Two', 'Three'), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            'One, Two and Three',
+            Misc::list(array('One', 'Two', 'Three'), 'standard', '', 'en_GB')
+        );
+        $this->assertSame(
+            'One, Two, or Three',
+            Misc::list(array('One', 'Two', 'Three'), 'or', '', 'en')
+        );
+        $this->assertSame(
+            'One, Two, Three, and Four',
+            Misc::list(array('One', 'Two', 'Three', 'Four'), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            'One, Two, Three, or Four',
+            Misc::list(array('One', 'Two', 'Three', 'Four'), 'or', '', 'en')
+        );
+        $this->assertSame(
+            'One, Two, Three, Four, and 5',
+            Misc::list(array('One', 'Two', 'Three', 'Four', 5), 'standard', '', 'en')
+        );
+        $this->assertSame(
+            'Uno',
+            Misc::list(array('Uno'), 'standard', '', 'it')
+        );
+        $this->assertSame(
+            'Uno e due',
+            Misc::list(array('Uno', 'due'), 'standard', '', 'it')
+        );
+        $this->assertSame(
+            'Uno o due',
+            Misc::list(array('Uno', 'due'), 'or', '', 'it')
+        );
+        $this->assertSame(
+            'Uno, due e tre',
+            Misc::list(array('Uno', 'due', 'tre'), 'standard', '', 'it')
+        );
+        $this->assertSame(
+            'Uno, due, tre e quattro',
+            Misc::list(array('Uno', 'due', 'tre', 'quattro'), 'standard', '', 'it')
+        );
+        $this->assertSame(
+            'Uno, due, tre, quattro e 5',
+            Misc::list(array('Uno', 'due', 'tre', 'quattro', 5), 'standard', '', 'it')
+        );
+
+        $this->assertSame(
+            '1 ft, 3 in',
+            Misc::list(array('1 ft', '3 in'), 'unit', '', 'en')
+        );
+        $this->assertSame(
+            '1 ft, 3 in',
+            Misc::list(array('1 ft', '3 in'), 'unit', 'short', 'en')
+        );
+        $this->assertSame(
+            '1 ft 3 in',
+            Misc::list(array('1 ft', '3 in'), 'unit', 'narrow', 'en')
+        );
+        $this->assertSame(
+            '1 piede e 3 pollici',
+            Misc::list(array('1 piede', '3 pollici'), 'unit', '', 'it')
+        );
+        $this->assertSame(
+            '1 piede e 3 pollici',
+            Misc::list(array('1 piede', '3 pollici'), 'unit', 'short', 'it')
+        );
+        $this->assertSame(
+            '1 piede 3 pollici',
+            Misc::list(array('1 piede', '3 pollici'), 'unit', 'narrow', 'it')
+        );
+    }
+
     public function testJoin()
     {
         $this->assertSame(
@@ -132,10 +257,16 @@ class ListTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testValueNotInListException()
+    public function testInvalidType()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
-        Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');
+        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-type' is not valid. Acceptable values are: 'standard', 'or', 'unit");
+        Misc::list(array('One', 'Two'), 'invalid-type', '', 'en');
+    }
+
+    public function testInvalidWidthException()
+    {
+        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
+        Misc::list(array('One', 'Two'), '', 'invalid-width', 'en');
     }
 
     /**
