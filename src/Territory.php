@@ -102,11 +102,11 @@ class Territory
      * @param string $levels A string with one or more of the characters: 'W' (for world), 'C' (for continents), 'S' (for sub-continents), 'c' (for countries)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
+     * @throws Exception\BadArgumentType
+     *
      * @return array
      *
      * @see http://www.unicode.org/cldr/charts/latest/supplemental/territory_containment_un_m_49.html
-     *
-     * @throws Exception\BadArgumentType
      */
     public static function getList($levels = 'W', $locale = '')
     {
@@ -346,6 +346,11 @@ class Territory
         return $result;
     }
 
+    /**
+     * @param string $territoryCode
+     *
+     * @return array|null
+     */
     protected static function getTerritoryInfo($territoryCode)
     {
         $result = null;
@@ -360,6 +365,9 @@ class Territory
         return $result;
     }
 
+    /**
+     * @return array
+     */
     protected static function getStructure()
     {
         static $cache = null;
@@ -374,6 +382,13 @@ class Territory
         return $result;
     }
 
+    /**
+     * @param array $data
+     * @param string $id
+     * @param int $level
+     *
+     * @return array
+     */
     protected static function fillStructure($data, $id, $level)
     {
         $item = array('id' => $id, 'level' => $level, 'children' => array());
@@ -386,6 +401,13 @@ class Territory
         return $item;
     }
 
+    /**
+     * @param array $data
+     * @param array $list
+     * @param bool $flatList
+     *
+     * @return array
+     */
     protected static function finalizeWithNames($data, $list, $flatList)
     {
         $result = array();
@@ -404,6 +426,12 @@ class Territory
         return $result;
     }
 
+    /**
+     * @param array $parent
+     * @param int[] $levels
+     *
+     * @return array
+     */
     protected static function filterStructure($parent, $levels)
     {
         $thisResult = array();
@@ -428,6 +456,11 @@ class Territory
         return $thisResult;
     }
 
+    /**
+     * @param array $list
+     *
+     * @return array
+     */
     protected static function sort($list)
     {
         foreach (array_keys($list) as $i) {

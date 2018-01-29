@@ -35,7 +35,7 @@ class Number
         if (is_int($number)) {
             $result = true;
         } elseif (is_float($number)) {
-            if ($number === floatval(round($number))) {
+            if ($number === (float) round($number)) {
                 $result = true;
             }
         }
@@ -46,7 +46,7 @@ class Number
     /**
      * Localize a number representation (for instance, converts 1234.5 to '1,234.5' in case of English and to '1.234,5' in case of Italian).
      *
-     * @param numeric $value The string value to convert
+     * @param int|float|string $value The string value to convert
      * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -60,7 +60,7 @@ class Number
             $number = $value;
         } elseif (is_string($value) && isset($value[0])) {
             if (preg_match('/^[\\-+]?\\d+$/', $value)) {
-                $number = intval($value);
+                $number = (int) $value;
             } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
                 if (!isset($m[1])) {
                     $m[1] = '';
@@ -69,7 +69,7 @@ class Number
                     $m[2] = '';
                 }
                 if ((isset($m[1][0])) || (isset($m[2][0]))) {
-                    $number = floatval($value);
+                    $number = (float) $value;
                     if (!is_numeric($precision)) {
                         $precision = strlen($m[2]);
                     }
@@ -77,20 +77,20 @@ class Number
             }
         }
         if ($number !== null) {
-            $precision = is_numeric($precision) ? intval($precision) : null;
+            $precision = is_numeric($precision) ? (int) $precision : null;
             if ($precision !== null) {
                 $value = round($value, $precision);
             }
             $data = Data::get('numbers', $locale);
             $decimal = $data['symbols']['decimal'];
-            $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? intval($data['groupLength']) : 3;
+            $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? (int) $data['groupLength'] : 3;
             if ($value < 0) {
                 $sign = $data['symbols']['minusSign'];
                 $value = abs($value);
             } else {
                 $sign = '';
             }
-            $full = explode('.', strval($value), 2);
+            $full = explode('.', (string) $value, 2);
             $intPart = $full[0];
             $floatPath = (count($full) > 1) ? $full[1] : '';
             $len = strlen($intPart);
@@ -165,9 +165,9 @@ class Number
                 }
                 $int = str_replace($group, '', $int);
                 if ($float === null) {
-                    $result = intval("$sign$int");
+                    $result = (int) "$sign$int";
                 } else {
-                    $result = floatval("$sign$int.$float");
+                    $result = (float) "$sign$int.$float";
                 }
             }
         }

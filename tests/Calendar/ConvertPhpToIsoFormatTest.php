@@ -1,6 +1,6 @@
 <?php
 
-use \Punic\Calendar;
+use Punic\Calendar;
 
 class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 {
@@ -21,15 +21,9 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
         date_default_timezone_set($this->previousTimezone);
     }
 
-    private static function timestampToDateTime($timestamp)
-    {
-        $dateTime = new DateTime();
-        $dateTime->setTimezone(new DateTimeZone(self::TEST_TIMEZONE));
-        $dateTime->setTimestamp($timestamp);
-
-        return $dateTime;
-    }
-
+    /**
+     * @return array
+     */
     public function providerConvertPhpToIsoFormat()
     {
         $chunks = array(
@@ -64,6 +58,10 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerConvertPhpToIsoFormat
+     *
+     * @param string $phpFormat
+     * @param int $timestamp
+     * @param DateTime $dateTime
      */
     public function testConvertPhpToIsoFormat($phpFormat, $timestamp, DateTime $dateTime)
     {
@@ -73,5 +71,19 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
             Calendar::format($dateTime, $punicFormat, 'en'),
             "PHP date/time format chunk '$phpFormat' converted as '$punicFormat' and rendered for ".$dateTime->format('c')
         );
+    }
+
+    /**
+     * @param int $timestamp
+     *
+     * @return DateTime
+     */
+    private static function timestampToDateTime($timestamp)
+    {
+        $dateTime = new DateTime();
+        $dateTime->setTimezone(new DateTimeZone(self::TEST_TIMEZONE));
+        $dateTime->setTimestamp($timestamp);
+
+        return $dateTime;
     }
 }

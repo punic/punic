@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Data;
+use Punic\Data;
 
 class DataTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function testInvalidLocalesProvider()
     {
         return array(
@@ -24,6 +27,10 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testInvalidLocalesProvider
+     *
+     * @param string $method
+     * @param array $parameters
+     * @param string $exception
      */
     public function testInvalidLocales($method, $parameters, $exception)
     {
@@ -64,6 +71,9 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->assertSame('de', \Punic\Data::getFallbackLanguage());
     }
 
+    /**
+     * @return array
+     */
     public function providerInvalidDataFile()
     {
         return array(
@@ -84,6 +94,10 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerInvalidDataFile
+     *
+     * @param string $exception
+     * @param string $method
+     * @param string|mixed $dataFileID
      */
     public function testInvalidDataFile($exception, $method, $dataFileID)
     {
@@ -99,6 +113,9 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->assertGreaterThan(1, count($locales));
     }
 
+    /**
+     * @return array
+     */
     public function providerGuessFullLocale()
     {
         return array(
@@ -112,6 +129,9 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGuessFullLocale
+     *
+     * @param string $result
+     * @param array $parameters
      */
     public function testGuessFullLocale($result, $parameters)
     {
@@ -126,6 +146,9 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->assertSame('de-Latn-DE', $locale);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetTerritory()
     {
         return array(
@@ -140,6 +163,9 @@ class DataTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetTerritory
+     *
+     * @param string $result
+     * @param array $parameters
      */
     public function testGetTerritory($result, $parameters)
     {

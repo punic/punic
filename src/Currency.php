@@ -51,7 +51,7 @@ class Currency
      * Returns the name of a currency given its code.
      *
      * @param string $currencyCode The currency code
-     * @param null|number|string The quantity identifier. Allowed values:
+     * @param null|number|string $quantity The quantity identifier. Allowed values:
      * <ul>
      *     <li>`null` to return the standard name, not associated to any quantity</li>
      *     <li>`number` to return the name following the plural rule for the specified quantity</li>
@@ -183,6 +183,12 @@ class Currency
         return $result;
     }
 
+    /**
+     * @param string $currencyCode
+     * @param string $locale
+     *
+     * @return array|null
+     */
     protected static function getLocaleData($currencyCode, $locale)
     {
         $result = null;

@@ -8,7 +8,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
         foreach (\Punic\Data::getAvailableLocales(true) as $locale) {
             $theseCurrencyCodes = array_keys(\Punic\Currency::getAllCurrencies(true, true, $locale));
             sort($theseCurrencyCodes);
-            if (is_null($allCurrencyCodes)) {
+            if (null === $allCurrencyCodes) {
                 $allCurrencyCodes = $theseCurrencyCodes;
             } else {
                 $this->assertSame($allCurrencyCodes, $theseCurrencyCodes);
@@ -17,6 +17,9 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($allCurrencyCodes);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetInfo()
     {
         return array(
@@ -34,6 +37,14 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetInfo
+     *
+     * @param string $locale
+     * @param string $currencyCode
+     * @param int|null $quantity
+     * @param string $currencyName
+     * @param string $currencySymbol
+     * @param string $currencySymbolNarrow
+     * @param string $currencySymbolAlternative
      */
     public function testGetInfo($locale, $currencyCode, $quantity, $currencyName, $currencySymbol, $currencySymbolNarrow, $currencySymbolAlternative)
     {
@@ -43,6 +54,9 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
         $this->assertSame($currencySymbolAlternative, \Punic\Currency::getSymbol($currencyCode, 'alt', $locale), 'Error getting alternative symbol');
     }
 
+    /**
+     * @return array
+     */
     public function providerGetCurrencyForTerritory()
     {
         return array(
@@ -55,6 +69,9 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetCurrencyForTerritory
+     *
+     * @param string $territoryCode
+     * @param string $currencyCode
      */
     public function testGetCurrencyForTerritory($territoryCode, $currencyCode)
     {

@@ -1,6 +1,6 @@
 <?php
 
-use \Punic\Language;
+use Punic\Language;
 
 class LanguageTest extends PHPUnit_Framework_TestCase
 {
@@ -33,6 +33,9 @@ class LanguageTest extends PHPUnit_Framework_TestCase
         $this->assertSame('inglese', $languages['en']);
     }
 
+    /**
+     * @return string
+     */
     public function providerGetName()
     {
         return array(
@@ -62,6 +65,11 @@ class LanguageTest extends PHPUnit_Framework_TestCase
      * test getName.
      *
      * @dataProvider providerGetName
+     *
+     * @param string $result
+     * @param string $languageCode
+     * @param string $forLocale
+     * @param bool $allowCompoundNames
      */
     public function testGetName($result, $languageCode, $forLocale, $allowCompoundNames)
     {
