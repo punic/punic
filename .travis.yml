@@ -6,6 +6,10 @@ branches:
   only:
     - master
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
   - 5.4
   - 5.5
@@ -43,8 +47,8 @@ before_script:
 
 script:
   - |
-    if [[ $CODINGSTYLE = yes]]; then
-      php-cs-fixer fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.bootstrap
+    if [[ $CODINGSTYLE = yes ]]; then
+      ./vendor/bin/php-cs-fixer fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.dist
     elif [[ $CODECOVERAGE = yes ]]; then
       mkdir -p build/logs
       ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
