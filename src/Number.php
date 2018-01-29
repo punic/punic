@@ -58,7 +58,7 @@ class Number
         $number = null;
         if (is_int($value) || is_float($value)) {
             $number = $value;
-        } elseif (is_string($value) && isset($value[0])) {
+        } elseif (is_string($value) && $value !== '') {
             if (preg_match('/^[\\-+]?\\d+$/', $value)) {
                 $number = (int) $value;
             } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
@@ -68,7 +68,7 @@ class Number
                 if (!isset($m[2])) {
                     $m[2] = '';
                 }
-                if ((isset($m[1][0])) || (isset($m[2][0]))) {
+                if ($m[1] !== '' || $m[2] !== '') {
                     $number = (float) $value;
                     if (!is_numeric($precision)) {
                         $precision = strlen($m[2]);
@@ -92,7 +92,7 @@ class Number
             }
             $full = explode('.', (string) $value, 2);
             $intPart = $full[0];
-            $floatPath = (count($full) > 1) ? $full[1] : '';
+            $floatPath = count($full) > 1 ? $full[1] : '';
             $len = strlen($intPart);
             if (($groupLength > 0) && ($len > $groupLength)) {
                 $groupSign = $data['symbols']['group'];
@@ -102,7 +102,7 @@ class Number
             }
             $result = $sign.$intPart;
             if ($precision === null) {
-                if (isset($floatPath[0])) {
+                if ($floatPath !== '') {
                     $result .= $decimal.$floatPath;
                 }
             } elseif ($precision > 0) {
@@ -126,7 +126,7 @@ class Number
         $result = null;
         if (is_int($value) || is_float($value)) {
             $result = $value;
-        } elseif (is_string($value) && isset($value[0])) {
+        } elseif (is_string($value) && $value !== '') {
             $data = Data::get('numbers', $locale);
             $plus = $data['symbols']['plusSign'];
             $plusQ = preg_quote($plus);

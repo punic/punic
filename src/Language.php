@@ -81,7 +81,7 @@ class Language
             }
             if ($territory !== '') {
                 $territoryName = Territory::getName($territory, $locale);
-                if ($territoryName[0] !== '') {
+                if ($territoryName !== '') {
                     $patternData = Data::get('localeDisplayNames');
                     $pattern = $patternData['localeDisplayPattern']['localePattern'];
                     $result = sprintf($pattern, $result, $territoryName);
