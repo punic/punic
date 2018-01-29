@@ -110,11 +110,11 @@ class Currency
                     }
                     break;
             }
-            if ((strlen($result) === 0) && ($which !== 'alt')) {
+            if ($result === '' && $which !== 'alt') {
                 if (isset($data['symbol'])) {
                     $result = $data['symbol'];
                 }
-                if (!isset($result[0])) {
+                if ($result === '') {
                     $result = $currencyCode;
                 }
             }

@@ -124,7 +124,7 @@ class Unit
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = Data::getGeneric('measurementData');
-            while (isset($territoryCode[0])) {
+            while ($territoryCode !== '') {
                 if (isset($data['measurementSystem'][$territoryCode])) {
                     $result = $data['measurementSystem'][$territoryCode];
                     break;
@@ -146,7 +146,7 @@ class Unit
     public static function getCountriesWithMeasurementSystem($measurementSystem)
     {
         $result = array();
-        if (is_string($measurementSystem) && (isset($measurementSystem[0]))) {
+        if (is_string($measurementSystem) && $measurementSystem !== '') {
             $someGroup = false;
             $data = Data::getGeneric('measurementData');
             foreach ($data['measurementSystem'] as $territory => $ms) {
@@ -192,7 +192,7 @@ class Unit
         if (is_string($territoryCode) && preg_match('/^[a-z0-9]{2,3}$/i', $territoryCode)) {
             $territoryCode = strtoupper($territoryCode);
             $data = Data::getGeneric('measurementData');
-            while (isset($territoryCode[0])) {
+            while ($territoryCode !== '') {
                 if (isset($data['paperSize'][$territoryCode])) {
                     $result = $data['paperSize'][$territoryCode];
                     break;
@@ -214,7 +214,7 @@ class Unit
     public static function getCountriesWithPaperSize($paperSize)
     {
         $result = array();
-        if (is_string($paperSize) && (isset($paperSize[0]))) {
+        if (is_string($paperSize) && $paperSize !== '') {
             $someGroup = false;
             $data = Data::getGeneric('measurementData');
             foreach ($data['paperSize'] as $territory => $ms) {
