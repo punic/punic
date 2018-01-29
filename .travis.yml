@@ -36,6 +36,9 @@ before_script:
     export COMPOSER_DISABLE_XDEBUG_WARN=1
     travis_retry composer self-update --no-interaction || true
   - |
+    if [[ $CODINGSTYLE != yes ]]; then
+      composer remove --no-interaction --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+    fi
     if [[ $CODECOVERAGE = yes ]]; then
       export COMPOSER_ALLOW_XDEBUG=1
       travis_retry composer require --no-interaction --dev --no-suggest --no-update 'php-coveralls/php-coveralls:^2.0'
