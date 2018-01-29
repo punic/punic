@@ -18,6 +18,7 @@ return PhpCsFixer\Config::create()
         'no_useless_return' => true,
         'ordered_class_elements' => true,
         'ordered_imports' => true,
+        'php_unit_construct' => false,
         'php_unit_strict' => true,
         'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
         'phpdoc_align' => false,
@@ -54,6 +55,7 @@ fixers:
   no_useless_return: true
   ordered_class_elements: true
   ordered_imports: true
+  php_unit_construct: false
   php_unit_strict: true
   phpdoc_add_missing_param_annotation:
     only_untyped: false
