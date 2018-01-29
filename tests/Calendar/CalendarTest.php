@@ -1,6 +1,6 @@
 <?php
 
-use \Punic\Calendar;
+use Punic\Calendar;
 
 class CalendarTest extends PHPUnit_Framework_TestCase
 {
@@ -64,7 +64,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $dt = Calendar::toDateTime('now');
         $this->assertLessThan(
             3,
-            time() - intval($dt->format('U')),
+            time() - (int) $dt->format('U'),
             'Calculating now'
         );
 
@@ -155,7 +155,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             '2017-03-08T03:00:00+10:30',
-            Calendar::toDateTime(strval($time), null, 'Australia/Adelaide')->format('c'),
+            Calendar::toDateTime((string) $time, null, 'Australia/Adelaide')->format('c'),
             'Calculating from timestamp'
         );
         $this->assertSame(
@@ -173,6 +173,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function providerConvertPhpToIso()
     {
         return array(
@@ -187,6 +190,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      * expected boolean.
      *
      * @dataProvider providerConvertPhpToIso
+     *
+     * @param string $a
+     * @param string $b
      */
     public function testConvertPhpToIso($a, $b)
     {
@@ -374,6 +380,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testExceptionsProvider
+     *
+     * @param string $method
+     * @param array $parameters
+     * @param string $exception
      */
     public function testExceptions($method, $parameters, $exception)
     {
@@ -2120,6 +2130,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame("2010E'E01", Calendar::format($dt, "yyyy'E''E'MM"));
     }
 
+    /**
+     * @return array
+     */
     public function providerDescribeInterval()
     {
         $now = new \DateTime('2017-11-01T16:18:44', new \DateTimeZone('Europe/Rome'));
@@ -2157,6 +2170,13 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      * Test describeInterval.
      *
      * @dataProvider providerDescribeInterval
+     *
+     * @param string $expected
+     * @param \DateTime $dateEnd
+     * @param \DateTime $dateStart
+     * @param int $maxParts
+     * @param string $width
+     * @param string $locale
      */
     public function testDescribeInterval($expected, $dateEnd, $dateStart, $maxParts, $width, $locale)
     {
@@ -2227,6 +2247,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetDeltaDays()
     {
         return array(
@@ -2241,6 +2264,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      * Test getDeltaDays.
      *
      * @dataProvider providerGetDeltaDays
+     *
+     * @param int $expected
+     * @param array $arguments
      */
     public function testGetDeltaDays($expected, $arguments)
     {
@@ -2262,6 +2288,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetTimezonesAliases()
     {
         return array(
@@ -2288,6 +2317,9 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      * Test getTimezonesAliases.
      *
      * @dataProvider providerGetTimezonesAliases
+     *
+     * @param string $expected
+     * @param string $phpTimezoneName
      */
     public function testGetTimezonesAliases($expected, $phpTimezoneName)
     {

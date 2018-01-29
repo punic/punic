@@ -118,9 +118,9 @@ class Data
      * @param string $identifier The data identifier
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
      *
-     * @return array
-     *
      * @throws \Punic\Exception Throws an exception in case of problems
+     *
+     * @return array
      *
      * @internal
      */
@@ -165,9 +165,9 @@ class Data
      *
      * @param string $identifier The data identifier
      *
-     * @return array
-     *
      * @throws Exception Throws an exception in case of problems
+     *
+     * @return array
      *
      * @internal
      */
@@ -311,28 +311,12 @@ class Data
     }
 
     /**
-     * @deprecated
-     */
-    protected static function getParentTerritory($territory)
-    {
-        return Territory::getParentTerritoryCode($territory);
-    }
-
-    /**
-     * @deprecated
-     */
-    protected static function expandTerritoryGroup($parentTerritory)
-    {
-        return Territory::getChildTerritoryCodes($parentTerritory, true);
-    }
-
-    /**
      * Return the node associated to the locale territory.
      *
      * @param array $data The parent array for which you want the territory node
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
      *
-     * @return mixed Returns null if the node was not found, the node data otherwise
+     * @return null|mixed Returns null if the node was not found, the node data otherwise
      *
      * @internal
      */
@@ -357,7 +341,7 @@ class Data
      * @param array $data The parent array for which you want the language node
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
      *
-     * @return mixed Returns null if the node was not found, the node data otherwise
+     * @return null|mixed Returns null if the node was not found, the node data otherwise
      *
      * @internal
      */
@@ -383,7 +367,7 @@ class Data
      * @param array $data The data containing the locale info
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
      *
-     * @return mixed Returns null if $data is not an array or it does not contain locale info, the array item otherwise
+     * @return null|mixed Returns null if $data is not an array or it does not contain locale info, the array item otherwise
      *
      * @internal
      */
@@ -473,6 +457,30 @@ class Data
     }
 
     /**
+     * @deprecated
+     *
+     * @param string $territory
+     *
+     * @return string
+     */
+    protected static function getParentTerritory($territory)
+    {
+        return Territory::getParentTerritoryCode($territory);
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param string $parentTerritory
+     *
+     * @return array
+     */
+    protected static function expandTerritoryGroup($parentTerritory)
+    {
+        return Territory::getChildTerritoryCodes($parentTerritory, true);
+    }
+
+    /**
      * Returns the path of the locale-specific data, looking also for the fallback locale.
      *
      * @param string $locale The locale for which you want the data folder
@@ -505,7 +513,7 @@ class Data
      * Returns a list of locale identifiers associated to a locale.
      *
      * @param string $locale The locale for which you want the alternatives
-     * @param string $addFallback Set to true to add the fallback locale to the result, false otherwise
+     * @param bool $addFallback Set to true to add the fallback locale to the result, false otherwise
      *
      * @return array
      */

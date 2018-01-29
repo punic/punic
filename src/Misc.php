@@ -49,50 +49,6 @@ class Misc
         return static::joinInternal($list, $keys, $locale);
     }
 
-    protected static function joinInternal($list, $keys, $locale)
-    {
-        $result = '';
-        if (is_array($list)) {
-            $list = array_values($list);
-            $n = count($list);
-            switch ($n) {
-                case 0:
-                    break;
-                case 1:
-                    $result = strval($list[0]);
-                    break;
-                default:
-                    $allData = Data::get('listPatterns', $locale);
-                    $data = null;
-                    if (!empty($keys)) {
-                        foreach ($keys as $key) {
-                            if (isset($allData[$key])) {
-                                $data = $allData[$key];
-                                break;
-                            }
-                        }
-                    }
-                    if ($data === null) {
-                        $data = $allData['standard'];
-                    }
-                    if (isset($data[$n])) {
-                        $result = vsprintf($data[$n], $list);
-                    } else {
-                        $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
-                        if ($n > 2) {
-                            for ($index = $n - 3; $index > 0; --$index) {
-                                $result = sprintf($data['middle'], $list[$index], $result);
-                            }
-                            $result = sprintf($data['start'], $list[0], $result);
-                        }
-                    }
-                    break;
-            }
-        }
-
-        return $result;
-    }
-
     /**
      * Fix the case of a string.
      *
@@ -189,7 +145,7 @@ class Misc
                             $m[2] = '0'.$m[2];
                         }
                         if (preg_match('/^[01](\\.\\d*)?$/', $m[2])) {
-                            $quality = round(@floatval($m[2]), 4);
+                            $quality = round(@(float) $m[2], 4);
                         } else {
                             $quality = -1;
                         }
@@ -265,5 +221,56 @@ class Misc
         $data = Data::get('layout', $locale);
 
         return $data['lineOrder'];
+    }
+
+    /**
+     * @param array $list
+     * @param null|string[] $keys
+     * @param string $locale
+     *
+     * @return string
+     */
+    protected static function joinInternal($list, $keys, $locale)
+    {
+        $result = '';
+        if (is_array($list)) {
+            $list = array_values($list);
+            $n = count($list);
+            switch ($n) {
+                case 0:
+                    break;
+                case 1:
+                    $result = (string) $list[0];
+                    break;
+                default:
+                    $allData = Data::get('listPatterns', $locale);
+                    $data = null;
+                    if (!empty($keys)) {
+                        foreach ($keys as $key) {
+                            if (isset($allData[$key])) {
+                                $data = $allData[$key];
+                                break;
+                            }
+                        }
+                    }
+                    if ($data === null) {
+                        $data = $allData['standard'];
+                    }
+                    if (isset($data[$n])) {
+                        $result = vsprintf($data[$n], $list);
+                    } else {
+                        $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
+                        if ($n > 2) {
+                            for ($index = $n - 3; $index > 0; --$index) {
+                                $result = sprintf($data['middle'], $list[$index], $result);
+                            }
+                            $result = sprintf($data['start'], $list[0], $result);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        return $result;
     }
 }

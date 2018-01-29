@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Number;
+use Punic\Number;
 
 class NumberTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function providerIsNumeric()
     {
         return array(
@@ -14,6 +17,10 @@ class NumberTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerIsNumeric
+     *
+     * @param bool $result
+     * @param string $value
+     * @param string $locale
      */
     public function testIsNumeric($result, $value, $locale)
     {
@@ -23,6 +30,9 @@ class NumberTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerIsInteger()
     {
         return array(
@@ -35,6 +45,10 @@ class NumberTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerIsInteger
+     *
+     * @param bool $result
+     * @param string $value
+     * @param string $locale
      */
     public function testIsInteger($result, $value, $locale)
     {
@@ -44,6 +58,9 @@ class NumberTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerFormat()
     {
         return array(
@@ -72,6 +89,11 @@ class NumberTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerFormat
+     *
+     * @param string $result
+     * @param string|mixed $value
+     * @param int|null $precision
+     * @param string $locale
      */
     public function testFormat($result, $value, $precision, $locale)
     {
@@ -81,6 +103,9 @@ class NumberTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerUnformat()
     {
         return array(
@@ -96,6 +121,10 @@ class NumberTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerUnformat
+     *
+     * @param float|int $result
+     * @param string|number $value
+     * @param string $locale
      */
     public function testUnformat($result, $value, $locale)
     {

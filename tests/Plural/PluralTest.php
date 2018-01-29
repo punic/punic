@@ -1,41 +1,12 @@
 <?php
 
-use \Punic\Plural;
+use Punic\Plural;
 
 class PluralTest extends PHPUnit_Framework_TestCase
 {
-    protected static function joinPluralRules($rules)
-    {
-        usort($rules, function ($a, $b) {
-            foreach (array('zero', 'one', 'two', 'few', 'many', 'other') as $pr) {
-                if ($a == $pr) {
-                    return -1;
-                }
-                if ($b == $pr) {
-                    return 1;
-                }
-            }
-
-            return 0;
-        });
-
-        return implode(', ', $rules);
-    }
-
-    protected static function loadPluralRulesTestData()
-    {
-        $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
-        if (!is_file($testDataFile)) {
-            throw new \Exception('Test data file not found: plurals.php');
-        }
-        $data = @include $testDataFile;
-        if (!is_array($data)) {
-            throw new \Exception('Test data file not valid: plurals.php');
-        }
-
-        return $data;
-    }
-
+    /**
+     * @return array
+     */
     public function providerGetRules()
     {
         $data = static::loadPluralRulesTestData();
@@ -64,6 +35,9 @@ class PluralTest extends PHPUnit_Framework_TestCase
      * expected boolean.
      *
      * @dataProvider providerGetRules
+     *
+     * @param string $rules
+     * @param string $language
      */
     public function testGetRules($rules, $language)
     {
@@ -73,6 +47,9 @@ class PluralTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetRule()
     {
         $data = static::loadPluralRulesTestData();
@@ -107,6 +84,9 @@ class PluralTest extends PHPUnit_Framework_TestCase
      * expected boolean.
      *
      * @dataProvider providerGetRule
+     *
+     * @param string $rule
+     * @param array $parameters
      */
     public function testGetRule($rule, $parameters)
     {
@@ -116,6 +96,9 @@ class PluralTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function testExceptionsProvider()
     {
         return array(
@@ -126,10 +109,56 @@ class PluralTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testExceptionsProvider
+     *
+     * @param string $method
+     * @param array $parameters
+     * @param string $exception
      */
     public function testExceptions($method, $parameters, $exception)
     {
         $this->setExpectedException($exception);
         call_user_func_array(array('\Punic\Plural', $method), $parameters);
+    }
+
+    /**
+     * @param array $rules
+     *
+     * @return string
+     */
+    protected static function joinPluralRules($rules)
+    {
+        usort($rules, function ($a, $b) {
+            foreach (array('zero', 'one', 'two', 'few', 'many', 'other') as $pr) {
+                if ($a == $pr) {
+                    return -1;
+                }
+                if ($b == $pr) {
+                    return 1;
+                }
+            }
+
+            return 0;
+        });
+
+        return implode(', ', $rules);
+    }
+
+    /**
+     * @throws \Exception
+     *
+     * @return array
+     */
+    protected static function loadPluralRulesTestData()
+    {
+        $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
+        if (!is_file($testDataFile)) {
+            throw new \Exception('Test data file not found: plurals.php');
+        }
+        $data = @include $testDataFile;
+        if (!is_array($data)) {
+            throw new \Exception('Test data file not valid: plurals.php');
+        }
+
+        return $data;
     }
 }

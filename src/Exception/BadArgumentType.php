@@ -29,7 +29,7 @@ class BadArgumentType extends \Punic\Exception
                 break;
             case 'integer':
             case 'double':
-                $shownName = strval($argumentValue);
+                $shownName = (string) $argumentValue;
                 break;
             case 'string':
                 $shownName = "'$argumentValue'";

@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Misc;
+use Punic\Misc;
 
 class TextDirectionsTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function providerCharacterOrder()
     {
         return array(
@@ -16,6 +19,9 @@ class TextDirectionsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerCharacterOrder
+     *
+     * @param string $locale
+     * @param string $expectedDirection
      */
     public function testCharacterOrder($locale, $expectedDirection)
     {
@@ -30,6 +36,9 @@ class TextDirectionsTest extends PHPUnit_Framework_TestCase
         $this->assertSame('left-to-right', Misc::getCharacterOrder());
     }
 
+    /**
+     * @return array
+     */
     public function providerLineOrder()
     {
         return array(
@@ -42,6 +51,9 @@ class TextDirectionsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerLineOrder
+     *
+     * @param string $locale
+     * @param string $expectedDirection
      */
     public function testLineOrder($locale, $expectedDirection)
     {

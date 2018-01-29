@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Territory;
+use Punic\Territory;
 
 class TerritoryTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function providerGetName()
     {
         return array(
@@ -18,6 +21,10 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
      * test getName.
      *
      * @dataProvider providerGetName
+     *
+     * @param string $result
+     * @param string $territoryCode
+     * @param string $forLocale
      */
     public function testGetName($result, $territoryCode, $forLocale)
     {
@@ -156,6 +163,9 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         $this->assertContains('VA', $it);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetParentTerritoryCode()
     {
         return array(
@@ -166,6 +176,9 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetParentTerritoryCode
+     *
+     * @param string $child
+     * @param string $parent
      */
     public function testGetParentTerritoryCode($child, $parent)
     {
@@ -175,6 +188,9 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetChildTerritoryCodes()
     {
         return array(
@@ -187,6 +203,11 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetChildTerritoryCodes
+     *
+     * @param string $parentTerritoryCode
+     * @param bool $expandSubGroups
+     * @param string $childTerritoryCode
+     * @param bool $childIncluded
      */
     public function testGetChildTerritoryCodes($parentTerritoryCode, $expandSubGroups, $childTerritoryCode, $childIncluded)
     {

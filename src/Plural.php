@@ -30,34 +30,34 @@ class Plural
      * @param string|int|float $number The number to check the plural rule for for
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
-     *
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
      * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
+     *
+     * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
      */
     public static function getRule($number, $locale = '')
     {
         if (is_int($number)) {
-            $intPartAbs = strval(abs($number));
+            $intPartAbs = (string) abs($number);
             $floatPart = '';
         } elseif (is_float($number)) {
-            $s = strval($number);
+            $s = (string) $number;
             if (strpos($s, '.') === false) {
                 $intPart = $s;
                 $floatPart = '';
             } else {
                 list($intPart, $floatPart) = explode('.', $s);
             }
-            $intPartAbs = strval(abs(intval($intPart)));
+            $intPartAbs = (string) abs((int) $intPart);
         } elseif (is_string($number) && isset($number[0])) {
             if (preg_match('/^[+|\\-]?\\d+\\.?$/', $number)) {
-                $v = intval($number);
-                $intPartAbs = strval(abs($v));
+                $v = (int) $number;
+                $intPartAbs = (string) abs($v);
                 $floatPart = '';
             } elseif (preg_match('/^(\\d*)\\.(\\d+)$/', $number, $m)) {
                 list($intPart, $floatPart) = explode('.', $number);
-                $v = @intval($intPart);
-                $intPartAbs = strval(abs($v));
+                $v = @(int) $intPart;
+                $intPartAbs = (string) abs($v);
             } else {
                 throw new Exception\BadArgumentType($number, 'number');
             }
@@ -73,7 +73,7 @@ class Plural
         // 'w' => '%4$s', // number of visible fraction digits in n, without trailing zeros.
         $v4 = strlen(rtrim($floatPart, '0'));
         // 'f' => '%5$s', // visible fractional digits in n, with trailing zeros.
-        $v5 = strlen($floatPart) ? strval(intval($floatPart)) : '0';
+        $v5 = strlen($floatPart) ? (string) ((int) $floatPart) : '0';
         // 't' => '%6$s', // visible fractional digits in n, without trailing zeros.
         $v6 = trim($floatPart, '0');
         if (!isset($v6[0])) {
@@ -92,10 +92,10 @@ class Plural
                 list(, $decimalPart) = explode('.', $m[1], 2);
                 $decimals = strlen(rtrim($decimalPart, '0'));
                 if ($decimals > 0) {
-                    $pow = intval(pow(10, $decimals));
-                    $repl = '('.strval(intval(floatval($m[1]) * $pow)).' % '.strval(intval(floatval($m[2] * $pow))).') / '.$pow;
+                    $pow = (int) pow(10, $decimals);
+                    $repl = '('.(string) ((int) ((float) $m[1] * $pow)).' % '.(string) ((int) ((float) ($m[2] * $pow))).') / '.$pow;
                 } else {
-                    $repl = strval(intval($m[1])).' % '.$m[2];
+                    $repl = (string) ((int) $m[1]).' % '.$m[2];
                 }
                 $formula = str_replace($m[0], $repl, $formula);
             }
@@ -111,11 +111,17 @@ class Plural
         return $result;
     }
 
+    /**
+     * @param int|string|array $value
+     * @param bool $mustBeIncluded
+     *
+     * @return bool
+     */
     protected static function inRange($value, $mustBeIncluded)
     {
         if (is_int($value)) {
             $isInt = true;
-        } elseif (intval($value) == $value) {
+        } elseif ((int) $value == $value) {
             $isInt = true;
         } else {
             $isInt = false;

@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Calendar;
+use Punic\Calendar;
 
 class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function providerLiterals()
     {
         return array(
@@ -19,12 +22,18 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
 
     /**
      * * @dataProvider providerLiterals
+     *
+     * @param string|mixed $isoFormat
+     * @param string|null $phpFormat
      */
     public function testLiterals($isoFormat, $phpFormat)
     {
         $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat));
     }
 
+    /**
+     * @return array
+     */
     public function providerLetters()
     {
         $result = array(
@@ -116,6 +125,9 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
 
     /**
      * * @dataProvider providerLetters
+     *
+     * @param string $letter
+     * @param array $multiplierResults
      */
     public function testLetters($letter, $multiplierResults)
     {
@@ -125,6 +137,9 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function providerLocaleFormats()
     {
         return array(
@@ -151,6 +166,11 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
 
     /**
      * * @dataProvider providerLocaleFormats
+     *
+     * @param string $localeID
+     * @param array $phpFormatsDate
+     * @param array $phpFormatsTime
+     * @param array $phpFormatsDateTime
      */
     public function testLocaleFormats($localeID, array $phpFormatsDate, array $phpFormatsTime, array $phpFormatsDateTime)
     {

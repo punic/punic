@@ -6,32 +6,61 @@ if (!class_exists('PhpCsFixer\Config', true)) {
 }
 
 return PhpCsFixer\Config::create()
-    ->setCacheFile(dirname(__FILE__).'/.php_cs.cache')
-    ->setRules(array(
-        // Let's start with the standard Symfony rules
+    ->setCacheFile(__DIR__.'/.php_cs.cache')
+    ->setRiskyAllowed(true)
+    ->setRules([
         '@Symfony' => true,
-
-        // Force long array syntax
-        'array_syntax' => array('syntax' => 'long'),
-
-        // A single space between cast and variable
-        'cast_spaces' => true,
-
-        // Concatenation should be spaced with a space
-        'concat_space' => array(
-            'spacing' => 'none',
-        ),
-
-        // Don't vertically align phpdoc tags
+        '@Symfony:risky' => true,
+        'array_syntax' => ['syntax' => 'long'],
+        'no_php4_constructor' => true,
+        'no_unreachable_default_argument_value' => true,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_class_elements' => true,
+        'ordered_imports' => true,
+        'php_unit_strict' => true,
+        'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
         'phpdoc_align' => false,
-
-        // Allow double-quoted strings, don't force single-quoted strings
-        'single_quote' => true,
-    ))
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in(dirname(__FILE__))
-            ->exclude('src/data')
-            ->exclude('tests/dataFiles')
+        'phpdoc_no_access' => false,
+        'phpdoc_no_package' => false,
+        'phpdoc_order' => true,
+        'protected_to_private' => false,
+    ])
+    ->setFinder(PhpCsFixer\Finder::create()
+        ->exclude(array(
+            'src/data',
+            'tests/dataFiles',
+            'vendor',
+        ))
+        ->in(__DIR__)
     )
 ;
+
+/*
+This document has been generated with
+https://mlocati.github.io/php-cs-fixer-configurator/?version=2.2
+you can change this configuration by importing this YAML code:
+
+fixerSets:
+  - '@Symfony'
+  - '@Symfony:risky'
+risky: true
+fixers:
+  array_syntax:
+    syntax: long
+  no_php4_constructor: true
+  no_unreachable_default_argument_value: true
+  no_useless_else: true
+  no_useless_return: true
+  ordered_class_elements: true
+  ordered_imports: true
+  php_unit_strict: true
+  phpdoc_add_missing_param_annotation:
+    only_untyped: false
+  phpdoc_align: false
+  phpdoc_no_access: false
+  phpdoc_no_package: false
+  phpdoc_order: true
+  protected_to_private: false
+
+*/

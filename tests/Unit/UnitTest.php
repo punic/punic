@@ -1,9 +1,12 @@
 <?php
 
-use \Punic\Unit;
+use Punic\Unit;
 
 class UnitTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function providerFormat()
     {
         return array(
@@ -86,6 +89,9 @@ class UnitTest extends PHPUnit_Framework_TestCase
      * test format.
      *
      * @dataProvider providerFormat
+     *
+     * @param string $result
+     * @param array $parameters
      */
     public function testFormat($result, $parameters)
     {
@@ -117,6 +123,9 @@ class UnitTest extends PHPUnit_Framework_TestCase
         Unit::format(2, 'invalid-unit');
     }
 
+    /**
+     * @return array
+     */
     public function providerGetUnitName()
     {
         return array(

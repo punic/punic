@@ -52,29 +52,6 @@ class Comparer
     }
 
     /**
-     * @param string $str
-     *
-     * @return string
-     */
-    private function normalize($str)
-    {
-        $str = (string) $str;
-        if (!isset($this->cache[$str])) {
-            $this->cache[$str] = $str;
-            if ($str !== '') {
-                if ($this->iconv) {
-                    $transliterated = @iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-                    if ($transliterated !== false) {
-                        $this->cache[$str] = $transliterated;
-                    }
-                }
-            }
-        }
-
-        return $this->cache[$str];
-    }
-
-    /**
      * Compare two strings.
      *
      * @param string $a
@@ -161,5 +138,28 @@ class Comparer
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return string
+     */
+    private function normalize($str)
+    {
+        $str = (string) $str;
+        if (!isset($this->cache[$str])) {
+            $this->cache[$str] = $str;
+            if ($str !== '') {
+                if ($this->iconv) {
+                    $transliterated = @iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+                    if ($transliterated !== false) {
+                        $this->cache[$str] = $transliterated;
+                    }
+                }
+            }
+        }
+
+        return $this->cache[$str];
     }
 }

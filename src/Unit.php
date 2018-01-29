@@ -8,32 +8,6 @@ namespace Punic;
 class Unit
 {
     /**
-     * Get the width-specific unit data.
-     *
-     * @param string $width the data width
-     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     *
-     * @throws Exception\ValueNotInList
-     *
-     * @return array
-     */
-    private static function getDataForWidth($width, $locale = '')
-    {
-        $data = Data::get('units', $locale);
-        if ($width[0] === '_' || !isset($data[$width])) {
-            $widths = array();
-            foreach (array_keys($data) as $w) {
-                if (strpos($w, '_') !== 0) {
-                    $widths[] = $w;
-                }
-            }
-            throw new Exception\ValueNotInList($width, $widths);
-        }
-
-        return $data[$width];
-    }
-
-    /**
      * Get the list of all the available units.
      *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -62,60 +36,6 @@ class Unit
         }
 
         return $categories;
-    }
-
-    /**
-     * Get a unit-specific data.
-     *
-     * @param array $data the width-specific data
-     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
-     *
-     * @throws Exception\ValueNotInList
-     *
-     * @return array
-     */
-    private static function getDataForUnit(array $data, $unit)
-    {
-        $chunks = explode('/', $unit, 2);
-        if (isset($chunks[1])) {
-            list($unitCategory, $unitID) = $chunks;
-        } else {
-            $unitCategory = null;
-            $unitID = null;
-            foreach (array_keys($data) as $c) {
-                if ($c[0] !== '_') {
-                    if (isset($data[$c][$unit])) {
-                        if ($unitCategory === null) {
-                            $unitCategory = $c;
-                            $unitID = $unit;
-                        } else {
-                            $unitCategory = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (
-            $unitCategory === null || $unitCategory[0] === '_'
-            || !isset($data[$unitCategory])
-            || $unitID === null || $unitID[0] === '_'
-            || !isset($data[$unitCategory][$unitID])
-            ) {
-            $units = array();
-            foreach ($data as $c => $us) {
-                if (strpos($c, '_') === false) {
-                    foreach (array_keys($us) as $u) {
-                        if (strpos($c, '_') === false) {
-                            $units[] = "$c/$u";
-                        }
-                    }
-                }
-            }
-            throw new \Punic\Exception\ValueNotInList($unit, $units);
-        }
-
-        return $data[$unitCategory][$unitID];
     }
 
     /**
@@ -156,7 +76,7 @@ class Unit
             $precision = $width;
             $width = 'short';
         } elseif (is_string($width) && preg_match('/^(?:(.*),)?([+\\-]?\\d+)$/', $width, $m)) {
-            $precision = intval($m[2]);
+            $precision = (int) $m[2];
             $width = (string) $m[1];
             if ($width === '') {
                 $width = 'short';
@@ -325,5 +245,85 @@ class Unit
         }
 
         return $result;
+    }
+
+    /**
+     * Get the width-specific unit data.
+     *
+     * @param string $width the data width
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @throws Exception\ValueNotInList
+     *
+     * @return array
+     */
+    private static function getDataForWidth($width, $locale = '')
+    {
+        $data = Data::get('units', $locale);
+        if ($width[0] === '_' || !isset($data[$width])) {
+            $widths = array();
+            foreach (array_keys($data) as $w) {
+                if (strpos($w, '_') !== 0) {
+                    $widths[] = $w;
+                }
+            }
+            throw new Exception\ValueNotInList($width, $widths);
+        }
+
+        return $data[$width];
+    }
+
+    /**
+     * Get a unit-specific data.
+     *
+     * @param array $data the width-specific data
+     * @param string $unit The unit identifier (eg 'duration/millisecond' or 'millisecond')
+     *
+     * @throws Exception\ValueNotInList
+     *
+     * @return array
+     */
+    private static function getDataForUnit(array $data, $unit)
+    {
+        $chunks = explode('/', $unit, 2);
+        if (isset($chunks[1])) {
+            list($unitCategory, $unitID) = $chunks;
+        } else {
+            $unitCategory = null;
+            $unitID = null;
+            foreach (array_keys($data) as $c) {
+                if ($c[0] !== '_') {
+                    if (isset($data[$c][$unit])) {
+                        if ($unitCategory === null) {
+                            $unitCategory = $c;
+                            $unitID = $unit;
+                        } else {
+                            $unitCategory = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (
+            $unitCategory === null || $unitCategory[0] === '_'
+            || !isset($data[$unitCategory])
+            || $unitID === null || $unitID[0] === '_'
+            || !isset($data[$unitCategory][$unitID])
+            ) {
+            $units = array();
+            foreach ($data as $c => $us) {
+                if (strpos($c, '_') === false) {
+                    foreach (array_keys($us) as $u) {
+                        if (strpos($c, '_') === false) {
+                            $units[] = "$c/$u";
+                        }
+                    }
+                }
+            }
+            throw new \Punic\Exception\ValueNotInList($unit, $units);
+        }
+
+        return $data[$unitCategory][$unitID];
     }
 }

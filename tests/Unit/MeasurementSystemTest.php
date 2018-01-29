@@ -8,7 +8,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         foreach (\Punic\Data::getAvailableLocales(true) as $locale) {
             $theseKeys = array_keys(\Punic\Unit::getMeasurementSystems($locale));
             sort($theseKeys);
-            if (is_null($keys)) {
+            if (null === $keys) {
                 $keys = $theseKeys;
             } else {
                 $this->assertSame($keys, $theseKeys);
@@ -17,6 +17,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($keys);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetMeasurementSystemFor()
     {
         return array(
@@ -28,6 +31,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetMeasurementSystemFor
+     *
+     * @param string $territoryCode
+     * @param string $measurementSystemCode
      */
     public function testGetMeasurementSystemFor($territoryCode, $measurementSystemCode)
     {
@@ -37,6 +43,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetCountriesWithMeasurementSystem()
     {
         return array(
@@ -49,6 +58,10 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetCountriesWithMeasurementSystem
+     *
+     * @param string $measurementSystemCode
+     * @param string $territoryCode
+     * @param bool $territoryPresent
      */
     public function testGetCountriesWithMeasurementSystem($measurementSystemCode, $territoryCode, $territoryPresent)
     {
@@ -60,6 +73,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function providerGetPaperSizeFor()
     {
         return array(
@@ -71,6 +87,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetPaperSizeFor
+     *
+     * @param string $territoryCode
+     * @param string $paperSize
      */
     public function testGetPaperSizeFor($territoryCode, $paperSize)
     {
@@ -80,6 +99,9 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function providerGetCountriesWithPaperSize()
     {
         return array(
@@ -92,6 +114,10 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerGetCountriesWithPaperSize
+     *
+     * @param string $paperSize
+     * @param string $territoryCode
+     * @param bool $territoryPresent
      */
     public function testGetCountriesWithPaperSize($paperSize, $territoryCode, $territoryPresent)
     {

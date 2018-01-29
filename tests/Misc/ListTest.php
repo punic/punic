@@ -1,6 +1,6 @@
 <?php
 
-use \Punic\Misc;
+use Punic\Misc;
 
 class ListTest extends PHPUnit_Framework_TestCase
 {
@@ -138,6 +138,9 @@ class ListTest extends PHPUnit_Framework_TestCase
         Misc::joinUnits(array('One', 'Two'), 'invalid-width', 'en');
     }
 
+    /**
+     * @return array
+     */
     public function providerFixCase()
     {
         return array(
@@ -157,6 +160,10 @@ class ListTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerFixCase
+     *
+     * @param string $result
+     * @param string $string
+     * @param string $case
      */
     public function testFixCase($result, $string, $case)
     {
