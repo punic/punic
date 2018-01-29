@@ -1002,7 +1002,7 @@ class Calendar
     /**
      * Returns the localized name of a timezone, location-specific.
      *
-     * @param string|\DateTime|\DateTimeZone $value the php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name
+     * @param string|\DateTime|\DateTimeInterface|\DateTimeZone $value the php name of a timezone, or a \DateTime instance or a \DateTimeZone instance for which you want the localized timezone name
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      *
      * @return string returns an empty string if the timezone has not been found, the timezone name otherwise
@@ -1027,7 +1027,7 @@ class Calendar
                     return '';
                 }
                 $location = $timezone->getLocation();
-            } elseif (is_a($value, '\\DateTime')) {
+            } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $timezone = $value->getTimezone();
                 $location = self::getTimezoneLocationFromDatetime($value);
                 if (empty($kind)) {
@@ -1750,8 +1750,8 @@ class Calendar
     /**
      * Format a date/time interval.
      *
-     * @param \DateTime $earliest the first date of the interval
-     * @param \DateTime $latest The last date of the
+     * @param \DateTime|\DateTimeInterface $earliest the first date of the interval
+     * @param \DateTime|\DateTimeInterface $latest The last date of the
      * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
      *
@@ -1784,8 +1784,8 @@ class Calendar
     /**
      * Format a date/time interval (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param number|\DateTime|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
@@ -2184,17 +2184,17 @@ class Calendar
      * If the dates are identical, the empty string is returned.
 
      *
-     * @param \DateTime $value1
-     * @param \DateTime $value2
+     * @param \DateTime|\DateTimeInterface $value1
+     * @param \DateTime|\DateTimeInterface $value2
      *
      * @return string
      */
     protected static function getGreatestDifference($value1, $value2)
     {
-        if (!is_a($value1, '\\DateTime')) {
+        if (!($value1 instanceof \DateTimeInterface || $value1 instanceof \DateTime)) {
             throw new Exception\BadArgumentType($value1, '\\DateTime');
         }
-        if (!is_a($value2, '\\DateTime')) {
+        if (!($value2 instanceof \DateTimeInterface || $value2 instanceof \DateTime)) {
             throw new Exception\BadArgumentType($value2, '\\DateTime');
         }
 
@@ -3215,11 +3215,11 @@ class Calendar
     }
 
     /**
-     * @param \DateTime $dt
+     * @param \DateTime|\DateTimeInterface $dt
      *
      * @return array|false
      */
-    protected static function getTimezoneLocationFromDatetime(\DateTime $dt)
+    protected static function getTimezoneLocationFromDatetime($dt)
     {
         if (defined('\HHVM_VERSION')) {
             if (!preg_match('/[0-9][0-9]/', $dt->format('e'))) {
