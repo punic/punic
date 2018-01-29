@@ -1037,7 +1037,7 @@ class Calendar
                         $kind = 'standard';
                     }
                 }
-            } elseif (is_a($value, '\\DateTimeZone')) {
+            } elseif ($value instanceof \DateTimeZone) {
                 $timezone = $value;
                 $location = $timezone->getLocation();
             } else {
