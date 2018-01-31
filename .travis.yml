@@ -10,6 +10,10 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+env:
+  global:
+    - secure: "DD0bUXBjD2WbW20E0XSiakit+31z2erSARV4jXIKvU4PnZpD0G5MWMptMegBjNHd3qQ80FYuN/vFwAzoRvTgtDjCJYS1tp+eJlPRJxtFrjota6N8vjqVB+cZHOlwlQEA8kTIi9R+HpWeMTXCg7c/2hR30TyT7VBt82ZpC0KkEq8="
+
 php:
   - 5.4
   - 5.5
@@ -26,7 +30,9 @@ matrix:
     - php: 5.3
       dist: precise
     - php: 7.1
-      env: CODECOVERAGE="yes"
+      env:
+        - CODECOVERAGE="yes"
+        - UPDATEDOCS="yes"
     - php: 7.1
       env: CODINGSTYLE="yes"
 
@@ -65,6 +71,37 @@ after_success:
       ./vendor/bin/php-coveralls -v
       wget https://scrutinizer-ci.com/ocular.phar
       php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+    fi
+  - |
+    if [[ $UPDATEDOCS = yes ]]; then
+      set -o errexit
+      set -o pipefail
+      set -o nounset
+      SOURCE_BRANCH='master'
+      if [ "${TRAVIS_PULL_REQUEST:=}" != 'false' -o "${TRAVIS_BRANCH:=}" != "$SOURCE_BRANCH" ]; then
+        echo "Not pushing to ${SOURCE_BRANCH}: skipping updating APIs."
+      elif [ -z "${GUTHUB_ACCESS_TOKEN:=}" ]; then
+        echo 'Missing GUTHUB_ACCESS_TOKEN environment variable.'
+      else
+        cd "${TRAVIS_BUILD_DIR}"
+        COMMIT_SHA1=`git rev-parse --verify HEAD`
+        COMMIT_AUTHOR_EMAIL=`git log -1 --pretty="%cE"`
+        TARGET_REPOSITORY="https://${GUTHUB_ACCESS_TOKEN}@github.com/punic/punic.github.io.git"
+        TARGET_BRANCH='master'
+        git clone -b "${TARGET_BRANCH}" -- "$TARGET_REPOSITORY" punic.github.io
+        cd punic.github.io
+        git config user.name 'Travis CI'
+        git config user.email "${COMMIT_AUTHOR_EMAIL}"
+        travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
+        ./bin/punic-update-docs --punic="${TRAVIS_BUILD_DIR}"
+        git add --all .
+        git commit --message="APIs updated after commit ${COMMIT_SHA1}"
+        git push deploy "${TARGET_BRANCH}"
+        echo 'APIs updated.'
+      fi
+      set +o errexit
+      set +o pipefail
+      set +o nounset
     fi
 
 notifications:
