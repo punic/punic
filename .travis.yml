@@ -96,7 +96,7 @@ after_success:
         ./bin/punic-update-docs --punic="${TRAVIS_BUILD_DIR}"
         git add --all .
         git commit --message="APIs updated after commit ${COMMIT_SHA1}"
-        git push deploy "${TARGET_BRANCH}"
+        git push origin "${TARGET_BRANCH}"
         echo 'APIs updated.'
       fi
       set +o errexit
