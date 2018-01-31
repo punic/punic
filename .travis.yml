@@ -12,7 +12,7 @@ cache:
 
 env:
   global:
-    - secure: "DD0bUXBjD2WbW20E0XSiakit+31z2erSARV4jXIKvU4PnZpD0G5MWMptMegBjNHd3qQ80FYuN/vFwAzoRvTgtDjCJYS1tp+eJlPRJxtFrjota6N8vjqVB+cZHOlwlQEA8kTIi9R+HpWeMTXCg7c/2hR30TyT7VBt82ZpC0KkEq8="
+    - secure: "View3+Nu0F+dkCu09UtRX1XHTGyuT1P1yCUMoQXIHdCZS4/SV/ljxncAu3utt8Ynw4lEcey45Up6TXgRbsct7Ky/kPtBVFk6Sou9L3ULgZkvnExlBjEj/KP6O/LXM8VuvEwQLKmFmYFe3p+hmEfcPu3Qh5TkIkNf0PTpryaW28M="
 
 php:
   - 5.4
@@ -64,14 +64,6 @@ script:
     else
       ./vendor/bin/phpunit
     fi
-
-after_success:
-  - |
-    if [[ $CODECOVERAGE = yes ]]; then
-      ./vendor/bin/php-coveralls -v
-      wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
-    fi
   - |
     if [[ $UPDATEDOCS = yes ]]; then
       set -o errexit
@@ -82,6 +74,12 @@ after_success:
         echo "Not pushing to ${SOURCE_BRANCH}: skipping updating APIs."
       elif [ -z "${GUTHUB_ACCESS_TOKEN:=}" ]; then
         echo 'Missing GUTHUB_ACCESS_TOKEN environment variable.'
+        # To create it:
+        #  - go to https://github.com/settings/tokens/new
+        #  - create a new token
+        #  - sudo apt install -y build-essential ruby ruby-dev
+        #  - sudo gem install travis
+        #  - travis encrypt -r punic/punic GUTHUB_ACCESS_TOKEN=<TOKEN>
       else
         cd "${TRAVIS_BUILD_DIR}"
         COMMIT_SHA1=`git rev-parse --verify HEAD`
@@ -102,6 +100,14 @@ after_success:
       set +o errexit
       set +o pipefail
       set +o nounset
+    fi
+
+after_success:
+  - |
+    if [[ $CODECOVERAGE = yes ]]; then
+      ./vendor/bin/php-coveralls -v
+      wget https://scrutinizer-ci.com/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
     fi
 
 notifications:
