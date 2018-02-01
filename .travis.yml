@@ -88,14 +88,18 @@ script:
         TARGET_BRANCH='master'
         git clone -b "${TARGET_BRANCH}" -- "$TARGET_REPOSITORY" punic.github.io
         cd punic.github.io
-        git config user.name 'Travis CI'
-        git config user.email "${COMMIT_AUTHOR_EMAIL}"
         travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
         ./bin/punic-update-docs --punic="${TRAVIS_BUILD_DIR}"
-        git add --all .
-        git commit --message="APIs updated after commit ${COMMIT_SHA1}"
-        git push origin "${TARGET_BRANCH}"
-        echo 'APIs updated.'
+        if [ -z "$(git status --porcelain)" ]; then
+          echo 'No changes in API docs'
+        else
+          git config user.name 'Travis CI'
+          git config user.email "${COMMIT_AUTHOR_EMAIL}"
+          git add --all .
+          git commit --message="APIs updated after commit ${COMMIT_SHA1}"
+          git push origin "${TARGET_BRANCH}"
+          echo 'APIs updated.'
+        fi
       fi
       set +o errexit
       set +o pipefail
