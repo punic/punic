@@ -157,9 +157,9 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
             ),
             array(
                 'it',
-                array('full' => 'l j F Y', 'long' => 'j F Y', 'medium' => 'd M Y', 'short' => 'd/m/y'),
+                array('full' => 'l j F Y', 'long' => 'j F Y', 'medium' => 'j M Y', 'short' => 'd/m/y'),
                 array('full' => 'H:i:s \G\M\TP', 'long' => 'H:i:s T', 'medium' => 'H:i:s', 'short' => 'H:i'),
-                array('full' => 'l j F Y H:i:s \G\M\TP', 'long' => 'j F Y H:i:s T', 'medium' => 'd M Y, H:i:s', 'short' => 'd/m/y, H:i'),
+                array('full' => 'l j F Y H:i:s \G\M\TP', 'long' => 'j F Y H:i:s T', 'medium' => 'j M Y, H:i:s', 'short' => 'd/m/y, H:i'),
             ),
         );
     }

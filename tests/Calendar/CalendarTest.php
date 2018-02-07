@@ -984,7 +984,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getDateFormat('long', 'it')
         );
         $this->assertSame(
-            'dd MMM y',
+            'd MMM y',
             Calendar::getDateFormat('medium', 'it_IT')
         );
         $this->assertSame(
