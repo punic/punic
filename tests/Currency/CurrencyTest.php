@@ -24,7 +24,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('en', 'USD', null, 'US Dollar', '$', '$', ''),
-            array('it', 'USD', null, 'dollaro statunitense', 'US$', '$', ''),
+            array('it', 'USD', null, 'dollaro statunitense', 'USD', '$', ''),
             array('en', 'Invalid currency code', null, '', '', '', ''),
             array('de', 'ARS', null, 'Argentinischer Peso', 'ARS', '$', ''),
             array('en', 'USD', 0, 'US dollars', '$', '$', ''),
