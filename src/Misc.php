@@ -8,7 +8,72 @@ namespace Punic;
 class Misc
 {
     /**
-     * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian).
+     * Concatenates a list of items returning a localized string using "and" as seperator.
+     *
+     * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
+     *
+     * @param array $list The list to concatenate
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     *
+     * @deprecated use joinAnd()
+     */
+    public static function join($list, $locale = '')
+    {
+        return static::joinList($list, 'standard', '', $locale);
+    }
+
+    /**
+     * Concatenates a list of items returning a localized string using "and" as seperator.
+     *
+     * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
+     *
+     * @param array $list The list to concatenate
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     */
+    public static function joinAnd($list, $width = '', $locale = '')
+    {
+        return static::joinList($list, 'standard', $width, $locale);
+    }
+
+    /**
+     * Concatenates a list of items returning a localized string using "or" as seperator.
+     *
+     * For instance, array(1, 2, 3) will result in '1, 2, or 3' for English or '1, 2 o 3' for Italian.
+     *
+     * @param array $list The list to concatenate
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     */
+    public static function joinOr($list, $width = '', $locale = '')
+    {
+        return static::joinList($list, 'or', $width, $locale);
+    }
+
+    /**
+     * Concatenates a list of unit items returning a localized string.
+     *
+     * For instance, array('3 ft', '2 in') will result in '3 ft, 2 in'.
+     *
+     * @param array $list The list to concatenate
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
+     */
+    public static function joinUnits($list, $width = '', $locale = '')
+    {
+        return static::joinList($list, 'unit', $width, $locale);
+    }
+
+    /**
+     * Concatenates a list of items returning a localized string.
      *
      * @param array $list The list to concatenate
      * @param string $type The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').
@@ -17,7 +82,7 @@ class Misc
      *
      * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
-    public static function list($list, $type = 'standard', $width = '', $locale = '')
+    public static function joinList($list, $type = 'standard', $width = '', $locale = '')
     {
         $result = '';
         if (is_array($list)) {
@@ -73,37 +138,6 @@ class Misc
         }
 
         return $result;
-    }
-
-    /**
-     * Concatenates a list of items returning a localized string (for instance: array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian).
-     *
-     * @param array $list The list to concatenate
-     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     *
-     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
-     *
-     * @deprecated Use list() instead.
-     */
-    public static function join($list, $locale = '')
-    {
-        return static::list($list, 'standard', '', $locale);
-    }
-
-    /**
-     * Concatenates a list of unit items returning a localized string (for instance: array('3 ft', '2 in') will result in '3 ft, 2 in'.
-     *
-     * @param array $list The list to concatenate
-     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
-     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     *
-     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
-     *
-     * @deprecated Use list() instead.
-     */
-    public static function joinUnits($list, $width = '', $locale = '')
-    {
-        return static::list($list, 'unit', $width, $locale);
     }
 
     /**
