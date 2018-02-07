@@ -241,79 +241,10 @@ class ListTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testJoinList()
-    {
-        $this->assertSame(
-            '',
-            Misc::joinList(false, 'standard', '', 'en')
-        );
-        $this->assertSame(
-            '',
-            Misc::joinList('', 'or', '', 'en')
-        );
-        $this->assertSame(
-            '',
-            Misc::joinList(array(), 'unit', '', 'en')
-        );
-        $this->assertSame(
-            'One',
-            Misc::joinList(array('One'), 'standard', '', 'en')
-        );
-        $this->assertSame(
-            'One',
-            Misc::joinList(array('One'), 'or', '', 'en')
-        );
-        $this->assertSame(
-            'One and Two',
-            Misc::joinList(array('One', 'Two'), 'standard', '', 'en')
-        );
-        $this->assertSame(
-            'One and Two',
-            Misc::joinList(array('One', 'Two'), 'standard', 'short', 'en')
-        );
-        $this->assertSame(
-            'One and Two',
-            Misc::joinList(array('One', 'Two'), 'standard', 'narrow', 'en')
-        );
-        $this->assertSame(
-            'One, Two, or Three',
-            Misc::joinList(array('One', 'Two', 'Three'), 'or', '', 'en')
-        );
-        $this->assertSame(
-            'Uno e due',
-            Misc::joinList(array('Uno', 'due'), 'standard', '', 'it')
-        );
-
-        $this->assertSame(
-            '1 ft, 3 in',
-            Misc::joinList(array('1 ft', '3 in'), 'unit', '', 'en')
-        );
-        $this->assertSame(
-            '1 ft, 3 in',
-            Misc::joinList(array('1 ft', '3 in'), 'unit', 'short', 'en')
-        );
-        $this->assertSame(
-            '1 ft 3 in',
-            Misc::joinList(array('1 ft', '3 in'), 'unit', 'narrow', 'en')
-        );
-
-        Data::setDefaultLocale('de');
-        $this->assertSame(
-            'Eins und zwei',
-            Misc::joinList(array('Eins', 'zwei'))
-        );
-    }
-
-    public function testInvalidType()
-    {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-type' is not valid. Acceptable values are: 'standard', 'or', 'unit");
-        Misc::joinList(array('One', 'Two'), 'invalid-type', '', 'en');
-    }
-
     public function testInvalidWidthException()
     {
         $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
-        Misc::joinList(array('One', 'Two'), '', 'invalid-width', 'en');
+        Misc::joinAnd(array('One', 'Two'), 'invalid-width', 'en');
     }
 
     /**
