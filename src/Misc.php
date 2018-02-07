@@ -112,14 +112,14 @@ class Misc
                     $allData = Data::get('listPatterns', $locale);
                     $data = null;
                     foreach ($suffixes as $suffix) {
-                        $key = $type . $suffix;
+                        $key = $type.$suffix;
                         if (isset($allData[$key])) {
                             $data = $allData[$key];
                             break;
                         }
                     }
                     if ($data === null) {
-                        $types = array_unique(array_map(function($key) { return strtok($key, '-'); }, array_keys($allData)));
+                        $types = array_unique(array_map(function ($key) { return strtok($key, '-'); }, array_keys($allData)));
                         throw new \Punic\Exception\ValueNotInList($type, $types);
                     }
                     if (isset($data[$n])) {
