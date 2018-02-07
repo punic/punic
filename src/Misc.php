@@ -21,7 +21,7 @@ class Misc
      */
     public static function join($list, $locale = '')
     {
-        return static::joinList($list, 'standard', '', $locale);
+        return static::joinInternal($list, 'standard', '', $locale);
     }
 
     /**
@@ -37,7 +37,7 @@ class Misc
      */
     public static function joinAnd($list, $width = '', $locale = '')
     {
-        return static::joinList($list, 'standard', $width, $locale);
+        return static::joinInternal($list, 'standard', $width, $locale);
     }
 
     /**
@@ -53,7 +53,7 @@ class Misc
      */
     public static function joinOr($list, $width = '', $locale = '')
     {
-        return static::joinList($list, 'or', $width, $locale);
+        return static::joinInternal($list, 'or', $width, $locale);
     }
 
     /**
@@ -69,75 +69,7 @@ class Misc
      */
     public static function joinUnits($list, $width = '', $locale = '')
     {
-        return static::joinList($list, 'unit', $width, $locale);
-    }
-
-    /**
-     * Concatenates a list of items returning a localized string.
-     *
-     * @param array $list The list to concatenate
-     * @param string $type The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').
-     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
-     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     *
-     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
-     */
-    public static function joinList($list, $type = 'standard', $width = '', $locale = '')
-    {
-        $result = '';
-        if (is_array($list)) {
-            switch ($width) {
-                case 'narrow':
-                    $suffixes = array('-narrow', '-short', '');
-                    break;
-                case 'short':
-                    $suffixes = array('-short', '-narrow', '');
-                    break;
-                case '':
-                    $suffixes = array('', '-short', '-narrow');
-                    break;
-                default:
-                    throw new \Punic\Exception\ValueNotInList($width, array('', 'short', 'narrow'));
-            }
-
-            $list = array_values($list);
-            $n = count($list);
-            switch ($n) {
-                case 0:
-                    break;
-                case 1:
-                    $result = (string) $list[0];
-                    break;
-                default:
-                    $allData = Data::get('listPatterns', $locale);
-                    $data = null;
-                    foreach ($suffixes as $suffix) {
-                        $key = $type.$suffix;
-                        if (isset($allData[$key])) {
-                            $data = $allData[$key];
-                            break;
-                        }
-                    }
-                    if ($data === null) {
-                        $types = array_unique(array_map(function ($key) { return strtok($key, '-'); }, array_keys($allData)));
-                        throw new \Punic\Exception\ValueNotInList($type, $types);
-                    }
-                    if (isset($data[$n])) {
-                        $result = vsprintf($data[$n], $list);
-                    } else {
-                        $result = sprintf($data['end'], $list[$n - 2], $list[$n - 1]);
-                        if ($n > 2) {
-                            for ($index = $n - 3; $index > 0; --$index) {
-                                $result = sprintf($data['middle'], $list[$index], $result);
-                            }
-                            $result = sprintf($data['start'], $list[0], $result);
-                        }
-                    }
-                    break;
-            }
-        }
-
-        return $result;
+        return static::joinInternal($list, 'unit', $width, $locale);
     }
 
     /**
@@ -315,16 +247,33 @@ class Misc
     }
 
     /**
-     * @param array $list
-     * @param null|string[] $keys
-     * @param string $locale
+     * Concatenates a list of items returning a localized string.
      *
-     * @return string
+     * @param array $list The list to concatenate
+     * @param string $type The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').
+     * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
-    protected static function joinInternal($list, $keys, $locale)
+    protected static function joinInternal($list, $type = 'standard', $width = '', $locale = '')
     {
         $result = '';
         if (is_array($list)) {
+            switch ($width) {
+                case 'narrow':
+                    $suffixes = array('-narrow', '-short', '');
+                    break;
+                case 'short':
+                    $suffixes = array('-short', '-narrow', '');
+                    break;
+                case '':
+                    $suffixes = array('', '-short', '-narrow');
+                    break;
+                default:
+                    throw new \Punic\Exception\ValueNotInList($width, array('', 'short', 'narrow'));
+            }
+
             $list = array_values($list);
             $n = count($list);
             switch ($n) {
@@ -336,16 +285,16 @@ class Misc
                 default:
                     $allData = Data::get('listPatterns', $locale);
                     $data = null;
-                    if (!empty($keys)) {
-                        foreach ($keys as $key) {
-                            if (isset($allData[$key])) {
-                                $data = $allData[$key];
-                                break;
-                            }
+                    foreach ($suffixes as $suffix) {
+                        $key = $type.$suffix;
+                        if (isset($allData[$key])) {
+                            $data = $allData[$key];
+                            break;
                         }
                     }
                     if ($data === null) {
-                        $data = $allData['standard'];
+                        $types = array_unique(array_map(function ($key) { return strtok($key, '-'); }, array_keys($allData)));
+                        throw new \Punic\Exception\ValueNotInList($type, $types);
                     }
                     if (isset($data[$n])) {
                         $result = vsprintf($data[$n], $list);
