@@ -232,7 +232,7 @@ class Misc
     }
 
     /**
-     * @deprecated use joinAnd()
+     * @deprecated use joinAnd($list, '', $locale)
      *
      * @param array|\Traversable $list
      * @param string $locale
@@ -261,7 +261,7 @@ class Misc
             $list = iterator_to_array($list);
         }
         if (is_array($list)) {
-            switch ($width) {
+            switch ((string) $width) {
                 case 'narrow':
                     $suffixes = array('-narrow', '-short', '');
                     break;
