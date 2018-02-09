@@ -2,6 +2,8 @@
 
 namespace Punic;
 
+use Traversable;
+
 /**
  * Various helper stuff.
  */
@@ -12,7 +14,7 @@ class Misc
      *
      * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
      *
-     * @param array $list The list to concatenate
+     * @param array|\Traversable $list The list to concatenate
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -28,7 +30,7 @@ class Misc
      *
      * For instance, array(1, 2, 3) will result in '1, 2, or 3' for English or '1, 2 o 3' for Italian.
      *
-     * @param array $list The list to concatenate
+     * @param array|\Traversable $list The list to concatenate
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -44,7 +46,7 @@ class Misc
      *
      * For instance, array('3 ft', '2 in') will result in '3 ft, 2 in'.
      *
-     * @param array $list The list to concatenate
+     * @param array|\Traversable $list The list to concatenate
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -232,7 +234,7 @@ class Misc
     /**
      * @deprecated use joinAnd()
      *
-     * @param array $list
+     * @param array|\Traversable $list
      * @param string $locale
      *
      * @return string
@@ -245,16 +247,19 @@ class Misc
     /**
      * Concatenates a list of items returning a localized string.
      *
-     * @param array $list The list to concatenate
+     * @param array|\Traversable $list The list to concatenate
      * @param string $type The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
      */
-    protected static function joinInternal($list, $type = 'standard', $width = '', $locale = '')
+    protected static function joinInternal($list, $type, $width, $locale)
     {
         $result = '';
+        if ($list instanceof Traversable) {
+            $list = iterator_to_array($list);
+        }
         if (is_array($list)) {
             switch ($width) {
                 case 'narrow':
