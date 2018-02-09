@@ -1548,7 +1548,7 @@ class Calendar
                 $joined = Misc::joinUnits($parts, $width, $locale);
                 break;
             default:
-                $joined = Misc::join($parts, $locale);
+                $joined = Misc::joinAnd($parts, '', $locale);
                 break;
         }
 
