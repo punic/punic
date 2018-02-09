@@ -13,23 +13,6 @@ class Misc
      * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
      *
      * @param array $list The list to concatenate
-     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     *
-     * @return string returns an empty string if $list is not an array of it it's empty, the joined items otherwise
-     *
-     * @deprecated use joinAnd()
-     */
-    public static function join($list, $locale = '')
-    {
-        return static::joinInternal($list, 'standard', '', $locale);
-    }
-
-    /**
-     * Concatenates a list of items returning a localized string using "and" as seperator.
-     *
-     * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
-     *
-     * @param array $list The list to concatenate
      * @param string $width The preferred width ('' for default, or 'short' or 'narrow')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -244,6 +227,19 @@ class Misc
         $data = Data::get('layout', $locale);
 
         return $data['lineOrder'];
+    }
+
+    /**
+     * @deprecated use joinAnd()
+     *
+     * @param array $list
+     * @param string $locale
+     *
+     * @return string
+     */
+    public static function join($list, $locale = '')
+    {
+        return static::joinInternal($list, 'standard', '', $locale);
     }
 
     /**
