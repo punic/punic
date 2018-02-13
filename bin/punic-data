@@ -467,7 +467,7 @@ Available options:
     --locale=-it,-de
     means 'the default locales except Italian and German'.
     Likewise:
-    --locale=ALL,-it,-de
+    --locale={$allLocalesPlaceholders},-it,-de
     means 'all locales except Italian and German'.
     You can prepend a plus to add specific locales: so for instance
     --locale=+it,+de
