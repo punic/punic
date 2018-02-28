@@ -36,6 +36,13 @@ class Data
     protected static $fallbackLocale = 'en_US';
 
     /**
+     * The data root directory.
+     *
+     * @var string
+     */
+    protected static $directory = __DIR__.DIRECTORY_SEPARATOR.'data';
+
+    /**
      * Return the current default locale.
      *
      * @return string
@@ -113,6 +120,26 @@ class Data
     }
 
     /**
+     * Get the data root directory.
+     *
+     * @return string
+     */
+    public static function getDataDirectory()
+    {
+        return static::$directory;
+    }
+
+    /**
+     * Set the data root directory.
+     *
+     * @param string $directory
+     */
+    public static function setDataDirectory($directory)
+    {
+        static::$directory = $directory;
+    }
+
+    /**
      * Get the locale data.
      *
      * @param string $identifier The data identifier
@@ -143,8 +170,8 @@ class Data
             if ($dir === '') {
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
-            $file = $dir.DIRECTORY_SEPARATOR.$identifier.'.php';
-            if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
+            $file = self::$directory.DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$identifier.'.php';
+            if (!is_file($file)) {
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
             $data = include $file;
@@ -182,8 +209,8 @@ class Data
         if (!preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
             throw new Exception\InvalidDataFile($identifier);
         }
-        $file = 'data'.DIRECTORY_SEPARATOR."$identifier.php";
-        if (!is_file(__DIR__.DIRECTORY_SEPARATOR.$file)) {
+        $file = self::$directory.DIRECTORY_SEPARATOR."$identifier.php";
+        if (!is_file($file)) {
             throw new Exception\DataFileNotFound($identifier);
         }
         $data = include $file;
@@ -208,7 +235,7 @@ class Data
     public static function getAvailableLocales($allowGroups = false)
     {
         $locales = array();
-        $dir = __DIR__.DIRECTORY_SEPARATOR.'data';
+        $dir = self::$directory;
         if (is_dir($dir) && is_readable($dir)) {
             $contents = @scandir($dir);
             if (is_array($contents)) {
@@ -495,9 +522,8 @@ class Data
             $key = $locale.'/'.static::$fallbackLocale;
             if (!isset($cache[$key])) {
                 foreach (static::getLocaleAlternatives($locale) as $alternative) {
-                    $dir = 'data'.DIRECTORY_SEPARATOR.$alternative;
-                    if (is_dir(__DIR__.DIRECTORY_SEPARATOR.$dir)) {
-                        $result = $dir;
+                    if (is_dir(self::$directory.DIRECTORY_SEPARATOR.$alternative)) {
+                        $result = $alternative;
                         break;
                     }
                 }
