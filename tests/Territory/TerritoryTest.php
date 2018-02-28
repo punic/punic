@@ -13,6 +13,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
             array('United States', 'US', 'en'),
             array('Stati Uniti', 'US', 'it'),
             array('Italy', 'IT', 'en'),
+            array('Italy', 'it', 'en'),
             array('Rome', 'itrm', 'en'),
             array('provincia di Roma', 'itrm', 'it'),
         );
@@ -174,6 +175,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
             array(/*Europe*/'150', /*World*/'001'),
             array(/*Southern Europe*/'039', /*Europe*/'150'),
             array(/*Italy*/'IT', /*Northern Europe*/'039'),
+            array(/*Italy*/'it', /*Northern Europe*/'039'),
             array(/*Lazio*/'it62', /*Italy*/'IT'),
             array(/*Rome*/'itrm', /*Lazio*/'it62'),
         );
@@ -209,6 +211,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
             array(/*Italy*/'IT', false, false, 'it62', false),
             array(/*Italy*/'IT', false, false, 'itrm', false),
             array(/*Italy*/'IT', false, true, 'it62', true),
+            array(/*Italy*/'it', false, true, 'it62', true),
             array(/*Italy*/'IT', false, true, 'itrm', false),
             array(/*Italy*/'IT', true, true, 'it62', false),
             array(/*Italy*/'IT', true, true, 'itrm', true),
