@@ -13,7 +13,8 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
             array('United States', 'US', 'en'),
             array('Stati Uniti', 'US', 'it'),
             array('Italy', 'IT', 'en'),
-            array('Italia', 'IT', 'it'),
+            array('Rome', 'itrm', 'en'),
+            array('provincia di Roma', 'itrm', 'it'),
         );
     }
 
@@ -171,6 +172,10 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         return array(
             array(/*World*/'001', /*Nothing*/''),
             array(/*Europe*/'150', /*World*/'001'),
+            array(/*Southern Europe*/'039', /*Europe*/'150'),
+            array(/*Italy*/'IT', /*Northern Europe*/'039'),
+            array(/*Lazio*/'it62', /*Italy*/'IT'),
+            array(/*Rome*/'itrm', /*Lazio*/'it62'),
         );
     }
 
@@ -194,10 +199,21 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     public function providerGetChildTerritoryCodes()
     {
         return array(
-            array(/*World*/'001', false, /*Europe*/'150', true),
-            array(/*World*/'001', false, 'IT', false),
-            array(/*World*/'001', true, /*Europe*/'150', false),
-            array(/*World*/'001', true, 'IT', true),
+            array(/*World*/'001', false, false, /*Europe*/'150', true),
+            array(/*World*/'001', false, false, 'IT', false),
+            array(/*World*/'001', true, false, /*Europe*/'150', false),
+            array(/*World*/'001', true, false, 'IT', true),
+            array(/*World*/'001', true, true, 'IT', false),
+            array(/*World*/'001', true, true, 'it62', false),
+            array(/*World*/'001', true, true, 'itrm', true),
+            array(/*Italy*/'IT', false, false, 'it62', false),
+            array(/*Italy*/'IT', false, false, 'itrm', false),
+            array(/*Italy*/'IT', false, true, 'it62', true),
+            array(/*Italy*/'IT', false, true, 'itrm', false),
+            array(/*Italy*/'IT', true, true, 'it62', false),
+            array(/*Italy*/'IT', true, true, 'itrm', true),
+            array(/*Lazio*/'it62', true, false, 'itrm', true),
+            array(/*Lazio*/'it62', true, true, 'itrm', true),
         );
     }
 
@@ -206,12 +222,13 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
      *
      * @param string $parentTerritoryCode
      * @param bool $expandSubGroups
+     * @param bool $expandSubdivisions
      * @param string $childTerritoryCode
      * @param bool $childIncluded
      */
-    public function testGetChildTerritoryCodes($parentTerritoryCode, $expandSubGroups, $childTerritoryCode, $childIncluded)
+    public function testGetChildTerritoryCodes($parentTerritoryCode, $expandSubGroups, $expandSubdivisions, $childTerritoryCode, $childIncluded)
     {
-        $children = Territory::getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups);
+        $children = Territory::getChildTerritoryCodes($parentTerritoryCode, $expandSubGroups, $expandSubdivisions);
         if ($childIncluded) {
             $this->assertContains($childTerritoryCode, $children);
         } else {
