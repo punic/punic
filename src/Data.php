@@ -40,7 +40,7 @@ class Data
      *
      * @var string
      */
-    protected static $directory = __DIR__.DIRECTORY_SEPARATOR.'data';
+    protected static $directory;
 
     /**
      * Return the current default locale.
@@ -126,6 +126,10 @@ class Data
      */
     public static function getDataDirectory()
     {
+        if (!isset(static::$directory)) {
+            static::$directory = __DIR__.DIRECTORY_SEPARATOR.'data';
+        }
+
         return static::$directory;
     }
 
@@ -170,7 +174,7 @@ class Data
             if ($dir === '') {
                 throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
             }
-            $file = self::$directory.DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$identifier.'.php';
+            $file = static::getDataDirectory().DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$identifier.'.php';
             if (!is_file($file)) {
                 throw new Exception\DataFileNotFound($identifier, $locale, static::$fallbackLocale);
             }
@@ -209,7 +213,7 @@ class Data
         if (!preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
             throw new Exception\InvalidDataFile($identifier);
         }
-        $file = self::$directory.DIRECTORY_SEPARATOR."$identifier.php";
+        $file = static::getDataDirectory().DIRECTORY_SEPARATOR."$identifier.php";
         if (!is_file($file)) {
             throw new Exception\DataFileNotFound($identifier);
         }
@@ -235,7 +239,7 @@ class Data
     public static function getAvailableLocales($allowGroups = false)
     {
         $locales = array();
-        $dir = self::$directory;
+        $dir = static::getDataDirectory();
         if (is_dir($dir) && is_readable($dir)) {
             $contents = @scandir($dir);
             if (is_array($contents)) {
@@ -521,8 +525,9 @@ class Data
         if (is_string($locale)) {
             $key = $locale.'/'.static::$fallbackLocale;
             if (!isset($cache[$key])) {
+                $dir = static::getDataDirectory();
                 foreach (static::getLocaleAlternatives($locale) as $alternative) {
-                    if (is_dir(self::$directory.DIRECTORY_SEPARATOR.$alternative)) {
+                    if (is_dir($dir.DIRECTORY_SEPARATOR.$alternative)) {
                         $result = $alternative;
                         break;
                     }
