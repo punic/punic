@@ -19,7 +19,7 @@ class Territory
     {
         $result = $territoryCode;
         if (preg_match('/^[a-z0-9]{2,5}$/i', $territoryCode)) {
-            if (strlen($territoryCode) == 2 || intval($territoryCode) > 0) {
+            if (strlen($territoryCode) == 2 || (int) $territoryCode > 0) {
                 $territoryCode = strtoupper($territoryCode);
                 $data = Data::get('territories', $locale);
             } else {
@@ -308,7 +308,7 @@ class Territory
     {
         $result = '';
         if (is_string($childTerritoryCode) && preg_match('/^[a-z0-9]{2,5}$/i', $childTerritoryCode)) {
-            if (strlen($childTerritoryCode) == 2 || intval($childTerritoryCode) > 0) {
+            if (strlen($childTerritoryCode) == 2 || (int) $childTerritoryCode > 0) {
                 $childTerritoryCode = strtoupper($childTerritoryCode);
                 $data = Data::getGeneric('territoryContainment');
             } else {
@@ -340,7 +340,7 @@ class Territory
     {
         $result = array();
         if (is_string($parentTerritoryCode) && preg_match('/^[a-z0-9]{2,5}$/i', $parentTerritoryCode)) {
-            if (strlen($parentTerritoryCode) == 2 || intval($parentTerritoryCode) > 0) {
+            if (strlen($parentTerritoryCode) == 2 || (int) $parentTerritoryCode > 0) {
                 $parentTerritoryCode = strtoupper($parentTerritoryCode);
             } else {
                 $expandSubdivisions = true;
