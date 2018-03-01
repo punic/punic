@@ -332,7 +332,7 @@ class Territory
      *
      * @param string $parentTerritoryCode
      * @param bool $expandSubGroups set to true to expand the sub-groups, false to retrieve them
-     * @param bool $expandSubGroups set to true to expand countries into subdivisions, false to retrieve them
+     * @param bool $expandSubdivisions set to true to expand countries into subdivisions, false to retrieve them
      *
      * @return array Return the list of territory codes that are children of $parentTerritoryCode (if $parentTerritoryCode is invalid you'll get an empty list)
      */
