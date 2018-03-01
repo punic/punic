@@ -141,6 +141,8 @@ class Data
     public static function setDataDirectory($directory)
     {
         static::$directory = $directory;
+
+        static::$cache = array();
     }
 
     /**
