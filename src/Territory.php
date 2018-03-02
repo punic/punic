@@ -23,6 +23,7 @@ class Territory
                 $territoryCode = strtoupper($territoryCode);
                 $data = Data::get('territories', $locale);
             } else {
+                $territoryCode = strtolower($territoryCode);
                 $data = Data::get('subdivisions', $locale);
             }
             if (isset($data[$territoryCode])) {
@@ -312,12 +313,13 @@ class Territory
                 $childTerritoryCode = strtoupper($childTerritoryCode);
                 $data = Data::getGeneric('territoryContainment');
             } else {
+                $childTerritoryCode = strtolower($childTerritoryCode);
                 $data = Data::getGeneric('subdivisionContainment');
             }
             foreach ($data as $parentTerritoryCode => $parentTerritoryInfo) {
-                if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], true)) {
+                if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], false)) {
                     $result = is_int($parentTerritoryCode) ? substr('00'.$parentTerritoryCode, -3) : $parentTerritoryCode;
-                    if (($result === '001') || (strlen(static::getParentTerritoryCode($result)) > 0)) {
+                    if ($result === '001' || static::getParentTerritoryCode($result) !== '') {
                         break;
                     }
                 }
@@ -343,6 +345,7 @@ class Territory
             if (strlen($parentTerritoryCode) == 2 || (int) $parentTerritoryCode > 0) {
                 $parentTerritoryCode = strtoupper($parentTerritoryCode);
             } else {
+                $parentTerritoryCode = strtolower($parentTerritoryCode);
                 $expandSubdivisions = true;
             }
             $data = Data::getGeneric('territoryContainment');
