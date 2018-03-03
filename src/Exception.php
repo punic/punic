@@ -71,6 +71,13 @@ class Exception extends \Exception
     const VALUE_NOT_IN_LIST = 10008;
 
     /**
+     * Exception code for the \Punic\Exception\InvalidOverride exception.
+     *
+     * @var int
+     */
+    const INVALID_OVERRIDE = 10009;
+
+    /**
      * Initializes the instance.
      *
      * @param string $message The exception message

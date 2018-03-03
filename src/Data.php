@@ -22,6 +22,20 @@ class Data
     protected static $cacheGeneric = array();
 
     /**
+     * Custom overrides of CLDR data (locale-specific).
+     *
+     * @var array
+     */
+    protected static $overrides = array();
+
+    /**
+     * Custom overrides of CLDR data (not locale-specific).
+     *
+     * @var array
+     */
+    protected static $overridesGeneric = array();
+
+    /**
      * The current default locale.
      *
      * @var string
@@ -120,6 +134,67 @@ class Data
     }
 
     /**
+     * Get custom overrides of CLDR locale data.
+     *
+     * If a locale is specified, overrides for that locale are returned, indexed
+     * by identifier. If no locale is specified, overrides for all locales are
+     * returned index by locale.
+     *
+     * @return array Associative array
+     */
+    public static function getOverrides($locale = null)
+    {
+        if (!$locale) {
+            return static::$overrides;
+        } elseif (isset(static::$overrides[$locale])) {
+            return static::$overrides[$locale];
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * Set custom overrides of CLDR locale data.
+     *
+     * Overrides may be provides either one locale at a time or all locales at once.
+     *
+     * @param array  $overrides Associative array index by locale (if $locale is null) or identifier.
+     * @param string $locale
+     */
+    public static function setOverrides($overrides, $locale = null)
+    {
+        static::$cache = array();
+
+        if ($locale) {
+            static::$overrides[$locale] = $overrides;
+        } else {
+            static::$overrides = $overrides;
+        }
+    }
+
+    /**
+     * Get custom overrides of CLDR generic data.
+     *
+     * @return array Associative array indexed by identifier
+     */
+    public static function getOverridesGeneric()
+    {
+        return static::$overridesGeneric;
+    }
+
+    /**
+     * Set custom overrides of CLDR locale.
+     *
+     * @param array Associative array indexed by identifier
+     */
+    public static function setOverridesGeneric($overrides)
+    {
+        static::$cacheGeneric = array();
+
+        static::$overridesGeneric = $overrides;
+    }
+
+    /**
      * Get the data root directory.
      *
      * @return string
@@ -186,6 +261,9 @@ class Data
             if (!is_array($data)) {
                 throw new Exception\BadDataFileContents($file, file_get_contents($file));
             }
+            if (isset(static::$overrides[$locale][$identifier])) {
+                $data = static::merge($data, static::$overrides[$locale][$identifier]);
+            }
             //@codeCoverageIgnoreEnd
             static::$cache[$locale][$identifier] = $data;
         }
@@ -226,6 +304,9 @@ class Data
             throw new Exception\BadDataFileContents($file, file_get_contents($file));
         }
         //@codeCoverageIgnoreEnd
+        if (isset(static::$overridesGeneric[$identifier])) {
+            $data = static::merge($data, static::$overridesGeneric[$identifier]);
+        }
         static::$cacheGeneric[$identifier] = $data;
 
         return $data;
@@ -612,5 +693,24 @@ class Data
         }
 
         return $result;
+    }
+
+    public static function merge(array $data, array $overrides)
+    {
+        foreach ($overrides as $key => $override) {
+            if (isset($data[$key])) {
+                if (gettype($override) !== gettype($data[$key])) {
+                    throw new Exception\InvalidOverride($data[$key], $override);
+                }
+                if (is_array($data[$key])) {
+                    $data[$key] = static::merge($data[$key], $override);
+                } else {
+                    $data[$key] = $override;
+                }
+            } else {
+                $data[$key] = $override;
+            }
+        }
+        return $data;
     }
 }

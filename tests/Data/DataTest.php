@@ -1,6 +1,9 @@
 <?php
 
 use Punic\Data;
+use Punic\Calendar;
+use Punic\Territory;
+use Punic\Unit;
 
 class DataTest extends PHPUnit_Framework_TestCase
 {
@@ -171,5 +174,114 @@ class DataTest extends PHPUnit_Framework_TestCase
     {
         $locale = call_user_func_array(array('\Punic\Data', 'getTerritory'), $parameters);
         $this->assertSame($result, $locale);
+    }
+
+    public function testOverrides()
+    {
+        Data::setOverrides(array(
+            'calendar' => array(
+                'days' => array(
+                    'format' => array(
+                        'wide' => array(
+                            'mon' => 'Moonday',
+                        ),
+                        'enormous' => array(
+                            'mon' => 'Moooonday',
+                        ),
+                    ),
+                ),
+            ),
+        ), 'en');
+        $this->assertSame('Moonday', Calendar::getWeekdayName(1, 'wide', 'en'));
+        $this->assertSame('Moooonday', Calendar::getWeekdayName(1, 'enormous', 'en'));
+        $this->assertSame('Monday', Calendar::getWeekdayName(1, 'wide', 'en-GB'));
+
+        Data::setOverrides(array(), 'en');
+        $this->assertSame('Monday', Calendar::getWeekdayName(1, 'wide', 'en'));
+
+        $overrides = array(
+            'en' => array(
+                'territories' => array(
+                    '001' => 'Whole world',
+                ),
+            ),
+            'de' => array(
+                'territories' => array(
+                    '001' => 'Ganze Welt',
+                ),
+            ),
+        );
+        Data::setOverrides($overrides);
+        $this->assertSame($overrides, Data::getOverrides());
+        $this->assertSame($overrides['en'], Data::getOverrides('en'));
+        $this->assertSame(array(), Data::getOverrides('it'));
+        $this->assertSame('Whole world', Territory::getName('001', 'en'));
+        $this->assertSame('Ganze Welt', Territory::getName('001', 'de'));
+
+        $overrides = array(
+            'measurementData' => array(
+                'measurementSystem' => array(
+                    'GB' => 'metric',
+                    'IT' => 'US',
+                ),
+            ),
+        );
+        Data::setOverridesGeneric($overrides);
+        $this->assertSame($overrides, Data::getOverridesGeneric());
+        $this->assertSame('metric', Unit::getMeasurementSystemFor('GB'));
+        $this->assertSame('US', Unit::getMeasurementSystemFor('IT'));
+    }
+
+    public function invalidOverridesProvider()
+    {
+        return array(
+            array(
+                array(
+                    'calendar' => array(
+                        'days' => array(
+                            'format' => array(
+                                'wide' => array(
+                                    'mon' => 1
+                                ),
+                            ),
+                        ),
+                    )
+                ),
+                'Cannot override string value Monday with integer value 1'
+            ),
+            array(
+                array(
+                    'calendar' => array(
+                        'days' => array(
+                            'format' => array(
+                                'wide' => array(
+                                    'mon' => [1, 2, 3]
+                                ),
+                            ),
+                        ),
+                    )
+                ),
+                'Cannot override string value Monday with array with keys 0, 1, 2'
+            ),
+            array(
+                array(
+                    'calendar' => array(
+                        'days' => 'foo',
+                    )
+                ),
+                'Cannot override array with keys format, stand-alone with string value foo'
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider invalidOverridesProvider
+     */
+    public function testInvalidOverrides($overrides, $message)
+    {
+        Data::setOverrides($overrides, 'en');
+
+        $this->setExpectedException('Punic\Exception\InvalidOverride', $message);
+        Data::get('calendar', 'en');
     }
 }
