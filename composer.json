@@ -28,6 +28,11 @@
             "name": "Remo Laubacher",
             "email": "remo.laubacher@gmail.com",
             "role": "Collaborator, motivator and perfectionist supporter"
+        },
+        {
+            "name": "Christian Schmidt",
+            "email": "github@chsc.dk",
+            "role": "Developer"
         }
     ],
     "autoload": {
