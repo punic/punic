@@ -24,14 +24,15 @@ class InvalidOverride extends \Punic\Exception
      * Convert override data to a string.
      *
      * @param  mixed $data
+     *
      * @return string
      */
     protected function dataToString($data)
     {
         if (is_array($data)) {
             return 'array with keys '.implode(', ', array_keys($data));
-        } else {
-            return gettype($data).' value '.$data;
         }
+
+        return gettype($data).' value '.$data;
     }
 }
