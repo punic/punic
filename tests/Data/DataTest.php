@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Data;
 use Punic\Calendar;
+use Punic\Data;
 use Punic\Territory;
 use Punic\Unit;
 
@@ -247,13 +247,13 @@ class DataTest extends PHPUnit_Framework_TestCase
                         'days' => array(
                             'format' => array(
                                 'wide' => array(
-                                    'mon' => 1
+                                    'mon' => 1,
                                 ),
                             ),
                         ),
-                    )
+                    ),
                 ),
-                'Cannot override string value Monday with integer value 1'
+                'Cannot override string value Monday with integer value 1',
             ),
             array(
                 array(
@@ -261,29 +261,32 @@ class DataTest extends PHPUnit_Framework_TestCase
                         'days' => array(
                             'format' => array(
                                 'wide' => array(
-                                    'mon' => [1, 2, 3]
+                                    'mon' => array(1, 2, 3),
                                 ),
                             ),
                         ),
-                    )
+                    ),
                 ),
-                'Cannot override string value Monday with array with keys 0, 1, 2'
+                'Cannot override string value Monday with array with keys 0, 1, 2',
             ),
             array(
                 array(
                     'calendar' => array(
                         'days' => 'foo',
-                    )
+                    ),
                 ),
-                'Cannot override array with keys format, stand-alone with string value foo'
+                'Cannot override array with keys format, stand-alone with string value foo',
             ),
         );
     }
 
     /**
      * @dataProvider invalidOverridesProvider
+     *
+     * @param array $overrides
+     * @param string $message
      */
-    public function testInvalidOverrides($overrides, $message)
+    public function testInvalidOverrides(array $overrides, $message)
     {
         Data::setOverrides($overrides, 'en');
 

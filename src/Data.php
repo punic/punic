@@ -140,6 +140,8 @@ class Data
      * by identifier. If no locale is specified, overrides for all locales are
      * returned index by locale.
      *
+     * @param null|mixed $locale
+     *
      * @return array Associative array
      */
     public static function getOverrides($locale = null)
@@ -148,9 +150,9 @@ class Data
             return static::$overrides;
         } elseif (isset(static::$overrides[$locale])) {
             return static::$overrides[$locale];
-        } else {
-            return array();
         }
+
+        return array();
     }
 
     /**
@@ -158,10 +160,10 @@ class Data
      *
      * Overrides may be provides either one locale at a time or all locales at once.
      *
-     * @param array  $overrides Associative array index by locale (if $locale is null) or identifier.
+     * @param array  $overrides Associative array index by locale (if $locale is null) or identifier
      * @param string $locale
      */
-    public static function setOverrides($overrides, $locale = null)
+    public static function setOverrides(array $overrides, $locale = null)
     {
         static::$cache = array();
 
@@ -186,8 +188,9 @@ class Data
      * Set custom overrides of CLDR locale.
      *
      * @param array Associative array indexed by identifier
+     * @param array $overrides
      */
-    public static function setOverridesGeneric($overrides)
+    public static function setOverridesGeneric(array $overrides)
     {
         static::$cacheGeneric = array();
 
@@ -695,7 +698,7 @@ class Data
         return $result;
     }
 
-    public static function merge(array $data, array $overrides)
+    protected static function merge(array $data, array $overrides)
     {
         foreach ($overrides as $key => $override) {
             if (isset($data[$key])) {
@@ -711,6 +714,7 @@ class Data
                 $data[$key] = $override;
             }
         }
+
         return $data;
     }
 }
