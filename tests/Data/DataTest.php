@@ -7,6 +7,12 @@ use Punic\Unit;
 
 class DataTest extends PHPUnit_Framework_TestCase
 {
+    protected function tearDown()
+    {
+        Data::setOverrides(array());
+        Data::setOverridesGeneric(array());
+    }
+
     /**
      * @return array
      */
