@@ -7,6 +7,8 @@ namespace Punic;
  */
 class Territory
 {
+    private static $CODE_TYPES = array('alpha3', 'numeric', 'fips10', 'internet');
+
     /**
      * Retrieve the name of a territory/subdivision (country, continent, ...).
      *
@@ -32,6 +34,77 @@ class Territory
         }
 
         return $result;
+    }
+
+    /**
+     * Retrieve the code of a territory in a different coding system.
+     *
+     * @param string $territoryCode The territory code
+     * @param string $type The type of code to return. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains
+     *
+     * @throws \Punic\Exception\ValueNotInList throws a ValueNotInList exception if $type is not valid
+     *
+     * @return string|array returns the code for the specified territory, or an array of codes when $type is "internet", or an empty string if the code is not defined for the territory or the territory is unknown
+     *
+     * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
+     */
+    public static function getCode($territoryCode, $type)
+    {
+        $codeMappings = Data::getGeneric('codeMappings');
+        $territories = $codeMappings['territories'];
+
+        if (!in_array($type, static::$CODE_TYPES)) {
+            throw new Exception\ValueNotInList($type, static::$CODE_TYPES);
+        }
+
+        if (!isset($territories[$territoryCode])) {
+            $result = '';
+        } elseif (isset($territories[$territoryCode][$type])) {
+            $result = $territories[$territoryCode][$type];
+        } elseif ($type === 'internet') {
+            $result = array($territoryCode);
+        } elseif ($type !== 'numeric' && $type !== 'alpha3') {
+            $result = $territoryCode;
+        } else {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the territory code given its code in a different coding system.
+     *
+     * @param string $code The code
+     * @param string $type The type of code provided. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains
+     *
+     * @throws \Punic\Exception\ValueNotInList throws a ValueNotInList exception if $type is not valid
+     *
+     * @return string returns the code for the specified territory, or null if the code is unknown
+     *
+     * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
+     */
+    public static function getByCode($code, $type)
+    {
+        $codeMappings = Data::getGeneric('codeMappings');
+        $territories = $codeMappings['territories'];
+
+        if (!in_array($type, static::$CODE_TYPES)) {
+            throw new Exception\ValueNotInList($type, static::$CODE_TYPES);
+        }
+
+        foreach ($territories as $territoryCode => $territory) {
+            $c = isset($territory[$type]) ? $territory[$type] : $territoryCode;
+            if (is_array($c)) {
+                if (in_array($code, $c)) {
+                    return $territoryCode;
+                }
+            } elseif ($code == $c) {
+                return $territoryCode;
+            }
+        }
+
+        return null;
     }
 
     /**

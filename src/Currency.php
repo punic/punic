@@ -124,6 +124,54 @@ class Currency
     }
 
     /**
+     * Returns the ISO 4217 code for a currency given its code.
+     *
+     * Historical currencies are not supported.
+     *
+     * @param string $currencyCode The currency code
+     *
+     * @return string Returns the ISO 427 code, or an empty string if $currencyCode is not valid
+     *
+     * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
+     */
+    public static function getCode($currencyCode)
+    {
+        $codeMappings = Data::getGeneric('codeMappings');
+        $currencies = $codeMappings['currencies'];
+
+        if (isset($currencies[$currencyCode]['numeric'])) {
+            return $currencies[$currencyCode]['numeric'];
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns the currency code given its ISO 4217 code.
+     *
+     * Historical currencies are not supported.
+     *
+     * @param string $code The ISO 427 code
+     *
+     * @return string Returns the currency code, or an empty string if $code is not valid
+     *
+     * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
+     */
+    public static function getByCode($code)
+    {
+        $codeMappings = Data::getGeneric('codeMappings');
+        $currencies = $codeMappings['currencies'];
+
+        foreach ($currencies as $currencyCode => $currency) {
+            if (isset($currency['numeric']) && $currency['numeric'] == $code) {
+                return $currencyCode;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Return the history for the currencies used in a territory.
      *
      * @param string $territoryCode The territoy code
