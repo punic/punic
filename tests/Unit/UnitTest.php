@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Unit;
-use PHPUnit\Framework\TestCase;
 
-class UnitTest extends TestCase
+class UnitTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @return array

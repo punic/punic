@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Language;
-use PHPUnit\Framework\TestCase;
 
-class LanguageTest extends TestCase
+class LanguageTest extends PHPUnit_Framework_TestCase
 {
     public function testGetAll()
     {

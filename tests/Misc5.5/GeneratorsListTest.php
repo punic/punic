@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Misc;
-use PHPUnit\Framework\TestCase;
 
-class GeneratorsListTest extends TestCase
+class GeneratorsListTest extends PHPUnit_Framework_TestCase
 {
     public function testJoinWithGenerators()
     {

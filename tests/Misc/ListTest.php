@@ -2,9 +2,8 @@
 
 use Punic\Data;
 use Punic\Misc;
-use PHPUnit\Framework\TestCase;
 
-class ListTest extends TestCase
+class ListTest extends PHPUnit_Framework_TestCase
 {
     public function testJoin()
     {

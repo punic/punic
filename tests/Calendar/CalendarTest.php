@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Calendar;
-use PHPUnit\Framework\TestCase;
 
-class CalendarTest extends TestCase
+class CalendarTest extends PHPUnit_Framework_TestCase
 {
     protected $initialTimezone;
 

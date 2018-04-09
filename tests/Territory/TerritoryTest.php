@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Territory;
-use PHPUnit\Framework\TestCase;
 
-class TerritoryTest extends TestCase
+class TerritoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @return array

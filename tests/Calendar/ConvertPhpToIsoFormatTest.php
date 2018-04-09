@@ -1,9 +1,8 @@
 <?php
 
 use Punic\Calendar;
-use PHPUnit\Framework\TestCase;
 
-class ConvertPhpToIsoFormatTest extends TestCase
+class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
 {
     const TEST_TIMEZONE = 'America/Los_Angeles';
     private $previousTimezone;
