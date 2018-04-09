@@ -1,6 +1,8 @@
 <?php
 
-class MeasurementSystemTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MeasurementSystemTest extends TestCase
 {
     public function testIdentifiersConsistency()
     {

@@ -1,8 +1,9 @@
 <?php
 
 use Punic\Number;
+use PHPUnit\Framework\TestCase;
 
-class NumberTest extends PHPUnit_Framework_TestCase
+class NumberTest extends TestCase
 {
     /**
      * @return array

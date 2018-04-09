@@ -1,8 +1,9 @@
 <?php
 
 use Punic\Misc;
+use PHPUnit\Framework\TestCase;
 
-class TextDirectionsTest extends PHPUnit_Framework_TestCase
+class TextDirectionsTest extends TestCase
 {
     /**
      * @return array

@@ -4,13 +4,25 @@ use Punic\Calendar;
 use Punic\Data;
 use Punic\Territory;
 use Punic\Unit;
+use PHPUnit\Framework\TestCase;
 
-class DataTest extends PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
     protected function tearDown()
     {
         Data::setOverrides(array());
         Data::setOverridesGeneric(array());
+    }
+
+    public function testGetLanguageNodeWithLocaleIsNotArray()
+    {
+        $this->setExpectedException('Punic\Exception\InvalidLocale');
+        Data::getLanguageNode(array('data1', 'data2'), 123);
+    }
+
+    public function testGetLocaleItem()
+    {
+        $this->assertNull(Data::getLocaleItem(array('data1', 'data2')));
     }
 
     /**
