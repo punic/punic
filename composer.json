@@ -41,13 +41,15 @@
         }
     },
     "require": {
-        "php": ">=5.3",
-        "ext-iconv": "*",
-        "ext-mbstring": "*"
+        "php": ">=5.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
-        "friendsofphp/php-cs-fixer": "^2.2"
+        "friendsofphp/php-cs-fixer": "2.2.*"
+    },
+    "suggest": {
+        "ext-iconv": "using the iconv to speed up the string process.",
+        "ext-mbstring": "using the mbstring to speed up the string process"
     },
     "replace": {
         "punic/common": "*",
