@@ -1,8 +1,9 @@
 <?php
 
 use Punic\Misc;
+use PHPUnit\Framework\TestCase;
 
-class BrowserLocaleTest extends PHPUnit_Framework_TestCase
+class BrowserLocaleTest extends TestCase
 {
     public function testBrowserLocales()
     {

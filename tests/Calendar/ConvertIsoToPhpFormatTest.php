@@ -1,8 +1,9 @@
 <?php
 
 use Punic\Calendar;
+use PHPUnit\Framework\TestCase;
 
-class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
+class ConvertIsoToPhpFormatTest extends TestCase
 {
     /**
      * @return array

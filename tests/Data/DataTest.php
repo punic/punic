@@ -4,8 +4,9 @@ use Punic\Calendar;
 use Punic\Data;
 use Punic\Territory;
 use Punic\Unit;
+use PHPUnit\Framework\TestCase;
 
-class DataTest extends PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
     protected function tearDown()
     {

@@ -1,8 +1,9 @@
 <?php
 
 use Punic\Plural;
+use PHPUnit\Framework\TestCase;
 
-class PluralTest extends PHPUnit_Framework_TestCase
+class PluralTest extends TestCase
 {
     /**
      * @return array
