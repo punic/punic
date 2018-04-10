@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Territory;
 use PHPUnit\Framework\TestCase;
+use Punic\Territory;
 
 class TerritoryTest extends TestCase
 {

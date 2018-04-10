@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Plural;
 use PHPUnit\Framework\TestCase;
+use Punic\Plural;
 
 class PluralTest extends TestCase
 {

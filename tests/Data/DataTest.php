@@ -1,10 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use Punic\Calendar;
 use Punic\Data;
 use Punic\Territory;
 use Punic\Unit;
-use PHPUnit\Framework\TestCase;
 
 class DataTest extends TestCase
 {

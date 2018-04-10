@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Unit;
 use PHPUnit\Framework\TestCase;
+use Punic\Unit;
 
 class UnitTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Language;
 use PHPUnit\Framework\TestCase;
+use Punic\Language;
 
 class LanguageTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Phone;
 use PHPUnit\Framework\TestCase;
+use Punic\Phone;
 
 class PhoneTest extends TestCase
 {

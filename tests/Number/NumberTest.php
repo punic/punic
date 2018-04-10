@@ -1,7 +1,7 @@
 <?php
 
-use Punic\Number;
 use PHPUnit\Framework\TestCase;
+use Punic\Number;
 
 class NumberTest extends TestCase
 {
