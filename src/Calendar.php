@@ -913,22 +913,22 @@ class Calendar
             } elseif ($value instanceof \DateTimeZone) {
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
+            $timeZoneNames = Data::get('timeZoneNames', $locale);
             if ($receivedPhpName !== '') {
                 $metazoneCode = '';
-                $data = Data::getGeneric('metaZones');
+                $metaZones = Data::getGeneric('metaZones');
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
                 if ($metazoneCode === '') {
                     foreach ($phpNames as $phpName) {
-                        $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                        $tzInfo = $data;
-                        foreach ($path as $chunk) {
-                            if (isset($tzInfo[$chunk])) {
-                                $tzInfo = $tzInfo[$chunk];
-                            } else {
-                                $tzInfo = null;
-                                break;
-                            }
+                        $path = array_merge(array('zone'), explode('/', $phpName), array($width, array($kind, 'generic', 'standard')));
+                        $name = self::getArrayValue($timeZoneNames, $path);
+                        if ($name) {
+                            $result = $name;
+                            break;
                         }
+
+                        $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
+                        $tzInfo = self::getArrayValue($metaZones, $path);
                         if (is_array($tzInfo)) {
                             foreach ($tzInfo as $tz) {
                                 if (is_array($tz) && isset($tz['mzone'])) {
@@ -950,9 +950,9 @@ class Calendar
                         }
                     }
                 }
-                if ($metazoneCode === '') {
+                if ($result === '' && $metazoneCode === '') {
                     foreach ($phpNames as $phpName) {
-                        foreach ($data['metazones'] as $metazone) {
+                        foreach ($metaZones['metazones'] as $metazone) {
                             if (strcasecmp($phpName, $metazone['type']) === 0) {
                                 $metazoneCode = $metazone['other'];
                                 break;
@@ -963,32 +963,14 @@ class Calendar
                         }
                     }
                 }
-                if ($metazoneCode === '') {
+                if ($result === '' && $metazoneCode === '') {
                     $metazoneCode = $receivedPhpName;
                 }
-                if ($metazoneCode !== '') {
-                    $data = Data::get('timeZoneNames', $locale);
-                    if (isset($data['metazone'])) {
-                        $data = $data['metazone'];
-                        if (isset($data[$metazoneCode])) {
-                            $data = $data[$metazoneCode];
-                            if (isset($data[$width])) {
-                                $data = $data[$width];
-                                $lookFor = array();
-                                if (!empty($kind)) {
-                                    $lookFor[] = $kind;
-                                }
-                                $lookFor[] = 'generic';
-                                $lookFor[] = 'standard';
-                                $lookFor[] = 'daylight';
-                                foreach ($lookFor as $lf) {
-                                    if (isset($data[$lf])) {
-                                        $result = $data[$lf];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                if ($result === '' && $metazoneCode !== '') {
+                    $path = array('metazone', $metazoneCode, $width, array($kind, 'generic', 'standard'));
+                    $name = self::getArrayValue($timeZoneNames, $path);
+                    if ($name) {
+                        $result = $name;
                     }
                 }
             }
@@ -1093,20 +1075,10 @@ class Calendar
                 $phpNames = static::getTimezonesAliases($receivedPhpName);
                 $timeZoneNames = Data::get('timeZoneNames', $locale);
                 foreach ($phpNames as $phpName) {
-                    $chunks = array_merge(array('zone'), explode('/', $phpName));
-                    $data = $timeZoneNames;
-                    foreach ($chunks as $chunk) {
-                        if (isset($data[$chunk])) {
-                            $data = $data[$chunk];
-                        } else {
-                            $data = null;
-                        }
-                        if (!is_array($data)) {
-                            break;
-                        }
-                    }
-                    if (is_array($data) && isset($data['exemplarCity'])) {
-                        $result = $data['exemplarCity'];
+                    $path = array_merge(array('zone'), explode('/', $phpName), array('exemplarCity'));
+                    $exemplarCity = self::getArrayValue($timeZoneNames, $path);
+                    if ($exemplarCity) {
+                        $result = $exemplarCity;
                         break;
                     }
                 }
@@ -3278,5 +3250,29 @@ class Calendar
         }
 
         return $result;
+    }
+
+    /**
+     * Get value from nested array.
+     *
+     * @param  array $data the nested array to descend into
+     * @param  array $path Path of array keys. Each part of the path may be a string or an array of alternative strings.
+     *
+     * @return mixed
+     */
+    protected static function getArrayValue($data, $path)
+    {
+        $alternatives = (array) array_shift($path);
+        foreach ($alternatives as $alternative) {
+            if (isset($data[$alternative])) {
+                if ($path) {
+                    return self::getArrayValue($data[$alternative], $path);
+                }
+
+                return $data[$alternative];
+            }
+        }
+
+        return null;
     }
 }
