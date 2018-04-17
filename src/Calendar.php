@@ -897,7 +897,7 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             $receivedPhpName = '';
-            $date = '';
+            $date = '9999-12-31';
             if (is_string($value)) {
                 $receivedPhpName = $value;
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
