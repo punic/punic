@@ -950,9 +950,6 @@ class Calendar
                         }
                     }
                 }
-                if ($metazoneCode === '') {
-                    $metazoneCode = $receivedPhpName;
-                }
                 if ($metazoneCode !== '') {
                     $data = Data::get('timeZoneNames', $locale);
                     if (isset($data['metazone'])) {
