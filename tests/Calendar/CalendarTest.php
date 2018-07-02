@@ -1325,6 +1325,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             array('MMMM d – MMMM d, y', true),
+            Calendar::getIntervalFormat('yMMMMd', 'Q')
+        );
+        $this->assertSame(
+            array('MMMM d – MMMM d, y', true),
             Calendar::getIntervalFormat('yMMMMd', 'M')
         );
         $this->assertSame(

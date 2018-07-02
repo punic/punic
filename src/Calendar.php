@@ -2264,7 +2264,7 @@ class Calendar
             $adjustedGreatestDifference = 'h';
         } elseif ($adjustedGreatestDifference === 'Q' && strpos($skeleton, 'Q') === false) {
             // Ignore quarter, if it is not part of the skeleton.
-            $adjustedGreatestDifference = 'm';
+            $adjustedGreatestDifference = 'M';
         } elseif ($adjustedGreatestDifference[0] === 'S') {
             $skeletonGranularityIndex += substr_count($skeleton, 'S') - 1;
         }
