@@ -74,7 +74,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
 
     public function testGetCodeException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Territory::getCode('DE', 'foo');
     }
 
@@ -117,7 +117,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
 
     public function testGetByCodeException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Territory::getByCode('666', 'foo');
     }
 
