@@ -56,25 +56,11 @@ class Number
     {
         $result = '';
         $number = null;
-        if (is_int($value) || is_float($value)) {
-            $number = $value;
-        } elseif (is_string($value) && $value !== '') {
-            if (preg_match('/^[\\-+]?\\d+$/', $value)) {
-                $number = (int) $value;
-            } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
-                if (!isset($m[1])) {
-                    $m[1] = '';
-                }
-                if (!isset($m[2])) {
-                    $m[2] = '';
-                }
-                if ($m[1] !== '' || $m[2] !== '') {
-                    $number = (float) $value;
-                    if (!is_numeric($precision)) {
-                        $precision = strlen($m[2]);
-                    }
-                }
+        if (is_numeric($value)) {
+            if (is_string($value) && $precision === null) {
+                $precision = self::getPrecision($value);
             }
+            $number = floatval($value);
         }
         if ($number !== null) {
             $precision = is_numeric($precision) ? (int) $precision : null;
@@ -111,6 +97,72 @@ class Number
         }
 
         return $result;
+    }
+
+    /**
+     * Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).
+     *
+     * @param int|float|string $value The string value to convert
+     * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+     */
+    public static function formatPercent($value, $precision = null, $locale = '')
+    {
+        $result = '';
+        if (is_numeric($value)) {
+            $data = Data::get('numbers', $locale);
+            if ($precision === null) {
+                $precision = self::getPrecision($value);
+            }
+            $formatted = self::format(100 * $value, $precision, $locale);
+            $format = $data['percentFormats']['standard']['format'];
+            $sign = $data['symbols']['percentSign'];
+
+            $result = sprintf($format, $formatted, $sign);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).
+     *
+     * @param int|float|string $value The string value to convert
+     * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+     */
+    public static function formatPercent($value, $precision = null, $locale = '')
+    {
+        $result = '';
+        if (is_numeric($value)) {
+            $data = Data::get('numbers', $locale);
+            if ($precision === null) {
+                $precision = self::getPrecision($value);
+            }
+            $formatted = self::format(100 * $value, $precision, $locale);
+            $format = $data['percentFormats']['standard']['format'];
+            $sign = $data['symbols']['percentSign'];
+
+            $result = sprintf($format, $formatted, $sign);
+        }
+
+        return $result;
+    }
+
+    private static function getPrecision($value)
+    {
+        $precision = null;
+        if (is_string($value)) {
+            $i = strrpos($value, '.');
+            if ($i !== false) {
+                $precision = strlen($value) - $i - 1;
+            }
+        }
+        return $precision;
     }
 
     /**

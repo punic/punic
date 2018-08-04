@@ -133,4 +133,52 @@ class NumberTest extends PHPUnit_Framework_TestCase
             Number::unformat($value, $locale)
         );
     }
+
+    /**
+     * @return array
+     */
+    public function providerFormatPercent()
+    {
+        return array(
+            array('12.3456%', 0.123456, null, 'en'),
+            array('12%', 0.123456, 0, 'en'),
+            array('10%', 0.12, -1, 'en'),
+            array('1,234.57%', 12.34567, 2, 'en'),
+            array('1.234,57 %', 12.34567, 2, 'da'),
+            array('1,234.57‎%‎', 12.34567, 2, 'ar'),
+            array('-1,234.57%', -12.34567, 2, 'en'),
+            array('-1,234.57%', '-12.34567', 2, 'en'),
+            array('1,234.57%', '12.34567', 2, 'en'),
+            array('1,230.00%', '12.3', 2, 'en'),
+            array('', '', null, 'en'),
+            array('', false, null, 'en'),
+            array('', null, null, 'en'),
+            array('', array(), null, 'en'),
+            array('', true, null, 'en'),
+            array('', '', null, 'en'),
+            array('0%', '0', null, 'en'),
+            array('0%', '0.', null, 'en'),
+            array('0.0%', '.0', null, 'en'),
+            array('0.0%', '0.0', null, 'en'),
+            array('', '.', null, 'en'),
+        );
+    }
+
+    /**
+     * @dataProvider providerFormatPercent
+     *
+     * @param string $result
+     * @param string|mixed $value
+     * @param int|null $precision
+     * @param string $locale
+     */
+    public function testFormatPercent($result, $value, $precision, $locale)
+    {
+        $this->assertSame(
+            $result,
+            Number::formatPercent($value, $precision, $locale)
+        );
+    }
+
+
 }
