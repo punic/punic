@@ -145,7 +145,7 @@ class Calendar
                     throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone');
                 }
             }
-            if (is_int($value) || is_float($value)) {
+            if (is_numeric($value)) {
                 $result = new \DateTime();
                 $result->setTimestamp($value);
                 if ($tzFrom !== null) {
@@ -158,22 +158,14 @@ class Calendar
                     $result->setTimezone($tzFrom);
                 }
             } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $result = new \DateTime();
-                    $result->setTimestamp($value);
-                    if ($tzFrom !== null) {
-                        $result->setTimezone($tzFrom);
+                try {
+                    if ($tzFrom === null) {
+                        $result = new \DateTime($value);
+                    } else {
+                        $result = new \DateTime($value, $tzFrom);
                     }
-                } else {
-                    try {
-                        if ($tzFrom === null) {
-                            $result = new \DateTime($value);
-                        } else {
-                            $result = new \DateTime($value, $tzFrom);
-                        }
-                    } catch (\Exception $x) {
-                        throw new Exception\BadArgumentType($value, '\\DateTime', $x);
-                    }
+                } catch (\Exception $x) {
+                    throw new Exception\BadArgumentType($value, '\\DateTime', $x);
                 }
             } else {
                 throw new Exception\BadArgumentType($value, '\\DateTime');
@@ -601,14 +593,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $year = null;
-            if (is_int($value)) {
-                $year = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $year = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $year = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $year = (int) $value->format('Y');
             }
@@ -645,14 +631,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $month = null;
-            if (is_int($value)) {
-                $month = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $month = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $month = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $month = (int) $value->format('n');
             }
@@ -689,14 +669,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $weekday = null;
-            if (is_int($value)) {
-                $weekday = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $weekday = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $weekday = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $weekday = (int) $value->format('w');
             }
@@ -734,14 +708,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $quarter = null;
-            if (is_int($value)) {
-                $quarter = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $quarter = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $quarter = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $quarter = 1 + (int) floor(((int) $value->format('n') - 1) / 3);
             }
@@ -780,18 +748,12 @@ class Calendar
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $dayperiod = null;
             $hours = null;
-            if (is_int($value)) {
-                $hours = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $hours = (int) $value;
             } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $hours = (int) $value;
-                } else {
-                    $s = strtolower($value);
-                    if (in_array($s, $dictionary, true)) {
-                        $dayperiod = $s;
-                    }
+                $s = strtolower($value);
+                if (in_array($s, $dictionary, true)) {
+                    $dayperiod = $s;
                 }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $dayperiod = $value->format('a');
@@ -844,14 +806,8 @@ class Calendar
 
             $hours = null;
             $dayperiod = null;
-            if (is_int($value)) {
-                $hours = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $hours = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $hours = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $hours = (int) $value->format('G');
             }
