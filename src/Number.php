@@ -77,36 +77,42 @@ class Number
             }
         }
         if ($number !== null) {
-            $precision = is_numeric($precision) ? (int) $precision : null;
-            if ($precision !== null) {
-                $value = round($value, $precision);
-            }
             $data = Data::get('numbers', $locale);
-            $decimal = $data['symbols']['decimal'];
-            $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? (int) $data['groupLength'] : 3;
             if ($value < 0) {
                 $sign = $data['symbols']['minusSign'];
                 $value = abs($value);
             } else {
                 $sign = '';
             }
-            $full = explode('.', (string) $value, 2);
-            $intPart = $full[0];
-            $floatPath = count($full) > 1 ? $full[1] : '';
-            $len = strlen($intPart);
-            if (($groupLength > 0) && ($len > $groupLength)) {
-                $groupSign = $data['symbols']['group'];
-                $preLength = 1 + (($len - 1) % 3);
-                $pre = substr($intPart, 0, $preLength);
-                $intPart = $pre.$groupSign.implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
-            }
-            $result = $sign.$intPart;
-            if ($precision === null) {
-                if ($floatPath !== '') {
-                    $result .= $decimal.$floatPath;
+            if (is_nan($number)) {
+                $result = $data['symbols']['nan'];
+            } elseif (is_infinite($number)) {
+                $result = $sign.$data['symbols']['infinity'];
+            } else {
+                $precision = is_numeric($precision) ? (int) $precision : null;
+                if ($precision !== null) {
+                    $value = round($value, $precision);
                 }
-            } elseif ($precision > 0) {
-                $result .= $decimal.substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
+                $decimal = $data['symbols']['decimal'];
+                $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? (int) $data['groupLength'] : 3;
+                $full = explode('.', (string) $value, 2);
+                $intPart = $full[0];
+                $floatPath = count($full) > 1 ? $full[1] : '';
+                $len = strlen($intPart);
+                if (($groupLength > 0) && ($len > $groupLength)) {
+                    $groupSign = $data['symbols']['group'];
+                    $preLength = 1 + (($len - 1) % 3);
+                    $pre = substr($intPart, 0, $preLength);
+                    $intPart = $pre.$groupSign.implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
+                }
+                $result = $sign.$intPart;
+                if ($precision === null) {
+                    if ($floatPath !== '') {
+                        $result .= $decimal.$floatPath;
+                    }
+                } elseif ($precision > 0) {
+                    $result .= $decimal.substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
+                }
             }
         }
 
