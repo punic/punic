@@ -132,14 +132,15 @@ class Number
      * Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).
      *
      * @param int|float|string $value The string value to convert
-     * @param string $currencyCode the 3-letter currency code
-     * @param string $kind the currency variant, either "standard" or "accounting"
+     * @param string $currencyCode The 3-letter currency code
+     * @param string $kind The currency variant, either "standard" or "accounting"
      * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $which The currency symbol to use, "" for default, "long" for the currency name, "narrow", "alt" for alternative, or "code" for the 3-letter currency code
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the amount
      */
-    public static function formatCurrency($value, $currencyCode, $kind = 'standard', $precision = null, $locale = '')
+    public static function formatCurrency($value, $currencyCode, $kind = 'standard', $precision = null, $which = '', $locale = '')
     {
         $result = '';
         if (is_numeric($value)) {
@@ -160,24 +161,46 @@ class Number
                 throw new Exception\ValueNotInList($kind, array_keys($data));
             }
             $format = $data[$kind][$value >= 0 ? 'positive' : 'negative'];
-            $symbol = Currency::getSymbol($currencyCode, null, $locale);
+
+            $symbol = null;
+            switch ($which) {
+                case 'long':
+                    $symbol = Currency::getName($currencyCode, $value, $locale);
+                    break;
+                case 'code':
+                    $symbol = $currencyCode;
+                    break;
+                default:
+                    $symbol = Currency::getSymbol($currencyCode, $which, $locale);
+                    break;
+            }
             if (!$symbol) {
                 $symbol = $currencyCode;
             }
 
-            list($before, $after) = explode('%2$s', $format);
-            if ($after &&
-                preg_match($data['currencySpacing']['afterCurrency']['currency'], $symbol) &&
-                preg_match($data['currencySpacing']['afterCurrency']['surrounding'], sprintf($after, $formatted))) {
-                $symbol .= $data['currencySpacing']['afterCurrency']['insertBetween'];
-            }
-            if ($before &&
-                preg_match($data['currencySpacing']['beforeCurrency']['currency'], $symbol) &&
-                preg_match($data['currencySpacing']['beforeCurrency']['surrounding'], sprintf($before, $formatted))) {
-                $symbol = $data['currencySpacing']['beforeCurrency']['insertBetween'].$symbol;
-            }
+            if ($which === 'long') {
+                $pluralRule = 'count-'.Plural::getRule(round($value, $precision), $locale);
+                if (!isset($data['unitPattern'][$pluralRule])) {
+                    $pluralRule = 'count-other';
+                }
+                $unitPattern = $data['unitPattern'][$pluralRule];
 
-            $result = sprintf($format, $formatted, $symbol);
+                $result = sprintf($unitPattern, $formatted, $symbol);
+            } else {
+                list($before, $after) = explode('%2$s', $format);
+                if ($after &&
+                    preg_match($data['currencySpacing']['afterCurrency']['currency'], $symbol) &&
+                    preg_match($data['currencySpacing']['afterCurrency']['surrounding'], sprintf($after, $formatted))) {
+                    $symbol .= $data['currencySpacing']['afterCurrency']['insertBetween'];
+                }
+                if ($before &&
+                    preg_match($data['currencySpacing']['beforeCurrency']['currency'], $symbol) &&
+                    preg_match($data['currencySpacing']['beforeCurrency']['surrounding'], sprintf($before, $formatted))) {
+                    $symbol = $data['currencySpacing']['beforeCurrency']['insertBetween'].$symbol;
+                }
+
+                $result = sprintf($format, $formatted, $symbol);
+            }
         }
 
         return $result;

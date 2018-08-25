@@ -159,29 +159,34 @@ class NumberTest extends PHPUnit_Framework_TestCase
         $nbsp = "\xC2\xA0";
 
         return array(
-            array('$1.23', 1.23, 'USD', 'standard', null, 'en'),
-            array('US$1.23', 1.23, 'USD', 'standard', null, 'en_CA'),
-            array("ZAR{$nbsp}1.23", 1.23, 'ZAR', 'standard', null, 'en'),
-            array("1,23{$nbsp}€", 1.23, 'EUR', 'standard', null, 'de'),
-            array("1,23{$nbsp}kr.", 1.23, 'DKK', 'standard', null, 'da'),
-            array("CLF{$nbsp}1.2300", 1.23, 'CLF', 'standard', null, 'en'),
-            array("AMD{$nbsp}1", 1.23, 'AMD', 'standard', null, 'en'),
-            array('$1.2', 1.23, 'USD', 'standard', 1, 'en'),
-            array('$1.230', 1.23, 'USD', 'standard', 3, 'en'),
-            array('$100', 123, 'USD', 'standard', -2, 'en'),
-            array("AMD{$nbsp}1", 1.23, 'AMD', 'standard', null, 'en'),
-            array("UNKNOWN{$nbsp}1.23", 1.23, 'UNKNOWN', 'standard', null, 'en'),
-            array('-$1.23', -1.23, 'USD', 'standard', null, 'en'),
-            array('($1.23)', -1.23, 'USD', 'accounting', null, 'en'),
-            array('', '', 'EUR', 'standard', null, 'en'),
-            array('', false, 'EUR', 'standard', null, 'en'),
-            array('', null, 'EUR', 'standard', null, 'en'),
-            array('', array(), 'EUR', 'standard', null, 'en'),
-            array('', true, 'EUR', 'standard', null, 'en'),
-            array('', '', 'EUR', 'standard', null, 'en'),
-            array('€0', '0', 'EUR', 'standard', 0, 'en'),
-            array('€0.00', '0.0', 'EUR', 'standard', null, 'en'),
-            array('', '.', 'EUR', 'standard', null, 'en'),
+            array('$1.23', 1.23, 'USD', 'standard', null, null, 'en'),
+            array('US$1.23', 1.23, 'USD', 'standard', null, null, 'en_CA'),
+            array("ZAR{$nbsp}1.23", 1.23, 'ZAR', 'standard', null, null, 'en'),
+            array("1,23{$nbsp}€", 1.23, 'EUR', 'standard', null, null, 'de'),
+            array("1,23{$nbsp}kr.", 1.23, 'DKK', 'standard', null, null, 'da'),
+            array("CLF{$nbsp}1.2300", 1.23, 'CLF', 'standard', null, null, 'en'),
+            array("AMD{$nbsp}1", 1.23, 'AMD', 'standard', null, null, 'en'),
+            array('$1.2', 1.23, 'USD', 'standard', 1, null, 'en'),
+            array('$1.230', 1.23, 'USD', 'standard', 3, null, 'en'),
+            array('$100', 123, 'USD', 'standard', -2, null, 'en'),
+            array("USD{$nbsp}1.23", 1.23, 'USD', 'standard', null, 'code', 'en'),
+            array("TL{$nbsp}1.23", 1.23, 'TRY', 'standard', null, 'alt', 'en'),
+            array('1.00 US dollar', 1, 'USD', 'standard', null, 'long', 'en'),
+            array('1.23 US dollars', 1.23, 'USD', 'standard', null, 'long', 'en'),
+            array('1.23米ドル', 1.23, 'USD', 'standard', null, 'long', 'ja'),
+            array("AMD{$nbsp}1", 1.23, 'AMD', 'standard', null, null, 'en'),
+            array("UNKNOWN{$nbsp}1.23", 1.23, 'UNKNOWN', 'standard', null, null, 'en'),
+            array('-$1.23', -1.23, 'USD', 'standard', null, null, 'en'),
+            array('($1.23)', -1.23, 'USD', 'accounting', null, null, 'en'),
+            array('', '', 'EUR', 'standard', null, null, 'en'),
+            array('', false, 'EUR', 'standard', null, null, 'en'),
+            array('', null, 'EUR', 'standard', null, null, 'en'),
+            array('', array(), 'EUR', 'standard', null, null, 'en'),
+            array('', true, 'EUR', 'standard', null, null, 'en'),
+            array('', '', 'EUR', 'standard', null, null, 'en'),
+            array('€0', '0', 'EUR', 'standard', 0, null, 'en'),
+            array('€0.00', '0.0', 'EUR', 'standard', null, null, 'en'),
+            array('', '.', 'EUR', 'standard', null, null, 'en'),
         );
     }
 
@@ -194,12 +199,13 @@ class NumberTest extends PHPUnit_Framework_TestCase
      * @param string $locale
      * @param mixed $currencyCode
      * @param mixed $kind
+     * @param mixed $symbol
      */
-    public function testFormatCurrency($result, $value, $currencyCode, $kind, $precision, $locale)
+    public function testFormatCurrency($result, $value, $currencyCode, $kind, $precision, $symbol, $locale)
     {
         $this->assertSame(
             $result,
-            Number::formatCurrency($value, $currencyCode, $kind, $precision, $locale)
+            Number::formatCurrency($value, $currencyCode, $kind, $precision, $symbol, $locale)
         );
     }
 
