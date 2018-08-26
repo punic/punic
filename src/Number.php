@@ -165,6 +165,7 @@ class Number
             $symbol = null;
             switch ($which) {
                 case 'long':
+                    $value = number_format($value, $precision, '.', '');
                     $symbol = Currency::getName($currencyCode, $value, $locale);
                     break;
                 case 'code':
@@ -179,7 +180,7 @@ class Number
             }
 
             if ($which === 'long') {
-                $pluralRule = 'count-'.Plural::getRule(round($value, $precision), $locale);
+                $pluralRule = 'count-'.Plural::getRule($value, $locale);
                 if (!isset($data['unitPattern'][$pluralRule])) {
                     $pluralRule = 'count-other';
                 }
