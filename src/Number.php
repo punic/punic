@@ -298,7 +298,7 @@ class Number
 
             // Add .5 to avoid floating-point rounding error in PHP 5. $base is
             // an integer, so adding a number < 1 will not break anything.
-            $divisor = pow($radix, intval(log($base + .5, $radix)));
+            $divisor = pow($radix, (int) log($base + .5, $radix));
 
             if ($divisor) {
                 $right = $value % $divisor;
