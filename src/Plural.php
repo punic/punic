@@ -29,13 +29,14 @@ class Plural
      *
      * @param string|int|float $number The number to check the plural rule for for
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     * @param string $type The type of plural rules, either "cardinal" (1, 2, 3, ...) or "ordinal" (1st, 2nd, 3rd, ...)
      *
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
      * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
      *
      * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
      */
-    public static function getRule($number, $locale = '')
+    public static function getRule($number, $locale = '', $type = 'cardinal')
     {
         if (is_int($number)) {
             $intPartAbs = (string) abs($number);
@@ -80,7 +81,16 @@ class Plural
             $v6 = '0';
         }
         $result = 'other';
-        $node = Data::getLanguageNode(Data::getGeneric('plurals'), $locale);
+        switch ($type) {
+            case 'ordinal':
+                $identifier = 'ordinals';
+                break;
+            case 'cardinal':
+            default:
+                $identifier = 'plurals';
+                break;
+        }
+        $node = Data::getLanguageNode(Data::getGeneric($identifier), $locale);
         foreach ($node as $rule => $formulaPattern) {
             $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6);
             $check = str_replace(array('static::inRange(', ' and ', ' or ', ', false, ', ', true, ', ', array('), ' , ', $formula);

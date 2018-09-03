@@ -12,15 +12,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
         $data = static::loadPluralRulesTestData();
         $parameters = array();
         foreach ($data as $language => $languageTest) {
-            switch ($language) {
-                case 'root':
-                    // The test data for root is incomplete in the source
-                    $rules = array('one', 'other');
-                    break;
-                default:
-                    $rules = array_keys($languageTest);
-                    break;
-            }
+            $rules = array_keys($languageTest);
             $parameters[] = array(
                 static::joinPluralRules($rules),
                 $language,
@@ -74,6 +66,14 @@ class PluralTest extends PHPUnit_Framework_TestCase
             array('one', array('1', 'en')),
             array('other', array('1.0', 'en')),
             array('other', array('1.1', 'en')),
+            array('other', array(11, 'en', 'ordinal')),
+            array('other', array(12, 'en', 'ordinal')),
+            array('other', array(13, 'en', 'ordinal')),
+            array('one', array(21, 'en', 'ordinal')),
+            array('two', array(22, 'en', 'ordinal')),
+            array('few', array(23, 'en', 'ordinal')),
+            array('other', array(24, 'en', 'ordinal')),
+            array('other', array(21, 'en', 'cardinal')),
         );
 
         return array_merge($parameters, $rules);
@@ -92,7 +92,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $rule,
-            Plural::getRule($parameters[0], $parameters[1])
+            Plural::getRule($parameters[0], $parameters[1], isset($parameters[2]) ? $parameters[2] : null)
         );
     }
 

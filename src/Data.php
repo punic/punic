@@ -689,10 +689,12 @@ class Data
                 }
             }
         }
-        $i = array_search('root', $result, true);
-        if ($i !== false) {
-            array_splice($result, $i, 1);
-            $result[] = 'root';
+        if ($locale !== 'root') {
+            $i = array_search('root', $result, true);
+            if ($i !== false) {
+                array_splice($result, $i, 1);
+                $result[] = 'root';
+            }
         }
 
         return $result;
