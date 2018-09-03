@@ -200,6 +200,11 @@ class Number
      * This method should not be called from outside this class.
      *
      * It is declared public for compatibility with PHP 5.3.
+     *
+     * @param int|float|string $value
+     * @param string $type
+     * @param int $base
+     * @param string $locale
      */
     public static function formatRbnf($value, $type, $base, $locale)
     {
