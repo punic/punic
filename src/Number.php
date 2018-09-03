@@ -248,7 +248,7 @@ class Number
                 }
 
                 return implode(' ', array_map(function ($v) use ($type, $base, $locale) {
-                    return self::formatRbnf($v, $type, $base, $locale);
+                    return Number::formatRbnf($v, $type, $base, $locale);
                 }, (array) $value));
             }
         }, $rule);
