@@ -196,7 +196,12 @@ class Number
         return self::formatRbnf($value, $type, null, $locale);
     }
 
-    protected static function formatRbnf($value, $type, $base, $locale)
+    /**
+     * This method should not be called from outside this class.
+     *
+     * It is declared public for compatibility with PHP 5.3.
+     */
+    public static function formatRbnf($value, $type, $base, $locale)
     {
         $data = Data::get('rbnf', $locale);
         if (!isset($data[$type])) {
