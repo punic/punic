@@ -227,6 +227,7 @@ class Number
                         } else {
                             $precision = strspn($match[2], '0', $i + 1);
                         }
+
                         return self::format($value, $precision, $locale);
                     }
                     $type = substr($match[2], 1);
@@ -246,9 +247,9 @@ class Number
                         break;
                 }
 
-                return implode(' ', array_map(function($v) use ($type, $base, $locale) {
+                return implode(' ', array_map(function ($v) use ($type, $base, $locale) {
                     return self::formatRbnf($v, $type, $base, $locale);
-                }, (array)$value));
+                }, (array) $value));
             }
         }, $rule);
 
@@ -282,7 +283,7 @@ class Number
             if ($base) {
                 $i = array_search($base, $bases);
             } else {
-                for ($i = count($bases) - 1; $i >= 0; $i--) {
+                for ($i = count($bases) - 1; $i >= 0; --$i) {
                     $base = $bases[$i];
                     if ($base <= $value) {
                         break;
