@@ -205,6 +205,8 @@ class Number
      * @param string $type
      * @param int $base
      * @param string $locale
+     *
+     * @internal
      */
     public static function formatRbnf($value, $type, $base, $locale)
     {
