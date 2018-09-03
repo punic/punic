@@ -295,7 +295,10 @@ class Number
             $r = $data['integer'][$base] + array('radix' => 10);
             $rule = $r['rule'];
             $radix = $r['radix'];
-            $divisor = pow($radix, floor(log($base, $radix)));
+
+            // Add .5 to avoid floating-point rounding error in PHP 5. $base is
+            // an integer, so adding a number < 1 will not break anything.
+            $divisor = pow($radix, intval(log($base + .5, $radix)));
 
             if ($divisor) {
                 $right = $value % $divisor;
