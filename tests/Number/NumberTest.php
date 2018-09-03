@@ -155,6 +155,8 @@ class NumberTest extends PHPUnit_Framework_TestCase
             array('infinity', INF, 'spellout-numbering', 'en'),
             array('minus infinity', -INF, 'spellout-numbering', 'en'),
             array('not a number', NAN, 'spellout-numbering', 'en'),
+            array('영점이', 0.2, 'spellout-numbering', 'ko'),
+            array('일점이', 1.2, 'spellout-numbering', 'ko'),
             array('one thousand nine hundred eighty-four', 1984, 'spellout-numbering', 'en'),
             array('nineteen eighty-four', 1984, 'spellout-numbering-year', 'en'),
             array('two thousand one', 2001, 'spellout-numbering-year', 'en'),
@@ -208,5 +210,11 @@ class NumberTest extends PHPUnit_Framework_TestCase
             $result,
             Number::spellOut($value, $type, $locale)
         );
+    }
+
+    public function testSpellOutException()
+    {
+        $this->setExpectedException('Punic\Exception\ValueNotInList');
+        Number::spellOut(1234, 'foo', 'en');
     }
 }

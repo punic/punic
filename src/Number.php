@@ -312,12 +312,8 @@ class Number
             // an integer, so adding a number < 1 will not break anything.
             $divisor = pow($radix, (int) log($base + .5, $radix));
 
-            if ($divisor) {
-                $right = $value % $divisor;
-                $left = floor($value / $divisor);
-            } else {
-                $left = $value % $radix;
-            }
+            $right = $value % $divisor;
+            $left = floor($value / $divisor);
 
             if ($right) {
                 $rule = str_replace(array('[', ']'), '', $rule);
