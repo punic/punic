@@ -240,7 +240,7 @@ class Number
                             $precision = strspn($match[2], '0', $i + 1);
                         }
 
-                        return self::format($value, $precision, $locale);
+                        return Number::format($value, $precision, $locale);
                     }
                     $type = substr($match[2], 1);
                 }
@@ -275,13 +275,13 @@ class Number
         $prevBase = 0;
         if (!is_numeric($value)) {
             $rule = '';
+        } elseif (is_nan($value) && isset($data['NaN'])) {
+            $rule = $data['NaN']['rule'];
         } elseif ($value < 0) {
             $right = -$value;
             $rule = $data['-x']['rule'];
         } elseif (is_infinite($value) && isset($data['Inf'])) {
             $rule = $data['Inf']['rule'];
-        } elseif (is_nan($value) && isset($data['NaN'])) {
-            $rule = $data['NaN']['rule'];
         } elseif (strpos($value, '.') !== false && isset($data['x.x'])) {
             list($left, $right) = explode('.', $value);
             $right = str_split($right);
