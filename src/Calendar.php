@@ -1009,13 +1009,6 @@ class Calendar
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $timezone = $value->getTimezone();
                 $location = self::getTimezoneLocationFromDatetime($value);
-                if (empty($kind)) {
-                    if ((int) $value->format('I') === 1) {
-                        $kind = 'daylight';
-                    } else {
-                        $kind = 'standard';
-                    }
-                }
             } elseif ($value instanceof \DateTimeZone) {
                 $timezone = $value;
                 $location = $timezone->getLocation();
@@ -2118,7 +2111,6 @@ class Calendar
         $postprocessedFormat = '';
         $quoted = false;
         $length = strlen($format);
-        $lengthM1 = strlen($format) - 1;
         for ($index = 0; $index < $length; ++$index) {
             $char = $format[$index];
             if ($char === "'") {
@@ -2265,7 +2257,7 @@ class Calendar
      */
     protected static function splitIntervalFormat($format)
     {
-        $functionNames[] = array();
+        $functionNames = array(array());
         $index = 0;
 
         // Split on the first recurring field.
