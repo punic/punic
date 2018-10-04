@@ -2008,7 +2008,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('sabato', Calendar::format($dt, 'cccc', 'it'));
         // decodeDayperiod
         $this->assertSame('PM', Calendar::format($dt, 'a'));
-        $this->assertSame('nachm.', Calendar::format($dt, 'a', 'de'));
+        $this->assertContains(Calendar::format($dt, 'a', 'de'), array('nachm.', 'PM')); // 'nachm.' for CLDR < 33, 'PM' for CLDR 33.1
         $this->assertSame('PM', Calendar::format($dt, 'aa'));
         $this->assertSame('PM', Calendar::format($dt, 'aaa'));
         $this->assertSame('AM', Calendar::format($dt2, 'aaaa'));
@@ -2022,7 +2022,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         $this->assertSame('p', Calendar::format($dt, 'bbbbb'));
         $this->assertSame('AM', Calendar::format($dt2, 'bbbb'));
         $this->assertSame('a', Calendar::format($dt2, 'bbbbb'));
-        $this->assertSame('nachm.', Calendar::format($dt, 'b', 'de'));
+        $this->assertContains(Calendar::format($dt, 'b', 'de'), array('nachm.', 'PM')); // 'nachm.' for CLDR < 33, 'PM' for CLDR 33.1
         // decodeVariableDayperiod
         $this->assertSame('in the evening', Calendar::format($dt, 'B'));
         $this->assertSame('in the evening', Calendar::format($dt, 'BB'));
