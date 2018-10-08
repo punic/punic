@@ -124,17 +124,17 @@ class Currency
     }
 
     /**
-     * Returns the ISO 4217 code for a currency given its code.
+     * Returns the ISO 4217 code for a currency given its currency code.
      *
      * Historical currencies are not supported.
      *
-     * @param string $currencyCode The currency code
+     * @param string $currencyCode The 3-letter currency code
      *
-     * @return string Returns the ISO 427 code, or an empty string if $currencyCode is not valid
+     * @return string Returns the numeric ISO 427 code, or an empty string if $currencyCode is not valid
      *
      * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
      */
-    public static function getCode($currencyCode)
+    public static function getNumericCode($currencyCode)
     {
         $codeMappings = Data::getGeneric('codeMappings');
         $currencies = $codeMappings['currencies'];
@@ -151,13 +151,13 @@ class Currency
      *
      * Historical currencies are not supported.
      *
-     * @param string $code The ISO 427 code
+     * @param string $code The numeric ISO 427 code
      *
-     * @return string Returns the currency code, or an empty string if $code is not valid
+     * @return string Returns the 3-letter currency code, or an empty string if $code is not valid
      *
      * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
      */
-    public static function getByCode($code)
+    public static function getByNumericCode($code)
     {
         $codeMappings = Data::getGeneric('codeMappings');
         $currencies = $codeMappings['currencies'];
