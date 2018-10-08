@@ -53,14 +53,14 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
         $this->assertSame($currencySymbol, \Punic\Currency::getSymbol($currencyCode, '', $locale), 'Error getting standard symbol');
         $this->assertSame($currencySymbolNarrow, \Punic\Currency::getSymbol($currencyCode, 'narrow', $locale), 'Error getting narrow symbol');
         $this->assertSame($currencySymbolAlternative, \Punic\Currency::getSymbol($currencyCode, 'alt', $locale), 'Error getting alternative symbol');
-        $this->assertSame($iso4217, \Punic\Currency::getCode($currencyCode), 'Error getting code');
+        $this->assertSame($iso4217, \Punic\Currency::getNumericCode($currencyCode), 'Error getting code');
     }
 
     public function testGetByCode()
     {
-        $this->assertSame('DKK', \Punic\Currency::getByCode(208));
-        $this->assertSame('DKK', \Punic\Currency::getByCode('208'));
-        $this->assertSame('', \Punic\Currency::getByCode(666));
+        $this->assertSame('DKK', \Punic\Currency::getByNumericCode(208));
+        $this->assertSame('DKK', \Punic\Currency::getByNumericCode('208'));
+        $this->assertSame('', \Punic\Currency::getByNumericCode(666));
     }
 
     /**
