@@ -11,9 +11,3 @@ PHP-Unicode CLDR Toolkit
    installation
    classes
    language-data
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
