@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Punic\Misc | Punic API v.3.1.0</title>
+
+            <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/sami.css">
+        <script src="../js/jquery-1.11.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/typeahead.min.js"></script>
+        <script src="../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Punic_Misc" data-root-path="../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../index.html">Punic API v.3.1.0</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../classes.html">Classes</a></li>
+                                            <li><a href="../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../interfaces.html">Interfaces</a></li>
+                    <li><a href="../traits.html">Traits</a></li>
+                    <li><a href="../doc-index.html">Index</a></li>
+                    <li><a href="../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../Punic.html">Punic</a></li><li class="backslash">\</li><li>Misc</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            Misc
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>Misc</strong>
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>Various helper stuff.</p>                                </div>
+    
+    
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_joinAnd">joinAnd</a>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        
+                                            <p>Concatenates a list of items returning a localized string using "and" as seperator.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_joinOr">joinOr</a>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        
+                                            <p>Concatenates a list of items returning a localized string using "or" as seperator.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_joinUnits">joinUnits</a>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        
+                                            <p>Concatenates a list of unit items returning a localized string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fixCase">fixCase</a>(string $string, string $case)
+        
+                                            <p>Fix the case of a string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getBrowserLocales">getBrowserLocales</a>(bool $ignoreCache = false)
+        
+                                            <p>Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parseHttpAcceptLanguage">parseHttpAcceptLanguage</a>(string $httpAcceptLanguages)
+        
+                                            <p>Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getCharacterOrder">getCharacterOrder</a>(string $locale = &#039;&#039;)
+        
+                                            <p>Retrieve the character order (right-to-left or left-to-right).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getLineOrder">getLineOrder</a>(string $locale = &#039;&#039;)
+        
+                                            <p>Retrieve the line order (top-to-bottom or bottom-to-top).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_join">join</a>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $locale = &#039;&#039;)
+        <small><sup><span class="label label-danger">deprecated</span></sup></small>
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_joinInternal">joinInternal</a>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $type, string $width, string $locale)
+        
+                                            <p>Concatenates a list of items returning a localized string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_joinAnd">
+        <div class="location">at         line 23</div>
+        <code>        static            string
+    <strong>joinAnd</strong>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Concatenates a list of items returning a localized string using "and" as seperator.</p>                    <p>For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array|<a target="_blank" href="http://php.net/Traversable">Traversable</a></td>
+                <td>$list</td>
+                <td>The list to concatenate</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$width</td>
+                <td>The preferred width ('' for default, or 'short' or 'narrow')</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>returns an empty string if $list is not an array of it it's empty, the joined items otherwise</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_joinOr">
+        <div class="location">at         line 39</div>
+        <code>        static            string
+    <strong>joinOr</strong>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Concatenates a list of items returning a localized string using "or" as seperator.</p>                    <p>For instance, array(1, 2, 3) will result in '1, 2, or 3' for English or '1, 2 o 3' for Italian.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array|<a target="_blank" href="http://php.net/Traversable">Traversable</a></td>
+                <td>$list</td>
+                <td>The list to concatenate</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$width</td>
+                <td>The preferred width ('' for default, or 'short' or 'narrow')</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>returns an empty string if $list is not an array of it it's empty, the joined items otherwise</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_joinUnits">
+        <div class="location">at         line 55</div>
+        <code>        static            string
+    <strong>joinUnits</strong>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $width = &#039;&#039;, string $locale = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Concatenates a list of unit items returning a localized string.</p>                    <p>For instance, array('3 ft', '2 in') will result in '3 ft, 2 in'.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array|<a target="_blank" href="http://php.net/Traversable">Traversable</a></td>
+                <td>$list</td>
+                <td>The list to concatenate</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$width</td>
+                <td>The preferred width ('' for default, or 'short' or 'narrow')</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>returns an empty string if $list is not an array of it it's empty, the joined items otherwise</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fixCase">
+        <div class="location">at         line 74</div>
+        <code>        static            string
+    <strong>fixCase</strong>(string $string, string $case)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Fix the case of a string.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$string</td>
+                <td>The string whose case needs to be fixed</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$case</td>
+                <td>How to fix case. Allowed values:
+  <li><code>'titlecase-words'</code> all words in the phrase should be title case</li>
+  <li><code>'titlecase-firstword'</code> the first word should be title case</li>
+  <li><code>'lowercase-words'</code> all words in the phrase should be lower case</li>
+</ul></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getBrowserLocales">
+        <div class="location">at         line 122</div>
+        <code>        static            array
+    <strong>getBrowserLocales</strong>(bool $ignoreCache = false)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Parse the browser HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>bool</td>
+                <td>$ignoreCache</td>
+                <td>Set to true if you want to ignore the cache</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>Array keys are the found locales, array values are the relative quality value (from 0 to 1)</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parseHttpAcceptLanguage">
+        <div class="location">at         line 145</div>
+        <code>        static            array
+    <strong>parseHttpAcceptLanguage</strong>(string $httpAcceptLanguages)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Parse the value of an HTTP_ACCEPT_LANGUAGE header and return the found locales, sorted in descending order by the quality values.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$httpAcceptLanguages</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>Array keys are the found locales, array values are the relative quality value (from 0 to 1)</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getCharacterOrder">
+        <div class="location">at         line 213</div>
+        <code>        static            string
+    <strong>getCharacterOrder</strong>(string $locale = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Retrieve the character order (right-to-left or left-to-right).</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>Return 'left-to-right' or 'right-to-left'</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getLineOrder">
+        <div class="location">at         line 227</div>
+        <code>        static            string
+    <strong>getLineOrder</strong>(string $locale = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Retrieve the line order (top-to-bottom or bottom-to-top).</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>Return 'top-to-bottom' or 'bottom-to-top'</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_join">
+        <div class="location">at         line 242</div>
+        <code>        static            string
+    <strong>join</strong>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $locale = &#039;&#039;)
+        <small><sup><span class="label label-danger">deprecated</span></sup></small></code>
+    </h3>
+    <div class="details">
+            
+            <p>
+                <small><sup><span class="label label-danger">deprecated</span></sup></small>
+                            <tr>
+                    <td>use</td>
+                    <td>joinAnd($list, '', $locale)</td>
+                </tr>
+                    </p>
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array|<a target="_blank" href="http://php.net/Traversable">Traversable</a></td>
+                <td>$list</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_joinInternal">
+        <div class="location">at         line 257</div>
+        <code>        static    protected        string
+    <strong>joinInternal</strong>(array|<a target="_blank" href="http://php.net/Traversable">Traversable</a> $list, string $type, string $width, string $locale)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Concatenates a list of items returning a localized string.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array|<a target="_blank" href="http://php.net/Traversable">Traversable</a></td>
+                <td>$list</td>
+                <td>The list to concatenate</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td>The type of list; 'standard' (e.g. '1, 2, and 3'), 'or' ('1, 2, or 3') or 'unit' ('3 ft, 2 in').</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$width</td>
+                <td>The preferred width ('' for default, or 'short' or 'narrow')</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$locale</td>
+                <td>The locale to use. If empty we'll use the default locale set in \Punic\Data</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>returns an empty string if $list is not an array of it it's empty, the joined items otherwise</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

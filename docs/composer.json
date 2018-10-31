@@ -1,0 +1,9 @@
+{
+    "require": {
+        "sami/sami": "^4"
+    },
+    "scripts": {
+    	"update-docs": "sami.php update sami_configuration.php -v",
+		"update-docs-win": "sami.php.bat update sami_configuration.php -v"
+    }
+}

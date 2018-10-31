@@ -1,4 +1,8 @@
 /.settings/
+/docs/cache/
+/docs/out/
+/docs/vendor/
+/docs/composer.lock
 /temp/
 /vendor/
 /.buildpath
