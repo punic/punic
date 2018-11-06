@@ -8,7 +8,7 @@
 import os, datetime, re, subprocess
 
 def get_punic_rootdir():
-    return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 def get_punic_copyright():
     initialYear = 2018
@@ -19,41 +19,34 @@ def get_punic_copyright():
     result += u', Michele Locati'
     return result
 
-def get_punic_latest_versiontag():
-    if get_punic_latest_versiontag.result:
-        return get_punic_latest_versiontag.result
-    rootDir = get_punic_rootdir()
-    result = u''
-    rx = re.compile(u'^(?:v\.?\s*)?(\d+\.\d+\.\d+.*)$')
-    cmd = u'git tag --list --sort=version:refname'
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=get_punic_rootdir())
-    try:
-        stdout, stderr = process.communicate()
-    except:
-        process.kill()
-        process.wait()
-        raise
-    rc = process.poll()
-    if rc:
-        if stderr:
-            raise subprocess.CalledProcessError(rc, cmd, output=stderr)
-        raise subprocess.CalledProcessError(rc, cmd, output=stdout)
-    for line in stdout.splitlines():
-        match = rx.match(line)
-        if match:
-            result = match.group(1)
-    if not result:
-        raise Exception(u'Unable to detect Punic version from git tags')
-    get_punic_latest_versiontag.result = result
-    return result
-get_punic_latest_versiontag.result = False
-
 def get_punic_version(full):
-    fullVersion = get_punic_latest_versiontag()
+    if get_punic_version.fullVersion:
+        fullVersion = get_punic_version.fullVersion
+    else:
+        isDev = False
+        fullVersion = False
+        rxVersion = re.compile(u'^### (\d+\.\d+\.\d+)')
+        with open(os.path.join(get_punic_rootdir(), 'CHANGELOG.md')) as file:
+            for line in file:
+                line = line.strip()
+                if line == '### NEXT (YYYY-MM-DD)':
+                    isDev = True
+                else:
+                    m = rxVersion.match(line)
+                    if m:
+                        fullVersion = m.group(1)
+                        break
+        if not fullVersion:
+            raise Exception(u'Failed to detect the version from the CHANGELOG file.')
+        if isDev:
+            numbers = fullVersion.split('.')
+            numbers[2] = str(1 + int(numbers[2]))
+            fullVersion = '.'.join(numbers) + '-dev'
+        get_punic_version.fullVersion = fullVersion
     if full:
         return fullVersion
     return re.match(u'^(\d+\.\d+)', fullVersion).group(1)
-
+get_punic_version.fullVersion = False
 
 # -- Configure lexers --------------------------------------------------------
 
