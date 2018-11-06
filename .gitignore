@@ -1,12 +1,8 @@
-/.settings/
 /docs/cache/
 /docs/out/
 /docs/vendor/
 /docs/composer.lock
-/temp/
 /vendor/
-/.buildpath
 /.php_cs
 /.php_cs.cache
-/.project
 /composer.lock
