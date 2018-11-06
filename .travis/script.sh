@@ -47,7 +47,7 @@ To create it:
     else
         printf '# checking out branch "%s"\n' "$API_PROCESS_BRANCH"
         cd "$TRAVIS_BUILD_DIR"
-        git checkout --quiet ..force "$API_PROCESS_BRANCH"
+        git checkout --quiet --force "$API_PROCESS_BRANCH"
         printf '# installing docs composer dependencies\n'
         cd "$TRAVIS_BUILD_DIR/docs"
         composer --no-interaction install --prefer-dist --optimize-autoloader --no-suggest
