@@ -4,9 +4,9 @@ use Sami\Sami;
 use Symfony\Component\Finder\Finder;
 
 $rootDir = dirname(__DIR__);
-$srcDir = $rootDir . DIRECTORY_SEPARATOR . 'src';
+$srcDir = $rootDir.DIRECTORY_SEPARATOR.'src';
 
-$changelog = @file_get_contents($rootDir . '/CHANGELOG.md');
+$changelog = @file_get_contents($rootDir.'/CHANGELOG.md');
 if ($changelog === false) {
     throw new Exception('Failed to read the CHANGELOG file.');
 }
@@ -40,7 +40,7 @@ $iterator = Finder::create()
 return new Sami($iterator, array(
     'title' => "Punic API v.{$version}",
     'theme' => 'default',
-    'build_dir' => __DIR__ . '/themes/punic/static/api',
-    'cache_dir' => __DIR__ . '/cache/sami',
+    'build_dir' => __DIR__.'/themes/punic/static/api',
+    'cache_dir' => __DIR__.'/cache/sami',
     'default_opened_level' => 2,
 ));

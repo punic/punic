@@ -2,117 +2,53 @@ sudo: false
 
 language: php
 
+notifications:
+  email: false
+
 branches:
   only:
-    - master
+  - master
 
 cache:
   directories:
-    - $HOME/.composer/cache
+  - $HOME/.composer/cache
 
 env:
   global:
-    - secure: "View3+Nu0F+dkCu09UtRX1XHTGyuT1P1yCUMoQXIHdCZS4/SV/ljxncAu3utt8Ynw4lEcey45Up6TXgRbsct7Ky/kPtBVFk6Sou9L3ULgZkvnExlBjEj/KP6O/LXM8VuvEwQLKmFmYFe3p+hmEfcPu3Qh5TkIkNf0PTpryaW28M="
+  - secure: View3+Nu0F+dkCu09UtRX1XHTGyuT1P1yCUMoQXIHdCZS4/SV/ljxncAu3utt8Ynw4lEcey45Up6TXgRbsct7Ky/kPtBVFk6Sou9L3ULgZkvnExlBjEj/KP6O/LXM8VuvEwQLKmFmYFe3p+hmEfcPu3Qh5TkIkNf0PTpryaW28M=
+  - DO_TESTS=1
+  - DO_UPDATEAPI=0
+  - DO_CODINGSTYLE=0
 
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.2
-  - hhvm
-  - nightly
+- 5.4
+- 5.5
+- 5.6
+- 7.0
+- 7.2
+- 7.3
+- hhvm
+- nightly
 
 matrix:
   allow_failures:
-    - php: nightly
+  - php: nightly
   include:
-    - php: 5.3
-      dist: precise
-    - php: 7.1
-      env:
-        - CODECOVERAGE="yes"
-        - UPDATEDOCS="yes"
-    - php: 7.1
-      env: CODINGSTYLE="yes"
+  - php: 5.3
+    dist: precise
+  - php: 7.1
+    env:
+    - DO_TESTS=2
+  - php: 7.1
+    env:
+    - DO_CODINGSTYLE=1
+    - DO_UPDATEAPI=1
 
 before_script:
-  - set -e
-  - |
-    export COMPOSER_DISABLE_XDEBUG_WARN=1
-    travis_retry composer self-update --no-interaction || true
-  - |
-    if [[ $CODINGSTYLE != yes ]]; then
-      composer remove --no-interaction --dev --no-update --no-scripts friendsofphp/php-cs-fixer
-    fi
-    if [[ $CODECOVERAGE = yes ]]; then
-      export COMPOSER_ALLOW_XDEBUG=1
-      travis_retry composer require --no-interaction --dev --no-suggest --no-update 'php-coveralls/php-coveralls:^2.0'
-    elif [[ $TRAVIS_PHP_VERSION != hhvm ]]; then
-      export COMPOSER_DISABLE_XDEBUG_WARN=0
-      phpenv config-rm xdebug.ini || true
-    fi
-  - travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
+- ./.travis/before_script.sh
 
 script:
-  - |
-    if [[ $CODINGSTYLE = yes ]]; then
-      ./vendor/bin/php-cs-fixer fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.dist
-    elif [[ $CODECOVERAGE = yes ]]; then
-      mkdir -p build/logs
-      ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-    else
-      ./vendor/bin/phpunit
-    fi
-  - |
-    if [[ $UPDATEDOCS = yes ]]; then
-      set -o errexit
-      set -o pipefail
-      set -o nounset
-      SOURCE_BRANCH='master'
-      if [ "${TRAVIS_PULL_REQUEST:=}" != 'false' -o "${TRAVIS_BRANCH:=}" != "$SOURCE_BRANCH" ]; then
-        echo "Not pushing to ${SOURCE_BRANCH}: skipping updating APIs."
-      elif [ -z "${GUTHUB_ACCESS_TOKEN:=}" ]; then
-        echo 'Missing GUTHUB_ACCESS_TOKEN environment variable.'
-        # To create it:
-        #  - go to https://github.com/settings/tokens/new
-        #  - create a new token
-        #  - sudo apt install -y build-essential ruby ruby-dev
-        #  - sudo gem install travis
-        #  - travis encrypt -r punic/punic GUTHUB_ACCESS_TOKEN=<TOKEN>
-      else
-        cd "${TRAVIS_BUILD_DIR}"
-        COMMIT_SHA1=`git rev-parse --verify HEAD`
-        COMMIT_AUTHOR_EMAIL=`git log -1 --pretty="%cE"`
-        TARGET_REPOSITORY="https://${GUTHUB_ACCESS_TOKEN}@github.com/punic/punic.github.io.git"
-        TARGET_BRANCH='master'
-        git clone -b "${TARGET_BRANCH}" -- "$TARGET_REPOSITORY" punic.github.io
-        cd punic.github.io
-        travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
-        ./bin/punic-update-docs --punic="${TRAVIS_BUILD_DIR}"
-        if [ -z "$(git status --porcelain)" ]; then
-          echo 'No changes in API docs'
-        else
-          git config user.name 'Travis CI'
-          git config user.email "${COMMIT_AUTHOR_EMAIL}"
-          git add --all .
-          git commit --message="APIs updated after commit ${COMMIT_SHA1}"
-          git push origin "${TARGET_BRANCH}"
-          echo 'APIs updated.'
-        fi
-      fi
-      set +o errexit
-      set +o pipefail
-      set +o nounset
-    fi
+- ./.travis/script.sh
 
 after_success:
-  - |
-    if [[ $CODECOVERAGE = yes ]]; then
-      ./vendor/bin/php-coveralls -v
-      wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
-    fi
-
-notifications:
-  email: false
+- ./.travis/after_success.sh
