@@ -18,6 +18,6 @@ As Punic is written using PSR-4, it's highly recommended to use composer to use 
 
 .. code-block:: bash
 
-    composer require punic/punic:^3
+    composer require "punic/punic:^3"
 
 That's all it takes, you're ready to go! Have a look at the example on the right to see how a basic call to punic can look like.
