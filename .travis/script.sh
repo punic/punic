@@ -52,11 +52,11 @@ To create it:
         cd "$TRAVIS_BUILD_DIR/docs"
         composer --no-interaction install --prefer-dist --optimize-autoloader --no-suggest
         printf '# removing old API docs\n'
-        rm -rf "$TRAVIS_BUILD_DIR/themes/punic/static/api"
+        rm -rf 'themes/punic/static/api'
         printf '# generating new API docs\n'
         composer --no-interaction run-script update-docs
         printf '# checking changes\n'
-        cd "$TRAVIS_BUILD_DIR/themes/punic/static/api"
+        cd 'themes/punic/static/api'
         if test -z "$(git status --porcelain .)"; then
             printf '# no changes detected\n'
         else
