@@ -1,18 +1,18 @@
 # Generation of the API
 
+This is done automatically by a TravisCI job.
+
+If you want to do it locally:
+
 1. Install composer dependencies  
    ```sh
    composer install
    ```
 2. Update the API
-    - On *nix systems:
-      ```sh
-      composer run-script update-docs
-      ```
-    - On Windows systems:
-      ```sh
-      composer run-script update-docs-win
-      ```
+   ```sh
+   composer run-script update-docs
+   ```
+
 
 # Generation of the documentation
 
