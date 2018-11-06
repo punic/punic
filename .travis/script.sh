@@ -67,7 +67,7 @@ To create it:
             git config user.email "$API_COMMIT_AUTHOR_EMAIL"
             git commit -m "$API_COMMIT_MESSAGE"
             printf '# pushing changes\n'
-            git remote add deploy "https://${GUTHUB_ACCESS_TOKEN}@github.com/$API_REPOSITORY_OWNER/$API_REPOSITORY_NAME.git"
+            git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/$API_REPOSITORY_OWNER/$API_REPOSITORY_NAME.git"
             git push deploy "$API_PROCESS_BRANCH"
         fi
     fi

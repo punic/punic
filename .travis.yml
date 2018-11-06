@@ -15,7 +15,7 @@ cache:
 
 env:
   global:
-  - secure: View3+Nu0F+dkCu09UtRX1XHTGyuT1P1yCUMoQXIHdCZS4/SV/ljxncAu3utt8Ynw4lEcey45Up6TXgRbsct7Ky/kPtBVFk6Sou9L3ULgZkvnExlBjEj/KP6O/LXM8VuvEwQLKmFmYFe3p+hmEfcPu3Qh5TkIkNf0PTpryaW28M=
+  - secure: PPoh/qoZiUfvD8QPZltPHlpe2huly86u3kPogb5gmgvhXkizfUYWggA/VnSweMa2jzVTRZfLxhDqYggo28/UL4OptiRp6YwPP0APM/xUNM5oARo6JTA/4ERexHwtW64Km14izMZJXVIbGAc9ho4JTuKTaPKEuFlKVzxfD/65VbI=
   - DO_TESTS=1
   - DO_UPDATEAPI=0
   - DO_CODINGSTYLE=0
