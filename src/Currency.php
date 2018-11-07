@@ -71,7 +71,7 @@ class Currency
                 if (in_array($quantity, array('zero', 'one', 'two', 'few', 'many', 'other'))) {
                     $pluralRule = $quantity;
                 } else {
-                    $pluralRule = Plural::getRule($quantity, $locale);
+                    $pluralRule = Plural::getRuleOfType($quantity, Plural::RULETYPE_CARDINAL, $locale);
                 }
                 if (!isset($data['pluralName'][$pluralRule])) {
                     $pluralRule = 'other';

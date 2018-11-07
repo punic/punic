@@ -186,7 +186,7 @@ class Number
             }
 
             if ($which === 'long') {
-                $pluralRule = 'count-'.Plural::getRule($value, $locale);
+                $pluralRule = 'count-'.Plural::getRuleOfType($value, Plural::RULETYPE_CARDINAL, $locale);
                 if (!isset($data['unitPattern'][$pluralRule])) {
                     $pluralRule = 'count-other';
                 }
@@ -323,7 +323,7 @@ class Number
 
         $rule = preg_replace_callback('/([<>=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
             if (isset($match[4])) {
-                $rule = Plural::getRule($left, $locale, $match[3]);
+                $rule = Plural::getRuleOfType($left, $match[3] ? $match[3] : Plural::RULETYPE_CARDINAL, $locale);
                 if (preg_match('/'.$rule.'{(.*?)}/', $match[4], $match2)) {
                     return $match2[1];
                 }

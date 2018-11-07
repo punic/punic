@@ -17,6 +17,7 @@
 * Support explicit timezone translations (@c960657)
 * Localise infinity and NaN (@c960657)
 * Minor performance improvements (@c960657)
+* `Punic\Plural::getRule` has been deprecated: use `Punic\Plural::getRuleOfType` (@mlocati)
 * **BREAKING CHANGE** `Punic\Territory::getChildTerritoryCodes()` changed its signature (a new argument with a default value has been added) (@c960657)
 
 

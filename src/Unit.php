@@ -84,7 +84,7 @@ class Unit
         }
         $data = static::getDataForWidth($width, $locale);
         $rules = static::getDataForUnit($data, $unit);
-        $pluralRule = Plural::getRule($number, $locale);
+        $pluralRule = Plural::getRuleOfType($number, Plural::RULETYPE_CARDINAL, $locale);
         //@codeCoverageIgnoreStart
         // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)
         if (!isset($rules[$pluralRule])) {
