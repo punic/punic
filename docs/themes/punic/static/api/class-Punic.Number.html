@@ -130,7 +130,7 @@
 		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-Punic.Number.html#5-290" title="Go to source code">Number.php</a>
+			<b>Located at</b> <a href="source-class-Punic.Number.html#5-440" title="Go to source code">Number.php</a>
 		<br>
 	</div>
 
@@ -386,6 +386,57 @@
 					</div>
 
 
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="spellOut" id="_spellOut">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_spellOut">#</a>
+			<code><a href="source-class-Punic.Number.html#278-297" title="Go to source code">spellOut</a>( <span>integer|float|string <var>$value</var></span>, <span>string <var>$type</var></span>, <span>string <var>$locale</var></span> )</code>
+
+			<div class="description short">
+				<p>Spell out a number (e.g. "one hundred twenty-three" or "twenty-third") or convert to a different numbering system, e.g Roman numerals.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Spell out a number (e.g. "one hundred twenty-three" or "twenty-third") or convert to a different numbering system, e.g Roman numerals.</p>
+
+<p>Some types are language-dependent and reflect e.g. gender and case. Refer to the CLDR XML source for supported types.</p>
+
+<p>Available numbering systems are specified in the "root" locale.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The value to localize/spell out</dd>
+						<dt><var>$type</var></dt>
+						<dd>The format type, e.g. "spellout-numbering", "spellout-numbering-year", "spellout-cardinal", "digits-ordinal", "roman-upper".</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>The spelled number
+					</div>
+
+
+					<h4>See</h4>
+					<div class="list">
+							https://www.unicode.org/repos/cldr/trunk/common/rbnf/<br>
+							https://www.unicode.org/repos/cldr/trunk/common/rbnf/root.xml<br>
+					</div>
 
 
 			</div>
