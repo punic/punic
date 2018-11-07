@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Punic\Unit | Punic v3.1.1-dev</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Punic v3.1.1-dev</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Punic.html" title="Summary of Punic"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+					<li class="divider-vertical"></li>
+
+					<li>
+						<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+					</li>
+
+						<li>
+							<a href="annotation-group-todo.html" title="List of elements with todo annotation">
+								<span>Todo</span>
+							</a>
+						</li>
+						<li>
+							<a href="annotation-group-deprecated.html" title="List of elements with deprecated annotation">
+								<span>Deprecated</span>
+							</a>
+						</li>
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active main">
+						<a href="namespace-Punic.html">
+							Punic<span></span>
+						</a>
+							<ul>
+					<li class="main">
+						<a href="namespace-Punic.Exception.html">
+							Exception						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Punic.Calendar.html">Calendar</a></li>
+				<li><a href="class-Punic.Comparer.html">Comparer</a></li>
+				<li><a href="class-Punic.Currency.html">Currency</a></li>
+				<li><a href="class-Punic.Data.html">Data</a></li>
+				<li><a href="class-Punic.Language.html">Language</a></li>
+				<li><a href="class-Punic.Misc.html">Misc</a></li>
+				<li><a href="class-Punic.Number.html">Number</a></li>
+				<li><a href="class-Punic.Phone.html">Phone</a></li>
+				<li><a href="class-Punic.Plural.html">Plural</a></li>
+				<li><a href="class-Punic.Territory.html">Territory</a></li>
+				<li class="active"><a href="class-Punic.Unit.html">Unit</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Punic.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class Unit</h1>
+
+
+	<div class="description">
+	<p>Units helper stuff.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Punic.Unit.html#5-329" title="Go to source code">Unit.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="getAvailableUnits" id="_getAvailableUnits">
+
+			<td class="attributes"><code>
+				 public static
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAvailableUnits">#</a>
+			<code><a href="source-class-Punic.Unit.html#10-39" title="Go to source code">getAvailableUnits</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Get the list of all the available units.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the list of all the available units.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getName" id="_getName">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getName">#</a>
+			<code><a href="source-class-Punic.Unit.html#41-58" title="Go to source code">getName</a>( <span>string <var>$unit</var></span>, <span>string <var>$width</var> = <span class="php-quote">'short'</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Get the localized name of a unit.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the localized name of a unit.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$unit</var></dt>
+						<dd>The unit identifier (eg 'duration/millisecond' or 'millisecond')</dd>
+						<dt><var>$width</var></dt>
+						<dd>The format name; it can be 'long' ('milliseconds'), 'short' (eg 'millisecs') or 'narrow' (eg 'msec')</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Punic.Exception.ValueNotInList.html">Punic\Exception\ValueNotInList</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="format" id="_format">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_format">#</a>
+			<code><a href="source-class-Punic.Unit.html#60-100" title="Go to source code">format</a>( <span>integer|float|string <var>$number</var></span>, <span>string <var>$unit</var></span>, <span>string <var>$width</var> = <span class="php-quote">'short'</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Format a unit string.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Format a unit string.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$number</var></dt>
+						<dd>The unit amount</dd>
+						<dt><var>$unit</var></dt>
+						<dd>The unit identifier (eg 'duration/millisecond' or 'millisecond')</dd>
+						<dt><var>$width</var></dt>
+						<dd>The format name; it can be 'long' (eg '3 milliseconds'), 'short' (eg '3 ms') or 'narrow' (eg '3ms'). You can also add a precision specifier ('long,2' or just '2')</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Punic.Exception.ValueNotInList.html">Punic\Exception\ValueNotInList</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getMeasurementSystems" id="_getMeasurementSystems">
+
+			<td class="attributes"><code>
+				 public static
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getMeasurementSystems">#</a>
+			<code><a href="source-class-Punic.Unit.html#102-112" title="Go to source code">getMeasurementSystems</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Retrieve the measurement systems and their localized names.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the measurement systems and their localized names.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>The array keys are the measurement system codes (eg 'metric', 'US', 'UK'), the values are the localized measurement system names (eg 'Metric', 'US', 'UK' for English)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getMeasurementSystemFor" id="_getMeasurementSystemFor">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getMeasurementSystemFor">#</a>
+			<code><a href="source-class-Punic.Unit.html#114-137" title="Go to source code">getMeasurementSystemFor</a>( <span>string <var>$territoryCode</var></span> )</code>
+
+			<div class="description short">
+				<p>Retrieve the measurement system for a specific territory.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the measurement system for a specific territory.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$territoryCode</var></dt>
+						<dd>The territory code (eg. 'US' for 'United States of America').</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Return the measurement system code (eg: 'metric') for the specified territory. If $territoryCode is not valid we'll return an empty string.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getCountriesWithMeasurementSystem" id="_getCountriesWithMeasurementSystem">
+
+			<td class="attributes"><code>
+				 public static
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getCountriesWithMeasurementSystem">#</a>
+			<code><a href="source-class-Punic.Unit.html#139-180" title="Go to source code">getCountriesWithMeasurementSystem</a>( <span>string <var>$measurementSystem</var></span> )</code>
+
+			<div class="description short">
+				<p>Returns the list of countries that use a specific measurement system.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the list of countries that use a specific measurement system.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$measurementSystem</var></dt>
+						<dd>The measurement system identifier ('metric', 'US' or 'UK')</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>The list of country IDs that use the specified measurement system (if $measurementSystem is invalid you'll get an empty array)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getPaperSizeFor" id="_getPaperSizeFor">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getPaperSizeFor">#</a>
+			<code><a href="source-class-Punic.Unit.html#182-205" title="Go to source code">getPaperSizeFor</a>( <span>string <var>$territoryCode</var></span> )</code>
+
+			<div class="description short">
+				<p>Retrieve the standard paper size for a specific territory.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the standard paper size for a specific territory.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$territoryCode</var></dt>
+						<dd>The territory code (eg. 'US' for 'United States of America').</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Return the standard paper size (eg: 'A4' or 'US-Letter') for the specified territory. If $territoryCode is not valid we'll return an empty string.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getCountriesWithPaperSize" id="_getCountriesWithPaperSize">
+
+			<td class="attributes"><code>
+				 public static
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getCountriesWithPaperSize">#</a>
+			<code><a href="source-class-Punic.Unit.html#207-248" title="Go to source code">getCountriesWithPaperSize</a>( <span>string <var>$paperSize</var></span> )</code>
+
+			<div class="description short">
+				<p>Returns the list of countries that use a specific paper size by default.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the list of countries that use a specific paper size by default.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$paperSize</var></dt>
+						<dd>The paper size identifier ('A4' or 'US-Letter')</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>The list of country IDs that use the specified paper size (if $paperSize is invalid you'll get an empty array)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Punic v3.1.1-dev API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
