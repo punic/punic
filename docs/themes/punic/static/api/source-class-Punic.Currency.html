@@ -193,7 +193,7 @@
 </span><span id="71" class="l">                <span class="php-keyword1">if</span> (<span class="php-keyword2">in_array</span>(<span class="php-var">$quantity</span>, <span class="php-keyword1">array</span>(<span class="php-quote">'zero'</span>, <span class="php-quote">'one'</span>, <span class="php-quote">'two'</span>, <span class="php-quote">'few'</span>, <span class="php-quote">'many'</span>, <span class="php-quote">'other'</span>))) {
 </span><span id="72" class="l">                    <span class="php-var">$pluralRule</span> = <span class="php-var">$quantity</span>;
 </span><span id="73" class="l">                } <span class="php-keyword1">else</span> {
-</span><span id="74" class="l">                    <span class="php-var">$pluralRule</span> = Plural::getRule(<span class="php-var">$quantity</span>, <span class="php-var">$locale</span>);
+</span><span id="74" class="l">                    <span class="php-var">$pluralRule</span> = Plural::getRuleOfType(<span class="php-var">$quantity</span>, Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
 </span><span id="75" class="l">                }
 </span><span id="76" class="l">                <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'pluralName'</span>][<span class="php-var">$pluralRule</span>])) {
 </span><span id="77" class="l">                    <span class="php-var">$pluralRule</span> = <span class="php-quote">'other'</span>;

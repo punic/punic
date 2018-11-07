@@ -130,7 +130,7 @@
 		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-Punic.Plural.html#5-155" title="Go to source code">Plural.php</a>
+			<b>Located at</b> <a href="source-class-Punic.Plural.html#5-186" title="Go to source code">Plural.php</a>
 		<br>
 	</div>
 
@@ -150,7 +150,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getRules">#</a>
-			<code><a href="source-class-Punic.Plural.html#10-25" title="Go to source code">getRules</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Plural.html#24-39" title="Go to source code">getRules</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return the list of applicable plural rule for a locale.</p>
@@ -188,7 +188,58 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getRule">#</a>
-			<code><a href="source-class-Punic.Plural.html#27-122" title="Go to source code">getRule</a>( <span>string|integer|float <var>$number</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span>, <span>string <var>$type</var> = <span class="php-quote">'cardinal'</span></span> )</code>
+			<code class="deprecated"><a href="source-class-Punic.Plural.html#41-56" title="Go to source code">getRule</a>( <span>string|integer|float <var>$number</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span>, <span>string <var>$type</var>,…</span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+					<h4>Deprecated</h4>
+					<div class="list">
+							Use getRuleOfType with a Plural::RULETYPE_CARDINAL type<br>
+					</div>
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$number</var></dt>
+						<dd></dd>
+						<dt><var>$locale</var></dt>
+						<dd></dd>
+						<dt><var>$type</var>,…</dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Punic.Exception.BadArgumentType.html">Punic\Exception\BadArgumentType</a></code><br>
+						Exception
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getRuleOfType" id="_getRuleOfType">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getRuleOfType">#</a>
+			<code><a href="source-class-Punic.Plural.html#58-153" title="Go to source code">getRuleOfType</a>( <span>string|integer|float <var>$number</var></span>, <span>string <var>$type</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale.</p>
@@ -202,10 +253,10 @@
 					<div class="list"><dl>
 						<dt><var>$number</var></dt>
 						<dd>The number to check the plural rule for for</dd>
+						<dt><var>$type</var></dt>
+						<dd>The type of plural rules (one of the \Punic\Plural::RULETYPE_... constants)</dd>
 						<dt><var>$locale</var></dt>
 						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
-						<dt><var>$type</var></dt>
-						<dd>The type of plural rules, either "cardinal" (1, 2, 3, ...) or "ordinal" (1st, 2nd, 3rd, ...)</dd>
 					</dl></div>
 
 					<h4>Returns</h4>
@@ -216,6 +267,7 @@
 					<h4>Throws</h4>
 					<div class="list">
 						<code><a href="class-Punic.Exception.BadArgumentType.html">Punic\Exception\BadArgumentType</a></code><br>Throws a \Punic\Exception\BadArgumentType if $number is not a valid number<br>
+						<code><a href="class-Punic.Exception.ValueNotInList.html">Punic\Exception\ValueNotInList</a></code><br>Throws a \Punic\Exception\ValueNotInList if $type is not valid<br>
 						Exception<br>Throws a \Exception if there were problems calculating the plural rule
 					</div>
 
@@ -233,6 +285,60 @@
 
 
 
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Constants summary</h2></div>
+			<table class="summary table table-bordered table-striped constants" id="constants">
+			<tr data-order="RULETYPE_CARDINAL" id="RULETYPE_CARDINAL">
+
+				<td class="attributes"><code>string</code></td>
+				<td class="name">
+					<code>
+						<a href="source-class-Punic.Plural.html#10-15" title="Go to source code"><b>RULETYPE_CARDINAL</b></a>
+					</code>
+
+					<div class="description short">
+						<p>Plural rule type: cardinal (eg 1, 2, 3, ...).</p>
+					</div>
+
+					<div class="description detailed hidden">
+						<p>Plural rule type: cardinal (eg 1, 2, 3, ...).</p>
+
+					</div>
+				</td>
+				<td class="value">
+					<div>
+						<a href="#RULETYPE_CARDINAL" class="anchor">#</a>
+						<code><span class="php-quote">'cardinal'</span></code>
+					</div>
+				</td>
+			</tr>
+			<tr data-order="RULETYPE_ORDINAL" id="RULETYPE_ORDINAL">
+
+				<td class="attributes"><code>string</code></td>
+				<td class="name">
+					<code>
+						<a href="source-class-Punic.Plural.html#17-22" title="Go to source code"><b>RULETYPE_ORDINAL</b></a>
+					</code>
+
+					<div class="description short">
+						<p>Plural rule type: ordinal (eg 1st, 2nd, 3rd, ...).</p>
+					</div>
+
+					<div class="description detailed hidden">
+						<p>Plural rule type: ordinal (eg 1st, 2nd, 3rd, ...).</p>
+
+					</div>
+				</td>
+				<td class="value">
+					<div>
+						<a href="#RULETYPE_ORDINAL" class="anchor">#</a>
+						<code><span class="php-quote">'ordinal'</span></code>
+					</div>
+				</td>
+			</tr>
+			</table>
+		</div>
 
 
 

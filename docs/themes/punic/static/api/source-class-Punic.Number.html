@@ -308,7 +308,7 @@
 </span><span id="186" class="l">            }
 </span><span id="187" class="l">
 </span><span id="188" class="l">            <span class="php-keyword1">if</span> (<span class="php-var">$which</span> === <span class="php-quote">'long'</span>) {
-</span><span id="189" class="l">                <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-'</span>.Plural::getRule(<span class="php-var">$value</span>, <span class="php-var">$locale</span>);
+</span><span id="189" class="l">                <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-'</span>.Plural::getRuleOfType(<span class="php-var">$value</span>, Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
 </span><span id="190" class="l">                <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'unitPattern'</span>][<span class="php-var">$pluralRule</span>])) {
 </span><span id="191" class="l">                    <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-other'</span>;
 </span><span id="192" class="l">                }
@@ -445,7 +445,7 @@
 </span><span id="323" class="l">
 </span><span id="324" class="l">        <span class="php-var">$rule</span> = <span class="php-keyword2">preg_replace_callback</span>(<span class="php-quote">'/([&lt;&gt;=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/'</span>, <span class="php-keyword1">function</span> (<span class="php-var">$match</span>) <span class="php-keyword1">use</span> (<span class="php-var">$value</span>, <span class="php-var">$left</span>, <span class="php-var">$right</span>, <span class="php-var">$type</span>, <span class="php-var">$prevBase</span>, <span class="php-var">$locale</span>) {
 </span><span id="325" class="l">            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$match</span>[<span class="php-num">4</span>])) {
-</span><span id="326" class="l">                <span class="php-var">$rule</span> = Plural::getRule(<span class="php-var">$left</span>, <span class="php-var">$locale</span>, <span class="php-var">$match</span>[<span class="php-num">3</span>]);
+</span><span id="326" class="l">                <span class="php-var">$rule</span> = Plural::getRuleOfType(<span class="php-var">$left</span>, <span class="php-var">$match</span>[<span class="php-num">3</span>] ? <span class="php-var">$match</span>[<span class="php-num">3</span>] : Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
 </span><span id="327" class="l">                <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/'</span>.<span class="php-var">$rule</span>.<span class="php-quote">'{(.*?)}/'</span>, <span class="php-var">$match</span>[<span class="php-num">4</span>], <span class="php-var">$match2</span>)) {
 </span><span id="328" class="l">                    <span class="php-keyword1">return</span> <span class="php-var">$match2</span>[<span class="php-num">1</span>];
 </span><span id="329" class="l">                }

@@ -206,7 +206,7 @@
 </span><span id="84" class="l">        }
 </span><span id="85" class="l">        <span class="php-var">$data</span> = <span class="php-keyword1">static</span>::getDataForWidth(<span class="php-var">$width</span>, <span class="php-var">$locale</span>);
 </span><span id="86" class="l">        <span class="php-var">$rules</span> = <span class="php-keyword1">static</span>::getDataForUnit(<span class="php-var">$data</span>, <span class="php-var">$unit</span>);
-</span><span id="87" class="l">        <span class="php-var">$pluralRule</span> = Plural::getRule(<span class="php-var">$number</span>, <span class="php-var">$locale</span>);
+</span><span id="87" class="l">        <span class="php-var">$pluralRule</span> = Plural::getRuleOfType(<span class="php-var">$number</span>, Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
 </span><span id="88" class="l">        <span class="php-comment">//@codeCoverageIgnoreStart</span>
 </span><span id="89" class="l">        <span class="php-comment">// These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)</span>
 </span><span id="90" class="l">        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$rules</span>[<span class="php-var">$pluralRule</span>])) {
