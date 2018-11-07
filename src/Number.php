@@ -56,25 +56,11 @@ class Number
     {
         $result = '';
         $number = null;
-        if (is_int($value) || is_float($value)) {
-            $number = $value;
-        } elseif (is_string($value) && $value !== '') {
-            if (preg_match('/^[\\-+]?\\d+$/', $value)) {
-                $number = (int) $value;
-            } elseif (preg_match('/^[\\-+]?(\\d*)\\.(\\d*)$/', $value, $m)) {
-                if (!isset($m[1])) {
-                    $m[1] = '';
-                }
-                if (!isset($m[2])) {
-                    $m[2] = '';
-                }
-                if ($m[1] !== '' || $m[2] !== '') {
-                    $number = (float) $value;
-                    if (!is_numeric($precision)) {
-                        $precision = strlen($m[2]);
-                    }
-                }
+        if (is_numeric($value)) {
+            if (is_string($value) && $precision === null) {
+                $precision = self::getPrecision($value);
             }
+            $number = (float) $value;
         }
         if ($number !== null) {
             $precision = is_numeric($precision) ? (int) $precision : null;
@@ -107,6 +93,114 @@ class Number
                 }
             } elseif ($precision > 0) {
                 $result .= $decimal.substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).
+     *
+     * @param int|float|string $value The string value to convert
+     * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+     */
+    public static function formatPercent($value, $precision = null, $locale = '')
+    {
+        $result = '';
+        if (is_numeric($value)) {
+            $data = Data::get('numbers', $locale);
+
+            if ($precision === null) {
+                $precision = self::getPrecision($value);
+            }
+            $formatted = self::format(100 * abs($value), $precision, $locale);
+
+            $format = $data['percentFormats']['standard'][$value >= 0 ? 'positive' : 'negative'];
+            $sign = $data['symbols']['percentSign'];
+
+            $result = sprintf($format, $formatted, $sign);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).
+     *
+     * @param int|float|string $value The string value to convert
+     * @param string $currencyCode The 3-letter currency code
+     * @param string $kind The currency variant, either "standard" or "accounting"
+     * @param int|null $precision The wanted precision (well use {@link http://php.net/manual/function.round.php})
+     * @param string $which The currency symbol to use, "" for default, "long" for the currency name, "narrow", "alt" for alternative, or "code" for the 3-letter currency code
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string Returns an empty string $value is not a number, otherwise returns the localized representation of the amount
+     */
+    public static function formatCurrency($value, $currencyCode, $kind = 'standard', $precision = null, $which = '', $locale = '')
+    {
+        $result = '';
+        if (is_numeric($value)) {
+            $data = Data::get('numbers', $locale);
+            $data = $data['currencyFormats'];
+
+            if ($precision === null) {
+                $currencyData = Data::getGeneric('currencyData');
+                if (isset($currencyData['fractions'][$currencyCode]['digits'])) {
+                    $precision = $currencyData['fractions'][$currencyCode]['digits'];
+                } else {
+                    $precision = $currencyData['fractionsDefault']['digits'];
+                }
+            }
+            $formatted = self::format(abs($value), $precision, $locale);
+
+            if (!isset($data[$kind])) {
+                throw new Exception\ValueNotInList($kind, array_keys($data));
+            }
+            $format = $data[$kind][$value >= 0 ? 'positive' : 'negative'];
+
+            $symbol = null;
+            switch ($which) {
+                case 'long':
+                    $value = number_format($value, $precision, '.', '');
+                    $symbol = Currency::getName($currencyCode, $value, $locale);
+                    break;
+                case 'code':
+                    $symbol = $currencyCode;
+                    break;
+                default:
+                    $symbol = Currency::getSymbol($currencyCode, $which, $locale);
+                    break;
+            }
+            if (!$symbol) {
+                $symbol = $currencyCode;
+            }
+
+            if ($which === 'long') {
+                $pluralRule = 'count-'.Plural::getRule($value, $locale);
+                if (!isset($data['unitPattern'][$pluralRule])) {
+                    $pluralRule = 'count-other';
+                }
+                $unitPattern = $data['unitPattern'][$pluralRule];
+
+                $result = sprintf($unitPattern, $formatted, $symbol);
+            } else {
+                list($before, $after) = explode('%2$s', $format);
+                if ($after &&
+                    preg_match($data['currencySpacing']['afterCurrency']['currency'], $symbol) &&
+                    preg_match($data['currencySpacing']['afterCurrency']['surrounding'], sprintf($after, $formatted))) {
+                    $symbol .= $data['currencySpacing']['afterCurrency']['insertBetween'];
+                }
+                if ($before &&
+                    preg_match($data['currencySpacing']['beforeCurrency']['currency'], $symbol) &&
+                    preg_match($data['currencySpacing']['beforeCurrency']['surrounding'], sprintf($before, $formatted))) {
+                    $symbol = $data['currencySpacing']['beforeCurrency']['insertBetween'].$symbol;
+                }
+
+                $result = sprintf($format, $formatted, $symbol);
             }
         }
 
@@ -173,5 +267,18 @@ class Number
         }
 
         return $result;
+    }
+
+    private static function getPrecision($value)
+    {
+        $precision = null;
+        if (is_string($value)) {
+            $i = strrpos($value, '.');
+            if ($i !== false) {
+                $precision = strlen($value) - $i - 1;
+            }
+        }
+
+        return $precision;
     }
 }
