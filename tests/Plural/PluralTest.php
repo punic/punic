@@ -42,7 +42,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetRule()
+    public function providerGetRuleOfType()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -80,19 +80,19 @@ class PluralTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getRule
+     * test getRuleOfType
      * expected boolean.
      *
-     * @dataProvider providerGetRule
+     * @dataProvider providerGetRuleOfType
      *
      * @param string $rule
      * @param array $parameters
      */
-    public function testGetRule($rule, $parameters)
+    public function testGetRuleOfType($rule, $parameters)
     {
         $this->assertSame(
             $rule,
-            Plural::getRule($parameters[0], $parameters[1], isset($parameters[2]) ? $parameters[2] : null)
+            Plural::getRuleOfType($parameters[0], isset($parameters[2]) ? $parameters[2] : Plural::RULETYPE_CARDINAL, $parameters[1])
         );
     }
 
@@ -102,8 +102,9 @@ class PluralTest extends PHPUnit_Framework_TestCase
     public function testExceptionsProvider()
     {
         return array(
-            array('getRule', array('not-a-number'), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRule', array(true), '\\Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(0, 'invalid rule type'), '\\Punic\\Exception\\ValueNotInList'),
         );
     }
 

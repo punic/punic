@@ -8,6 +8,20 @@ namespace Punic;
 class Plural
 {
     /**
+     * Plural rule type: cardinal (eg 1, 2, 3, ...).
+     *
+     * @var string
+     */
+    const RULETYPE_CARDINAL = 'cardinal';
+
+    /**
+     * Plural rule type: ordinal (eg 1st, 2nd, 3rd, ...).
+     *
+     * @var string
+     */
+    const RULETYPE_ORDINAL = 'ordinal';
+
+    /**
      * Return the list of applicable plural rule for a locale.
      *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
@@ -25,18 +39,36 @@ class Plural
     }
 
     /**
+     * @deprecated Use getRuleOfType with a Plural::RULETYPE_CARDINAL type
+     *
+     * @param string|int|float $number
+     * @param string $locale
+     * @param string $type
+     *
+     * @throws \Punic\Exception\BadArgumentType
+     * @throws \Exception
+     *
+     * @return string
+     */
+    public static function getRule($number, $locale = '')
+    {
+        return self::getRuleOfType($number, self::RULETYPE_CARDINAL);
+    }
+
+    /**
      * Return the plural rule ('zero', 'one', 'two', 'few', 'many' or 'other') for a number and a locale.
      *
      * @param string|int|float $number The number to check the plural rule for for
+     * @param string $type The type of plural rules (one of the \Punic\Plural::RULETYPE_... constants)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
-     * @param string $type The type of plural rules, either "cardinal" (1, 2, 3, ...) or "ordinal" (1st, 2nd, 3rd, ...)
      *
      * @throws \Punic\Exception\BadArgumentType Throws a \Punic\Exception\BadArgumentType if $number is not a valid number
+     * @throws \Punic\Exception\ValueNotInList Throws a \Punic\Exception\ValueNotInList if $type is not valid
      * @throws \Exception Throws a \Exception if there were problems calculating the plural rule
      *
      * @return string Returns one of the following values: 'zero', 'one', 'two', 'few', 'many', 'other'
      */
-    public static function getRule($number, $locale = '', $type = 'cardinal')
+    public static function getRuleOfType($number, $type, $locale = '')
     {
         if (is_int($number)) {
             $intPartAbs = (string) abs($number);
@@ -81,15 +113,14 @@ class Plural
             $v6 = '0';
         }
         $result = 'other';
-        switch ($type) {
-            case 'ordinal':
-                $identifier = 'ordinals';
-                break;
-            case 'cardinal':
-            default:
-                $identifier = 'plurals';
-                break;
+        $identifierMap = array(
+            self::RULETYPE_CARDINAL => 'plurals',
+            self::RULETYPE_ORDINAL => 'ordinals',
+        );
+        if (!isset($identifierMap[$type])) {
+            throw new Exception\ValueNotInList($type, array_keys($identifierMap));
         }
+        $identifier = $identifierMap[$type];
         $node = Data::getLanguageNode(Data::getGeneric($identifier), $locale);
         foreach ($node as $rule => $formulaPattern) {
             $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6);
