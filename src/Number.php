@@ -66,7 +66,7 @@ class Number
             $data = Data::get('numbers', $locale);
             if ($value < 0) {
                 $sign = $data['symbols']['minusSign'];
-                $value = abs($value);
+                $number = abs($number);
             } else {
                 $sign = '';
             }
@@ -77,11 +77,11 @@ class Number
             } else {
                 $precision = is_numeric($precision) ? (int) $precision : null;
                 if ($precision !== null) {
-                    $value = round($value, $precision);
+                    $number = round($number, $precision);
                 }
                 $decimal = $data['symbols']['decimal'];
                 $groupLength = (isset($data['groupLength']) && is_numeric($data['groupLength'])) ? (int) $data['groupLength'] : 3;
-                $full = explode('.', (string) $value, 2);
+                $full = explode('.', (string) $number, 2);
                 $intPart = $full[0];
                 $floatPath = count($full) > 1 ? $full[1] : '';
                 $len = strlen($intPart);
