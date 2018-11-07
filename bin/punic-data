@@ -230,7 +230,6 @@ class Options
     {
         $result = new static();
         $localeOptions = array();
-        $substractLocales = array();
         $n = count($options);
         for ($i = 0; $i < $n; ++$i) {
             if (preg_match('/^(--[^=]+)=(.*)$/', $options[$i], $matches)) {

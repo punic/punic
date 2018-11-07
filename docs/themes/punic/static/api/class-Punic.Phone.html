@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Punic\Phone | Punic v3.1.1-dev</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Punic v3.1.1-dev</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Punic.html" title="Summary of Punic"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+					<li class="divider-vertical"></li>
+
+					<li>
+						<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+					</li>
+
+						<li>
+							<a href="annotation-group-todo.html" title="List of elements with todo annotation">
+								<span>Todo</span>
+							</a>
+						</li>
+						<li>
+							<a href="annotation-group-deprecated.html" title="List of elements with deprecated annotation">
+								<span>Deprecated</span>
+							</a>
+						</li>
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active main">
+						<a href="namespace-Punic.html">
+							Punic<span></span>
+						</a>
+							<ul>
+					<li class="main">
+						<a href="namespace-Punic.Exception.html">
+							Exception						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Punic.Calendar.html">Calendar</a></li>
+				<li><a href="class-Punic.Comparer.html">Comparer</a></li>
+				<li><a href="class-Punic.Currency.html">Currency</a></li>
+				<li><a href="class-Punic.Data.html">Data</a></li>
+				<li><a href="class-Punic.Language.html">Language</a></li>
+				<li><a href="class-Punic.Misc.html">Misc</a></li>
+				<li><a href="class-Punic.Number.html">Number</a></li>
+				<li class="active"><a href="class-Punic.Phone.html">Phone</a></li>
+				<li><a href="class-Punic.Plural.html">Plural</a></li>
+				<li><a href="class-Punic.Territory.html">Territory</a></li>
+				<li><a href="class-Punic.Unit.html">Unit</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Punic.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class Phone</h1>
+
+
+	<div class="description">
+	<p>Numbers helpers.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Punic.Phone.html#5-77" title="Go to source code">Phone.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="getPrefixesForTerritory" id="_getPrefixesForTerritory">
+
+			<td class="attributes"><code>
+				 public static
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getPrefixesForTerritory">#</a>
+			<code><a href="source-class-Punic.Phone.html#10-29" title="Go to source code">getPrefixesForTerritory</a>( <span>string <var>$territoryCode</var></span> )</code>
+
+			<div class="description short">
+				<p>Retrieve the list of the country calling codes for a specific country.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the list of the country calling codes for a specific country.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$territoryCode</var></dt>
+						<dd>The country identifier ('001' for global systems, for instance satellite communications like Iridium)</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>Returns the list of country calling codes found for the specified country (eg: for 'US' you'll get array('1'))
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getTerritoriesForPrefix" id="_getTerritoriesForPrefix">
+
+			<td class="attributes"><code>
+				 public static
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getTerritoriesForPrefix">#</a>
+			<code><a href="source-class-Punic.Phone.html#31-51" title="Go to source code">getTerritoriesForPrefix</a>( <span>string <var>$prefix</var></span> )</code>
+
+			<div class="description short">
+				<p>Retrieve the list of territory codes for a specific prefix.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the list of territory codes for a specific prefix.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$prefix</var></dt>
+						<dd>The country calling code (for instance: '1')</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>Returns the list of territories for which the specified prefix is applicable (eg: for '1' you'll get array('US', 'AG', 'AI', 'CA', ...))
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getMaxPrefixLength" id="_getMaxPrefixLength">
+
+			<td class="attributes"><code>
+				 public static
+				integer
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getMaxPrefixLength">#</a>
+			<code><a href="source-class-Punic.Phone.html#53-76" title="Go to source code">getMaxPrefixLength</a>( )</code>
+
+			<div class="description short">
+				<p>Retrieve the max length of the country calling codes.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieve the max length of the country calling codes.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						integer
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Punic v3.1.1-dev API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

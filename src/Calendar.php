@@ -913,64 +913,63 @@ class Calendar
             } elseif ($value instanceof \DateTimeZone) {
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
-            $timeZoneNames = Data::get('timeZoneNames', $locale);
             if ($receivedPhpName !== '') {
-                $metazoneCode = '';
-                $metaZones = Data::getGeneric('metaZones');
-                $phpNames = static::getTimezonesAliases($receivedPhpName);
-                if ($metazoneCode === '') {
-                    foreach ($phpNames as $phpName) {
-                        $path = array_merge(array('zone'), explode('/', $phpName), array($width, array($kind, 'generic', 'standard')));
-                        $name = self::getArrayValue($timeZoneNames, $path);
-                        if ($name) {
-                            $result = $name;
-                            break;
-                        }
-
-                        $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                        $tzInfo = self::getArrayValue($metaZones, $path);
-                        if (is_array($tzInfo)) {
-                            foreach ($tzInfo as $tz) {
-                                if (is_array($tz) && isset($tz['mzone'])) {
-                                    if ($date !== '') {
-                                        if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
-                                            continue;
-                                        }
-                                        if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
-                                            continue;
-                                        }
-                                    }
-                                    $metazoneCode = $tz['mzone'];
-                                    break;
+                $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
+                $timeZoneNames = Data::get('timeZoneNames', $locale);
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array($width, array($kind, 'generic', 'standard')));
+                $name = Data::getArrayValue($timeZoneNames, $path);
+                if ($name !== null) {
+                    $result = $name;
+                } else {
+                    $metaZones = Data::getGeneric('metaZones');
+                    $metazoneCode = '';
+                    $path = array_merge(array('metazoneInfo'), explode('/', $timezoneID));
+                    $tzInfo = Data::getArrayValue($metaZones, $path);
+                    if (is_array($tzInfo)) {
+                        foreach ($tzInfo as $tz) {
+                            if (is_array($tz) && isset($tz['mzone'])) {
+                                if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
+                                    continue;
                                 }
-                            }
-                        }
-                        if ($metazoneCode !== '') {
-                            break;
-                        }
-                    }
-                }
-                if ($result === '' && $metazoneCode === '') {
-                    foreach ($phpNames as $phpName) {
-                        foreach ($metaZones['metazones'] as $metazone) {
-                            if (strcasecmp($phpName, $metazone['type']) === 0) {
-                                $metazoneCode = $metazone['other'];
+                                if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
+                                    continue;
+                                }
+                                $metazoneCode = $tz['mzone'];
                                 break;
                             }
                         }
-                        if ($metazoneCode !== '') {
-                            break;
+                    }
+                    if ($metazoneCode === '') {
+                        foreach ($metaZones['metazones'] as $metazone) {
+                            if (strcasecmp($timezoneID, $metazone['type']) === 0) {
+                                $metazoneCode = $metazone['other'];
+                            }
                         }
                     }
-                }
-                if ($result === '' && $metazoneCode === '') {
-                    $metazoneCode = $receivedPhpName;
-                }
-                if ($result === '' && $metazoneCode !== '') {
-                    $path = array('metazone', $metazoneCode, $width, array($kind, 'generic', 'standard'));
-                    $name = self::getArrayValue($timeZoneNames, $path);
-                    if ($name) {
-                        $result = $name;
+                    if ($metazoneCode !== '') {
+                        $data = Data::get('timeZoneNames', $locale);
+                        if (isset($data['metazone'])) {
+                            $data = $data['metazone'];
+                            if (isset($data[$metazoneCode])) {
+                                $data = $data[$metazoneCode];
+                                if (isset($data[$width])) {
+                                    $data = $data[$width];
+                                    $lookFor = array();
+                                    if (!empty($kind)) {
+                                        $lookFor[] = $kind;
+                                    }
+                                    $lookFor[] = 'generic';
+                                    $lookFor[] = 'standard';
+                                    $lookFor[] = 'daylight';
+                                    foreach ($lookFor as $lf) {
+                                        if (isset($data[$lf])) {
+                                            $result = $data[$lf];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -996,29 +995,17 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             if (is_string($value)) {
-                $phpNames = static::getTimezonesAliases($value);
+                $timezoneID = static::getTimezoneCanonicalID($value);
                 $timezone = null;
-                foreach ($phpNames as $phpName) {
-                    try {
-                        $timezone = new \DateTimeZone($phpName);
-                        break;
-                    } catch (\Exception $x) {
-                    }
-                }
-                if (!$timezone) {
+                try {
+                    $timezone = new \DateTimeZone($timezoneID);
+                } catch (\Exception $x) {
                     return '';
                 }
                 $location = $timezone->getLocation();
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $timezone = $value->getTimezone();
                 $location = self::getTimezoneLocationFromDatetime($value);
-                if (empty($kind)) {
-                    if ((int) $value->format('I') === 1) {
-                        $kind = 'daylight';
-                    } else {
-                        $kind = 'standard';
-                    }
-                }
             } elseif ($value instanceof \DateTimeZone) {
                 $timezone = $value;
                 $location = $timezone->getLocation();
@@ -1072,15 +1059,12 @@ class Calendar
                 $receivedPhpName = '';
             }
             if ($receivedPhpName !== '') {
-                $phpNames = static::getTimezonesAliases($receivedPhpName);
+                $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
                 $timeZoneNames = Data::get('timeZoneNames', $locale);
-                foreach ($phpNames as $phpName) {
-                    $path = array_merge(array('zone'), explode('/', $phpName), array('exemplarCity'));
-                    $exemplarCity = self::getArrayValue($timeZoneNames, $path);
-                    if ($exemplarCity) {
-                        $result = $exemplarCity;
-                        break;
-                    }
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array('exemplarCity'));
+                $exemplarCity = Data::getArrayValue($timeZoneNames, $path);
+                if ($exemplarCity !== null) {
+                    $result = $exemplarCity;
                 }
             }
         }
@@ -2114,7 +2098,6 @@ class Calendar
         $postprocessedFormat = '';
         $quoted = false;
         $length = strlen($format);
-        $lengthM1 = strlen($format) - 1;
         for ($index = 0; $index < $length; ++$index) {
             $char = $format[$index];
             if ($char === "'") {
@@ -2236,7 +2219,7 @@ class Calendar
             $adjustedGreatestDifference = 'h';
         } elseif ($adjustedGreatestDifference === 'Q' && strpos($skeleton, 'Q') === false) {
             // Ignore quarter, if it is not part of the skeleton.
-            $adjustedGreatestDifference = 'm';
+            $adjustedGreatestDifference = 'M';
         } elseif ($adjustedGreatestDifference[0] === 'S') {
             $skeletonGranularityIndex += substr_count($skeleton, 'S') - 1;
         }
@@ -2261,7 +2244,7 @@ class Calendar
      */
     protected static function splitIntervalFormat($format)
     {
-        $functionNames[] = array();
+        $functionNames = array(array());
         $index = 0;
 
         // Split on the first recurring field.
@@ -3043,62 +3026,18 @@ class Calendar
     }
 
     /**
-     * @param string $phpTimezoneName
+     * @param string $timezoneID
      *
-     * @return string[]
+     * @return string
      */
-    protected static function getTimezonesAliases($phpTimezoneName)
+    protected static function getTimezoneCanonicalID($timezoneID)
     {
-        $result = array($phpTimezoneName);
-        switch ($phpTimezoneName) {
-            case 'Africa/Asmara':
-                $result[] = 'Africa/Asmera';
-                break;
-            case 'America/Atikokan':
-                $result[] = 'America/Coral_Harbour';
-                break;
-            case 'Asia/Ho_Chi_Minh':
-                $result[] = 'Asia/Saigon';
-                break;
-            case 'Asia/Kathmandu':
-                $result[] = 'Asia/Katmandu';
-                break;
-            case 'Asia/Kolkata':
-                $result[] = 'Asia/Calcutta';
-                break;
-            case 'Atlantic/Faroe':
-                $result[] = 'Atlantic/Faeroe';
-                break;
-            case 'Pacific/Chuuk':
-                $result[] = 'Pacific/Truk';
-                break;
-            case 'Pacific/Pohnpei':
-                $result[] = 'Pacific/Ponape';
-                break;
-            case 'America/Argentina/Buenos_Aires':
-                $result[] = 'America/Buenos_Aires';
-                break;
-            case 'America/Argentina/Catamarca':
-                $result[] = 'America/Catamarca';
-                break;
-            case 'America/Argentina/Cordoba':
-                $result[] = 'America/Cordoba';
-                break;
-            case 'America/Argentina/Jujuy':
-                $result[] = 'America/Jujuy';
-                break;
-            case 'America/Argentina/Mendoza':
-                $result[] = 'America/Mendoza';
-                break;
-            case 'America/Indiana/Indianapolis':
-                $result[] = 'America/Indianapolis';
-                break;
-            case 'America/Kentucky/Louisville':
-                $result[] = 'America/Louisville';
-                break;
+        $timeZones = Data::getGeneric('timeZones');
+        if (isset($timeZones['aliases'][$timezoneID])) {
+            $timezoneID = $timeZones['aliases'][$timezoneID];
         }
 
-        return $result;
+        return $timezoneID;
     }
 
     /**
@@ -3250,29 +3189,5 @@ class Calendar
         }
 
         return $result;
-    }
-
-    /**
-     * Get value from nested array.
-     *
-     * @param  array $data the nested array to descend into
-     * @param  array $path Path of array keys. Each part of the path may be a string or an array of alternative strings.
-     *
-     * @return mixed
-     */
-    protected static function getArrayValue($data, $path)
-    {
-        $alternatives = (array) array_shift($path);
-        foreach ($alternatives as $alternative) {
-            if (isset($data[$alternative])) {
-                if ($path) {
-                    return self::getArrayValue($data[$alternative], $path);
-                }
-
-                return $data[$alternative];
-            }
-        }
-
-        return null;
     }
 }
