@@ -275,6 +275,156 @@ class Number
         return $result;
     }
 
+    /**
+     * Spell out a number (e.g. "one hundred twenty-three" or "twenty-third") or convert to a different numbering system, e.g Roman numerals.
+     *
+     * Some types are language-dependent and reflect e.g. gender and case. Refer to the CLDR XML source for supported types.
+     *
+     * Available numbering systems are specified in the "root" locale.
+     *
+     * @param int|float|string $value The value to localize/spell out
+     * @param string $type The format type, e.g. "spellout-numbering", "spellout-numbering-year", "spellout-cardinal", "digits-ordinal", "roman-upper".
+     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
+     *
+     * @return string The spelled number
+     *
+     * @see https://www.unicode.org/repos/cldr/trunk/common/rbnf/
+     * @see https://www.unicode.org/repos/cldr/trunk/common/rbnf/root.xml
+     */
+    public static function spellOut($value, $type, $locale)
+    {
+        return self::formatRbnf($value, $type, null, $locale);
+    }
+
+    /**
+     * This method should not be called from outside this class.
+     *
+     * It is declared public for compatibility with PHP 5.3.
+     *
+     * @param int|float|string $value
+     * @param string $type
+     * @param int $base
+     * @param string $locale
+     *
+     * @internal
+     */
+    public static function formatRbnf($value, $type, $base, $locale)
+    {
+        $data = Data::get('rbnf', $locale);
+        if (!isset($data[$type])) {
+            $data += Data::get('rbnf', 'root');
+        }
+        if (!isset($data[$type])) {
+            throw new Exception\ValueNotInList($type, array_keys($data));
+        }
+        $data = $data[$type];
+
+        list($rule, $left, $right, $prevBase) = self::getRbnfRule($value, $data, $base);
+
+        $rule = preg_replace_callback('/([<>=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
+            if (isset($match[4])) {
+                $rule = Plural::getRule($left, $locale, $match[3]);
+                if (preg_match('/'.$rule.'{(.*?)}/', $match[4], $match2)) {
+                    return $match2[1];
+                }
+            } else {
+                $base = null;
+                if ($match[2]) {
+                    if ($match[2][0] !== '%') {
+                        $i = strpos($match[2], '.');
+                        if ($i === false) {
+                            $precision = 0;
+                        } elseif ($match[2][$i + 1] === '#') {
+                            $precision = null;
+                        } else {
+                            $precision = strspn($match[2], '0', $i + 1);
+                        }
+
+                        return Number::format($value, $precision, $locale);
+                    }
+                    $type = substr($match[2], 1);
+                }
+
+                switch ($match[1]) {
+                    case '=':
+                        break;
+                    case '<':
+                        $value = $left;
+                        break;
+                    case '>':
+                        $value = $right;
+                        if ($match[0] == '>>>') {
+                            $base = $prevBase;
+                        }
+                        break;
+                }
+
+                return implode(' ', array_map(function ($v) use ($type, $base, $locale) {
+                    return Number::formatRbnf($v, $type, $base, $locale);
+                }, (array) $value));
+            }
+        }, $rule);
+
+        return $rule;
+    }
+
+    protected static function getRbnfRule($value, $data, $base = null)
+    {
+        $left = 0;
+        $right = 0;
+        $prevBase = 0;
+        if (!is_numeric($value)) {
+            $rule = '';
+        } elseif (is_nan($value) && isset($data['NaN'])) {
+            $rule = $data['NaN']['rule'];
+        } elseif ($value < 0) {
+            $right = -$value;
+            $rule = $data['-x']['rule'];
+        } elseif (is_infinite($value) && isset($data['Inf'])) {
+            $rule = $data['Inf']['rule'];
+        } elseif (strpos($value, '.') !== false && isset($data['x.x'])) {
+            list($left, $right) = explode('.', $value);
+            $right = str_split($right);
+            if ($left == 0 && isset($data['0.x'])) {
+                $rule = $data['0.x']['rule'];
+            } else {
+                $rule = $data['x.x']['rule'];
+            }
+        } else {
+            $bases = array_keys($data['integer']);
+            if ($base) {
+                $i = array_search($base, $bases);
+            } else {
+                for ($i = count($bases) - 1; $i >= 0; --$i) {
+                    $base = $bases[$i];
+                    if ($base <= $value) {
+                        break;
+                    }
+                }
+            }
+            $prevBase = $i > 0 ? $bases[$i - 1] : null;
+
+            $r = $data['integer'][$base] + array('radix' => 10);
+            $rule = $r['rule'];
+            $radix = $r['radix'];
+
+            // Add .5 to avoid floating-point rounding error in PHP 5. $base is
+            // an integer, so adding a number < 1 will not break anything.
+            $divisor = pow($radix, (int) log($base + .5, $radix));
+
+            $right = $value % $divisor;
+            $left = floor($value / $divisor);
+
+            if ($right) {
+                $rule = str_replace(array('[', ']'), '', $rule);
+            } else {
+                $rule = preg_replace('/\[.*?\]/', '', $rule);
+            }
+        }
+
+        return array($rule, $left, $right, $prevBase);
+    }
+
     private static function getPrecision($value)
     {
         $precision = null;

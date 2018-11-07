@@ -6,6 +6,7 @@
 * Added possibility to overrides data (`Punic\Data::getOverrides`, `Punic\Data::setOverrides`, `Punic\Data::getOverridesGeneric`, `Punic\Data::setOverridesGeneric`) (@c960657)
 * Added `Punic\Number::formatPercent()` (@c960657)
 * Added `Punic\Number::formatCurrency()` (@c960657)
+* Added `Punic\Number::spellOut()` (@c960657)
 * Allow using custom data directory (@c960657)
 * `Punic\Territory` *get* methods now support territory subdivisions (Provinces, Counties, ...) (@c960657, @mlocati)
 * Time zone aliases are now extracted from CLDR instead of hard coding them (@c960657)
