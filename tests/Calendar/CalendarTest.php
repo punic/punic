@@ -746,6 +746,22 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
         );
         $this->assertSame(
+            'Greenwich Mean Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/London', 'long', 'generic')
+        );
+        $this->assertSame(
+            'Greenwich Mean Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/London', 'long', 'standard')
+        );
+        $this->assertSame(
+            'British Summer Time',
+            Calendar::getTimezoneNameNoLocationSpecific('Europe/London', 'long', 'daylight')
+        );
+        $this->assertSame(
+            'British Summer Time',
+            Calendar::getTimezoneNameNoLocationSpecific(new DateTimeZone('Europe/London'), 'long', 'daylight')
+        );
+        $this->assertSame(
             'Central European Time',
             Calendar::getTimezoneNameNoLocationSpecific('Europe/Rome', 'long', 'generic')
         );

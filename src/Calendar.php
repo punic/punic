@@ -897,7 +897,7 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             $receivedPhpName = '';
-            $date = '';
+            $date = '9999-12-31';
             if (is_string($value)) {
                 $receivedPhpName = $value;
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
@@ -914,61 +914,58 @@ class Calendar
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if ($receivedPhpName !== '') {
-                $metazoneCode = '';
-                $data = Data::getGeneric('metaZones');
                 $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
-                $path = array_merge(array('metazoneInfo'), explode('/', $timezoneID));
-                $tzInfo = $data;
-                foreach ($path as $chunk) {
-                    if (isset($tzInfo[$chunk])) {
-                        $tzInfo = $tzInfo[$chunk];
-                    } else {
-                        $tzInfo = null;
-                        break;
-                    }
-                }
-                if (is_array($tzInfo)) {
-                    foreach ($tzInfo as $tz) {
-                        if (is_array($tz) && isset($tz['mzone'])) {
-                            if ($date !== '') {
+                $timeZoneNames = Data::get('timeZoneNames', $locale);
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array($width, array($kind, 'generic', 'standard')));
+                $name = Data::getArrayValue($timeZoneNames, $path);
+                if ($name !== null) {
+                    $result = $name;
+                } else {
+                    $metaZones = Data::getGeneric('metaZones');
+                    $metazoneCode = '';
+                    $path = array_merge(array('metazoneInfo'), explode('/', $timezoneID));
+                    $tzInfo = Data::getArrayValue($metaZones, $path);
+                    if (is_array($tzInfo)) {
+                        foreach ($tzInfo as $tz) {
+                            if (is_array($tz) && isset($tz['mzone'])) {
                                 if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
                                     continue;
                                 }
                                 if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
                                     continue;
                                 }
+                                $metazoneCode = $tz['mzone'];
+                                break;
                             }
-                            $metazoneCode = $tz['mzone'];
-                            break;
                         }
                     }
-                }
-                if ($metazoneCode === '') {
-                    foreach ($data['metazones'] as $metazone) {
-                        if (strcasecmp($timezoneID, $metazone['type']) === 0) {
-                            $metazoneCode = $metazone['other'];
+                    if ($metazoneCode === '') {
+                        foreach ($metaZones['metazones'] as $metazone) {
+                            if (strcasecmp($timezoneID, $metazone['type']) === 0) {
+                                $metazoneCode = $metazone['other'];
+                            }
                         }
                     }
-                }
-                if ($metazoneCode !== '') {
-                    $data = Data::get('timeZoneNames', $locale);
-                    if (isset($data['metazone'])) {
-                        $data = $data['metazone'];
-                        if (isset($data[$metazoneCode])) {
-                            $data = $data[$metazoneCode];
-                            if (isset($data[$width])) {
-                                $data = $data[$width];
-                                $lookFor = array();
-                                if (!empty($kind)) {
-                                    $lookFor[] = $kind;
-                                }
-                                $lookFor[] = 'generic';
-                                $lookFor[] = 'standard';
-                                $lookFor[] = 'daylight';
-                                foreach ($lookFor as $lf) {
-                                    if (isset($data[$lf])) {
-                                        $result = $data[$lf];
-                                        break;
+                    if ($metazoneCode !== '') {
+                        $data = Data::get('timeZoneNames', $locale);
+                        if (isset($data['metazone'])) {
+                            $data = $data['metazone'];
+                            if (isset($data[$metazoneCode])) {
+                                $data = $data[$metazoneCode];
+                                if (isset($data[$width])) {
+                                    $data = $data[$width];
+                                    $lookFor = array();
+                                    if (!empty($kind)) {
+                                        $lookFor[] = $kind;
+                                    }
+                                    $lookFor[] = 'generic';
+                                    $lookFor[] = 'standard';
+                                    $lookFor[] = 'daylight';
+                                    foreach ($lookFor as $lf) {
+                                        if (isset($data[$lf])) {
+                                            $result = $data[$lf];
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -1064,20 +1061,10 @@ class Calendar
             if ($receivedPhpName !== '') {
                 $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
                 $timeZoneNames = Data::get('timeZoneNames', $locale);
-                $chunks = array_merge(array('zone'), explode('/', $timezoneID));
-                $data = $timeZoneNames;
-                foreach ($chunks as $chunk) {
-                    if (isset($data[$chunk])) {
-                        $data = $data[$chunk];
-                    } else {
-                        $data = null;
-                    }
-                    if (!is_array($data)) {
-                        break;
-                    }
-                }
-                if (is_array($data) && isset($data['exemplarCity'])) {
-                    $result = $data['exemplarCity'];
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array('exemplarCity'));
+                $exemplarCity = Data::getArrayValue($timeZoneNames, $path);
+                if ($exemplarCity !== null) {
+                    $result = $exemplarCity;
                 }
             }
         }
