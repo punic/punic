@@ -104,7 +104,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
         return array(
             array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
             array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRuleOfType', array(0, 'invalid rule type'), '\\Punic\\Exception\\ValueNotInList'), 
+            array('getRuleOfType', array(0, 'invalid rule type'), '\\Punic\\Exception\\ValueNotInList'),
         );
     }
 
