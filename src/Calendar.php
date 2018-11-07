@@ -145,7 +145,7 @@ class Calendar
                     throw new Exception\BadArgumentType($fromTimezone, '\\DateTimeZone');
                 }
             }
-            if (is_int($value) || is_float($value)) {
+            if (is_numeric($value)) {
                 $result = new \DateTime();
                 $result->setTimestamp($value);
                 if ($tzFrom !== null) {
@@ -158,22 +158,14 @@ class Calendar
                     $result->setTimezone($tzFrom);
                 }
             } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $result = new \DateTime();
-                    $result->setTimestamp($value);
-                    if ($tzFrom !== null) {
-                        $result->setTimezone($tzFrom);
+                try {
+                    if ($tzFrom === null) {
+                        $result = new \DateTime($value);
+                    } else {
+                        $result = new \DateTime($value, $tzFrom);
                     }
-                } else {
-                    try {
-                        if ($tzFrom === null) {
-                            $result = new \DateTime($value);
-                        } else {
-                            $result = new \DateTime($value, $tzFrom);
-                        }
-                    } catch (\Exception $x) {
-                        throw new Exception\BadArgumentType($value, '\\DateTime', $x);
-                    }
+                } catch (\Exception $x) {
+                    throw new Exception\BadArgumentType($value, '\\DateTime', $x);
                 }
             } else {
                 throw new Exception\BadArgumentType($value, '\\DateTime');
@@ -601,14 +593,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $year = null;
-            if (is_int($value)) {
-                $year = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $year = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $year = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $year = (int) $value->format('Y');
             }
@@ -645,14 +631,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $month = null;
-            if (is_int($value)) {
-                $month = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $month = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $month = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $month = (int) $value->format('n');
             }
@@ -689,14 +669,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $weekday = null;
-            if (is_int($value)) {
-                $weekday = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $weekday = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $weekday = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $weekday = (int) $value->format('w');
             }
@@ -734,14 +708,8 @@ class Calendar
         $result = '';
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $quarter = null;
-            if (is_int($value)) {
-                $quarter = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $quarter = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $quarter = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $quarter = 1 + (int) floor(((int) $value->format('n') - 1) / 3);
             }
@@ -780,18 +748,12 @@ class Calendar
         if ((!empty($value)) || ($value === 0) || ($value === '0')) {
             $dayperiod = null;
             $hours = null;
-            if (is_int($value)) {
-                $hours = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $hours = (int) $value;
             } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $hours = (int) $value;
-                } else {
-                    $s = strtolower($value);
-                    if (in_array($s, $dictionary, true)) {
-                        $dayperiod = $s;
-                    }
+                $s = strtolower($value);
+                if (in_array($s, $dictionary, true)) {
+                    $dayperiod = $s;
                 }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $dayperiod = $value->format('a');
@@ -844,14 +806,8 @@ class Calendar
 
             $hours = null;
             $dayperiod = null;
-            if (is_int($value)) {
-                $hours = $value;
-            } elseif (is_float($value)) {
+            if (is_numeric($value)) {
                 $hours = (int) $value;
-            } elseif (is_string($value)) {
-                if (is_numeric($value)) {
-                    $hours = (int) $value;
-                }
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $hours = (int) $value->format('G');
             }
@@ -897,7 +853,7 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             $receivedPhpName = '';
-            $date = '';
+            $date = '9999-12-31';
             if (is_string($value)) {
                 $receivedPhpName = $value;
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
@@ -914,77 +870,58 @@ class Calendar
                 $receivedPhpName = static::getTimezoneNameFromTimezone($value);
             }
             if ($receivedPhpName !== '') {
-                $metazoneCode = '';
-                $data = Data::getGeneric('metaZones');
-                $phpNames = static::getTimezonesAliases($receivedPhpName);
-                if ($metazoneCode === '') {
-                    foreach ($phpNames as $phpName) {
-                        $path = array_merge(array('metazoneInfo'), explode('/', $phpName));
-                        $tzInfo = $data;
-                        foreach ($path as $chunk) {
-                            if (isset($tzInfo[$chunk])) {
-                                $tzInfo = $tzInfo[$chunk];
-                            } else {
-                                $tzInfo = null;
+                $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
+                $timeZoneNames = Data::get('timeZoneNames', $locale);
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array($width, array($kind, 'generic', 'standard')));
+                $name = Data::getArrayValue($timeZoneNames, $path);
+                if ($name !== null) {
+                    $result = $name;
+                } else {
+                    $metaZones = Data::getGeneric('metaZones');
+                    $metazoneCode = '';
+                    $path = array_merge(array('metazoneInfo'), explode('/', $timezoneID));
+                    $tzInfo = Data::getArrayValue($metaZones, $path);
+                    if (is_array($tzInfo)) {
+                        foreach ($tzInfo as $tz) {
+                            if (is_array($tz) && isset($tz['mzone'])) {
+                                if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
+                                    continue;
+                                }
+                                if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
+                                    continue;
+                                }
+                                $metazoneCode = $tz['mzone'];
                                 break;
                             }
                         }
-                        if (is_array($tzInfo)) {
-                            foreach ($tzInfo as $tz) {
-                                if (is_array($tz) && isset($tz['mzone'])) {
-                                    if ($date !== '') {
-                                        if (isset($tz['from']) && (strcmp($date, $tz['from']) < 0)) {
-                                            continue;
-                                        }
-                                        if (isset($tz['to']) && (strcmp($date, $tz['to']) >= 0)) {
-                                            continue;
-                                        }
-                                    }
-                                    $metazoneCode = $tz['mzone'];
-                                    break;
-                                }
-                            }
-                        }
-                        if ($metazoneCode !== '') {
-                            break;
-                        }
                     }
-                }
-                if ($metazoneCode === '') {
-                    foreach ($phpNames as $phpName) {
-                        foreach ($data['metazones'] as $metazone) {
-                            if (strcasecmp($phpName, $metazone['type']) === 0) {
+                    if ($metazoneCode === '') {
+                        foreach ($metaZones['metazones'] as $metazone) {
+                            if (strcasecmp($timezoneID, $metazone['type']) === 0) {
                                 $metazoneCode = $metazone['other'];
-                                break;
                             }
                         }
-                        if ($metazoneCode !== '') {
-                            break;
-                        }
                     }
-                }
-                if ($metazoneCode === '') {
-                    $metazoneCode = $receivedPhpName;
-                }
-                if ($metazoneCode !== '') {
-                    $data = Data::get('timeZoneNames', $locale);
-                    if (isset($data['metazone'])) {
-                        $data = $data['metazone'];
-                        if (isset($data[$metazoneCode])) {
-                            $data = $data[$metazoneCode];
-                            if (isset($data[$width])) {
-                                $data = $data[$width];
-                                $lookFor = array();
-                                if (!empty($kind)) {
-                                    $lookFor[] = $kind;
-                                }
-                                $lookFor[] = 'generic';
-                                $lookFor[] = 'standard';
-                                $lookFor[] = 'daylight';
-                                foreach ($lookFor as $lf) {
-                                    if (isset($data[$lf])) {
-                                        $result = $data[$lf];
-                                        break;
+                    if ($metazoneCode !== '') {
+                        $data = Data::get('timeZoneNames', $locale);
+                        if (isset($data['metazone'])) {
+                            $data = $data['metazone'];
+                            if (isset($data[$metazoneCode])) {
+                                $data = $data[$metazoneCode];
+                                if (isset($data[$width])) {
+                                    $data = $data[$width];
+                                    $lookFor = array();
+                                    if (!empty($kind)) {
+                                        $lookFor[] = $kind;
+                                    }
+                                    $lookFor[] = 'generic';
+                                    $lookFor[] = 'standard';
+                                    $lookFor[] = 'daylight';
+                                    foreach ($lookFor as $lf) {
+                                        if (isset($data[$lf])) {
+                                            $result = $data[$lf];
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -1014,29 +951,17 @@ class Calendar
         $result = '';
         if (!empty($value)) {
             if (is_string($value)) {
-                $phpNames = static::getTimezonesAliases($value);
+                $timezoneID = static::getTimezoneCanonicalID($value);
                 $timezone = null;
-                foreach ($phpNames as $phpName) {
-                    try {
-                        $timezone = new \DateTimeZone($phpName);
-                        break;
-                    } catch (\Exception $x) {
-                    }
-                }
-                if (!$timezone) {
+                try {
+                    $timezone = new \DateTimeZone($timezoneID);
+                } catch (\Exception $x) {
                     return '';
                 }
                 $location = $timezone->getLocation();
             } elseif ($value instanceof \DateTimeInterface || $value instanceof \DateTime) {
                 $timezone = $value->getTimezone();
                 $location = self::getTimezoneLocationFromDatetime($value);
-                if (empty($kind)) {
-                    if ((int) $value->format('I') === 1) {
-                        $kind = 'daylight';
-                    } else {
-                        $kind = 'standard';
-                    }
-                }
             } elseif ($value instanceof \DateTimeZone) {
                 $timezone = $value;
                 $location = $timezone->getLocation();
@@ -1090,25 +1015,12 @@ class Calendar
                 $receivedPhpName = '';
             }
             if ($receivedPhpName !== '') {
-                $phpNames = static::getTimezonesAliases($receivedPhpName);
+                $timezoneID = static::getTimezoneCanonicalID($receivedPhpName);
                 $timeZoneNames = Data::get('timeZoneNames', $locale);
-                foreach ($phpNames as $phpName) {
-                    $chunks = array_merge(array('zone'), explode('/', $phpName));
-                    $data = $timeZoneNames;
-                    foreach ($chunks as $chunk) {
-                        if (isset($data[$chunk])) {
-                            $data = $data[$chunk];
-                        } else {
-                            $data = null;
-                        }
-                        if (!is_array($data)) {
-                            break;
-                        }
-                    }
-                    if (is_array($data) && isset($data['exemplarCity'])) {
-                        $result = $data['exemplarCity'];
-                        break;
-                    }
+                $path = array_merge(array('zone'), explode('/', $timezoneID), array('exemplarCity'));
+                $exemplarCity = Data::getArrayValue($timeZoneNames, $path);
+                if ($exemplarCity !== null) {
+                    $result = $exemplarCity;
                 }
             }
         }
@@ -2142,7 +2054,6 @@ class Calendar
         $postprocessedFormat = '';
         $quoted = false;
         $length = strlen($format);
-        $lengthM1 = strlen($format) - 1;
         for ($index = 0; $index < $length; ++$index) {
             $char = $format[$index];
             if ($char === "'") {
@@ -2264,7 +2175,7 @@ class Calendar
             $adjustedGreatestDifference = 'h';
         } elseif ($adjustedGreatestDifference === 'Q' && strpos($skeleton, 'Q') === false) {
             // Ignore quarter, if it is not part of the skeleton.
-            $adjustedGreatestDifference = 'm';
+            $adjustedGreatestDifference = 'M';
         } elseif ($adjustedGreatestDifference[0] === 'S') {
             $skeletonGranularityIndex += substr_count($skeleton, 'S') - 1;
         }
@@ -2289,7 +2200,7 @@ class Calendar
      */
     protected static function splitIntervalFormat($format)
     {
-        $functionNames[] = array();
+        $functionNames = array(array());
         $index = 0;
 
         // Split on the first recurring field.
@@ -3071,62 +2982,18 @@ class Calendar
     }
 
     /**
-     * @param string $phpTimezoneName
+     * @param string $timezoneID
      *
-     * @return string[]
+     * @return string
      */
-    protected static function getTimezonesAliases($phpTimezoneName)
+    protected static function getTimezoneCanonicalID($timezoneID)
     {
-        $result = array($phpTimezoneName);
-        switch ($phpTimezoneName) {
-            case 'Africa/Asmara':
-                $result[] = 'Africa/Asmera';
-                break;
-            case 'America/Atikokan':
-                $result[] = 'America/Coral_Harbour';
-                break;
-            case 'Asia/Ho_Chi_Minh':
-                $result[] = 'Asia/Saigon';
-                break;
-            case 'Asia/Kathmandu':
-                $result[] = 'Asia/Katmandu';
-                break;
-            case 'Asia/Kolkata':
-                $result[] = 'Asia/Calcutta';
-                break;
-            case 'Atlantic/Faroe':
-                $result[] = 'Atlantic/Faeroe';
-                break;
-            case 'Pacific/Chuuk':
-                $result[] = 'Pacific/Truk';
-                break;
-            case 'Pacific/Pohnpei':
-                $result[] = 'Pacific/Ponape';
-                break;
-            case 'America/Argentina/Buenos_Aires':
-                $result[] = 'America/Buenos_Aires';
-                break;
-            case 'America/Argentina/Catamarca':
-                $result[] = 'America/Catamarca';
-                break;
-            case 'America/Argentina/Cordoba':
-                $result[] = 'America/Cordoba';
-                break;
-            case 'America/Argentina/Jujuy':
-                $result[] = 'America/Jujuy';
-                break;
-            case 'America/Argentina/Mendoza':
-                $result[] = 'America/Mendoza';
-                break;
-            case 'America/Indiana/Indianapolis':
-                $result[] = 'America/Indianapolis';
-                break;
-            case 'America/Kentucky/Louisville':
-                $result[] = 'America/Louisville';
-                break;
+        $timeZones = Data::getGeneric('timeZones');
+        if (isset($timeZones['aliases'][$timezoneID])) {
+            $timezoneID = $timeZones['aliases'][$timezoneID];
         }
 
-        return $result;
+        return $timezoneID;
     }
 
     /**

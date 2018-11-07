@@ -23,15 +23,15 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     public function providerGetInfo()
     {
         return array(
-            array('en', 'USD', null, 'US Dollar', '$', '$', ''),
-            array('it', 'USD', null, 'dollaro statunitense', 'USD', '$', ''),
-            array('en', 'Invalid currency code', null, '', '', '', ''),
-            array('de', 'ARS', null, 'Argentinischer Peso', 'ARS', '$', ''),
-            array('en', 'USD', 0, 'US dollars', '$', '$', ''),
-            array('en', 'USD', 1, 'US dollar', '$', '$', ''),
-            array('en', 'USD', 2, 'US dollars', '$', '$', ''),
-            array('en', 'USD', 'one', 'US dollar', '$', '$', ''),
-            array('en', 'USD', 'many', 'US dollars', '$', '$', ''),
+            array('en', 'USD', null, 'US Dollar', '$', '$', '', 840),
+            array('it', 'USD', null, 'dollaro statunitense', 'USD', '$', '', 840),
+            array('en', 'Invalid currency code', null, '', '', '', '', ''),
+            array('de', 'ARS', null, 'Argentinischer Peso', 'ARS', '$', '', 32),
+            array('en', 'USD', 0, 'US dollars', '$', '$', '', 840),
+            array('en', 'USD', 1, 'US dollar', '$', '$', '', 840),
+            array('en', 'USD', 2, 'US dollars', '$', '$', '', 840),
+            array('en', 'USD', 'one', 'US dollar', '$', '$', '', 840),
+            array('en', 'USD', 'many', 'US dollars', '$', '$', '', 840),
         );
     }
 
@@ -45,13 +45,22 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
      * @param string $currencySymbol
      * @param string $currencySymbolNarrow
      * @param string $currencySymbolAlternative
+     * @param mixed $iso4217
      */
-    public function testGetInfo($locale, $currencyCode, $quantity, $currencyName, $currencySymbol, $currencySymbolNarrow, $currencySymbolAlternative)
+    public function testGetInfo($locale, $currencyCode, $quantity, $currencyName, $currencySymbol, $currencySymbolNarrow, $currencySymbolAlternative, $iso4217)
     {
         $this->assertSame($currencyName, \Punic\Currency::getName($currencyCode, $quantity, $locale), 'Error getting name');
         $this->assertSame($currencySymbol, \Punic\Currency::getSymbol($currencyCode, '', $locale), 'Error getting standard symbol');
         $this->assertSame($currencySymbolNarrow, \Punic\Currency::getSymbol($currencyCode, 'narrow', $locale), 'Error getting narrow symbol');
         $this->assertSame($currencySymbolAlternative, \Punic\Currency::getSymbol($currencyCode, 'alt', $locale), 'Error getting alternative symbol');
+        $this->assertSame($iso4217, \Punic\Currency::getNumericCode($currencyCode), 'Error getting code');
+    }
+
+    public function testGetByCode()
+    {
+        $this->assertSame('DKK', \Punic\Currency::getByNumericCode(208));
+        $this->assertSame('DKK', \Punic\Currency::getByNumericCode('208'));
+        $this->assertSame('', \Punic\Currency::getByNumericCode(666));
     }
 
     /**

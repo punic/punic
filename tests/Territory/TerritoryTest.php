@@ -36,6 +36,91 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
+    public function providerGetCode()
+    {
+        return array(
+            array('USA', 'US', 'alpha3'),
+            array('840', 'US', 'numeric'),
+            array('US', 'US', 'fips10'),
+            array('AU', 'AT', 'fips10'),
+            array('DGA', 'DG', 'alpha3'),
+            array('', 'EA', 'alpha3'),
+            array('', 'DG', 'numeric'),
+            array(array('US'), 'US', 'internet'),
+            array(array('UK', 'GB'), 'GB', 'internet'),
+            array('', 'FOO', 'alpha3'),
+        );
+    }
+
+    /**
+     * test getCode.
+     *
+     * @dataProvider providerGetCode
+     *
+     * @param string $result
+     * @param string $territoryCode
+     * @param string $type
+     */
+    public function testGetCode($result, $territoryCode, $type)
+    {
+        $this->assertSame(
+            $result,
+            Territory::getCode($territoryCode, $type)
+        );
+    }
+
+    public function testGetCodeException()
+    {
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
+        Territory::getCode('DE', 'foo');
+    }
+
+    /**
+     * @return array
+     */
+    public function providerGetByCode()
+    {
+        return array(
+            array('US', 'USA', 'alpha3'),
+            array('US', '840', 'numeric'),
+            array('US', 840, 'numeric'),
+            array('US', 'US', 'fips10'),
+            array('AT', 'AU', 'fips10'),
+            array('DG', 'DGA', 'alpha3'),
+            array('US', 'US', 'internet'),
+            array('GB', 'UK', 'internet'),
+            array('GB', 'GB', 'internet'),
+            array('ZZ', 'COM', 'internet'),
+        );
+    }
+
+    /**
+     * test getByCode.
+     *
+     * @dataProvider providerGetByCode
+     *
+     * @param string $result
+     * @param string $territoryCode
+     * @param string $type
+     * @param mixed $code
+     */
+    public function testGetByCode($result, $code, $type)
+    {
+        $this->assertSame(
+            $result,
+            Territory::getByCode($code, $type)
+        );
+    }
+
+    public function testGetByCodeException()
+    {
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
+        Territory::getByCode('666', 'foo');
+    }
+
     public function testCountries()
     {
         $countries = Territory::getCountries();
