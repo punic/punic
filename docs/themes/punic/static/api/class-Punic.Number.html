@@ -130,7 +130,7 @@
 		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-Punic.Number.html#5-177" title="Go to source code">Number.php</a>
+			<b>Located at</b> <a href="source-class-Punic.Number.html#5-284" title="Go to source code">Number.php</a>
 		<br>
 	</div>
 
@@ -230,7 +230,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_format">#</a>
-			<code><a href="source-class-Punic.Number.html#46-114" title="Go to source code">format</a>( <span>integer|float|string <var>$value</var></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Number.html#46-100" title="Go to source code">format</a>( <span>integer|float|string <var>$value</var></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Localize a number representation (for instance, converts 1234.5 to '1,234.5' in case of English and to '1.234,5' in case of Italian).</p>
@@ -261,6 +261,96 @@
 			</div>
 			</div></td>
 		</tr>
+		<tr data-order="formatPercent" id="_formatPercent">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formatPercent">#</a>
+			<code><a href="source-class-Punic.Number.html#102-129" title="Go to source code">formatPercent</a>( <span>integer|float|string <var>$value</var></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$precision</var></dt>
+						<dd>The wanted precision (well use <a href="http://php.net/manual/function.round.php">http://php.net/manual/function.round.php</a>)</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formatCurrency" id="_formatCurrency">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formatCurrency">#</a>
+			<code><a href="source-class-Punic.Number.html#131-208" title="Go to source code">formatCurrency</a>( <span>integer|float|string <var>$value</var></span>, <span>string <var>$currencyCode</var></span>, <span>string <var>$kind</var> = <span class="php-quote">'standard'</span></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$which</var> = <span class="php-quote">''</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$currencyCode</var></dt>
+						<dd>The 3-letter currency code</dd>
+						<dt><var>$kind</var></dt>
+						<dd>The currency variant, either "standard" or "accounting"</dd>
+						<dt><var>$precision</var></dt>
+						<dd>The wanted precision (well use <a href="http://php.net/manual/function.round.php">http://php.net/manual/function.round.php</a>)</dd>
+						<dt><var>$which</var></dt>
+						<dd>The currency symbol to use, "" for default, "long" for the currency name, "narrow", "alt" for alternative, or "code" for the 3-letter currency code</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Returns an empty string $value is not a number, otherwise returns the localized representation of the amount
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
 		<tr data-order="unformat" id="_unformat">
 
 			<td class="attributes"><code>
@@ -272,7 +362,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_unformat">#</a>
-			<code><a href="source-class-Punic.Number.html#116-176" title="Go to source code">unformat</a>( <span>string <var>$value</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Number.html#210-270" title="Go to source code">unformat</a>( <span>string <var>$value</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Convert a localized representation of a number to a number (for instance, converts the string '1,234' to 1234 in case of English and to 1.234 in case of Italian).</p>
