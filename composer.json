@@ -53,5 +53,9 @@
     },
     "bin": [
         "bin/punic-data"
-    ]
+    ],
+    "scripts": {
+        "cs": "php-cs-fixer",
+        "test": "phpunit"
+    }
 }

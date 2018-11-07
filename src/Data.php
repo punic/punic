@@ -574,6 +574,31 @@ class Data
     }
 
     /**
+     * Get value from nested array.
+     *
+     * @param array $data the nested array to descend into
+     * @param array $path Path of array keys. Each part of the path may be a string or an array of alternative strings.
+     *
+     * @return mixed|null
+     */
+    public static function getArrayValue(array $data, array $path)
+    {
+        $alternatives = array_shift($path);
+        if ($alternatives === null) {
+            return $data;
+        }
+        foreach ((array) $alternatives as $alternative) {
+            if (array_key_exists($alternative, $data)) {
+                $data = $data[$alternative];
+
+                return is_array($data) ? self::getArrayValue($data, $path) : ($path ? null : $data);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @deprecated
      *
      * @param string $territory

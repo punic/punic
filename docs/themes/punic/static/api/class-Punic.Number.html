@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Punic\Number | Punic v3.1.1-dev</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Punic v3.1.1-dev</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Punic.html" title="Summary of Punic"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+					<li class="divider-vertical"></li>
+
+					<li>
+						<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+					</li>
+
+						<li>
+							<a href="annotation-group-todo.html" title="List of elements with todo annotation">
+								<span>Todo</span>
+							</a>
+						</li>
+						<li>
+							<a href="annotation-group-deprecated.html" title="List of elements with deprecated annotation">
+								<span>Deprecated</span>
+							</a>
+						</li>
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active main">
+						<a href="namespace-Punic.html">
+							Punic<span></span>
+						</a>
+							<ul>
+					<li class="main">
+						<a href="namespace-Punic.Exception.html">
+							Exception						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Punic.Calendar.html">Calendar</a></li>
+				<li><a href="class-Punic.Comparer.html">Comparer</a></li>
+				<li><a href="class-Punic.Currency.html">Currency</a></li>
+				<li><a href="class-Punic.Data.html">Data</a></li>
+				<li><a href="class-Punic.Language.html">Language</a></li>
+				<li><a href="class-Punic.Misc.html">Misc</a></li>
+				<li class="active"><a href="class-Punic.Number.html">Number</a></li>
+				<li><a href="class-Punic.Phone.html">Phone</a></li>
+				<li><a href="class-Punic.Plural.html">Plural</a></li>
+				<li><a href="class-Punic.Territory.html">Territory</a></li>
+				<li><a href="class-Punic.Unit.html">Unit</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Punic.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class Number</h1>
+
+
+	<div class="description">
+	<p>Numbers helpers.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Punic.Number.html#5-290" title="Go to source code">Number.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="isNumeric" id="_isNumeric">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_isNumeric">#</a>
+			<code><a href="source-class-Punic.Number.html#10-21" title="Go to source code">isNumeric</a>( <span>string <var>$value</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Check if a variable contains a valid number for the specified locale.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if a variable contains a valid number for the specified locale.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to check</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="isInteger" id="_isInteger">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_isInteger">#</a>
+			<code><a href="source-class-Punic.Number.html#23-44" title="Go to source code">isInteger</a>( <span>string <var>$value</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Check if a variable contains a valid integer number for the specified locale.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if a variable contains a valid integer number for the specified locale.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to check</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="format" id="_format">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_format">#</a>
+			<code><a href="source-class-Punic.Number.html#46-106" title="Go to source code">format</a>( <span>integer|float|string <var>$value</var></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Localize a number representation (for instance, converts 1234.5 to '1,234.5' in case of English and to '1.234,5' in case of Italian).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Localize a number representation (for instance, converts 1234.5 to '1,234.5' in case of English and to '1.234,5' in case of Italian).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$precision</var></dt>
+						<dd>The wanted precision (well use <a href="http://php.net/manual/function.round.php">http://php.net/manual/function.round.php</a>)</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Returns an empty string $value is not a number, otherwise returns the localized representation of the number
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formatPercent" id="_formatPercent">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formatPercent">#</a>
+			<code><a href="source-class-Punic.Number.html#108-135" title="Go to source code">formatPercent</a>( <span>integer|float|string <var>$value</var></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Localize a percentage (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$precision</var></dt>
+						<dd>The wanted precision (well use <a href="http://php.net/manual/function.round.php">http://php.net/manual/function.round.php</a>)</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Returns an empty string $value is not a number, otherwise returns the localized representation of the percentage
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formatCurrency" id="_formatCurrency">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formatCurrency">#</a>
+			<code><a href="source-class-Punic.Number.html#137-214" title="Go to source code">formatCurrency</a>( <span>integer|float|string <var>$value</var></span>, <span>string <var>$currencyCode</var></span>, <span>string <var>$kind</var> = <span class="php-quote">'standard'</span></span>, <span>integer|null <var>$precision</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$which</var> = <span class="php-quote">''</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Localize a currency amount (for instance, converts 12.345 to '1,234.5%' in case of English and to '1.234,5 %' in case of Danish).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$currencyCode</var></dt>
+						<dd>The 3-letter currency code</dd>
+						<dt><var>$kind</var></dt>
+						<dd>The currency variant, either "standard" or "accounting"</dd>
+						<dt><var>$precision</var></dt>
+						<dd>The wanted precision (well use <a href="http://php.net/manual/function.round.php">http://php.net/manual/function.round.php</a>)</dd>
+						<dt><var>$which</var></dt>
+						<dd>The currency symbol to use, "" for default, "long" for the currency name, "narrow", "alt" for alternative, or "code" for the 3-letter currency code</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>Returns an empty string $value is not a number, otherwise returns the localized representation of the amount
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="unformat" id="_unformat">
+
+			<td class="attributes"><code>
+				 public static
+				integer|float|null
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_unformat">#</a>
+			<code><a href="source-class-Punic.Number.html#216-276" title="Go to source code">unformat</a>( <span>string <var>$value</var></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				<p>Convert a localized representation of a number to a number (for instance, converts the string '1,234' to 1234 in case of English and to 1.234 in case of Italian).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Convert a localized representation of a number to a number (for instance, converts the string '1,234' to 1234 in case of English and to 1.234 in case of Italian).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$value</var></dt>
+						<dd>The string value to convert</dd>
+						<dt><var>$locale</var></dt>
+						<dd>The locale to use. If empty we'll use the default locale set in \Punic\Data</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						integer|float|null<br>Returns null if $value is not valid, the numeric value otherwise
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Punic v3.1.1-dev API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
