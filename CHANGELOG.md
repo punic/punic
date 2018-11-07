@@ -14,6 +14,7 @@
 * Fix `[ALL]` languages placeholder in `punic-data` CLI command (@mlocati)
 * Fix handling of minutes/month in Calendar intervals (@c960657)
 * Support explicit timezone translations (@c960657)
+* Localise infinity and NaN (@c960657)
 * Minor performance improvements (@c960657)
 * **BREAKING CHANGE** `Punic\Territory::getChildTerritoryCodes()` changed its signature (a new argument with a default value has been added) (@c960657)
 
