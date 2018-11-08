@@ -3,6 +3,7 @@
 ### NEXT (YYYY-MM-DD)
 
 * CLDR updated from 32.0.1 to 33.1 (@mlocati)
+* Draft status of CLDR data changed from *unconfirmed* to *contributed* (@mlocati)
 * Added possibility to overrides data (`Punic\Data::getOverrides`, `Punic\Data::setOverrides`, `Punic\Data::getOverridesGeneric`, `Punic\Data::setOverridesGeneric`) (@c960657)
 * Added `Punic\Number::formatPercent()` (@c960657)
 * Added `Punic\Number::formatCurrency()` (@c960657)
