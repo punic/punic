@@ -1,12 +1,18 @@
 <?php
 
-class CurrencyTest extends PHPUnit_Framework_TestCase
+namespace Punic\Test\Currency;
+
+use Punic\Currency;
+use Punic\Data;
+use Punic\Test\TestCase;
+
+class CurrencyTest extends TestCase
 {
     public function testAvailability()
     {
         $allCurrencyCodes = null;
-        foreach (\Punic\Data::getAvailableLocales(true) as $locale) {
-            $theseCurrencyCodes = array_keys(\Punic\Currency::getAllCurrencies(true, true, $locale));
+        foreach (Data::getAvailableLocales(true) as $locale) {
+            $theseCurrencyCodes = array_keys(Currency::getAllCurrencies(true, true, $locale));
             sort($theseCurrencyCodes);
             if (null === $allCurrencyCodes) {
                 $allCurrencyCodes = $theseCurrencyCodes;
@@ -20,7 +26,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetInfo()
+    public function provideGetInfo()
     {
         return array(
             array('en', 'USD', null, 'US Dollar', '$', '$', '', 840),
@@ -36,7 +42,7 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetInfo
+     * @dataProvider provideGetInfo
      *
      * @param string $locale
      * @param string $currencyCode
@@ -49,24 +55,24 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetInfo($locale, $currencyCode, $quantity, $currencyName, $currencySymbol, $currencySymbolNarrow, $currencySymbolAlternative, $iso4217)
     {
-        $this->assertSame($currencyName, \Punic\Currency::getName($currencyCode, $quantity, $locale), 'Error getting name');
-        $this->assertSame($currencySymbol, \Punic\Currency::getSymbol($currencyCode, '', $locale), 'Error getting standard symbol');
-        $this->assertSame($currencySymbolNarrow, \Punic\Currency::getSymbol($currencyCode, 'narrow', $locale), 'Error getting narrow symbol');
-        $this->assertSame($currencySymbolAlternative, \Punic\Currency::getSymbol($currencyCode, 'alt', $locale), 'Error getting alternative symbol');
-        $this->assertSame($iso4217, \Punic\Currency::getNumericCode($currencyCode), 'Error getting code');
+        $this->assertSame($currencyName, Currency::getName($currencyCode, $quantity, $locale), 'Error getting name');
+        $this->assertSame($currencySymbol, Currency::getSymbol($currencyCode, '', $locale), 'Error getting standard symbol');
+        $this->assertSame($currencySymbolNarrow, Currency::getSymbol($currencyCode, 'narrow', $locale), 'Error getting narrow symbol');
+        $this->assertSame($currencySymbolAlternative, Currency::getSymbol($currencyCode, 'alt', $locale), 'Error getting alternative symbol');
+        $this->assertSame($iso4217, Currency::getNumericCode($currencyCode), 'Error getting code');
     }
 
     public function testGetByCode()
     {
-        $this->assertSame('DKK', \Punic\Currency::getByNumericCode(208));
-        $this->assertSame('DKK', \Punic\Currency::getByNumericCode('208'));
-        $this->assertSame('', \Punic\Currency::getByNumericCode(666));
+        $this->assertSame('DKK', Currency::getByNumericCode(208));
+        $this->assertSame('DKK', Currency::getByNumericCode('208'));
+        $this->assertSame('', Currency::getByNumericCode(666));
     }
 
     /**
      * @return array
      */
-    public function providerGetCurrencyForTerritory()
+    public function provideGetCurrencyForTerritory()
     {
         return array(
             array('US', 'USD'),
@@ -77,19 +83,19 @@ class CurrencyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetCurrencyForTerritory
+     * @dataProvider provideGetCurrencyForTerritory
      *
      * @param string $territoryCode
      * @param string $currencyCode
      */
     public function testGetCurrencyForTerritory($territoryCode, $currencyCode)
     {
-        $this->assertSame($currencyCode, \Punic\Currency::getCurrencyForTerritory($territoryCode));
+        $this->assertSame($currencyCode, Currency::getCurrencyForTerritory($territoryCode));
     }
 
     public function testGetAllCurrencies()
     {
-        $currencies = \Punic\Currency::getAllCurrencies();
+        $currencies = Currency::getAllCurrencies();
         $this->assertArrayHasKey('USD', $currencies);
         $this->assertArrayHasKey('CHF', $currencies);
 

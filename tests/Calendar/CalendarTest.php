@@ -1,8 +1,18 @@
 <?php
 
-use Punic\Calendar;
+namespace Punic\Test\Calendar;
 
-class CalendarTest extends PHPUnit_Framework_TestCase
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+use Punic\Calendar;
+use Punic\Data;
+use Punic\Test\TestCase;
+use stdClass;
+
+class CalendarTest extends TestCase
 {
     protected $initialTimezone;
 
@@ -14,10 +24,10 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             $this->initialTimezone = 'UTC';
         }
         if (date_default_timezone_set('Pacific/Fiji') !== true) {
-            throw new \Exception('Unable to set initial timezone');
+            throw new Exception('Unable to set initial timezone');
         }
-        \Punic\Data::setFallbackLocale('en_US');
-        \Punic\Data::setDefaultLocale('en_US');
+        Data::setFallbackLocale('en_US');
+        Data::setDefaultLocale('en_US');
     }
 
     protected function tearDown()
@@ -29,8 +39,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testToDateTime()
     {
-        /* @var $dt \DateTime */
-        /* @var $dt2 \DateTime */
         $dt = Calendar::toDateTime(false);
         $this->assertNull(
             $dt,
@@ -83,7 +91,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
             $dt->format('c'),
             'Calculating from timestamp to a specific timezone'
         );
-        $dt = Calendar::toDateTime($time, new \DateTimeZone('Europe/Rome'));
+        $dt = Calendar::toDateTime($time, new DateTimeZone('Europe/Rome'));
         $this->assertSame(
             '2017-03-07T17:30:00+01:00',
             $dt->format('c'),
@@ -133,15 +141,15 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             '1999-12-31T14:30:00+01:00',
-            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new \DateTimeZone('Australia/Adelaide'))->format('c')
+            Calendar::toDateTime('2000-01-01 00:00', 'Europe/Rome', new DateTimeZone('Australia/Adelaide'))->format('c')
         );
         $this->assertSame(
             '1999-12-31T14:30:00+01:00',
-            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
+            Calendar::toDateTime('2000-01-01 00:00', new DateTimeZone('Europe/Rome'), 'Australia/Adelaide')->format('c')
         );
         $this->assertSame(
             '1999-12-31T14:30:00+01:00',
-            Calendar::toDateTime('2000-01-01 00:00', new \DateTimeZone('Europe/Rome'), new \DateTimeZone('Australia/Adelaide'))->format('c')
+            Calendar::toDateTime('2000-01-01 00:00', new DateTimeZone('Europe/Rome'), new DateTimeZone('Australia/Adelaide'))->format('c')
         );
         $this->assertSame(
             '2000-01-01T01:00:00+01:00',
@@ -160,14 +168,14 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             '2017-03-08T03:00:00+10:30',
-            Calendar::toDateTime(new \DateTime('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
+            Calendar::toDateTime(new DateTime('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
             'Calculating from timestamp'
         );
 
         if (version_compare(PHP_VERSION, '5.5') >= 0) {
             $this->assertSame(
                 '2017-03-08T03:00:00+10:30',
-                Calendar::toDateTime(new \DateTimeImmutable('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
+                Calendar::toDateTime(new DateTimeImmutable('2017-03-07T16:30:00+00:00'), null, 'Australia/Adelaide')->format('c'),
                 'Calculating from timestamp'
             );
         }
@@ -176,7 +184,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerConvertPhpToIso()
+    public function provideConvertPhpToIso()
     {
         return array(
             array("dd MMMM yyyy 'alle' H:mm:ss", 'd F Y \a\l\l\e G:i:s'),
@@ -189,7 +197,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
      * test convertPhpToIso
      * expected boolean.
      *
-     * @dataProvider providerConvertPhpToIso
+     * @dataProvider provideConvertPhpToIso
      *
      * @param string $a
      * @param string $b
@@ -249,7 +257,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetMonthName()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -305,81 +312,81 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExceptionsProvider()
+    public function provideExceptions()
     {
         return array(
-            array('getDatetimeFormat', array('invalid-width'), '\\Punic\\Exception'),
-            array('getTimeFormat', array('invalid-width'), '\\Punic\\Exception'),
-            array('getDateFormat', array('invalid-width'), '\\Punic\\Exception'),
-            array('getDatetimeFormat', array('1|2|3|4'), '\\Punic\\Exception'),
-            array('getSkeletonFormat', array('invalid-skeleton'), '\\Punic\\Exception'),
-            array('getSkeletonFormat', array('yE'), '\\Punic\\Exception'),
-            array('getIntervalFormat', array('E', 'y'), '\\Punic\\Exception'),
-            array('getIntervalFormat', array('_', 'y'), '\\Punic\\Exception'),
-            array('format', array(new stdClass(), ''), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ddd'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'EEEEEEE'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aaaaaa'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'bbbbbb'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'BBBBBB'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'kkk'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'mmm'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'sss'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'zzzzz'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OO'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOO'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOOOO'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'GGGGGG'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'QQQQQQ'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'www'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'DDDD'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'FFFF'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ZZZZZZ'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vv'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvv'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvvvv'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'VVVVV'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'XXXXXX'), '\\Punic\\Exception'),
-            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'xxxxxx'), '\\Punic\\Exception'),
-            array('getTimezoneNameLocationSpecific', array(1), '\\Punic\\Exception'),
-            array('getWeekdayName', array(8), '\\Punic\\Exception'),
-            array('getWeekdayName', array('test'), '\\Punic\\Exception'),
-            array('getWeekdayName', array(1, 'invalid-width'), '\\Punic\\Exception'),
-            array('getDayperiodName', array(25), '\\Punic\\Exception'),
-            array('getDayperiodName', array('test'), '\\Punic\\Exception'),
-            array('getDayperiodName', array('am', 'invalid-width'), '\\Punic\\Exception'),
-            array('getVariableDayperiodName', array(25), '\\Punic\\Exception'),
-            array('getVariableDayperiodName', array('test'), '\\Punic\\Exception'),
-            array('getVariableDayperiodName', array('morning1', 'invalid-width'), '\\Punic\\Exception'),
-            array('toDateTime', array(true), '\\Punic\\Exception'),
-            array('toDateTime', array('this is an invalid date representation'), '\\Punic\\Exception'),
-            array('toDateTime', array('now', 'this is an invalid timezone representation'), '\\Punic\\Exception'),
-            array('getEraName', array('test'), '\\Punic\\Exception'),
-            array('getEraName', array(1, 'invalid-width'), '\\Punic\\Exception'),
-            array('getMonthName', array('test'), '\\Punic\\Exception'),
-            array('getMonthName', array(13), '\\Punic\\Exception'),
-            array('getMonthName', array(12, 'invalid-width'), '\\Punic\\Exception'),
-            array('getQuarterName', array('test'), '\\Punic\\Exception'),
-            array('getQuarterName', array(5), '\\Punic\\Exception'),
-            array('getQuarterName', array(1, 'invalid-width'), '\\Punic\\Exception'),
-            array('toDateTime', array('2000-01-01', true), '\\Punic\\Exception'),
-            array('toDateTime', array('2000-01-01', 'This is an invalid *to* timezone'), '\\Punic\\Exception'),
-            array('toDateTime', array('2000-01-01', 'Europe/Rome', 'This is an invalid *from* timezone'), '\\Punic\\Exception'),
-            array('toDateTime', array('2000-01-01', 'Europe/Rome', true), '\\Punic\\Exception'),
-            array('getDeltaDays', array('string'), '\\Punic\\Exception'),
-            array('getDeltaDays', array(new \DateTime(), 'string'), '\\Punic\\Exception'),
-            array('describeInterval', array('not-a-datetime'), '\\Punic\\Exception'),
-            array('describeInterval', array(new \DateTime(), 'not-a-datetime'), '\\Punic\\Exception'),
+            array('getDatetimeFormat', array('invalid-width'), 'Punic\\Exception'),
+            array('getTimeFormat', array('invalid-width'), 'Punic\\Exception'),
+            array('getDateFormat', array('invalid-width'), 'Punic\\Exception'),
+            array('getDatetimeFormat', array('1|2|3|4'), 'Punic\\Exception'),
+            array('getSkeletonFormat', array('invalid-skeleton'), 'Punic\\Exception'),
+            array('getSkeletonFormat', array('yE'), 'Punic\\Exception'),
+            array('getIntervalFormat', array('E', 'y'), 'Punic\\Exception'),
+            array('getIntervalFormat', array('_', 'y'), 'Punic\\Exception'),
+            array('format', array(new stdClass(), ''), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 1), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'MMMMMM'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ddd'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'EEEEEEE'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'hhh'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'aaaaaa'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'bbbbbb'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'BBBBBB'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'HHH'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'KKK'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'kkk'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'mmm'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'sss'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'zzzzz'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OO'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOO'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'OOOOO'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'GGGGGG'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'QQQQQQ'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'www'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'DDDD'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'FFFF'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'ZZZZZZ'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vv'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvv'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'vvvvv'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'VVVVV'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'XXXXXX'), 'Punic\\Exception'),
+            array('format', array(Calendar::toDateTime('2010-01-02 08:01:02'), 'xxxxxx'), 'Punic\\Exception'),
+            array('getTimezoneNameLocationSpecific', array(1), 'Punic\\Exception'),
+            array('getWeekdayName', array(8), 'Punic\\Exception'),
+            array('getWeekdayName', array('test'), 'Punic\\Exception'),
+            array('getWeekdayName', array(1, 'invalid-width'), 'Punic\\Exception'),
+            array('getDayperiodName', array(25), 'Punic\\Exception'),
+            array('getDayperiodName', array('test'), 'Punic\\Exception'),
+            array('getDayperiodName', array('am', 'invalid-width'), 'Punic\\Exception'),
+            array('getVariableDayperiodName', array(25), 'Punic\\Exception'),
+            array('getVariableDayperiodName', array('test'), 'Punic\\Exception'),
+            array('getVariableDayperiodName', array('morning1', 'invalid-width'), 'Punic\\Exception'),
+            array('toDateTime', array(true), 'Punic\\Exception'),
+            array('toDateTime', array('this is an invalid date representation'), 'Punic\\Exception'),
+            array('toDateTime', array('now', 'this is an invalid timezone representation'), 'Punic\\Exception'),
+            array('getEraName', array('test'), 'Punic\\Exception'),
+            array('getEraName', array(1, 'invalid-width'), 'Punic\\Exception'),
+            array('getMonthName', array('test'), 'Punic\\Exception'),
+            array('getMonthName', array(13), 'Punic\\Exception'),
+            array('getMonthName', array(12, 'invalid-width'), 'Punic\\Exception'),
+            array('getQuarterName', array('test'), 'Punic\\Exception'),
+            array('getQuarterName', array(5), 'Punic\\Exception'),
+            array('getQuarterName', array(1, 'invalid-width'), 'Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', true), 'Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'This is an invalid *to* timezone'), 'Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', 'This is an invalid *from* timezone'), 'Punic\\Exception'),
+            array('toDateTime', array('2000-01-01', 'Europe/Rome', true), 'Punic\\Exception'),
+            array('getDeltaDays', array('string'), 'Punic\\Exception'),
+            array('getDeltaDays', array(new DateTime(), 'string'), 'Punic\\Exception'),
+            array('describeInterval', array('not-a-datetime'), 'Punic\\Exception'),
+            array('describeInterval', array(new DateTime(), 'not-a-datetime'), 'Punic\\Exception'),
         );
     }
 
     /**
-     * @dataProvider testExceptionsProvider
+     * @dataProvider provideExceptions
      *
      * @param string $method
      * @param array $parameters
@@ -388,12 +395,11 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     public function testExceptions($method, $parameters, $exception)
     {
         $this->setExpectedException($exception);
-        call_user_func_array(array('\Punic\Calendar', $method), $parameters);
+        call_user_func_array(array('Punic\Calendar', $method), $parameters);
     }
 
     public function testGetWeekdayName()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -455,7 +461,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetQuarterName()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -513,7 +518,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetDayperiodName()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -579,7 +583,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetVariableDayperiodName()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07 13:00');
         $this->assertSame(
             '',
@@ -681,7 +684,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetTimezoneNameNoLocationSpecific()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -808,7 +810,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetTimezoneNameLocationSpecific()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             '',
@@ -897,7 +898,6 @@ class CalendarTest extends PHPUnit_Framework_TestCase
 
     public function testGetTimezoneExemplarCity()
     {
-        /* @var $dt \DateTime */
         $dt = Calendar::toDateTime('2010-03-07');
         $this->assertSame(
             'Fiji',
@@ -925,7 +925,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             'Città del Vaticano',
-            Calendar::getTimezoneExemplarCity(new \DateTimeZone('Europe/Vatican'), false, 'it')
+            Calendar::getTimezoneExemplarCity(new DateTimeZone('Europe/Vatican'), false, 'it')
         );
     }
 
@@ -2153,19 +2153,19 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerDescribeInterval()
+    public function provideDescribeInterval()
     {
-        $now = new \DateTime('2017-11-01T16:18:44', new \DateTimeZone('Europe/Rome'));
+        $now = new DateTime('2017-11-01T16:18:44', new DateTimeZone('Europe/Rome'));
         $before1 = clone $now;
-        $before1->sub(new \DateInterval('P2Y4DT6H8M'));
+        $before1->sub(new DateInterval('P2Y4DT6H8M'));
         $before2 = clone $now;
-        $before2->sub(new \DateInterval('P2Y3M4DT6H8M59S'));
+        $before2->sub(new DateInterval('P2Y3M4DT6H8M59S'));
         $before3 = clone $now;
-        $before3->sub(new \DateInterval('P1Y3M4DT6H8M59S'));
+        $before3->sub(new DateInterval('P1Y3M4DT6H8M59S'));
         $nowTZ1 = clone $now;
-        $nowTZ1->setTimezone(new \DateTimeZone('Pacific/Pago_Pago'));
+        $nowTZ1->setTimezone(new DateTimeZone('Pacific/Pago_Pago'));
         $nowTZ2 = clone $now;
-        $nowTZ2->setTimezone(new \DateTimeZone('Pacific/Kiritimati'));
+        $nowTZ2->setTimezone(new DateTimeZone('Pacific/Kiritimati'));
 
         return array(
             array('now', $now, $now, 1, 'short', 'en'),
@@ -2189,7 +2189,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * Test describeInterval.
      *
-     * @dataProvider providerDescribeInterval
+     * @dataProvider provideDescribeInterval
      *
      * @param string $expected
      * @param \DateTime $dateEnd
@@ -2209,13 +2209,13 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * Test describeInterval.
      *
-     * @dataProvider providerDescribeInterval
+     * @dataProvider provideDescribeInterval
      */
     public function testDescribeInterval2()
     {
         $this->assertRegExp(
             '/^(now|1 second|\\d+ seconds)$/',
-            Calendar::describeInterval(new \DateTime(), null, 1, 'long', 'en')
+            Calendar::describeInterval(new DateTime(), null, 1, 'long', 'en')
         );
     }
 
@@ -2270,20 +2270,20 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetDeltaDays()
+    public function provideGetDeltaDays()
     {
         return array(
-            array(0, array(new \DateTime())),
-            array(1, array(new \DateTime('+1 days'))),
-            array(5, array(new \DateTime('+4 days'), new \DateTime('-1 days'))),
-            array(0, array(new \DateTime('now', new \DateTimeZone('Pacific/Pago_Pago')), new \DateTime('now', new \DateTimeZone('Pacific/Kiritimati')))),
+            array(0, array(new DateTime())),
+            array(1, array(new DateTime('+1 days'))),
+            array(5, array(new DateTime('+4 days'), new DateTime('-1 days'))),
+            array(0, array(new DateTime('now', new DateTimeZone('Pacific/Pago_Pago')), new DateTime('now', new DateTimeZone('Pacific/Kiritimati')))),
         );
     }
 
     /**
      * Test getDeltaDays.
      *
-     * @dataProvider providerGetDeltaDays
+     * @dataProvider provideGetDeltaDays
      *
      * @param int $expected
      * @param array $arguments
@@ -2292,7 +2292,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $expected,
-            call_user_func_array('\\Punic\\Calendar::getDeltaDays', $arguments)
+            call_user_func_array('Punic\\Calendar::getDeltaDays', $arguments)
         );
     }
 
@@ -2311,7 +2311,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetTimezonesAliases()
+    public function provideGetTimezonesAliases()
     {
         return array(
           array('Asmara', 'Africa/Asmara'),
@@ -2336,7 +2336,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     /**
      * Test getTimezonesAliases.
      *
-     * @dataProvider providerGetTimezonesAliases
+     * @dataProvider provideGetTimezonesAliases
      *
      * @param string $expected
      * @param string $phpTimezoneName
@@ -2345,7 +2345,7 @@ class CalendarTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $expected,
-            \Punic\Calendar::getTimezoneExemplarCity($phpTimezoneName, true, 'en')
+            Calendar::getTimezoneExemplarCity($phpTimezoneName, true, 'en')
         );
     }
 }

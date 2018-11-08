@@ -23,6 +23,9 @@ if test $DO_TESTS -ge 1 || test $DO_CODINGSTYLE -ge 1 || test $DO_UPDATEAPI -ge 
         if test $DO_TESTS -lt 1; then
             echo '### REMOVING PHPUNIT FROM COMPOSER DEPENDENCIES'
             composer --no-interaction remove --dev --no-update --no-scripts phpunit/phpunit
+        elif test "$TRAVIS_PHP_VERSION" = 'hhvm'; then
+            echo '### REQUIRING OLDER VERSION OF PHPUNIT FOR HHVM'
+            composer --no-interaction require --dev --no-update --no-scripts 'phpunit/phpunit:^4.8 || ^5.7'
         fi
 
         if test $DO_TESTS -ge 2; then

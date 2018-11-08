@@ -1,13 +1,16 @@
 <?php
 
-use Punic\Territory;
+namespace Punic\Test\Territory;
 
-class TerritoryTest extends PHPUnit_Framework_TestCase
+use Punic\Territory;
+use Punic\Test\TestCase;
+
+class TerritoryTest extends TestCase
 {
     /**
      * @return array
      */
-    public function providerGetName()
+    public function provideGetName()
     {
         return array(
             array('United States', 'US', 'en'),
@@ -22,7 +25,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * test getName.
      *
-     * @dataProvider providerGetName
+     * @dataProvider provideGetName
      *
      * @param string $result
      * @param string $territoryCode
@@ -39,7 +42,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetCode()
+    public function provideGetCode()
     {
         return array(
             array('USA', 'US', 'alpha3'),
@@ -58,7 +61,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * test getCode.
      *
-     * @dataProvider providerGetCode
+     * @dataProvider provideGetCode
      *
      * @param string $result
      * @param string $territoryCode
@@ -81,7 +84,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetByCode()
+    public function provideGetByCode()
     {
         return array(
             array('US', 'USA', 'alpha3'),
@@ -100,7 +103,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * test getByCode.
      *
-     * @dataProvider providerGetByCode
+     * @dataProvider provideGetByCode
      *
      * @param string $result
      * @param string $territoryCode
@@ -152,8 +155,8 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidTerritoryTypeException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\BadArgumentType');
-        $list = Territory::getList('a');
+        $this->setExpectedException('Punic\\Exception\\BadArgumentType');
+        Territory::getList('a');
     }
 
     public function testTerritoriesWithInfo()
@@ -253,7 +256,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetParentTerritoryCode()
+    public function provideGetParentTerritoryCode()
     {
         return array(
             array(/*World*/'001', /*Nothing*/''),
@@ -267,7 +270,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetParentTerritoryCode
+     * @dataProvider provideGetParentTerritoryCode
      *
      * @param string $child
      * @param string $parent
@@ -283,7 +286,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetChildTerritoryCodes()
+    public function provideGetChildTerritoryCodes()
     {
         return array(
             array(/*World*/'001', false, false, /*Europe*/'150', true),
@@ -306,7 +309,7 @@ class TerritoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetChildTerritoryCodes
+     * @dataProvider provideGetChildTerritoryCodes
      *
      * @param string $parentTerritoryCode
      * @param bool $expandSubGroups

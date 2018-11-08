@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Language;
+namespace Punic\Test\Language;
 
-class LanguageTest extends PHPUnit_Framework_TestCase
+use Punic\Language;
+use Punic\Test\TestCase;
+
+class LanguageTest extends TestCase
 {
     public function testGetAll()
     {
@@ -36,7 +39,7 @@ class LanguageTest extends PHPUnit_Framework_TestCase
     /**
      * @return string
      */
-    public function providerGetName()
+    public function provideGetName()
     {
         return array(
             array('English', 'en', 'en', false),
@@ -64,7 +67,7 @@ class LanguageTest extends PHPUnit_Framework_TestCase
     /**
      * test getName.
      *
-     * @dataProvider providerGetName
+     * @dataProvider provideGetName
      *
      * @param string $result
      * @param string $languageCode

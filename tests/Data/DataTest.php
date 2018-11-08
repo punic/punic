@@ -1,11 +1,16 @@
 <?php
 
+namespace Punic\Test\Data;
+
 use Punic\Calendar;
 use Punic\Data;
+use Punic\Exception;
 use Punic\Territory;
+use Punic\Test\TestCase;
 use Punic\Unit;
+use stdClass;
 
-class DataTest extends PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
     protected function tearDown()
     {
@@ -16,26 +21,26 @@ class DataTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function testInvalidLocalesProvider()
+    public function provideInvalidLocales()
     {
         return array(
-            array('setFallbackLocale', array(''), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array(null), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array(true), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(''), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(null), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(true), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(''), 'Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(null), 'Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(true), 'Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(false), 'Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(new stdClass()), 'Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array('invalid'), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(''), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(null), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(true), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(false), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(new stdClass()), 'Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array('invalid'), 'Punic\\Exception\\InvalidLocale'),
         );
     }
 
     /**
-     * @dataProvider testInvalidLocalesProvider
+     * @dataProvider provideInvalidLocales
      *
      * @param string $method
      * @param array $parameters
@@ -44,14 +49,14 @@ class DataTest extends PHPUnit_Framework_TestCase
     public function testInvalidLocales($method, $parameters, $exception)
     {
         $this->setExpectedException($exception);
-        call_user_func_array(array('\\Punic\\Data', $method), $parameters);
+        call_user_func_array(array('Punic\\Data', $method), $parameters);
     }
 
     public function testInvalidLocaleGet()
     {
         try {
             Data::setFallbackLocale('invalid');
-        } catch (\Punic\Exception\InvalidLocale $ex) {
+        } catch (Exception\InvalidLocale $ex) {
             $this->assertSame('invalid', $ex->getLocale());
         }
     }
@@ -59,50 +64,50 @@ class DataTest extends PHPUnit_Framework_TestCase
     public function testDefaultLocale()
     {
         Data::setDefaultLocale('it');
-        $this->assertSame('it', \Punic\Data::getDefaultLocale());
+        $this->assertSame('it', Data::getDefaultLocale());
     }
 
     public function testDefaultLanguage()
     {
         Data::setDefaultLocale('de_DE');
-        $this->assertSame('de', \Punic\Data::getDefaultLanguage());
+        $this->assertSame('de', Data::getDefaultLanguage());
     }
 
     public function testFallbackLocale()
     {
         Data::setFallbackLocale('it');
-        $this->assertSame('it', \Punic\Data::getFallbackLocale());
+        $this->assertSame('it', Data::getFallbackLocale());
     }
 
     public function testFallbackLanguage()
     {
         Data::setFallbackLocale('de_DE');
-        $this->assertSame('de', \Punic\Data::getFallbackLanguage());
+        $this->assertSame('de', Data::getFallbackLanguage());
     }
 
     /**
      * @return array
      */
-    public function providerInvalidDataFile()
+    public function provideInvalidDataFile()
     {
         return array(
-            array('\\Punic\Exception\InvalidDataFile', 'get', true),
-            array('\\Punic\Exception\InvalidDataFile', 'get', array()),
-            array('\\Punic\Exception\InvalidDataFile', 'get', ''),
-            array('\\Punic\Exception\InvalidDataFile', 'get', '../x'),
-            array('\\Punic\Exception\InvalidDataFile', 'get', '*'),
-            array('\\Punic\Exception\DataFileNotFound', 'get', 'invalid-data-file'),
-            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', true),
-            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', array()),
-            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', ''),
-            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', '../x'),
-            array('\\Punic\Exception\InvalidDataFile', 'getGeneric', '*'),
-            array('\\Punic\Exception\DataFileNotFound', 'getGeneric', 'invalid-data-file'),
+            array('Punic\Exception\InvalidDataFile', 'get', true),
+            array('Punic\Exception\InvalidDataFile', 'get', array()),
+            array('Punic\Exception\InvalidDataFile', 'get', ''),
+            array('Punic\Exception\InvalidDataFile', 'get', '../x'),
+            array('Punic\Exception\InvalidDataFile', 'get', '*'),
+            array('Punic\Exception\DataFileNotFound', 'get', 'invalid-data-file'),
+            array('Punic\Exception\InvalidDataFile', 'getGeneric', true),
+            array('Punic\Exception\InvalidDataFile', 'getGeneric', array()),
+            array('Punic\Exception\InvalidDataFile', 'getGeneric', ''),
+            array('Punic\Exception\InvalidDataFile', 'getGeneric', '../x'),
+            array('Punic\Exception\InvalidDataFile', 'getGeneric', '*'),
+            array('Punic\Exception\DataFileNotFound', 'getGeneric', 'invalid-data-file'),
         );
     }
 
     /**
-     * @dataProvider providerInvalidDataFile
+     * @dataProvider provideInvalidDataFile
      *
      * @param string $exception
      * @param string $method
@@ -111,7 +116,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     public function testInvalidDataFile($exception, $method, $dataFileID)
     {
         $this->setExpectedException($exception);
-        call_user_func(array('\\Punic\\Data', $method), $dataFileID);
+        call_user_func(array('Punic\\Data', $method), $dataFileID);
     }
 
     public function testGetAvailableLocales()
@@ -125,7 +130,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGuessFullLocale()
+    public function provideGuessFullLocale()
     {
         return array(
             array('en-Latn-US', array('en')),
@@ -137,14 +142,14 @@ class DataTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGuessFullLocale
+     * @dataProvider provideGuessFullLocale
      *
      * @param string $result
      * @param array $parameters
      */
     public function testGuessFullLocale($result, $parameters)
     {
-        $locale = call_user_func_array(array('\Punic\Data', 'guessFullLocale'), $parameters);
+        $locale = call_user_func_array(array('Punic\Data', 'guessFullLocale'), $parameters);
         $this->assertSame($result, $locale);
     }
 
@@ -158,7 +163,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetTerritory()
+    public function provideGetTerritory()
     {
         return array(
             array('US', array('en_US')),
@@ -171,14 +176,14 @@ class DataTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetTerritory
+     * @dataProvider provideGetTerritory
      *
      * @param string $result
      * @param array $parameters
      */
     public function testGetTerritory($result, $parameters)
     {
-        $locale = call_user_func_array(array('\Punic\Data', 'getTerritory'), $parameters);
+        $locale = call_user_func_array(array('Punic\Data', 'getTerritory'), $parameters);
         $this->assertSame($result, $locale);
     }
 
@@ -238,7 +243,7 @@ class DataTest extends PHPUnit_Framework_TestCase
         $this->assertSame('US', Unit::getMeasurementSystemFor('IT'));
     }
 
-    public function invalidOverridesProvider()
+    public function provideInvalidOverrides()
     {
         return array(
             array(
@@ -281,7 +286,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider invalidOverridesProvider
+     * @dataProvider provideInvalidOverrides
      *
      * @param array $overrides
      * @param string $message

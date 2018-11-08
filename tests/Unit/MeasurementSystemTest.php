@@ -1,12 +1,18 @@
 <?php
 
-class MeasurementSystemTest extends PHPUnit_Framework_TestCase
+namespace Punic\Test\Unit;
+
+use Punic\Data;
+use Punic\Test\TestCase;
+use Punic\Unit;
+
+class MeasurementSystemTest extends TestCase
 {
     public function testIdentifiersConsistency()
     {
         $keys = null;
-        foreach (\Punic\Data::getAvailableLocales(true) as $locale) {
-            $theseKeys = array_keys(\Punic\Unit::getMeasurementSystems($locale));
+        foreach (Data::getAvailableLocales(true) as $locale) {
+            $theseKeys = array_keys(Unit::getMeasurementSystems($locale));
             sort($theseKeys);
             if (null === $keys) {
                 $keys = $theseKeys;
@@ -20,7 +26,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetMeasurementSystemFor()
+    public function provideGetMeasurementSystemFor()
     {
         return array(
             array('US', 'US'),
@@ -30,7 +36,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetMeasurementSystemFor
+     * @dataProvider provideGetMeasurementSystemFor
      *
      * @param string $territoryCode
      * @param string $measurementSystemCode
@@ -39,14 +45,14 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $measurementSystemCode,
-            \Punic\Unit::getMeasurementSystemFor($territoryCode)
+            Unit::getMeasurementSystemFor($territoryCode)
         );
     }
 
     /**
      * @return array
      */
-    public function providerGetCountriesWithMeasurementSystem()
+    public function provideGetCountriesWithMeasurementSystem()
     {
         return array(
             array('US', 'US', true),
@@ -57,7 +63,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetCountriesWithMeasurementSystem
+     * @dataProvider provideGetCountriesWithMeasurementSystem
      *
      * @param string $measurementSystemCode
      * @param string $territoryCode
@@ -65,7 +71,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCountriesWithMeasurementSystem($measurementSystemCode, $territoryCode, $territoryPresent)
     {
-        $countries = \Punic\Unit::getCountriesWithMeasurementSystem($measurementSystemCode);
+        $countries = Unit::getCountriesWithMeasurementSystem($measurementSystemCode);
         if ($territoryPresent) {
             $this->assertContains($territoryCode, $countries);
         } else {
@@ -76,7 +82,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerGetPaperSizeFor()
+    public function provideGetPaperSizeFor()
     {
         return array(
             array('US', 'US-Letter'),
@@ -86,7 +92,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetPaperSizeFor
+     * @dataProvider provideGetPaperSizeFor
      *
      * @param string $territoryCode
      * @param string $paperSize
@@ -95,14 +101,14 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $paperSize,
-            \Punic\Unit::getPaperSizeFor($territoryCode)
+            Unit::getPaperSizeFor($territoryCode)
         );
     }
 
     /**
      * @return array
      */
-    public function providerGetCountriesWithPaperSize()
+    public function provideGetCountriesWithPaperSize()
     {
         return array(
             array('US-Letter', 'US', true),
@@ -113,7 +119,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerGetCountriesWithPaperSize
+     * @dataProvider provideGetCountriesWithPaperSize
      *
      * @param string $paperSize
      * @param string $territoryCode
@@ -121,7 +127,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCountriesWithPaperSize($paperSize, $territoryCode, $territoryPresent)
     {
-        $countries = \Punic\Unit::getCountriesWithPaperSize($paperSize);
+        $countries = Unit::getCountriesWithPaperSize($paperSize);
         if ($territoryPresent) {
             $this->assertContains($territoryCode, $countries);
         } else {

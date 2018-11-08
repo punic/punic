@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Misc;
+namespace Punic\Test\Misc;
 
-class BrowserLocaleTest extends PHPUnit_Framework_TestCase
+use Punic\Misc;
+use Punic\Test\TestCase;
+
+class BrowserLocaleTest extends TestCase
 {
     public function testBrowserLocales()
     {
@@ -22,7 +25,7 @@ class BrowserLocaleTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerParseHttpAcceptLanguage()
+    public function provideParseHttpAcceptLanguage()
     {
         return array(
             array('helloworld', array()),
@@ -40,7 +43,7 @@ class BrowserLocaleTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerParseHttpAcceptLanguage
+     * @dataProvider provideParseHttpAcceptLanguage
      *
      * @param string $httpAcceptLanguages
      * @param array $expected

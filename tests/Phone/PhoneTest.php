@@ -1,13 +1,16 @@
 <?php
 
-use Punic\Phone;
+namespace Punic\Test\Phone;
 
-class PhoneTest extends PHPUnit_Framework_TestCase
+use Punic\Phone;
+use Punic\Test\TestCase;
+
+class PhoneTest extends TestCase
 {
     /**
      * @return array
      */
-    public function somePrefixes()
+    public function providePrefixes()
     {
         return array(
             array('US', '1'),
@@ -19,7 +22,7 @@ class PhoneTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider somePrefixes
+     * @dataProvider providePrefixes
      *
      * @param string $territoryCode
      * @param string $prefix
@@ -33,7 +36,7 @@ class PhoneTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider somePrefixes
+     * @dataProvider providePrefixes
      *
      * @param string $territoryCode
      * @param string $prefix

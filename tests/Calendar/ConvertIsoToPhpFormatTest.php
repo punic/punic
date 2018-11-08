@@ -1,13 +1,17 @@
 <?php
 
-use Punic\Calendar;
+namespace Punic\Test\Calendar;
 
-class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
+use Punic\Calendar;
+use Punic\Test\TestCase;
+use stdClass;
+
+class ConvertIsoToPhpFormatTest extends TestCase
 {
     /**
      * @return array
      */
-    public function providerLiterals()
+    public function provideLiterals()
     {
         return array(
             array(null, null),
@@ -21,7 +25,7 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * * @dataProvider providerLiterals
+     * * @dataProvider provideLiterals
      *
      * @param string|mixed $isoFormat
      * @param string|null $phpFormat
@@ -34,7 +38,7 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerLetters()
+    public function provideLetters()
     {
         $result = array(
             // Era name
@@ -124,7 +128,7 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * * @dataProvider providerLetters
+     * * @dataProvider provideLetters
      *
      * @param string $letter
      * @param array $multiplierResults
@@ -140,7 +144,7 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerLocaleFormats()
+    public function provideLocaleFormats()
     {
         return array(
             array(
@@ -165,7 +169,7 @@ class ConvertIsoToPhpFormatTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * * @dataProvider providerLocaleFormats
+     * * @dataProvider provideLocaleFormats
      *
      * @param string $localeID
      * @param array $phpFormatsDate

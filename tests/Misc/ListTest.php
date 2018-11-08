@@ -1,9 +1,12 @@
 <?php
 
+namespace Punic\Test\Misc;
+
 use Punic\Data;
 use Punic\Misc;
+use Punic\Test\TestCase;
 
-class ListTest extends PHPUnit_Framework_TestCase
+class ListTest extends TestCase
 {
     public function testJoin()
     {
@@ -243,14 +246,14 @@ class ListTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidWidthException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
         Misc::joinAnd(array('One', 'Two'), 'invalid-width', 'en');
     }
 
     /**
      * @return array
      */
-    public function providerFixCase()
+    public function provideFixCase()
     {
         return array(
             array('Test', 'test', 'titlecase-words'),
@@ -268,7 +271,7 @@ class ListTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerFixCase
+     * @dataProvider provideFixCase
      *
      * @param string $result
      * @param string $string
@@ -276,6 +279,6 @@ class ListTest extends PHPUnit_Framework_TestCase
      */
     public function testFixCase($result, $string, $case)
     {
-        $this->assertSame($result, \Punic\Misc::fixCase($string, $case));
+        $this->assertSame($result, Misc::fixCase($string, $case));
     }
 }

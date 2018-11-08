@@ -1,13 +1,17 @@
 <?php
 
+namespace Punic\Test\Unit;
+
+use Punic\Exception;
+use Punic\Test\TestCase;
 use Punic\Unit;
 
-class UnitTest extends PHPUnit_Framework_TestCase
+class UnitTest extends TestCase
 {
     /**
      * @return array
      */
-    public function providerFormat()
+    public function provideFormat()
     {
         return array(
             array(
@@ -88,7 +92,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
     /**
      * test format.
      *
-     * @dataProvider providerFormat
+     * @dataProvider provideFormat
      *
      * @param string $result
      * @param array $parameters
@@ -105,7 +109,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
     {
         try {
             Unit::format(2, 'milisecond', 'does-not-exist');
-        } catch (\Punic\Exception\ValueNotInList $ex) {
+        } catch (Exception\ValueNotInList $ex) {
             $this->assertSame('does-not-exist', $ex->getValue());
             $this->assertSame(array('long', 'short', 'narrow'), $ex->getAllowedValues());
         }
@@ -113,20 +117,20 @@ class UnitTest extends PHPUnit_Framework_TestCase
 
     public function testValueNotInListException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'milisecond', 'does-not-exist');
     }
 
     public function testInvalidUnit()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'invalid-unit');
     }
 
     /**
      * @return array
      */
-    public function providerGetUnitName()
+    public function provideGetUnitName()
     {
         return array(
             array('milliseconds', 'millisecond', 'long', 'en_US'),

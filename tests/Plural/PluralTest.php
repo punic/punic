@@ -1,13 +1,17 @@
 <?php
 
-use Punic\Plural;
+namespace Punic\Test\Plural;
 
-class PluralTest extends PHPUnit_Framework_TestCase
+use Exception;
+use Punic\Plural;
+use Punic\Test\TestCase;
+
+class PluralTest extends TestCase
 {
     /**
      * @return array
      */
-    public function providerGetRules()
+    public function provideGetRules()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -26,7 +30,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
      * test getRules
      * expected boolean.
      *
-     * @dataProvider providerGetRules
+     * @dataProvider provideGetRules
      *
      * @param string $rules
      * @param string $language
@@ -35,14 +39,14 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $rules,
-            static::joinPluralRules(\Punic\Plural::getRules($language))
+            static::joinPluralRules(Plural::getRules($language))
         );
     }
 
     /**
      * @return array
      */
-    public function providerGetRuleOfType()
+    public function provideGetRuleOfType()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -83,7 +87,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
      * test getRuleOfType
      * expected boolean.
      *
-     * @dataProvider providerGetRuleOfType
+     * @dataProvider provideGetRuleOfType
      *
      * @param string $rule
      * @param array $parameters
@@ -99,17 +103,17 @@ class PluralTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function testExceptionsProvider()
+    public function provideExceptions()
     {
         return array(
-            array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRuleOfType', array(0, 'invalid rule type'), '\\Punic\\Exception\\ValueNotInList'),
+            array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), 'Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), 'Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(0, 'invalid rule type'), 'Punic\\Exception\\ValueNotInList'),
         );
     }
 
     /**
-     * @dataProvider testExceptionsProvider
+     * @dataProvider provideExceptions
      *
      * @param string $method
      * @param array $parameters
@@ -118,7 +122,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
     public function testExceptions($method, $parameters, $exception)
     {
         $this->setExpectedException($exception);
-        call_user_func_array(array('\Punic\Plural', $method), $parameters);
+        call_user_func_array(array('Punic\Plural', $method), $parameters);
     }
 
     /**
@@ -153,11 +157,11 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
         if (!is_file($testDataFile)) {
-            throw new \Exception('Test data file not found: plurals.php');
+            throw new Exception('Test data file not found: plurals.php');
         }
         $data = @include $testDataFile;
         if (!is_array($data)) {
-            throw new \Exception('Test data file not valid: plurals.php');
+            throw new Exception('Test data file not valid: plurals.php');
         }
 
         return $data;
