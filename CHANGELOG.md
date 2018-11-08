@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### NEXT (YYYY-MM-DD)
+
+
 ### 3.2.0 (2018-11-08)
 
 * CLDR updated from 32.0.1 to 33.1 (@mlocati)
