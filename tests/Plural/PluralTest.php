@@ -11,7 +11,7 @@ class PluralTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetRules()
+    public function provideGetRules()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -30,7 +30,7 @@ class PluralTest extends TestCase
      * test getRules
      * expected boolean.
      *
-     * @dataProvider providerGetRules
+     * @dataProvider provideGetRules
      *
      * @param string $rules
      * @param string $language
@@ -46,7 +46,7 @@ class PluralTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetRuleOfType()
+    public function provideGetRuleOfType()
     {
         $data = static::loadPluralRulesTestData();
         $parameters = array();
@@ -87,7 +87,7 @@ class PluralTest extends TestCase
      * test getRuleOfType
      * expected boolean.
      *
-     * @dataProvider providerGetRuleOfType
+     * @dataProvider provideGetRuleOfType
      *
      * @param string $rule
      * @param array $parameters
@@ -103,7 +103,7 @@ class PluralTest extends TestCase
     /**
      * @return array
      */
-    public function testExceptionsProvider()
+    public function provideExceptions()
     {
         return array(
             array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
@@ -113,7 +113,7 @@ class PluralTest extends TestCase
     }
 
     /**
-     * @dataProvider testExceptionsProvider
+     * @dataProvider provideExceptions
      *
      * @param string $method
      * @param array $parameters

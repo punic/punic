@@ -10,7 +10,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerIsNumeric()
+    public function provideIsNumeric()
     {
         return array(
             array(true, '1,234.56', 'en'),
@@ -19,7 +19,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIsNumeric
+     * @dataProvider provideIsNumeric
      *
      * @param bool $result
      * @param string $value
@@ -36,7 +36,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerIsInteger()
+    public function provideIsInteger()
     {
         return array(
             array(true, '1,234', 'en'),
@@ -47,7 +47,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIsInteger
+     * @dataProvider provideIsInteger
      *
      * @param bool $result
      * @param string $value
@@ -64,7 +64,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerFormat()
+    public function provideFormat()
     {
         return array(
             array('1,234.567', 1234.567, null, 'en'),
@@ -94,7 +94,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerFormat
+     * @dataProvider provideFormat
      *
      * @param string $result
      * @param string|mixed $value
@@ -112,7 +112,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerFormatPercent()
+    public function provideFormatPercent()
     {
         $nbsp = "\xC2\xA0";
 
@@ -142,7 +142,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerFormatPercent
+     * @dataProvider provideFormatPercent
      *
      * @param string $result
      * @param string|mixed $value
@@ -160,7 +160,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerFormatCurrency()
+    public function provideFormatCurrency()
     {
         $nbsp = "\xC2\xA0";
 
@@ -202,7 +202,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerFormatCurrency
+     * @dataProvider provideFormatCurrency
      *
      * @param string $result
      * @param string|mixed $value
@@ -223,7 +223,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerUnformat()
+    public function provideUnformat()
     {
         return array(
             array(1234.567, '1,234.567', 'en'),
@@ -237,7 +237,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerUnformat
+     * @dataProvider provideUnformat
      *
      * @param float|int $result
      * @param string|number $value
@@ -251,7 +251,7 @@ class NumberTest extends TestCase
         );
     }
 
-    public function testExceptionsProvider()
+    public function provideExceptions()
     {
         return array(
             array('formatCurrency', array(0, 'EUR', 'invalid'), '\\Punic\\Exception'),
@@ -259,7 +259,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider testExceptionsProvider
+     * @dataProvider provideExceptions
      *
      * @param string $method
      * @param array $parameters
@@ -274,7 +274,7 @@ class NumberTest extends TestCase
     /**
      * @return array
      */
-    public function providerSpellOut()
+    public function provideSpellOut()
     {
         return array(
             array('', 'foo', 'spellout-numbering', 'en'),
@@ -334,7 +334,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerSpellOut
+     * @dataProvider provideSpellOut
      *
      * @param string $result
      * @param string|number $value

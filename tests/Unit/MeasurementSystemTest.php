@@ -26,7 +26,7 @@ class MeasurementSystemTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetMeasurementSystemFor()
+    public function provideGetMeasurementSystemFor()
     {
         return array(
             array('US', 'US'),
@@ -36,7 +36,7 @@ class MeasurementSystemTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetMeasurementSystemFor
+     * @dataProvider provideGetMeasurementSystemFor
      *
      * @param string $territoryCode
      * @param string $measurementSystemCode
@@ -52,7 +52,7 @@ class MeasurementSystemTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetCountriesWithMeasurementSystem()
+    public function provideGetCountriesWithMeasurementSystem()
     {
         return array(
             array('US', 'US', true),
@@ -63,7 +63,7 @@ class MeasurementSystemTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetCountriesWithMeasurementSystem
+     * @dataProvider provideGetCountriesWithMeasurementSystem
      *
      * @param string $measurementSystemCode
      * @param string $territoryCode
@@ -82,7 +82,7 @@ class MeasurementSystemTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetPaperSizeFor()
+    public function provideGetPaperSizeFor()
     {
         return array(
             array('US', 'US-Letter'),
@@ -92,7 +92,7 @@ class MeasurementSystemTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetPaperSizeFor
+     * @dataProvider provideGetPaperSizeFor
      *
      * @param string $territoryCode
      * @param string $paperSize
@@ -108,7 +108,7 @@ class MeasurementSystemTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetCountriesWithPaperSize()
+    public function provideGetCountriesWithPaperSize()
     {
         return array(
             array('US-Letter', 'US', true),
@@ -119,7 +119,7 @@ class MeasurementSystemTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetCountriesWithPaperSize
+     * @dataProvider provideGetCountriesWithPaperSize
      *
      * @param string $paperSize
      * @param string $territoryCode

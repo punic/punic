@@ -29,7 +29,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
     /**
      * @return array
      */
-    public function providerConvertPhpToIsoFormat()
+    public function provideConvertPhpToIsoFormat()
     {
         $chunks = array(
             // Day
@@ -62,7 +62,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
     }
 
     /**
-     * @dataProvider providerConvertPhpToIsoFormat
+     * @dataProvider provideConvertPhpToIsoFormat
      *
      * @param string $phpFormat
      * @param int $timestamp

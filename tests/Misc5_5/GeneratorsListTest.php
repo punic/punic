@@ -9,13 +9,13 @@ class GeneratorsListTest extends TestCase
 {
     public function testJoinWithGenerators()
     {
-        $this->assertSame('Uno, due o tre', Misc::joinOr($this->generatorProvider(), '', 'it'));
+        $this->assertSame('Uno, due o tre', Misc::joinOr($this->provideGenerator(), '', 'it'));
     }
 
     /**
      * @return \Generator
      */
-    protected function generatorProvider()
+    protected function provideGenerator()
     {
         yield 'Uno';
         yield 'due';

@@ -21,7 +21,7 @@ class DataTest extends TestCase
     /**
      * @return array
      */
-    public function testInvalidLocalesProvider()
+    public function provideInvalidLocales()
     {
         return array(
             array('setFallbackLocale', array(''), '\\Punic\\Exception\\InvalidLocale'),
@@ -40,7 +40,7 @@ class DataTest extends TestCase
     }
 
     /**
-     * @dataProvider testInvalidLocalesProvider
+     * @dataProvider provideInvalidLocales
      *
      * @param string $method
      * @param array $parameters
@@ -88,7 +88,7 @@ class DataTest extends TestCase
     /**
      * @return array
      */
-    public function providerInvalidDataFile()
+    public function provideInvalidDataFile()
     {
         return array(
             array('\\Punic\Exception\InvalidDataFile', 'get', true),
@@ -107,7 +107,7 @@ class DataTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidDataFile
+     * @dataProvider provideInvalidDataFile
      *
      * @param string $exception
      * @param string $method
@@ -130,7 +130,7 @@ class DataTest extends TestCase
     /**
      * @return array
      */
-    public function providerGuessFullLocale()
+    public function provideGuessFullLocale()
     {
         return array(
             array('en-Latn-US', array('en')),
@@ -142,7 +142,7 @@ class DataTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGuessFullLocale
+     * @dataProvider provideGuessFullLocale
      *
      * @param string $result
      * @param array $parameters
@@ -163,7 +163,7 @@ class DataTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetTerritory()
+    public function provideGetTerritory()
     {
         return array(
             array('US', array('en_US')),
@@ -176,7 +176,7 @@ class DataTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetTerritory
+     * @dataProvider provideGetTerritory
      *
      * @param string $result
      * @param array $parameters
@@ -243,7 +243,7 @@ class DataTest extends TestCase
         $this->assertSame('US', Unit::getMeasurementSystemFor('IT'));
     }
 
-    public function invalidOverridesProvider()
+    public function provideInvalidOverrides()
     {
         return array(
             array(
@@ -286,7 +286,7 @@ class DataTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidOverridesProvider
+     * @dataProvider provideInvalidOverrides
      *
      * @param array $overrides
      * @param string $message

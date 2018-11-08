@@ -11,7 +11,7 @@ class UnitTest extends TestCase
     /**
      * @return array
      */
-    public function providerFormat()
+    public function provideFormat()
     {
         return array(
             array(
@@ -92,7 +92,7 @@ class UnitTest extends TestCase
     /**
      * test format.
      *
-     * @dataProvider providerFormat
+     * @dataProvider provideFormat
      *
      * @param string $result
      * @param array $parameters
@@ -130,7 +130,7 @@ class UnitTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetUnitName()
+    public function provideGetUnitName()
     {
         return array(
             array('milliseconds', 'millisecond', 'long', 'en_US'),

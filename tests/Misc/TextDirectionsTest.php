@@ -11,7 +11,7 @@ class TextDirectionsTest extends TestCase
     /**
      * @return array
      */
-    public function providerCharacterOrder()
+    public function provideCharacterOrder()
     {
         return array(
             array('en', 'left-to-right'),
@@ -22,7 +22,7 @@ class TextDirectionsTest extends TestCase
     }
 
     /**
-     * @dataProvider providerCharacterOrder
+     * @dataProvider provideCharacterOrder
      *
      * @param string $locale
      * @param string $expectedDirection
@@ -43,7 +43,7 @@ class TextDirectionsTest extends TestCase
     /**
      * @return array
      */
-    public function providerLineOrder()
+    public function provideLineOrder()
     {
         return array(
             array('en', 'top-to-bottom'),
@@ -54,7 +54,7 @@ class TextDirectionsTest extends TestCase
     }
 
     /**
-     * @dataProvider providerLineOrder
+     * @dataProvider provideLineOrder
      *
      * @param string $locale
      * @param string $expectedDirection

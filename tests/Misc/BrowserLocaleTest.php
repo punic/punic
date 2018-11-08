@@ -25,7 +25,7 @@ class BrowserLocaleTest extends TestCase
     /**
      * @return array
      */
-    public function providerParseHttpAcceptLanguage()
+    public function provideParseHttpAcceptLanguage()
     {
         return array(
             array('helloworld', array()),
@@ -43,7 +43,7 @@ class BrowserLocaleTest extends TestCase
     }
 
     /**
-     * @dataProvider providerParseHttpAcceptLanguage
+     * @dataProvider provideParseHttpAcceptLanguage
      *
      * @param string $httpAcceptLanguages
      * @param array $expected

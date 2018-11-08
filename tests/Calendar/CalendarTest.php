@@ -184,7 +184,7 @@ class CalendarTest extends TestCase
     /**
      * @return array
      */
-    public function providerConvertPhpToIso()
+    public function provideConvertPhpToIso()
     {
         return array(
             array("dd MMMM yyyy 'alle' H:mm:ss", 'd F Y \a\l\l\e G:i:s'),
@@ -197,7 +197,7 @@ class CalendarTest extends TestCase
      * test convertPhpToIso
      * expected boolean.
      *
-     * @dataProvider providerConvertPhpToIso
+     * @dataProvider provideConvertPhpToIso
      *
      * @param string $a
      * @param string $b
@@ -312,7 +312,7 @@ class CalendarTest extends TestCase
         );
     }
 
-    public function testExceptionsProvider()
+    public function provideExceptions()
     {
         return array(
             array('getDatetimeFormat', array('invalid-width'), '\\Punic\\Exception'),
@@ -386,7 +386,7 @@ class CalendarTest extends TestCase
     }
 
     /**
-     * @dataProvider testExceptionsProvider
+     * @dataProvider provideExceptions
      *
      * @param string $method
      * @param array $parameters
@@ -2153,7 +2153,7 @@ class CalendarTest extends TestCase
     /**
      * @return array
      */
-    public function providerDescribeInterval()
+    public function provideDescribeInterval()
     {
         $now = new DateTime('2017-11-01T16:18:44', new DateTimeZone('Europe/Rome'));
         $before1 = clone $now;
@@ -2189,7 +2189,7 @@ class CalendarTest extends TestCase
     /**
      * Test describeInterval.
      *
-     * @dataProvider providerDescribeInterval
+     * @dataProvider provideDescribeInterval
      *
      * @param string $expected
      * @param \DateTime $dateEnd
@@ -2209,7 +2209,7 @@ class CalendarTest extends TestCase
     /**
      * Test describeInterval.
      *
-     * @dataProvider providerDescribeInterval
+     * @dataProvider provideDescribeInterval
      */
     public function testDescribeInterval2()
     {
@@ -2270,7 +2270,7 @@ class CalendarTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetDeltaDays()
+    public function provideGetDeltaDays()
     {
         return array(
             array(0, array(new DateTime())),
@@ -2283,7 +2283,7 @@ class CalendarTest extends TestCase
     /**
      * Test getDeltaDays.
      *
-     * @dataProvider providerGetDeltaDays
+     * @dataProvider provideGetDeltaDays
      *
      * @param int $expected
      * @param array $arguments
@@ -2311,7 +2311,7 @@ class CalendarTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetTimezonesAliases()
+    public function provideGetTimezonesAliases()
     {
         return array(
           array('Asmara', 'Africa/Asmara'),
@@ -2336,7 +2336,7 @@ class CalendarTest extends TestCase
     /**
      * Test getTimezonesAliases.
      *
-     * @dataProvider providerGetTimezonesAliases
+     * @dataProvider provideGetTimezonesAliases
      *
      * @param string $expected
      * @param string $phpTimezoneName

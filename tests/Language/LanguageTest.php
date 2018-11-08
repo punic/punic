@@ -39,7 +39,7 @@ class LanguageTest extends TestCase
     /**
      * @return string
      */
-    public function providerGetName()
+    public function provideGetName()
     {
         return array(
             array('English', 'en', 'en', false),
@@ -67,7 +67,7 @@ class LanguageTest extends TestCase
     /**
      * test getName.
      *
-     * @dataProvider providerGetName
+     * @dataProvider provideGetName
      *
      * @param string $result
      * @param string $languageCode

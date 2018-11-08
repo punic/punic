@@ -10,7 +10,7 @@ class PhoneTest extends TestCase
     /**
      * @return array
      */
-    public function somePrefixes()
+    public function providePrefixes()
     {
         return array(
             array('US', '1'),
@@ -22,7 +22,7 @@ class PhoneTest extends TestCase
     }
 
     /**
-     * @dataProvider somePrefixes
+     * @dataProvider providePrefixes
      *
      * @param string $territoryCode
      * @param string $prefix
@@ -36,7 +36,7 @@ class PhoneTest extends TestCase
     }
 
     /**
-     * @dataProvider somePrefixes
+     * @dataProvider providePrefixes
      *
      * @param string $territoryCode
      * @param string $prefix

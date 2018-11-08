@@ -26,7 +26,7 @@ class CurrencyTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetInfo()
+    public function provideGetInfo()
     {
         return array(
             array('en', 'USD', null, 'US Dollar', '$', '$', '', 840),
@@ -42,7 +42,7 @@ class CurrencyTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetInfo
+     * @dataProvider provideGetInfo
      *
      * @param string $locale
      * @param string $currencyCode
@@ -72,7 +72,7 @@ class CurrencyTest extends TestCase
     /**
      * @return array
      */
-    public function providerGetCurrencyForTerritory()
+    public function provideGetCurrencyForTerritory()
     {
         return array(
             array('US', 'USD'),
@@ -83,7 +83,7 @@ class CurrencyTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetCurrencyForTerritory
+     * @dataProvider provideGetCurrencyForTerritory
      *
      * @param string $territoryCode
      * @param string $currencyCode

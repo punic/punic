@@ -253,7 +253,7 @@ class ListTest extends TestCase
     /**
      * @return array
      */
-    public function providerFixCase()
+    public function provideFixCase()
     {
         return array(
             array('Test', 'test', 'titlecase-words'),
@@ -271,7 +271,7 @@ class ListTest extends TestCase
     }
 
     /**
-     * @dataProvider providerFixCase
+     * @dataProvider provideFixCase
      *
      * @param string $result
      * @param string $string
