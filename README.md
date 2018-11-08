@@ -1,4 +1,5 @@
-[![Build Status](https://api.travis-ci.org/punic/punic.svg?branch=master)](https://travis-ci.org/punic/punic)
+[![Travis CI Build Status](https://api.travis-ci.org/punic/punic.svg?branch=master)](https://travis-ci.org/punic/punic)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/punic/punic?branch=master&svg=true)](https://ci.appveyor.com/project/punic/punic)
 [![Coverage Status](https://img.shields.io/coveralls/punic/punic.svg)](https://coveralls.io/r/punic/punic)
 [![Monthly Downloads](https://poser.pugx.org/punic/punic/d/monthly.svg)](https://packagist.org/packages/punic/punic)
 [![Join the chat at https://gitter.im/punic/punic](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/punic/punic?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
