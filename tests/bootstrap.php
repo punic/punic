@@ -22,5 +22,3 @@ spl_autoload_register(
 );
 
 require_once dirname(__DIR__).'/punic.php';
-
-PHPUnit_Framework_Error_Notice::$enabled = true;
