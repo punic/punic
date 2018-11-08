@@ -312,7 +312,7 @@ class Number
     {
         $data = Data::get('rbnf', $locale);
         if (!isset($data[$type])) {
-            $data += Data::get('rbnf', 'root');
+            $data += Data::get('rbnf', 'root', true);
         }
         if (!isset($data[$type])) {
             throw new Exception\ValueNotInList($type, array_keys($data));
@@ -410,9 +410,9 @@ class Number
 
             // Add .5 to avoid floating-point rounding error in PHP 5. $base is
             // an integer, so adding a number < 1 will not break anything.
-            $divisor = pow($radix, (int) log($base + .5, $radix));
+            $divisor = pow($radix, floor(abs(log($base + .5, $radix))));
 
-            $right = $value % $divisor;
+            $right = fmod($value, $divisor);
             $left = floor($value / $divisor);
 
             if ($right) {
