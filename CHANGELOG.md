@@ -1,25 +1,43 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.2.0 (2018-11-08)
 
 * CLDR updated from 32.0.1 to 33.1 (@mlocati)
+  See #148, #156
 * Draft status of CLDR data changed from *unconfirmed* to *contributed* (@mlocati)
+  See #156
 * Added possibility to overrides data (`Punic\Data::getOverrides`, `Punic\Data::setOverrides`, `Punic\Data::getOverridesGeneric`, `Punic\Data::setOverridesGeneric`) (@c960657)
+  See #136
 * Added `Punic\Number::formatPercent()` (@c960657)
+  See #144
 * Added `Punic\Number::formatCurrency()` (@c960657)
-* Added `Punic\Number::spellOut()` (@c960657)
+  See #144
+* Added `Punic\Number::spellOut()` (@c960657, @mlocati)
+  See #147, #155
 * Allow using custom data directory (@c960657)
+  See #132
 * `Punic\Territory` *get* methods now support territory subdivisions (Provinces, Counties, ...) (@c960657, @mlocati)
+  See #133
 * Time zone aliases are now extracted from CLDR instead of hard coding them (@c960657)
+  See #134
 * Added `Punic\Currency::getNumericCode` and `Punic\Currency::getByNumericCode` (@c960657)
+  See #138
 * Added `Punic\Territory::getCode` and `Punic\Territory::getByCode` (@c960657)
+  See #138
 * Fix `[ALL]` languages placeholder in `punic-data` CLI command (@mlocati)
+  See #131
 * Fix handling of minutes/month in Calendar intervals (@c960657)
+  See #143
 * Support explicit timezone translations (@c960657)
+  See #140
 * Localise infinity and NaN (@c960657)
+  See #146
 * Minor performance improvements (@c960657)
+  See #145
 * `Punic\Plural::getRule` has been deprecated: use `Punic\Plural::getRuleOfType` (@mlocati)
+  See #151
 * **BREAKING CHANGE** `Punic\Territory::getChildTerritoryCodes()` changed its signature (a new argument with a default value has been added) (@c960657)
+  See #138
 
 
 ### 3.1.0 (2018-02-09)
