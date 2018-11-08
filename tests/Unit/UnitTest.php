@@ -1,8 +1,12 @@
 <?php
 
+namespace Punic\Test\Unit;
+
+use Punic\Exception;
+use Punic\Test\TestCase;
 use Punic\Unit;
 
-class UnitTest extends PHPUnit_Framework_TestCase
+class UnitTest extends TestCase
 {
     /**
      * @return array
@@ -105,7 +109,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
     {
         try {
             Unit::format(2, 'milisecond', 'does-not-exist');
-        } catch (\Punic\Exception\ValueNotInList $ex) {
+        } catch (Exception\ValueNotInList $ex) {
             $this->assertSame('does-not-exist', $ex->getValue());
             $this->assertSame(array('long', 'short', 'narrow'), $ex->getAllowedValues());
         }

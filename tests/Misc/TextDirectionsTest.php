@@ -1,8 +1,12 @@
 <?php
 
-use Punic\Misc;
+namespace Punic\Test\Misc;
 
-class TextDirectionsTest extends PHPUnit_Framework_TestCase
+use Punic\Data;
+use Punic\Misc;
+use Punic\Test\TestCase;
+
+class TextDirectionsTest extends TestCase
 {
     /**
      * @return array
@@ -30,9 +34,9 @@ class TextDirectionsTest extends PHPUnit_Framework_TestCase
 
     public function testCharacterOrderDefault()
     {
-        \Punic\Data::setDefaultLocale('ar');
+        Data::setDefaultLocale('ar');
         $this->assertSame('right-to-left', Misc::getCharacterOrder());
-        \Punic\Data::setDefaultLocale('en_US');
+        Data::setDefaultLocale('en_US');
         $this->assertSame('left-to-right', Misc::getCharacterOrder());
     }
 
@@ -62,9 +66,9 @@ class TextDirectionsTest extends PHPUnit_Framework_TestCase
 
     public function testLineOrderDefault()
     {
-        \Punic\Data::setDefaultLocale('ar');
+        Data::setDefaultLocale('ar');
         $this->assertSame('top-to-bottom', Misc::getLineOrder());
-        \Punic\Data::setDefaultLocale('en_US');
+        Data::setDefaultLocale('en_US');
         $this->assertSame('top-to-bottom', Misc::getLineOrder());
     }
 }

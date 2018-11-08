@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Misc;
+namespace Punic\Test\Misc5_5;
 
-class GeneratorsListTest extends PHPUnit_Framework_TestCase
+use Punic\Misc;
+use Punic\Test\TestCase;
+
+class GeneratorsListTest extends TestCase
 {
     public function testJoinWithGenerators()
     {
@@ -10,7 +13,7 @@ class GeneratorsListTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Generator
+     * @return \Generator
      */
     protected function generatorProvider()
     {

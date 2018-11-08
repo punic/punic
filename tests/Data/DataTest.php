@@ -1,11 +1,16 @@
 <?php
 
+namespace Punic\Test\Data;
+
 use Punic\Calendar;
 use Punic\Data;
+use Punic\Exception;
 use Punic\Territory;
+use Punic\Test\TestCase;
 use Punic\Unit;
+use stdClass;
 
-class DataTest extends PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
     protected function tearDown()
     {
@@ -23,13 +28,13 @@ class DataTest extends PHPUnit_Framework_TestCase
             array('setFallbackLocale', array(null), '\\Punic\\Exception\\InvalidLocale'),
             array('setFallbackLocale', array(true), '\\Punic\\Exception\\InvalidLocale'),
             array('setFallbackLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
-            array('setFallbackLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
+            array('setFallbackLocale', array(new stdClass()), '\\Punic\\Exception\\InvalidLocale'),
             array('setFallbackLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
             array('setDefaultLocale', array(''), '\\Punic\\Exception\\InvalidLocale'),
             array('setDefaultLocale', array(null), '\\Punic\\Exception\\InvalidLocale'),
             array('setDefaultLocale', array(true), '\\Punic\\Exception\\InvalidLocale'),
             array('setDefaultLocale', array(false), '\\Punic\\Exception\\InvalidLocale'),
-            array('setDefaultLocale', array(new \stdClass()), '\\Punic\\Exception\\InvalidLocale'),
+            array('setDefaultLocale', array(new stdClass()), '\\Punic\\Exception\\InvalidLocale'),
             array('setDefaultLocale', array('invalid'), '\\Punic\\Exception\\InvalidLocale'),
         );
     }
@@ -51,7 +56,7 @@ class DataTest extends PHPUnit_Framework_TestCase
     {
         try {
             Data::setFallbackLocale('invalid');
-        } catch (\Punic\Exception\InvalidLocale $ex) {
+        } catch (Exception\InvalidLocale $ex) {
             $this->assertSame('invalid', $ex->getLocale());
         }
     }
@@ -59,25 +64,25 @@ class DataTest extends PHPUnit_Framework_TestCase
     public function testDefaultLocale()
     {
         Data::setDefaultLocale('it');
-        $this->assertSame('it', \Punic\Data::getDefaultLocale());
+        $this->assertSame('it', Data::getDefaultLocale());
     }
 
     public function testDefaultLanguage()
     {
         Data::setDefaultLocale('de_DE');
-        $this->assertSame('de', \Punic\Data::getDefaultLanguage());
+        $this->assertSame('de', Data::getDefaultLanguage());
     }
 
     public function testFallbackLocale()
     {
         Data::setFallbackLocale('it');
-        $this->assertSame('it', \Punic\Data::getFallbackLocale());
+        $this->assertSame('it', Data::getFallbackLocale());
     }
 
     public function testFallbackLanguage()
     {
         Data::setFallbackLocale('de_DE');
-        $this->assertSame('de', \Punic\Data::getFallbackLanguage());
+        $this->assertSame('de', Data::getFallbackLanguage());
     }
 
     /**

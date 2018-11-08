@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Territory;
+namespace Punic\Test\Territory;
 
-class TerritoryTest extends PHPUnit_Framework_TestCase
+use Punic\Territory;
+use Punic\Test\TestCase;
+
+class TerritoryTest extends TestCase
 {
     /**
      * @return array

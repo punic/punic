@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Language;
+namespace Punic\Test\Language;
 
-class LanguageTest extends PHPUnit_Framework_TestCase
+use Punic\Language;
+use Punic\Test\TestCase;
+
+class LanguageTest extends TestCase
 {
     public function testGetAll()
     {

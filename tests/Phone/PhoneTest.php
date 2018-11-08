@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Phone;
+namespace Punic\Test\Phone;
 
-class PhoneTest extends PHPUnit_Framework_TestCase
+use Punic\Phone;
+use Punic\Test\TestCase;
+
+class PhoneTest extends TestCase
 {
     /**
      * @return array

@@ -1,9 +1,12 @@
 <?php
 
+namespace Punic\Test\Misc;
+
 use Punic\Data;
 use Punic\Misc;
+use Punic\Test\TestCase;
 
-class ListTest extends PHPUnit_Framework_TestCase
+class ListTest extends TestCase
 {
     public function testJoin()
     {
@@ -276,6 +279,6 @@ class ListTest extends PHPUnit_Framework_TestCase
      */
     public function testFixCase($result, $string, $case)
     {
-        $this->assertSame($result, \Punic\Misc::fixCase($string, $case));
+        $this->assertSame($result, Misc::fixCase($string, $case));
     }
 }

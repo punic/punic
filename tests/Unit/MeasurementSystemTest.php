@@ -1,12 +1,18 @@
 <?php
 
-class MeasurementSystemTest extends PHPUnit_Framework_TestCase
+namespace Punic\Test\Unit;
+
+use Punic\Data;
+use Punic\Test\TestCase;
+use Punic\Unit;
+
+class MeasurementSystemTest extends TestCase
 {
     public function testIdentifiersConsistency()
     {
         $keys = null;
-        foreach (\Punic\Data::getAvailableLocales(true) as $locale) {
-            $theseKeys = array_keys(\Punic\Unit::getMeasurementSystems($locale));
+        foreach (Data::getAvailableLocales(true) as $locale) {
+            $theseKeys = array_keys(Unit::getMeasurementSystems($locale));
             sort($theseKeys);
             if (null === $keys) {
                 $keys = $theseKeys;
@@ -39,7 +45,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $measurementSystemCode,
-            \Punic\Unit::getMeasurementSystemFor($territoryCode)
+            Unit::getMeasurementSystemFor($territoryCode)
         );
     }
 
@@ -65,7 +71,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCountriesWithMeasurementSystem($measurementSystemCode, $territoryCode, $territoryPresent)
     {
-        $countries = \Punic\Unit::getCountriesWithMeasurementSystem($measurementSystemCode);
+        $countries = Unit::getCountriesWithMeasurementSystem($measurementSystemCode);
         if ($territoryPresent) {
             $this->assertContains($territoryCode, $countries);
         } else {
@@ -95,7 +101,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $paperSize,
-            \Punic\Unit::getPaperSizeFor($territoryCode)
+            Unit::getPaperSizeFor($territoryCode)
         );
     }
 
@@ -121,7 +127,7 @@ class MeasurementSystemTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCountriesWithPaperSize($paperSize, $territoryCode, $territoryPresent)
     {
-        $countries = \Punic\Unit::getCountriesWithPaperSize($paperSize);
+        $countries = Unit::getCountriesWithPaperSize($paperSize);
         if ($territoryPresent) {
             $this->assertContains($territoryCode, $countries);
         } else {

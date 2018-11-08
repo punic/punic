@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Misc;
+namespace Punic\Test\Misc;
 
-class BrowserLocaleTest extends PHPUnit_Framework_TestCase
+use Punic\Misc;
+use Punic\Test\TestCase;
+
+class BrowserLocaleTest extends TestCase
 {
     public function testBrowserLocales()
     {

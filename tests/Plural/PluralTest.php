@@ -1,8 +1,12 @@
 <?php
 
-use Punic\Plural;
+namespace Punic\Test\Plural;
 
-class PluralTest extends PHPUnit_Framework_TestCase
+use Exception;
+use Punic\Plural;
+use Punic\Test\TestCase;
+
+class PluralTest extends TestCase
 {
     /**
      * @return array
@@ -35,7 +39,7 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             $rules,
-            static::joinPluralRules(\Punic\Plural::getRules($language))
+            static::joinPluralRules(Plural::getRules($language))
         );
     }
 
@@ -153,11 +157,11 @@ class PluralTest extends PHPUnit_Framework_TestCase
     {
         $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
         if (!is_file($testDataFile)) {
-            throw new \Exception('Test data file not found: plurals.php');
+            throw new Exception('Test data file not found: plurals.php');
         }
         $data = @include $testDataFile;
         if (!is_array($data)) {
-            throw new \Exception('Test data file not valid: plurals.php');
+            throw new Exception('Test data file not valid: plurals.php');
         }
 
         return $data;

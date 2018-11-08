@@ -9,6 +9,18 @@ if (empty($timezone_identifier)) {
 date_default_timezone_set($timezone_identifier);
 unset($timezone_identifier);
 
+spl_autoload_register(
+    function ($class) {
+        if (strpos($class, 'Punic\\Test\\') !== 0) {
+            return;
+        }
+        $file = __DIR__.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen('Punic\\Test'))).'.php';
+        if (is_file($file)) {
+            require_once $file;
+        }
+    }
+);
+
 require_once dirname(__DIR__).'/punic.php';
 
 PHPUnit_Framework_Error_Notice::$enabled = true;

@@ -1,8 +1,13 @@
 <?php
 
-use Punic\Calendar;
+namespace Punic\Test\Calendar;
 
-class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
+use DateTime;
+use DateTimeZone;
+use Punic\Calendar;
+use Punic\Test\TestCase;
+
+class ConvertPhpToIsoFormatTest extends TestCase
 {
     const TEST_TIMEZONE = 'America/Los_Angeles';
     private $previousTimezone;
@@ -61,7 +66,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
      *
      * @param string $phpFormat
      * @param int $timestamp
-     * @param DateTime $dateTime
+     * @param \DateTime $dateTime
      */
     public function testConvertPhpToIsoFormat($phpFormat, $timestamp, DateTime $dateTime)
     {
@@ -76,7 +81,7 @@ class ConvertPhpToIsoFormatTest extends PHPUnit_Framework_TestCase
     /**
      * @param int $timestamp
      *
-     * @return DateTime
+     * @return \DateTime
      */
     private static function timestampToDateTime($timestamp)
     {

@@ -1,8 +1,11 @@
 <?php
 
-use Punic\Number;
+namespace Punic\Test\Number;
 
-class NumberTest extends PHPUnit_Framework_TestCase
+use Punic\Number;
+use Punic\Test\TestCase;
+
+class NumberTest extends TestCase
 {
     /**
      * @return array
@@ -333,7 +336,7 @@ class NumberTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerSpellOut
      *
-     * @param strinf $result
+     * @param string $result
      * @param string|number $value
      * @param string $locale
      * @param mixed $type
