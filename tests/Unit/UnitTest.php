@@ -117,13 +117,13 @@ class UnitTest extends TestCase
 
     public function testValueNotInListException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'milisecond', 'does-not-exist');
     }
 
     public function testInvalidUnit()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList');
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList');
         Unit::format(2, 'invalid-unit');
     }
 

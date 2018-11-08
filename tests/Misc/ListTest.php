@@ -246,7 +246,7 @@ class ListTest extends TestCase
 
     public function testInvalidWidthException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
+        $this->setExpectedException('Punic\\Exception\\ValueNotInList', "'invalid-width' is not valid. Acceptable values are: '', 'short', 'narrow'");
         Misc::joinAnd(array('One', 'Two'), 'invalid-width', 'en');
     }
 

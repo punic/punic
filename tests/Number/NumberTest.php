@@ -254,7 +254,7 @@ class NumberTest extends TestCase
     public function provideExceptions()
     {
         return array(
-            array('formatCurrency', array(0, 'EUR', 'invalid'), '\\Punic\\Exception'),
+            array('formatCurrency', array(0, 'EUR', 'invalid'), 'Punic\\Exception'),
         );
     }
 

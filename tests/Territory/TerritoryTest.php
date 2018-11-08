@@ -155,8 +155,8 @@ class TerritoryTest extends TestCase
 
     public function testInvalidTerritoryTypeException()
     {
-        $this->setExpectedException('\\Punic\\Exception\\BadArgumentType');
-        $list = Territory::getList('a');
+        $this->setExpectedException('Punic\\Exception\\BadArgumentType');
+        Territory::getList('a');
     }
 
     public function testTerritoriesWithInfo()

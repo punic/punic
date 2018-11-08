@@ -106,9 +106,9 @@ class PluralTest extends TestCase
     public function provideExceptions()
     {
         return array(
-            array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), '\\Punic\\Exception\\BadArgumentType'),
-            array('getRuleOfType', array(0, 'invalid rule type'), '\\Punic\\Exception\\ValueNotInList'),
+            array('getRuleOfType', array('not-a-number', Plural::RULETYPE_CARDINAL), 'Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(true, Plural::RULETYPE_CARDINAL), 'Punic\\Exception\\BadArgumentType'),
+            array('getRuleOfType', array(0, 'invalid rule type'), 'Punic\\Exception\\ValueNotInList'),
         );
     }
 
@@ -122,7 +122,7 @@ class PluralTest extends TestCase
     public function testExceptions($method, $parameters, $exception)
     {
         $this->setExpectedException($exception);
-        call_user_func_array(array('\Punic\Plural', $method), $parameters);
+        call_user_func_array(array('Punic\Plural', $method), $parameters);
     }
 
     /**
