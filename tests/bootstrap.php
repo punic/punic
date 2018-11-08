@@ -22,3 +22,11 @@ spl_autoload_register(
 );
 
 require_once dirname(__DIR__).'/punic.php';
+$dataDir = (string) getenv('PUNIC_TEST_DATADIR');
+if ($dataDir !== '') {
+    if (!is_dir($dataDir)) {
+        throw new Exception("The PUNIC_TEST_DATADIR environment variable points to a non existing directory ({$dataDir}).");
+    }
+    Punic\Data::setDataDirectory($dataDir);
+}
+unset($dataDir);

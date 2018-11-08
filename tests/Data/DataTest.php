@@ -123,7 +123,7 @@ class DataTest extends TestCase
     {
         $locales = Data::getAvailableLocales();
         // this list isn't static, we assume that something between 1 and 320 locales is okay
-        $this->assertLessThan(2000, count($locales));
+        $this->assertLessThan(4000, count($locales));
         $this->assertGreaterThan(1, count($locales));
     }
 
