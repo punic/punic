@@ -434,7 +434,7 @@
 </span><span id="312" class="l">    {
 </span><span id="313" class="l">        <span class="php-var">$data</span> = Data::get(<span class="php-quote">'rbnf'</span>, <span class="php-var">$locale</span>);
 </span><span id="314" class="l">        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-var">$type</span>])) {
-</span><span id="315" class="l">            <span class="php-var">$data</span> += Data::get(<span class="php-quote">'rbnf'</span>, <span class="php-quote">'root'</span>);
+</span><span id="315" class="l">            <span class="php-var">$data</span> += Data::get(<span class="php-quote">'rbnf'</span>, <span class="php-quote">'root'</span>, <span class="php-keyword1">true</span>);
 </span><span id="316" class="l">        }
 </span><span id="317" class="l">        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-var">$type</span>])) {
 </span><span id="318" class="l">            <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Exception\ValueNotInList(<span class="php-var">$type</span>, <span class="php-keyword2">array_keys</span>(<span class="php-var">$data</span>));
@@ -532,9 +532,9 @@
 </span><span id="410" class="l">
 </span><span id="411" class="l">            <span class="php-comment">// Add .5 to avoid floating-point rounding error in PHP 5. $base is</span>
 </span><span id="412" class="l">            <span class="php-comment">// an integer, so adding a number &lt; 1 will not break anything.</span>
-</span><span id="413" class="l">            <span class="php-var">$divisor</span> = <span class="php-keyword2">pow</span>(<span class="php-var">$radix</span>, (int) <span class="php-keyword2">log</span>(<span class="php-var">$base</span> + <span class="php-num">.5</span>, <span class="php-var">$radix</span>));
+</span><span id="413" class="l">            <span class="php-var">$divisor</span> = <span class="php-keyword2">pow</span>(<span class="php-var">$radix</span>, <span class="php-keyword2">floor</span>(<span class="php-keyword2">abs</span>(<span class="php-keyword2">log</span>(<span class="php-var">$base</span> + <span class="php-num">.5</span>, <span class="php-var">$radix</span>))));
 </span><span id="414" class="l">
-</span><span id="415" class="l">            <span class="php-var">$right</span> = <span class="php-var">$value</span> % <span class="php-var">$divisor</span>;
+</span><span id="415" class="l">            <span class="php-var">$right</span> = <span class="php-keyword2">fmod</span>(<span class="php-var">$value</span>, <span class="php-var">$divisor</span>);
 </span><span id="416" class="l">            <span class="php-var">$left</span> = <span class="php-keyword2">floor</span>(<span class="php-var">$value</span> / <span class="php-var">$divisor</span>);
 </span><span id="417" class="l">
 </span><span id="418" class="l">            <span class="php-keyword1">if</span> (<span class="php-var">$right</span>) {
