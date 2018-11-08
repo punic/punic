@@ -312,7 +312,7 @@ class Number
     {
         $data = Data::get('rbnf', $locale);
         if (!isset($data[$type])) {
-            $data += Data::get('rbnf', 'root');
+            $data += Data::get('rbnf', 'root', true);
         }
         if (!isset($data[$type])) {
             throw new Exception\ValueNotInList($type, array_keys($data));

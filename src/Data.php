@@ -228,6 +228,7 @@ class Data
      *
      * @param string $identifier The data identifier
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
+     * @param bool $exactMatch when $locale is specified, don't look for alternatives
      *
      * @throws \Punic\Exception Throws an exception in case of problems
      *
@@ -235,24 +236,32 @@ class Data
      *
      * @internal
      */
-    public static function get($identifier, $locale = '')
+    public static function get($identifier, $locale = '', $exactMatch = false)
     {
         if (!is_string($identifier) || $identifier === '') {
             throw new Exception\InvalidDataFile($identifier);
         }
         if (empty($locale)) {
             $locale = static::$defaultLocale;
+            $exactMatch = false;
+        } elseif ($exactMatch && !preg_match('/^\w+$/', $locale)) {
+            $exactMatch = false;
         }
-        if (!isset(static::$cache[$locale])) {
-            static::$cache[$locale] = array();
+        $cacheKey = $locale.'@'.($exactMatch ? '1' : '0');
+        if (!isset(static::$cache[$cacheKey])) {
+            static::$cache[$cacheKey] = array();
         }
-        if (!isset(static::$cache[$locale][$identifier])) {
+        if (!isset(static::$cache[$cacheKey][$identifier])) {
             if (!@preg_match('/^[a-zA-Z0-9_\\-]+$/', $identifier)) {
                 throw new Exception\InvalidDataFile($identifier);
             }
-            $dir = static::getLocaleFolder($locale);
-            if ($dir === '') {
-                throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
+            if ($exactMatch) {
+                $dir = $locale;
+            } else {
+                $dir = static::getLocaleFolder($locale);
+                if ($dir === '') {
+                    throw new Exception\DataFolderNotFound($locale, static::$fallbackLocale);
+                }
             }
             $file = static::getDataDirectory().DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$identifier.'.php';
             if (!is_file($file)) {
@@ -268,10 +277,10 @@ class Data
                 $data = static::merge($data, static::$overrides[$locale][$identifier]);
             }
             //@codeCoverageIgnoreEnd
-            static::$cache[$locale][$identifier] = $data;
+            static::$cache[$cacheKey][$identifier] = $data;
         }
 
-        return static::$cache[$locale][$identifier];
+        return static::$cache[$cacheKey][$identifier];
     }
 
     /**
