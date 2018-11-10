@@ -1705,6 +1705,10 @@ class CalendarTest extends TestCase
             'Ieri 14:15',
             Calendar::formatDateTime($yesterday, 'full|short^|short', 'it')
         );
+        $this->assertSame(
+            'October 12, 2010 at 11:59:00 PM UTC',
+            Calendar::formatDateTime(Calendar::toDateTime('2010-10-12 23:59 UTC'), 'long')
+        );
     }
 
     public function testFormatDateTimeEx()
