@@ -99,9 +99,9 @@ class UnitTest extends TestCase
      */
     public function testFormat($result, $parameters)
     {
-        $this->assertSame(
-            $result,
-            Unit::format($parameters[0], $parameters[1], $parameters[2], $parameters[3])
+        $this->assertContains(
+            Unit::format($parameters[0], $parameters[1], $parameters[2], $parameters[3]),
+            array($result, str_replace(' ', "\xC2\xA0", $result))
         );
     }
 
