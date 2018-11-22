@@ -17,7 +17,7 @@ class PhoneTest extends TestCase
             array('CA', '1'),
             array('IT', '39'),
             array('DE', '49'),
-            array('001', '388'),
+            array('001', '800'),
         );
     }
 
