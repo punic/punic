@@ -2194,7 +2194,7 @@ class Calendar
      *
      * @param string $format
      *
-     * @return array An array containing two entries, each representing a datetime format
+     * @return string[] An array containing two entries, each representing a datetime format
      *
      * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
      */
@@ -2887,7 +2887,7 @@ class Calendar
      * @param \DateTime|\DateTimeInterface $value
      * @param int $count
      * @param string $locale
-     * @param mixed $zForZero
+     * @param bool $zForZero
      *
      * @return string
      */

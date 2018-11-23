@@ -7,7 +7,7 @@ namespace Punic;
  */
 class Territory
 {
-    private static $CODE_TYPES = array('alpha3', 'numeric', 'fips10', 'internet');
+    private static $CODE_TYPES = array('alpha3', 'numeric', 'fips10');
 
     /**
      * Retrieve the name of a territory/subdivision (country, continent, ...).
@@ -40,11 +40,11 @@ class Territory
      * Retrieve the code of a territory in a different coding system.
      *
      * @param string $territoryCode The territory code
-     * @param string $type The type of code to return. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains
+     * @param string $type The type of code to return. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, or "fips10" for FIPS 10 codes
      *
      * @throws \Punic\Exception\ValueNotInList throws a ValueNotInList exception if $type is not valid
      *
-     * @return string|array returns the code for the specified territory, or an array of codes when $type is "internet", or an empty string if the code is not defined for the territory or the territory is unknown
+     * @return string|array returns the code for the specified territory, or an empty string if the code is not defined for the territory or the territory is unknown
      *
      * @see http://unicode.org/reports/tr35/tr35-info.html#Supplemental_Code_Mapping
      */
@@ -61,8 +61,6 @@ class Territory
             $result = '';
         } elseif (isset($territories[$territoryCode][$type])) {
             $result = $territories[$territoryCode][$type];
-        } elseif ($type === 'internet') {
-            $result = array($territoryCode);
         } elseif ($type !== 'numeric' && $type !== 'alpha3') {
             $result = $territoryCode;
         } else {
@@ -76,7 +74,7 @@ class Territory
      * Retrieve the territory code given its code in a different coding system.
      *
      * @param string $code The code
-     * @param string $type The type of code provided. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains
+     * @param string $type The type of code provided. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, or "fips10" for FIPS 10 codes
      *
      * @throws \Punic\Exception\ValueNotInList throws a ValueNotInList exception if $type is not valid
      *
