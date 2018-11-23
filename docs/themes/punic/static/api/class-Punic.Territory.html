@@ -130,7 +130,7 @@
 		<b>Namespace:</b> <a href="namespace-Punic.html">Punic</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-Punic.Territory.html#5-577" title="Go to source code">Territory.php</a>
+			<b>Located at</b> <a href="source-class-Punic.Territory.html#5-575" title="Go to source code">Territory.php</a>
 		<br>
 	</div>
 
@@ -190,7 +190,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getCode">#</a>
-			<code><a href="source-class-Punic.Territory.html#39-73" title="Go to source code">getCode</a>( <span>string <var>$territoryCode</var></span>, <span>string <var>$type</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#39-71" title="Go to source code">getCode</a>( <span>string <var>$territoryCode</var></span>, <span>string <var>$type</var></span> )</code>
 
 			<div class="description short">
 				<p>Retrieve the code of a territory in a different coding system.</p>
@@ -205,12 +205,12 @@
 						<dt><var>$territoryCode</var></dt>
 						<dd>The territory code</dd>
 						<dt><var>$type</var></dt>
-						<dd>The type of code to return. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains</dd>
+						<dd>The type of code to return. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, or "fips10" for FIPS 10 codes</dd>
 					</dl></div>
 
 					<h4>Returns</h4>
 					<div class="list">
-						string|array<br>returns the code for the specified territory, or an array of codes when $type is "internet", or an empty string if the code is not defined for the territory or the territory is unknown
+						string|array<br>returns the code for the specified territory, or an empty string if the code is not defined for the territory or the territory is unknown
 					</div>
 
 					<h4>Throws</h4>
@@ -238,7 +238,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getByCode">#</a>
-			<code><a href="source-class-Punic.Territory.html#75-108" title="Go to source code">getByCode</a>( <span>string <var>$code</var></span>, <span>string <var>$type</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#73-106" title="Go to source code">getByCode</a>( <span>string <var>$code</var></span>, <span>string <var>$type</var></span> )</code>
 
 			<div class="description short">
 				<p>Retrieve the territory code given its code in a different coding system.</p>
@@ -253,7 +253,7 @@
 						<dt><var>$code</var></dt>
 						<dd>The code</dd>
 						<dt><var>$type</var></dt>
-						<dd>The type of code provided. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, "fips10" for FIPS 10 codes or "internet" for top-level domains</dd>
+						<dd>The type of code provided. "alpha3" for ISO 3166-1 alpha-3 codes, "numeric" for UN M.49, or "fips10" for FIPS 10 codes</dd>
 					</dl></div>
 
 					<h4>Returns</h4>
@@ -286,7 +286,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getContinents">#</a>
-			<code><a href="source-class-Punic.Territory.html#110-120" title="Go to source code">getContinents</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#108-118" title="Go to source code">getContinents</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return the list of continents in the form of an array with key=ID, value=name.</p>
@@ -324,7 +324,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getCountries">#</a>
-			<code><a href="source-class-Punic.Territory.html#122-132" title="Go to source code">getCountries</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#120-130" title="Go to source code">getCountries</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return the list of countries in the form of an array with key=ID, value=name.</p>
@@ -362,7 +362,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getContinentsAndCountries">#</a>
-			<code><a href="source-class-Punic.Territory.html#134-166" title="Go to source code">getContinentsAndCountries</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#132-164" title="Go to source code">getContinentsAndCountries</a>( <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return a list of continents and relative countries. The resulting array is in the following form (JSON representation):</p>
@@ -429,7 +429,7 @@
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getList">#</a>
-			<code><a href="source-class-Punic.Territory.html#168-227" title="Go to source code">getList</a>( <span>string <var>$levels</var> = <span class="php-quote">'W'</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#166-225" title="Go to source code">getList</a>( <span>string <var>$levels</var> = <span class="php-quote">'W'</span></span>, <span>string <var>$locale</var> = <span class="php-quote">''</span></span> )</code>
 
 			<div class="description short">
 				<p>Return a list of some specified territory/subdivision, structured or not.
@@ -497,7 +497,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getTerritoriesWithInfo">#</a>
-			<code><a href="source-class-Punic.Territory.html#229-237" title="Go to source code">getTerritoriesWithInfo</a>( )</code>
+			<code><a href="source-class-Punic.Territory.html#227-235" title="Go to source code">getTerritoriesWithInfo</a>( )</code>
 
 			<div class="description short">
 				<p>Return a list of territory identifiers for which we have some info (languages, population, literacy level, Gross Domestic Product).</p>
@@ -530,7 +530,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getLanguages">#</a>
-			<code><a href="source-class-Punic.Territory.html#239-286" title="Go to source code">getLanguages</a>( <span>string <var>$territoryCode</var></span>, <span>string <var>$filterStatuses</var> = <span class="php-quote">''</span></span>, <span>string <var>$onlyCodes</var> = <span class="php-keyword1">false</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#237-284" title="Go to source code">getLanguages</a>( <span>string <var>$territoryCode</var></span>, <span>string <var>$filterStatuses</var> = <span class="php-quote">''</span></span>, <span>string <var>$onlyCodes</var> = <span class="php-keyword1">false</span></span> )</code>
 
 			<div class="description short">
 				<p>Return the list of languages spoken in a territory.</p>
@@ -588,7 +588,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getPopulation">#</a>
-			<code><a href="source-class-Punic.Territory.html#288-304" title="Go to source code">getPopulation</a>( <span>string <var>$territoryCode</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#286-302" title="Go to source code">getPopulation</a>( <span>string <var>$territoryCode</var></span> )</code>
 
 			<div class="description short">
 				<p>Return the population of a specific territory.</p>
@@ -626,7 +626,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getLiteracyLevel">#</a>
-			<code><a href="source-class-Punic.Territory.html#306-322" title="Go to source code">getLiteracyLevel</a>( <span>string <var>$territoryCode</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#304-320" title="Go to source code">getLiteracyLevel</a>( <span>string <var>$territoryCode</var></span> )</code>
 
 			<div class="description short">
 				<p>Return the literacy level for a specific territory, in %.</p>
@@ -664,7 +664,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getGrossDomesticProduct">#</a>
-			<code><a href="source-class-Punic.Territory.html#324-340" title="Go to source code">getGrossDomesticProduct</a>( <span>string <var>$territoryCode</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#322-338" title="Go to source code">getGrossDomesticProduct</a>( <span>string <var>$territoryCode</var></span> )</code>
 
 			<div class="description short">
 				<p>Return the GDP (Gross Domestic Product) for a specific territory, in US$.</p>
@@ -702,7 +702,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getTerritoriesForLanguage">#</a>
-			<code><a href="source-class-Punic.Territory.html#342-372" title="Go to source code">getTerritoriesForLanguage</a>( <span>string <var>$languageID</var></span>, <span>float <var>$threshold</var> = <span class="php-num">0</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#340-370" title="Go to source code">getTerritoriesForLanguage</a>( <span>string <var>$languageID</var></span>, <span>float <var>$threshold</var> = <span class="php-num">0</span></span> )</code>
 
 			<div class="description short">
 				<p>Return a list of territory IDs where a specific language is spoken, sorted by the total number of people speaking that language.</p>
@@ -742,7 +742,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getParentTerritoryCode">#</a>
-			<code><a href="source-class-Punic.Territory.html#374-403" title="Go to source code">getParentTerritoryCode</a>( <span>string <var>$childTerritoryCode</var></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#372-401" title="Go to source code">getParentTerritoryCode</a>( <span>string <var>$childTerritoryCode</var></span> )</code>
 
 			<div class="description short">
 				<p>Return the code of the territory/subdivision that contains a territory/subdivision.</p>
@@ -780,7 +780,7 @@ If one or more levels are specified, you'll get a structured list (like the one 
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getChildTerritoryCodes">#</a>
-			<code><a href="source-class-Punic.Territory.html#405-446" title="Go to source code">getChildTerritoryCodes</a>( <span>string <var>$parentTerritoryCode</var></span>, <span>boolean <var>$expandSubGroups</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$expandSubdivisions</var> = <span class="php-keyword1">false</span></span> )</code>
+			<code><a href="source-class-Punic.Territory.html#403-444" title="Go to source code">getChildTerritoryCodes</a>( <span>string <var>$parentTerritoryCode</var></span>, <span>boolean <var>$expandSubGroups</var> = <span class="php-keyword1">false</span></span>, <span>boolean <var>$expandSubdivisions</var> = <span class="php-keyword1">false</span></span> )</code>
 
 			<div class="description short">
 				<p>Retrieve the child territories/subdivisions of a parent territory.</p>
