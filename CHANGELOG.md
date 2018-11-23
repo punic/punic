@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ### NEXT (YYYY-MM-DD)
+* CLDR updated from 34 (#160, @mlocati, @c960657)
+  See http://cldr.unicode.org/index/downloads/cldr-34 for details
+* Since CLDR 34 no longer contains telephone data, Punic now uses the data from libphonenumber.
+* **BREAKING CHANGE** The two methds `Territory::getCode`/`Territory::getByCode` added in Punic 3.2.0 don't support the `internet` type anymore because CLDR removed the relevant data
 
 
 ### 3.2.0 (2018-11-08)
