@@ -43,7 +43,6 @@ class Plural
      *
      * @param string|int|float $number
      * @param string $locale
-     * @param string $type
      *
      * @throws \Punic\Exception\BadArgumentType
      * @throws \Exception
