@@ -52,8 +52,6 @@ class TerritoryTest extends TestCase
             array('DGA', 'DG', 'alpha3'),
             array('', 'EA', 'alpha3'),
             array('', 'DG', 'numeric'),
-            array(array('US'), 'US', 'internet'),
-            array(array('UK', 'GB'), 'GB', 'internet'),
             array('', 'FOO', 'alpha3'),
         );
     }
@@ -93,10 +91,6 @@ class TerritoryTest extends TestCase
             array('US', 'US', 'fips10'),
             array('AT', 'AU', 'fips10'),
             array('DG', 'DGA', 'alpha3'),
-            array('US', 'US', 'internet'),
-            array('GB', 'UK', 'internet'),
-            array('GB', 'GB', 'internet'),
-            array('ZZ', 'COM', 'internet'),
         );
     }
 

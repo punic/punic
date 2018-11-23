@@ -1432,16 +1432,16 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('C', 's', 'de')
         );
         $this->assertSame(
-            array('y G – y G', true),
-            Calendar::getIntervalFormat('Gy', 'G')
+            array('QQQQ y – QQQQ y', true),
+            Calendar::getIntervalFormat('yQQQQ', 'y')
         );
         $this->assertSame(
-            array('y G – y G', true),
-            Calendar::getIntervalFormat('Gy', 'y')
+            array('QQQQ y – QQQQ y', true),
+            Calendar::getIntervalFormat('yQQQQ', 'Q')
         );
         $this->assertSame(
-            array('y G', null),
-            Calendar::getIntervalFormat('Gy', 'M')
+            array('QQQQ y', null),
+            Calendar::getIntervalFormat('yQQQQ', 'M')
         );
 
         // Combined date and time.
