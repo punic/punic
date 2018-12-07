@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.3.1 (2018-12-07)
 * Comparer no longer raises E_NOTICE warnings in case of problems (#161, @mlocati)
 
 
