@@ -152,7 +152,9 @@ class Comparer
             $this->cache[$str] = $str;
             if ($str !== '') {
                 if ($this->iconv) {
+                    $previousErrorHandler = set_error_handler(function () {}, E_NOTICE);
                     $transliterated = @iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+                    set_error_handler($previousErrorHandler);
                     if ($transliterated !== false) {
                         $this->cache[$str] = $transliterated;
                     }
