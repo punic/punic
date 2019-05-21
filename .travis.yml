@@ -33,6 +33,7 @@ php:
 matrix:
   allow_failures:
   - php: nightly
+  - php: hhvm
   include:
   - php: 5.3
     dist: precise
