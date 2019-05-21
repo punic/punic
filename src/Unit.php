@@ -66,14 +66,20 @@ class Unit
      *
      * @throws Exception\ValueNotInList
      *
-     * @return string May return an empty string if the "per" format is not available
+     * @return string
      */
     public static function getPerFormat($unit, $width = 'short', $locale = '')
     {
         $data = self::getDataForWidth($width, $locale);
         $unitData = self::getDataForUnit($data, $unit);
 
-        return isset($unitData['_per']) ? $unitData['_per'] : '';
+        if (isset($unitData['_per'])) {
+            return $unitData['_per'];
+        }
+        $pluralRule = Plural::getRuleOfType(1, Plural::RULETYPE_CARDINAL, $locale);
+        $name = trim(sprintf($unitData[$pluralRule], ''));
+
+        return sprintf($data['_compoundPattern'], '%1$s', $name);
     }
 
     /**

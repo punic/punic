@@ -145,6 +145,12 @@ class UnitTest extends TestCase
             array('it', 'minute', 'long', array('minuti'), array('%1$s al minuto')),
             array('it', 'minute', 'short', array('min'), array('%1$s/min')),
             array('it', 'minute', 'narrow', array('min'), array('%1$s/min')),
+            array('en_US', 'length/millimeter', 'long', array('millimeters'), array('%1$s per millimeter')),
+            array('en_US', 'length/millimeter', 'short', array('mm'), array('%1$s/mm')),
+            array('en_US', 'length/millimeter', 'narrow', array('mm'), array('%1$s/mm')),
+            array('it', 'length/millimeter', 'long', array('millimetri'), array('%1$s al millimetro')),
+            array('it', 'length/millimeter', 'short', array('mm'), array('%1$s/mm')),
+            array('it', 'length/millimeter', 'narrow', array('mm'), array('%1$s/mm')),
         );
     }
 
