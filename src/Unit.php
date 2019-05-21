@@ -72,7 +72,7 @@ class Unit
     {
         $data = static::getDataForWidth($width, $locale);
         $unitData = static::getDataForUnit($data, $unit);
-        
+
         return isset($unitData['_per']) ? $unitData['_per'] : '';
     }
 
