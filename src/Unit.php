@@ -51,8 +51,8 @@ class Unit
      */
     public static function getName($unit, $width = 'short', $locale = '')
     {
-        $data = static::getDataForWidth($width, $locale);
-        $unitData = static::getDataForUnit($data, $unit);
+        $data = self::getDataForWidth($width, $locale);
+        $unitData = self::getDataForUnit($data, $unit);
 
         return $unitData['_name'];
     }
@@ -70,8 +70,8 @@ class Unit
      */
     public static function getPerFormat($unit, $width = 'short', $locale = '')
     {
-        $data = static::getDataForWidth($width, $locale);
-        $unitData = static::getDataForUnit($data, $unit);
+        $data = self::getDataForWidth($width, $locale);
+        $unitData = self::getDataForUnit($data, $unit);
 
         return isset($unitData['_per']) ? $unitData['_per'] : '';
     }
@@ -101,8 +101,8 @@ class Unit
                 $width = 'short';
             }
         }
-        $data = static::getDataForWidth($width, $locale);
-        $rules = static::getDataForUnit($data, $unit);
+        $data = self::getDataForWidth($width, $locale);
+        $rules = self::getDataForUnit($data, $unit);
         $pluralRule = Plural::getRuleOfType($number, Plural::RULETYPE_CARDINAL, $locale);
         //@codeCoverageIgnoreStart
         // These checks aren't necessary since $pluralRule should always be in $rules, but they don't hurt ;)
