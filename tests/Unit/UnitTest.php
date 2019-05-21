@@ -130,23 +130,56 @@ class UnitTest extends TestCase
     /**
      * @return array
      */
-    public function provideGetUnitName()
+    public function provideGetUnitData()
     {
         return array(
-            array('milliseconds', 'millisecond', 'long', 'en_US'),
-            array('millisecs', 'millisecond', 'short', 'en_US'),
-            array('msec', 'millisecond', 'narrow', 'en_US'),
-            array('millimetri', 'millimeter', 'long', 'it'),
-            array('mm', 'millimeter', 'short', 'it'),
-            array('mm', 'millimeter', 'narrow', 'it'),
-            array('millimetri', 'length/millimeter', 'long', 'it'),
-            array('mm', 'length/millimeter', 'short', 'it'),
-            array('mm', 'length/millimeter', 'narrow', 'it'),
-            array('Millisekunden', 'duration/millisecond', 'long', 'de'),
-            array('Millisekunden', 'millisecond', 'long', 'de'),
-            array('ms', 'millisecond', 'short', 'de'),
-            array('ms', 'millisecond', 'narrow', 'de'),
+            array('en_US', 'duration/minute', 'long', array('minutes'), array('%1$s per minute')),
+            array('en_US', 'duration/minute', 'short', array('mins'), array('%1$s/min')),
+            array('en_US', 'duration/minute', 'narrow', array('min'), array('%1$s/min')),
+            array('en_US', 'minute', 'long', array('minutes'), array('%1$s per minute')),
+            array('en_US', 'minute', 'short', array('mins'), array('%1$s/min')),
+            array('en_US', 'minute', 'narrow', array('min'), array('%1$s/min')),
+            array('it', 'duration/minute', 'long', array('minuti'), array('%1$s al minuto')),
+            array('it', 'duration/minute', 'short', array('min'), array('%1$s/min')),
+            array('it', 'duration/minute', 'narrow', array('min'), array('%1$s/min')),
+            array('it', 'minute', 'long', array('minuti'), array('%1$s al minuto')),
+            array('it', 'minute', 'short', array('min'), array('%1$s/min')),
+            array('it', 'minute', 'narrow', array('min'), array('%1$s/min')),
         );
+    }
+
+    /**
+     * Test getName.
+     *
+     * @dataProvider provideGetUnitData
+     *
+     * @param string $locale
+     * @param string $unit
+     * @param string $width
+     * @param string[] $expectedNames
+     * @param string[] $expectedPers
+     */
+    public function testGetName($locale, $unit, $width, array $expectedNames, array $expectedPers)
+    {
+        $actual = Unit::getName($unit, $width, $locale);
+        $this->assertContains($actual, $expectedNames, '', false, true, true);
+    }
+
+    /**
+     * Test getPerFormat.
+     *
+     * @dataProvider provideGetUnitData
+     *
+     * @param string $locale
+     * @param string $unit
+     * @param string $width
+     * @param string[] $expectedNames
+     * @param string[] $expectedPers
+     */
+    public function testGetPerFormat($locale, $unit, $width, array $expectedNames, array $expectedPers)
+    {
+        $actual = Unit::getPerFormat($unit, $width, $locale);
+        $this->assertContains($actual, $expectedPers, '', false, true, true);
     }
 
     public function testGetAvailableUnits()
