@@ -94,6 +94,9 @@ class PluralTest extends TestCase
      */
     public function testGetRuleOfType($rule, $parameters)
     {
+        if ($rule === 'other' && in_array($parameters[0], array('1000.0', '10000.0', '100000.0'), true) && isset($parameters[1]) && $parameters[1] === 'kw' && !isset($parameters[2])) {
+            $this->markTestSkipped('The "other" plural rule has wrong examples for the Cornish (kw) language - see https://unicode-org.atlassian.net/browse/CLDR-11876');
+        }
         $this->assertSame(
             $rule,
             Plural::getRuleOfType($parameters[0], isset($parameters[2]) ? $parameters[2] : Plural::RULETYPE_CARDINAL, $parameters[1])

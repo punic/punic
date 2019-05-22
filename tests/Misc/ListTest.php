@@ -50,13 +50,13 @@ class ListTest extends TestCase
             'One, Two, and Three',
             Misc::joinAnd(array('One', 'Two', 'Three'), '', 'en')
         );
-        $this->assertSame(
-            'One, Two, and Three',
-            Misc::joinAnd(array('One', 'Two', 'Three'), 'short', 'en')
+        $this->assertContains(
+            Misc::joinAnd(array('One', 'Two', 'Three'), 'short', 'en'),
+            array('One, Two, and Three', 'One, Two, & Three')
         );
-        $this->assertSame(
-            'One, Two, and Three',
-            Misc::joinAnd(array('One', 'Two', 'Three'), 'narrow', 'en')
+        $this->assertContains(
+            Misc::joinAnd(array('One', 'Two', 'Three'), 'narrow', 'en'),
+            array('One, Two, and Three', 'One, Two, Three')
         );
         $this->assertSame(
             'One, Two and Three',
