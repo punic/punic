@@ -1,14 +1,24 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.4.0 (2019-05-22)
 
+* New function: `Punic\Unit::getPerFormat()` (#162, #163, @mlocati)  
+  Example:
+  ```php
+  Punic\Unit::getPerFormat('minute', 'long`, 'en_US`)
+  ```
+  returns `'%1$s per minute'`
+* libphonenumber data upgraded from version 8.10.1 to version 8.10.12 (#164, @mlocati)
+* CLDR data updated from version 34 to version 35.1 (#164, @mlocati)  
+  See http://cldr.unicode.org/index/downloads/cldr-35 for details  
+  **NOTE** The plural rules for the Cornish (`kw`) language may have some issues: see https://unicode-org.atlassian.net/browse
 
 ### 3.3.1 (2018-12-07)
 * Comparer no longer raises E_NOTICE warnings in case of problems (#161, @mlocati)
 
 
 ### 3.3.0 (2018-11-23)
-* CLDR updated from 34 (#160, @mlocati, @c960657)
+* CLDR updated from 34 (#160, @mlocati, @c960657)  
   See http://cldr.unicode.org/index/downloads/cldr-34 for details
 * Since CLDR 34 no longer contains telephone data, Punic now uses the data from libphonenumber.
 * **BREAKING CHANGE** The two methds `Territory::getCode`/`Territory::getByCode` added in Punic 3.2.0 don't support the `internet` type anymore because CLDR removed the relevant data
