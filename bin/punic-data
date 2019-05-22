@@ -68,6 +68,36 @@ try {
             echo "done.\n";
         }
     }
+    if ($options->shouldUpdateTestFiles()) {
+        echo "Updating Punic test files:\n";
+        $testDirectory = $options->getPunicTestsDirectory();
+        if (!is_dir($testDirectory)) {
+            echo "Punic test directory not found - SKIPPED.\n";
+        } else {
+            $testFiles = $sourceData->getTestFiles();
+            if (count($testFiles) === 0) {
+                echo "No test files available - SKIPPED.\n";
+            } else {
+                foreach ($sourceData->getTestFiles() as $testFile) {
+                    echo " - {$testFile['destFile']}...";
+                    $testFilePath = $testDirectory;
+                    if(isset($testFile['destDir']) && $testFile['destDir'] !== '') {
+                        $testFilePath .= '/' . $testFile['destDir'];
+                    }
+                    if (!is_dir($testFilePath)) {
+                        echo " - skipped (directory not found: {$testFilePath})\n";
+                    } else {
+                        $testFilePath .= '/' . $testFile['destFile'];
+                        if (is_file($testFilePath)) {
+                            unlink($testFilePath);
+                        }
+                        $sourceData->fetchSupplementalFile($testFile['source'], $testFilePath);
+                        echo "done.\n";
+                    }
+                }
+            }
+        }
+    }
     exit(0);
 } catch (Exception $x) {
     echo "\n", $x->getMessage(), "\n";
@@ -208,6 +238,30 @@ class Options
         return rtrim(str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(__FILE__))), '/').'/src/data';
     }
 
+
+    /**
+     * @var bool
+     */
+    protected $shouldUpdateTestFiles;
+
+    /**
+     * Should the test files be updated?
+     *
+     * @return bool
+     */
+    public function shouldUpdateTestFiles()
+    {
+        return $this->shouldUpdateTestFiles;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPunicTestsDirectory()
+    {
+        return dirname(dirname(self::getDefaultOutputDirectory())) . '/tests';
+    }
+
     /**
      * Initializes the instance.
      */
@@ -219,6 +273,7 @@ class Options
         $this->locales = explode(',', static::DEFAULT_LOCALES);
         $this->excludeLocales = array();
         $this->outputDirectory = static::getDefaultOutputDirectory();
+        $this->shouldUpdateTestFiles = false;
     }
 
     /**
@@ -290,6 +345,10 @@ class Options
                         throw new UserMessageException("{$currentOption} is not a valid output directory path");
                     }
                     $result->outputDirectory = $s;
+                    break;
+                case '--update-test-files':
+                case '-t':
+                    $result->shouldUpdateTestFiles = true;
                     break;
                 default:
                     throw new UserMessageException("Unknown option: {$currentOption}\nUse -h (or --help) to get the list of available options");
@@ -458,6 +517,9 @@ Available options:
   --output|-o
     Set the output directory (default: {$defaultOutputDirectory})
 
+  --update-test-files|-t
+    Update the Punic test files (useful only for Punic developers)
+
   --locale=<locales>|-l <locales>
     Set the locales to work on.
     It's a comman-separated list of locale codes (you can also specify this option multiple times).
@@ -599,6 +661,12 @@ class SourceData
      * @var string[]|null
      */
     protected $supplementalFiles;
+
+    /**
+     * @var string[]|null
+     */
+    protected $testFiles;
+
     /**
      * @param Options $options
      */
@@ -611,6 +679,7 @@ class SourceData
         $this->availableLocales = null;
         $this->localeFiles = null;
         $this->supplementalFiles = null;
+        $this->testFiles = null;
     }
 
     /**
@@ -666,6 +735,7 @@ class SourceData
             $this->availableLocales = null;
             $this->localeFiles = null;
             $this->supplementalFiles = null;
+            $this->testFiles = null;
         } else {
             throw new UserMessageException("Invalid CLDR version: {$version}");
         }
@@ -747,6 +817,36 @@ class SourceData
         return $this->supplementalFiles;
     }
 
+    /**
+     * Get the list of test file names and their path relative to the test direcory.
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    public function getTestFiles()
+    {
+        if ($this->testFiles === null) {
+            $this->readState();
+            if ($this->cldrVersion === null) {
+                throw new Exception('CLDR version not set');
+            }
+            $data = $this->state['cldr'][$this->cldrVersion];
+            $testFiles = array();
+            if (isset($data['testFiles']) && is_array($data['testFiles'])) {
+                foreach ($data['testFiles'] as $testFile) {
+                    switch ($testFile) {
+                        case '__test.plurals.php':
+                            $testFiles[] = array('source' => $testFile, 'destDir' => 'dataFiles', 'destFile' => 'plurals.php');
+                            break;
+                    }
+                }
+            }
+            $this->testFiles = $testFiles;
+        }
+        return $this->testFiles;
+    }
+    
     /**
      * @param string $localeID
      * @param string $destDir
