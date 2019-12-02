@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 
-cd "$( dirname "${BASH_SOURCE[0]}" )/..docs"
+cd "$( dirname "${BASH_SOURCE[0]}" )/../docs"
 
 echo '### GENERATING NEW API DOCS'
 

@@ -26,7 +26,7 @@ jobs:
 
   include:
     - stage: Static code analysis
-      name: Test coding style
+      name: Check coding style
       php: "7.2"
       install: ./.travis/install-codingstyle.sh
       script: composer --no-interaction run-script cs -- fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.dist
@@ -95,10 +95,10 @@ jobs:
       install: ./.travis/install-tests.sh assume-php 7.4
       script: composer --no-interaction run-script test
 
-    - stage: Update docs
-      name: Update API
+    - stage: Deploy
+      name: Update API docs
       if: branch = master AND type = push
-      php: "7.3"
+      php: "7.1"
       git:
         depth: false
       env:
