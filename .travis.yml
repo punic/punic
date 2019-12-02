@@ -7,49 +7,102 @@ notifications:
 
 branches:
   only:
-  - master
+    - master
 
 cache:
   directories:
-  - $HOME/.composer/cache
+    - $HOME/.composer/cache
 
 env:
   global:
-  - secure: PPoh/qoZiUfvD8QPZltPHlpe2huly86u3kPogb5gmgvhXkizfUYWggA/VnSweMa2jzVTRZfLxhDqYggo28/UL4OptiRp6YwPP0APM/xUNM5oARo6JTA/4ERexHwtW64Km14izMZJXVIbGAc9ho4JTuKTaPKEuFlKVzxfD/65VbI=
-  - DO_TESTS=1
-  - DO_UPDATEAPI=0
-  - DO_CODINGSTYLE=0
+    - COMPOSER_DISABLE_XDEBUG_WARN=1
 
-php:
-- 5.4
-- 5.5
-- 5.6
-- 7.0
-- 7.2
-- 7.3
-- hhvm
-- nightly
+git:
+  depth: 1
 
-matrix:
+jobs:
   allow_failures:
-  - php: nightly
-  - php: hhvm
+    - name: Test with PHP Nightly
+
   include:
-  - php: 5.3
-    dist: precise
-  - php: 7.1
-    env:
-    - DO_TESTS=2
-  - php: 7.1
-    env:
-    - DO_CODINGSTYLE=1
-    - DO_UPDATEAPI=1
+    - stage: Static code analysis
+      name: Test coding style
+      php: "7.2"
+      install: ./.travis/install-codingstyle.sh
+      script: composer --no-interaction run-script cs -- fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.dist
 
-before_script:
-- ./.travis/before_script.sh
+    - stage: Test
+      name: Test with PHP 5.3
+      dist: precise
+      php: "5.3"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
 
-script:
-- ./.travis/script.sh
+    - stage: Test
+      name: Test with PHP 5.4
+      dist: trusty
+      php: "5.4"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
 
-after_success:
-- ./.travis/after_success.sh
+    - stage: Test
+      name: Test with PHP 5.5
+      dist: trusty
+      php: "5.5"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP 5.6
+      php: "5.6"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP 7.0
+      php: "7.0"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP 7.1
+      php: "7.1"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP 7.2
+      php: "7.2"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP 7.3 (with code coverage)
+      php: "7.3"
+      install: ./.travis/install-tests.sh coverage
+      script: composer --no-interaction run-script test -- --coverage-clover coverage-clover.xml
+      after_success: ./.travis/after_success-coverage.sh
+
+    - stage: Test
+      name: Test with PHP 7.4
+      php: "7.4snapshot"
+      install: ./.travis/install-tests.sh
+      script: composer --no-interaction run-script test
+
+    - stage: Test
+      name: Test with PHP Nightly
+      php: nightly
+      install: ./.travis/install-tests.sh assume-php 7.4
+      script: composer --no-interaction run-script test
+
+    - stage: Update docs
+      name: Update API
+      if: branch = master AND type = push
+      php: "7.3"
+      git:
+        depth: false
+      env:
+        - secure: PPoh/qoZiUfvD8QPZltPHlpe2huly86u3kPogb5gmgvhXkizfUYWggA/VnSweMa2jzVTRZfLxhDqYggo28/UL4OptiRp6YwPP0APM/xUNM5oARo6JTA/4ERexHwtW64Km14izMZJXVIbGAc9ho4JTuKTaPKEuFlKVzxfD/65VbI=
+      install: ./.travis/install-api.sh
+      before_script: git checkout --quiet --force "$TRAVIS_BRANCH"
+      script: ./.travis/update-api.sh
