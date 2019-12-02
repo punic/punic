@@ -1,6 +1,9 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.5.0 (2019-12-02)
+
+* CLDR data upgraded from 35.1 to 36 (#168, @mlocati)
+* libphonenumber data upgraded from version 8.10.12 to version 8.10.22 (#168, @mlocati)
 
 
 ### 3.4.0 (2019-05-22)
@@ -15,6 +18,7 @@
 * CLDR data updated from version 34 to version 35.1 (#164, @mlocati)  
   See http://cldr.unicode.org/index/downloads/cldr-35 for details  
   **NOTE** The plural rules for the Cornish (`kw`) language may have some issues: see https://unicode-org.atlassian.net/browse
+
 
 ### 3.3.1 (2018-12-07)
 * Comparer no longer raises E_NOTICE warnings in case of problems (#161, @mlocati)
