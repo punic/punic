@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.5.1 (2020-01-24)
 
 * Fix sorting strings that start with a digit (#169, @mlocati)
 
