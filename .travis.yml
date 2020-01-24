@@ -32,6 +32,13 @@ jobs:
       script: composer --no-interaction run-script cs -- fix --no-interaction --dry-run --diff --using-cache=no -v --config=.php_cs.dist
 
     - stage: Test
+      name: Test with PHP 7.3 (with code coverage)
+      php: "7.3"
+      install: ./.travis/install-tests.sh coverage
+      script: composer --no-interaction run-script test -- --coverage-clover coverage-clover.xml
+      after_success: ./.travis/after_success-coverage.sh
+
+    - stage: Test
       name: Test with PHP 5.3
       dist: precise
       php: "5.3"
@@ -75,13 +82,6 @@ jobs:
       php: "7.2"
       install: ./.travis/install-tests.sh
       script: composer --no-interaction run-script test
-
-    - stage: Test
-      name: Test with PHP 7.3 (with code coverage)
-      php: "7.3"
-      install: ./.travis/install-tests.sh coverage
-      script: composer --no-interaction run-script test -- --coverage-clover coverage-clover.xml
-      after_success: ./.travis/after_success-coverage.sh
 
     - stage: Test
       name: Test with PHP 7.4
