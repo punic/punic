@@ -103,7 +103,7 @@ class Comparer
      * @param array $array
      * @param bool $keepKeys
      *
-     * @return array
+     * @return bool
      */
     public function sort(&$array, $keepKeys = false)
     {
@@ -112,9 +112,9 @@ class Comparer
         if (isset($this->collator)) {
             try {
                 if ($keepKeys) {
-                    $result = $this->collator->asort($array);
+                    $result = $this->collator->asort($array, Collator::SORT_STRING);
                 } else {
-                    $result = $this->collator->sort($array);
+                    $result = $this->collator->sort($array, Collator::SORT_STRING);
                 }
             } catch (PHPException $x) {
             }

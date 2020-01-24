@@ -2,6 +2,8 @@
 
 ### NEXT (YYYY-MM-DD)
 
+* Fix sorting strings that start with a digit (#169, @mlocati)
+
 
 ### 3.5.0 (2019-12-02)
 
