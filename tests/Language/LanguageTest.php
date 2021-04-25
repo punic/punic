@@ -54,7 +54,7 @@ class LanguageTest extends TestCase
             array('inglese americano (Stati Uniti)', 'en_US', 'it-IT', true),
             array('English (United States)', 'en_US', 'en_US', false),
             array('American English (United States)', 'en_US', 'en_US', true),
-            array('Italian (World)', 'it-001', 'en', false),
+            array('Italian (world)', 'it-001', 'en', false),
             array('Italian (Europe)', 'it-150', 'en', false),
             array('italiano (Mondo)', 'it-001', 'it-001', false),
             array('italiano (Europa)', 'it-150', 'it-150', false),
