@@ -1,119 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-function handleError($errno, $errstr, $errfile, $errline)
-{
-    throw new Exception("{$errstr} in {$errfile} @ line {$errline}", $errno);
-}
-set_error_handler('handleError');
-
-try {
-    if (isset($argv) && is_array($argv) && count($argv) > 1) {
-        $optionArray = array_values($argv);
-        array_shift($optionArray);
-    } else {
-        $optionArray = array();
-    }
-    $options = Options::fromArray($optionArray);
-    echo 'Source location : ', $options->getSourceLocation(), "\n";
-    echo 'CLDR version    : ', $options->getCLDRVersion() === null ? 'latest available' : $options->getCLDRVersion(), "\n";
-    echo 'Format version  : ', Options::FORMAT_VERSION, "\n";
-    echo 'Locales         : ', $options->describeLocales(), "\n";
-    echo 'Output directory: ', str_replace('/', DIRECTORY_SEPARATOR, $options->getOutputDirectory()), "\n";
-    $fileUtils = new FileUtils();
-    $courier = new Courier($options);
-    $sourceData = new SourceData($fileUtils, $courier);
-    echo 'Fetching data state... ';
-    $sourceData->readState();
-    echo "done.\n";
-    $cldrVersion = $options->getCLDRVersion();
-    if ($cldrVersion === null) {
-        echo 'Determining the latest CLDR version... ';
-        $cldrVersion = $sourceData->getLatestCLDRVersion();
-        $sourceData->setCLDRVersion($cldrVersion);
-        echo $cldrVersion, "\n";
-    } else {
-        echo 'Checking CLDR version... ';
-        $sourceData->setCLDRVersion($cldrVersion);
-        echo "done.\n";
-    }
-    $locales = $options->finalizeLocalesList($sourceData->getAvailableLocales());
-    if (empty($locales)) {
-        throw new UserMessageException('No locale to be fetched.');
-    }
-    if (is_dir($options->getOutputDirectory()) && $options->getResetPunicData()) {
-        echo 'Clearing current Punic data... ';
-        $fileUtils->deleteFromFilesystem($options->getOutputDirectory(), true);
-        echo "done.\n";
-    }
-    echo "Fetching language files:\n";
-    foreach ($locales as $localeID) {
-        echo " - {$localeID}...";
-        $destDir = $options->getOutputDirectory().'/'.str_replace('_', '-', $localeID);
-        if (is_dir($destDir)) {
-            echo "destination directory exists - SKIPPED.\n";
-        } else {
-            $sourceData->fetchLocale($localeID, $destDir);
-            echo "done.\n";
-        }
-    }
-    echo "Fetching supplemental files:\n";
-    foreach ($sourceData->getSupplementalFiles() as $supplementalFile) {
-        echo " - {$supplementalFile}...";
-        $destFile = $options->getOutputDirectory().'/'.$supplementalFile;
-        if (is_file($destFile)) {
-            echo "destination file exists - SKIPPED.\n";
-        } else {
-            $sourceData->fetchSupplementalFile($supplementalFile, $destFile);
-            echo "done.\n";
-        }
-    }
-    if ($options->shouldUpdateTestFiles()) {
-        echo "Updating Punic test files:\n";
-        $testDirectory = $options->getPunicTestsDirectory();
-        if (!is_dir($testDirectory)) {
-            echo "Punic test directory not found - SKIPPED.\n";
-        } else {
-            $testFiles = $sourceData->getTestFiles();
-            if (count($testFiles) === 0) {
-                echo "No test files available - SKIPPED.\n";
-            } else {
-                foreach ($sourceData->getTestFiles() as $testFile) {
-                    echo " - {$testFile['destFile']}...";
-                    $testFilePath = $testDirectory;
-                    if(isset($testFile['destDir']) && $testFile['destDir'] !== '') {
-                        $testFilePath .= '/' . $testFile['destDir'];
-                    }
-                    if (!is_dir($testFilePath)) {
-                        echo " - skipped (directory not found: {$testFilePath})\n";
-                    } else {
-                        $testFilePath .= '/' . $testFile['destFile'];
-                        if (is_file($testFilePath)) {
-                            unlink($testFilePath);
-                        }
-                        $sourceData->fetchSupplementalFile($testFile['source'], $testFilePath);
-                        echo "done.\n";
-                    }
-                }
-            }
-        }
-    }
-    exit(0);
-} catch (Exception $x) {
-    echo "\n", $x->getMessage(), "\n";
-    if (!$x instanceof UserMessageException) {
-        echo 'FILE: ', $x->getFile(), '@', $x->getLine(), "\n";
-        if (method_exists($x, 'getTraceAsString')) {
-            echo "TRACE:\n", $x->getTraceAsString(), "\n";
-        }
-    }
-    exit(1);
-}
-
-class UserMessageException extends Exception
-{
-}
-
 /**
  * Command options.
  */
@@ -1063,4 +950,117 @@ class Courier
         }
         return $php;
     }
+}
+
+function handleError($errno, $errstr, $errfile, $errline)
+{
+    throw new Exception("{$errstr} in {$errfile} @ line {$errline}", $errno);
+}
+set_error_handler('handleError');
+
+try {
+    if (isset($argv) && is_array($argv) && count($argv) > 1) {
+        $optionArray = array_values($argv);
+        array_shift($optionArray);
+    } else {
+        $optionArray = array();
+    }
+    $options = Options::fromArray($optionArray);
+    echo 'Source location : ', $options->getSourceLocation(), "\n";
+    echo 'CLDR version    : ', $options->getCLDRVersion() === null ? 'latest available' : $options->getCLDRVersion(), "\n";
+    echo 'Format version  : ', Options::FORMAT_VERSION, "\n";
+    echo 'Locales         : ', $options->describeLocales(), "\n";
+    echo 'Output directory: ', str_replace('/', DIRECTORY_SEPARATOR, $options->getOutputDirectory()), "\n";
+    $fileUtils = new FileUtils();
+    $courier = new Courier($options);
+    $sourceData = new SourceData($fileUtils, $courier);
+    echo 'Fetching data state... ';
+    $sourceData->readState();
+    echo "done.\n";
+    $cldrVersion = $options->getCLDRVersion();
+    if ($cldrVersion === null) {
+        echo 'Determining the latest CLDR version... ';
+        $cldrVersion = $sourceData->getLatestCLDRVersion();
+        $sourceData->setCLDRVersion($cldrVersion);
+        echo $cldrVersion, "\n";
+    } else {
+        echo 'Checking CLDR version... ';
+        $sourceData->setCLDRVersion($cldrVersion);
+        echo "done.\n";
+    }
+    $locales = $options->finalizeLocalesList($sourceData->getAvailableLocales());
+    if (empty($locales)) {
+        throw new UserMessageException('No locale to be fetched.');
+    }
+    if (is_dir($options->getOutputDirectory()) && $options->getResetPunicData()) {
+        echo 'Clearing current Punic data... ';
+        $fileUtils->deleteFromFilesystem($options->getOutputDirectory(), true);
+        echo "done.\n";
+    }
+    echo "Fetching language files:\n";
+    foreach ($locales as $localeID) {
+        echo " - {$localeID}...";
+        $destDir = $options->getOutputDirectory().'/'.str_replace('_', '-', $localeID);
+        if (is_dir($destDir)) {
+            echo "destination directory exists - SKIPPED.\n";
+        } else {
+            $sourceData->fetchLocale($localeID, $destDir);
+            echo "done.\n";
+        }
+    }
+    echo "Fetching supplemental files:\n";
+    foreach ($sourceData->getSupplementalFiles() as $supplementalFile) {
+        echo " - {$supplementalFile}...";
+        $destFile = $options->getOutputDirectory().'/'.$supplementalFile;
+        if (is_file($destFile)) {
+            echo "destination file exists - SKIPPED.\n";
+        } else {
+            $sourceData->fetchSupplementalFile($supplementalFile, $destFile);
+            echo "done.\n";
+        }
+    }
+    if ($options->shouldUpdateTestFiles()) {
+        echo "Updating Punic test files:\n";
+        $testDirectory = $options->getPunicTestsDirectory();
+        if (!is_dir($testDirectory)) {
+            echo "Punic test directory not found - SKIPPED.\n";
+        } else {
+            $testFiles = $sourceData->getTestFiles();
+            if (count($testFiles) === 0) {
+                echo "No test files available - SKIPPED.\n";
+            } else {
+                foreach ($sourceData->getTestFiles() as $testFile) {
+                    echo " - {$testFile['destFile']}...";
+                    $testFilePath = $testDirectory;
+                    if(isset($testFile['destDir']) && $testFile['destDir'] !== '') {
+                        $testFilePath .= '/' . $testFile['destDir'];
+                    }
+                    if (!is_dir($testFilePath)) {
+                        echo " - skipped (directory not found: {$testFilePath})\n";
+                    } else {
+                        $testFilePath .= '/' . $testFile['destFile'];
+                        if (is_file($testFilePath)) {
+                            unlink($testFilePath);
+                        }
+                        $sourceData->fetchSupplementalFile($testFile['source'], $testFilePath);
+                        echo "done.\n";
+                    }
+                }
+            }
+        }
+    }
+    exit(0);
+} catch (Exception $x) {
+    echo "\n", $x->getMessage(), "\n";
+    if (!$x instanceof UserMessageException) {
+        echo 'FILE: ', $x->getFile(), '@', $x->getLine(), "\n";
+        if (method_exists($x, 'getTraceAsString')) {
+            echo "TRACE:\n", $x->getTraceAsString(), "\n";
+        }
+    }
+    exit(1);
+}
+
+class UserMessageException extends Exception
+{
 }
