@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+class UserMessageException extends Exception
+{
+}
+
 /**
  * Command options.
  */
@@ -1059,8 +1063,4 @@ try {
         }
     }
     exit(1);
-}
-
-class UserMessageException extends Exception
-{
 }
