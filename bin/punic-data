@@ -11,11 +11,12 @@ class UserMessageException extends Exception
 class Options
 {
     /**
-     * The data format version: to be increased when the data structure changes (not needed if data is only added).
+     * The supported data format versions: to be increased when the data structure changes (not needed if data is only added).
+     * Separate multiple versions with spaces.
      *
      * @var string
      */
-    const FORMAT_VERSION = '1';
+    const FORMAT_VERSIONS = '1 2';
 
     /**
      * The default location where the Punic data is stored.
@@ -62,6 +63,13 @@ class Options
      * @var string|null
      */
     protected $cldrVersion;
+
+    /**
+     * The Punic data format version.
+     *
+     * @var string|null
+     */
+    protected $formatVersion;
 
     /**
      * Get the CLDR version (null: latest).
@@ -160,6 +168,7 @@ class Options
     {
         $this->sourceLocation = static::DEFAULT_SOURCE_LOCATION;
         $this->cldrVersion = null;
+        $this->formatVersion = null;
         $this->resetPunicData = false;
         $this->locales = explode(',', static::DEFAULT_LOCALES);
         $this->excludeLocales = array();
@@ -583,10 +592,17 @@ class SourceData
             if (!isset($state['formats'])) {
                 throw new Exception('Invalid state.json file (missing formats).');
             }
-            if (!isset($state['formats'][Options::FORMAT_VERSION])) {
-                throw new Exception('Invalid state.json file (missing current format)');
+            $finalState = array();
+            foreach (preg_split('/\s+/', Options::FORMAT_VERSIONS, -1, PREG_SPLIT_NO_EMPTY) as $supportedFormatVersion) {
+                if (!isset($state['formats'][$supportedFormatVersion])) {
+                    continue;
+                }
+                $finalState[$supportedFormatVersion] = $state['formats'][$supportedFormatVersion];
             }
-            $this->state = $state['formats'][Options::FORMAT_VERSION];
+            if ($finalState === array()) {
+                throw new Exception('Invalid state.json file (no supported format found)');
+            }
+            $this->state = $finalState;
         }
     }
 
@@ -599,7 +615,12 @@ class SourceData
     {
         $this->readState();
         $latest = null;
-        $all = isset($this->state['cldr']) ? array_keys($this->state['cldr']) : array();
+        $all = array();
+        foreach ($this->state as $state) {
+            if (isset($state['cldr'])) {
+                $all = array_merge($all, array_keys($state['cldr']));
+            }
+        }
         foreach ($all as $v) {
             $v = (string) $v;
             if ($latest === null || version_compare($latest, $v) < 0) {
@@ -621,15 +642,25 @@ class SourceData
     public function setCLDRVersion($version)
     {
         $this->readState();
-        if (is_string($version) && isset($this->state['cldr']) && is_array($this->state['cldr']) && isset($this->state['cldr'][$version])) {
-            $this->cldrVersion = $version;
-            $this->availableLocales = null;
-            $this->localeFiles = null;
-            $this->supplementalFiles = null;
-            $this->testFiles = null;
-        } else {
+        $foundCldrVersion = null;
+        $foundFormatVersion = null;
+        if (is_string($version)) {
+            foreach ($this->state as $formatVersion => $state) {
+                if (isset($state['cldr']) && is_array($state['cldr']) && isset($state['cldr'][$version])) {
+                    $foundCldrVersion = $version;
+                    $foundFormatVersion = $formatVersion;
+                }
+            }
+        }
+        if ($foundCldrVersion === null) {
             throw new UserMessageException("Invalid CLDR version: {$version}");
         }
+        $this->cldrVersion = $foundCldrVersion;
+        $this->formatVersion = $foundFormatVersion;
+        $this->availableLocales = null;
+        $this->localeFiles = null;
+        $this->supplementalFiles = null;
+        $this->testFiles = null;
     }
 
     /**
@@ -646,7 +677,7 @@ class SourceData
             if ($this->cldrVersion === null) {
                 throw new Exception('CLDR version not set');
             }
-            $data = $this->state['cldr'][$this->cldrVersion];
+            $data = $this->state[$this->formatVersion]['cldr'][$this->cldrVersion];
             if (!isset($data['locales']) || !is_array($data['locales']) || count($data['locales']) === 0) {
                 throw new Exception('Missing locales in state file');
             }
@@ -671,7 +702,7 @@ class SourceData
             if ($this->cldrVersion === null) {
                 throw new Exception('CLDR version not set');
             }
-            $data = $this->state['cldr'][$this->cldrVersion];
+            $data = $this->state[$this->formatVersion]['cldr'][$this->cldrVersion];
             if (!isset($data['localeFiles']) || !is_array($data['localeFiles']) || count($data['localeFiles']) === 0) {
                 throw new Exception('Missing localeFiles in state file');
             }
@@ -697,7 +728,7 @@ class SourceData
             if ($this->cldrVersion === null) {
                 throw new Exception('CLDR version not set');
             }
-            $data = $this->state['cldr'][$this->cldrVersion];
+            $data = $this->state[$this->formatVersion]['cldr'][$this->cldrVersion];
             if (!isset($data['supplementalFiles']) || !is_array($data['supplementalFiles']) || count($data['supplementalFiles']) === 0) {
                 throw new Exception('Missing supplementalFiles in state file');
             }
@@ -722,7 +753,7 @@ class SourceData
             if ($this->cldrVersion === null) {
                 throw new Exception('CLDR version not set');
             }
-            $data = $this->state['cldr'][$this->cldrVersion];
+            $data = $this->state[$this->formatVersion]['cldr'][$this->cldrVersion];
             $testFiles = array();
             if (isset($data['testFiles']) && is_array($data['testFiles'])) {
                 foreach ($data['testFiles'] as $testFile) {
@@ -750,7 +781,7 @@ class SourceData
         $this->fileUtils->createDirectory($destDir);
         try {
             foreach ($this->getLocaleFiles() as $localeFile) {
-                $data = $this->courier->getPhp(Options::FORMAT_VERSION . '/' . $this->cldrVersion . '/' . str_replace('_', '-', $localeID) . '/' . $localeFile);
+                $data = $this->courier->getPhp($this->formatVersion . '/' . $this->cldrVersion . '/' . str_replace('_', '-', $localeID) . '/' . $localeFile);
                 if (@file_put_contents($destDir . '/' . $localeFile, $data) !== strlen($data)) {
                     throw new Exception("Failed to save file {$localeFile}");
                 }
@@ -774,7 +805,7 @@ class SourceData
     {
         $this->fileUtils->deleteFromFilesystem($destFile);
         try {
-            $data = $this->courier->getPhp(Options::FORMAT_VERSION . '/' . $this->cldrVersion . '/' . $supplementalFile);
+            $data = $this->courier->getPhp($this->formatVersion . '/' . $this->cldrVersion . '/' . $supplementalFile);
             if (@file_put_contents($destFile, $data) !== strlen($data)) {
                 throw new Exception("Failed to save file {$supplementalFile}");
             }
@@ -972,7 +1003,7 @@ try {
     $options = Options::fromArray($optionArray);
     echo 'Source location : ', $options->getSourceLocation(), "\n";
     echo 'CLDR version    : ', $options->getCLDRVersion() === null ? 'latest available' : $options->getCLDRVersion(), "\n";
-    echo 'Format version  : ', Options::FORMAT_VERSION, "\n";
+    echo 'Format versions : ', Options::FORMAT_VERSIONS, "\n";
     echo 'Locales         : ', $options->describeLocales(), "\n";
     echo 'Output directory: ', str_replace('/', DIRECTORY_SEPARATOR, $options->getOutputDirectory()), "\n";
     $fileUtils = new FileUtils();
