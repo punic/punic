@@ -321,7 +321,7 @@ class Number
 
         list($rule, $left, $right, $prevBase) = self::getRbnfRule($value, $data, $base);
 
-        $rule = preg_replace_callback('/([<>=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
+        $rule = preg_replace_callback('/([<←>→=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/u', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
             if (isset($match[4])) {
                 $rule = Plural::getRuleOfType($left, $match[3] ? $match[3] : Plural::RULETYPE_CARDINAL, $locale);
                 if (preg_match('/'.$rule.'{(.*?)}/', $match[4], $match2)) {
@@ -349,11 +349,13 @@ class Number
                     case '=':
                         break;
                     case '<':
+                    case '←':
                         $value = $left;
                         break;
                     case '>':
+                    case '→':
                         $value = $right;
-                        if ($match[0] == '>>>') {
+                        if ($match[0] == '>>>' || $match[0] == '→→→') {
                             $base = $prevBase;
                         }
                         break;

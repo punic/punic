@@ -22,7 +22,9 @@ git:
 
 jobs:
   allow_failures:
-    - name: Test with PHP Nightly
+    - name:
+      - Check coding style
+      - Test with PHP Nightly
 
   include:
     - stage: Static code analysis
