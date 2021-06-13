@@ -111,6 +111,10 @@ class Plural
         if ($v6 === '') {
             $v6 = '0';
         }
+        // 'c' => compact decimal exponent value: exponent of the power of 10 used in compact decimal formatting.
+        // 'e' => currently, synonym for ‘c’. however, may be redefined in the future.
+        // Not yet supported
+        $v7 = '0';
         $result = 'other';
         $identifierMap = array(
             self::RULETYPE_CARDINAL => 'plurals',
@@ -122,7 +126,7 @@ class Plural
         $identifier = $identifierMap[$type];
         $node = Data::getLanguageNode(Data::getGeneric($identifier), $locale);
         foreach ($node as $rule => $formulaPattern) {
-            $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6);
+            $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6, $v7);
             $check = str_replace(array('static::inRange(', ' and ', ' or ', ', false, ', ', true, ', ', array('), ' , ', $formula);
             if (preg_match('/[a-z]/', $check)) {
                 throw new \Exception('Bad formula!');
