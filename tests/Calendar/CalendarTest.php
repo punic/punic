@@ -16,9 +16,9 @@ class CalendarTest extends TestCase
 {
     protected $initialTimezone;
 
-    protected function setUp()
+    protected function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
         $this->initialTimezone = date_default_timezone_get();
         if (empty($this->initialTimezone)) {
             $this->initialTimezone = 'UTC';
@@ -30,7 +30,7 @@ class CalendarTest extends TestCase
         Data::setDefaultLocale('en_US');
     }
 
-    protected function tearDown()
+    protected function doTearDown()
     {
         if (isset($this->initialTimezone)) {
             @date_default_timezone_set($this->initialTimezone);
@@ -2217,7 +2217,7 @@ class CalendarTest extends TestCase
      */
     public function testDescribeInterval2()
     {
-        $this->assertRegExp(
+        $this->assertMatchRegExp(
             '/^(now|1 second|\\d+ seconds)$/',
             Calendar::describeInterval(new DateTime(), null, 1, 'long', 'en')
         );

@@ -1,0 +1,56 @@
+name: Update API documentation
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - "*"
+
+jobs:
+  update-api:
+    name: Update API
+    runs-on: ubuntu-latest
+    env:
+      CHANGES_DETECTED: n
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          tools: composer:v2
+          coverage: none
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depthh: 0
+      - name: Install Composer dependencies
+        run: |
+          cd "$GITHUB_WORKSPACE/docs"
+          composer update --ansi --no-interaction --prefer-dist --classmap-authoritative --no-cache
+      - name: Generate API Docs
+        run: |
+          cd "$GITHUB_WORKSPACE/docs"
+          composer run-script update-docs --ansi --no-interaction 
+      - name: Check changes
+        run: |
+          cd "$GITHUB_WORKSPACE/docs/themes/punic/static/api"
+          if test -z "$(git status --porcelain .)"; then
+            echo 'No changes detected'
+          else
+            echo 'changes detected.'
+            echo "CHANGES_DETECTED=y" >> $GITHUB_ENV
+          fi
+      - name: Save changes
+        if: ${{ env.CHANGES_DETECTED == 'y' }}
+        run: |
+          cd "$GITHUB_WORKSPACE/docs/themes/punic/static/api"
+          echo 'Staging changes'
+          git add --all .
+          echo 'Configuring git'
+          git config user.name 'Bot'
+          git config user.email 'michele@locati.it'
+          echo 'Committing changes'
+          git commit -m '[skip ci] Update APIs'
+          echo 'Pushing'
+          git push

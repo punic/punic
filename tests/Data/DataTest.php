@@ -12,7 +12,7 @@ use stdClass;
 
 class DataTest extends TestCase
 {
-    protected function tearDown()
+    protected function doTearDown()
     {
         Data::setOverrides(array());
         Data::setOverridesGeneric(array());

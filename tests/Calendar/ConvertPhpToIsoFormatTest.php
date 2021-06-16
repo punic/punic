@@ -13,7 +13,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
 
     private $previousTimezone;
 
-    protected function setUp()
+    protected function doSetUp()
     {
         $this->previousTimezone = @date_default_timezone_get();
         if (empty($this->previousTimezone)) {
@@ -22,7 +22,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
         date_default_timezone_set(self::TEST_TIMEZONE);
     }
 
-    protected function tearDown()
+    protected function doTearDown()
     {
         date_default_timezone_set($this->previousTimezone);
     }

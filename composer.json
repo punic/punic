@@ -43,9 +43,13 @@
     "require": {
         "php": ">=5.3"
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Punic\\Test\\": "tests/"
+        }
+    },
     "require-dev": {
-        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4",
-        "friendsofphp/php-cs-fixer": "2.2.*"
+        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4 || ^8.5 || ^9.5"
     },
     "replace": {
         "punic/common": "*",
@@ -55,7 +59,6 @@
         "bin/punic-data"
     ],
     "scripts": {
-        "cs": "php-cs-fixer",
         "test": "phpunit"
     }
 }
