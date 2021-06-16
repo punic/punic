@@ -173,12 +173,12 @@
 </span></span><span id="51" class="l"><span class="php-comment">     * Returns the name of a currency given its code.
 </span></span><span id="52" class="l"><span class="php-comment">     *
 </span></span><span id="53" class="l"><span class="php-comment">     * @param string $currencyCode The currency code
-</span></span><span id="54" class="l"><span class="php-comment">     * @param null|number|string $quantity The quantity identifier. Allowed values:
-</span></span><span id="55" class="l"><span class="php-comment">     * &lt;ul&gt;
-</span></span><span id="56" class="l"><span class="php-comment">     *     &lt;li&gt;`null` to return the standard name, not associated to any quantity&lt;/li&gt;
-</span></span><span id="57" class="l"><span class="php-comment">     *     &lt;li&gt;`number` to return the name following the plural rule for the specified quantity&lt;/li&gt;
-</span></span><span id="58" class="l"><span class="php-comment">     *     &lt;li&gt;string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
-</span></span><span id="59" class="l"><span class="php-comment">     * &lt;/ul&gt;
+</span></span><span id="54" class="l"><span class="php-comment">     * @param number|string|null $quantity The quantity identifier. Allowed values:
+</span></span><span id="55" class="l"><span class="php-comment">     *                                     &lt;ul&gt;
+</span></span><span id="56" class="l"><span class="php-comment">     *                                     &lt;li&gt;`null` to return the standard name, not associated to any quantity&lt;/li&gt;
+</span></span><span id="57" class="l"><span class="php-comment">     *                                     &lt;li&gt;`number` to return the name following the plural rule for the specified quantity&lt;/li&gt;
+</span></span><span id="58" class="l"><span class="php-comment">     *                                     &lt;li&gt;string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
+</span></span><span id="59" class="l"><span class="php-comment">     *                                     &lt;/ul&gt;
 </span></span><span id="60" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
 </span></span><span id="61" class="l"><span class="php-comment">     *
 </span></span><span id="62" class="l"><span class="php-comment">     * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
@@ -299,12 +299,12 @@
 </span></span><span id="177" class="l"><span class="php-comment">     * @param string $territoryCode The territoy code
 </span></span><span id="178" class="l"><span class="php-comment">     *
 </span></span><span id="179" class="l"><span class="php-comment">     * @return array Return a list of items with these keys:
-</span></span><span id="180" class="l"><span class="php-comment">     * &lt;ul&gt;
-</span></span><span id="181" class="l"><span class="php-comment">     *     &lt;li&gt;string `currency`: the currency code (always present)&lt;/li&gt;
-</span></span><span id="182" class="l"><span class="php-comment">     *     &lt;li&gt;string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD&lt;/li&gt;
-</span></span><span id="183" class="l"><span class="php-comment">     *     &lt;li&gt;string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD&lt;/li&gt;
-</span></span><span id="184" class="l"><span class="php-comment">     *     &lt;li&gt;bool `tender`: true if the currency was or is legal tender, false otherwise (always present)&lt;/li&gt;
-</span></span><span id="185" class="l"><span class="php-comment">     * &lt;/ul&gt;
+</span></span><span id="180" class="l"><span class="php-comment">     *               &lt;ul&gt;
+</span></span><span id="181" class="l"><span class="php-comment">     *               &lt;li&gt;string `currency`: the currency code (always present)&lt;/li&gt;
+</span></span><span id="182" class="l"><span class="php-comment">     *               &lt;li&gt;string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD&lt;/li&gt;
+</span></span><span id="183" class="l"><span class="php-comment">     *               &lt;li&gt;string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD&lt;/li&gt;
+</span></span><span id="184" class="l"><span class="php-comment">     *               &lt;li&gt;bool `tender`: true if the currency was or is legal tender, false otherwise (always present)&lt;/li&gt;
+</span></span><span id="185" class="l"><span class="php-comment">     *               &lt;/ul&gt;
 </span></span><span id="186" class="l"><span class="php-comment">     */</span>
 </span><span id="187" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getCurrencyHistoryForTerritory(<span class="php-var">$territoryCode</span>)
 </span><span id="188" class="l">    {
@@ -380,7 +380,7 @@
 		Punic v3.5.1 API documentation generated by <a href="http://apigen.org">ApiGen</a>
 	</div>
 </div>
-<script src="resources/combined.js?1393928f37b14bea36cde409550212fd50aeaa92"></script>
+<script src="resources/combined.js?86c79095babc17df9ae0e8fd0a4f6fb151b858c4"></script>
 <script src="elementlist.js?6bc6c7dbc4380c6900266b9d2727b430b96fcdd1"></script>
 </body>
 </html>

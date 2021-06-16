@@ -195,7 +195,7 @@
 </span><span id="73" class="l">            <span class="php-keyword1">if</span> (<span class="php-keyword2">is_nan</span>(<span class="php-var">$number</span>)) {
 </span><span id="74" class="l">                <span class="php-var">$result</span> = <span class="php-var">$data</span>[<span class="php-quote">'symbols'</span>][<span class="php-quote">'nan'</span>];
 </span><span id="75" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">is_infinite</span>(<span class="php-var">$number</span>)) {
-</span><span id="76" class="l">                <span class="php-var">$result</span> = <span class="php-var">$sign</span>.<span class="php-var">$data</span>[<span class="php-quote">'symbols'</span>][<span class="php-quote">'infinity'</span>];
+</span><span id="76" class="l">                <span class="php-var">$result</span> = <span class="php-var">$sign</span> . <span class="php-var">$data</span>[<span class="php-quote">'symbols'</span>][<span class="php-quote">'infinity'</span>];
 </span><span id="77" class="l">            } <span class="php-keyword1">else</span> {
 </span><span id="78" class="l">                <span class="php-var">$precision</span> = <span class="php-keyword2">is_numeric</span>(<span class="php-var">$precision</span>) ? (int) <span class="php-var">$precision</span> : <span class="php-keyword1">null</span>;
 </span><span id="79" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$precision</span> !== <span class="php-keyword1">null</span>) {
@@ -211,15 +211,15 @@
 </span><span id="89" class="l">                    <span class="php-var">$groupSign</span> = <span class="php-var">$data</span>[<span class="php-quote">'symbols'</span>][<span class="php-quote">'group'</span>];
 </span><span id="90" class="l">                    <span class="php-var">$preLength</span> = <span class="php-num">1</span> + ((<span class="php-var">$len</span> - <span class="php-num">1</span>) % <span class="php-num">3</span>);
 </span><span id="91" class="l">                    <span class="php-var">$pre</span> = <span class="php-keyword2">substr</span>(<span class="php-var">$intPart</span>, <span class="php-num">0</span>, <span class="php-var">$preLength</span>);
-</span><span id="92" class="l">                    <span class="php-var">$intPart</span> = <span class="php-var">$pre</span>.<span class="php-var">$groupSign</span>.<span class="php-keyword2">implode</span>(<span class="php-var">$groupSign</span>, <span class="php-keyword2">str_split</span>(<span class="php-keyword2">substr</span>(<span class="php-var">$intPart</span>, <span class="php-var">$preLength</span>), <span class="php-var">$groupLength</span>));
+</span><span id="92" class="l">                    <span class="php-var">$intPart</span> = <span class="php-var">$pre</span> . <span class="php-var">$groupSign</span> . <span class="php-keyword2">implode</span>(<span class="php-var">$groupSign</span>, <span class="php-keyword2">str_split</span>(<span class="php-keyword2">substr</span>(<span class="php-var">$intPart</span>, <span class="php-var">$preLength</span>), <span class="php-var">$groupLength</span>));
 </span><span id="93" class="l">                }
-</span><span id="94" class="l">                <span class="php-var">$result</span> = <span class="php-var">$sign</span>.<span class="php-var">$intPart</span>;
+</span><span id="94" class="l">                <span class="php-var">$result</span> = <span class="php-var">$sign</span> . <span class="php-var">$intPart</span>;
 </span><span id="95" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$precision</span> === <span class="php-keyword1">null</span>) {
 </span><span id="96" class="l">                    <span class="php-keyword1">if</span> (<span class="php-var">$floatPath</span> !== <span class="php-quote">''</span>) {
-</span><span id="97" class="l">                        <span class="php-var">$result</span> .= <span class="php-var">$decimal</span>.<span class="php-var">$floatPath</span>;
+</span><span id="97" class="l">                        <span class="php-var">$result</span> .= <span class="php-var">$decimal</span> . <span class="php-var">$floatPath</span>;
 </span><span id="98" class="l">                    }
 </span><span id="99" class="l">                } <span class="php-keyword1">elseif</span> (<span class="php-var">$precision</span> &gt; <span class="php-num">0</span>) {
-</span><span id="100" class="l">                    <span class="php-var">$result</span> .= <span class="php-var">$decimal</span>.<span class="php-keyword2">substr</span>(<span class="php-keyword2">str_pad</span>(<span class="php-var">$floatPath</span>, <span class="php-var">$precision</span>, <span class="php-quote">'0'</span>, STR_PAD_RIGHT), <span class="php-num">0</span>, <span class="php-var">$precision</span>);
+</span><span id="100" class="l">                    <span class="php-var">$result</span> .= <span class="php-var">$decimal</span> . <span class="php-keyword2">substr</span>(<span class="php-keyword2">str_pad</span>(<span class="php-var">$floatPath</span>, <span class="php-var">$precision</span>, <span class="php-quote">'0'</span>, STR_PAD_RIGHT), <span class="php-num">0</span>, <span class="php-var">$precision</span>);
 </span><span id="101" class="l">                }
 </span><span id="102" class="l">            }
 </span><span id="103" class="l">        }
@@ -308,7 +308,7 @@
 </span><span id="186" class="l">            }
 </span><span id="187" class="l">
 </span><span id="188" class="l">            <span class="php-keyword1">if</span> (<span class="php-var">$which</span> === <span class="php-quote">'long'</span>) {
-</span><span id="189" class="l">                <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-'</span>.Plural::getRuleOfType(<span class="php-var">$value</span>, Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
+</span><span id="189" class="l">                <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-'</span> . Plural::getRuleOfType(<span class="php-var">$value</span>, Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
 </span><span id="190" class="l">                <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'unitPattern'</span>][<span class="php-var">$pluralRule</span>])) {
 </span><span id="191" class="l">                    <span class="php-var">$pluralRule</span> = <span class="php-quote">'count-other'</span>;
 </span><span id="192" class="l">                }
@@ -317,15 +317,15 @@
 </span><span id="195" class="l">                <span class="php-var">$result</span> = <span class="php-keyword2">sprintf</span>(<span class="php-var">$unitPattern</span>, <span class="php-var">$formatted</span>, <span class="php-var">$symbol</span>);
 </span><span id="196" class="l">            } <span class="php-keyword1">else</span> {
 </span><span id="197" class="l">                <span class="php-keyword1">list</span>(<span class="php-var">$before</span>, <span class="php-var">$after</span>) = <span class="php-keyword2">explode</span>(<span class="php-quote">'%2$s'</span>, <span class="php-var">$format</span>);
-</span><span id="198" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$after</span> &amp;&amp;
-</span><span id="199" class="l">                    <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'afterCurrency'</span>][<span class="php-quote">'currency'</span>], <span class="php-var">$symbol</span>) &amp;&amp;
-</span><span id="200" class="l">                    <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'afterCurrency'</span>][<span class="php-quote">'surrounding'</span>], <span class="php-keyword2">sprintf</span>(<span class="php-var">$after</span>, <span class="php-var">$formatted</span>))) {
+</span><span id="198" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$after</span>
+</span><span id="199" class="l">                    &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'afterCurrency'</span>][<span class="php-quote">'currency'</span>], <span class="php-var">$symbol</span>)
+</span><span id="200" class="l">                    &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'afterCurrency'</span>][<span class="php-quote">'surrounding'</span>], <span class="php-keyword2">sprintf</span>(<span class="php-var">$after</span>, <span class="php-var">$formatted</span>))) {
 </span><span id="201" class="l">                    <span class="php-var">$symbol</span> .= <span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'afterCurrency'</span>][<span class="php-quote">'insertBetween'</span>];
 </span><span id="202" class="l">                }
-</span><span id="203" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$before</span> &amp;&amp;
-</span><span id="204" class="l">                    <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'currency'</span>], <span class="php-var">$symbol</span>) &amp;&amp;
-</span><span id="205" class="l">                    <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'surrounding'</span>], <span class="php-keyword2">sprintf</span>(<span class="php-var">$before</span>, <span class="php-var">$formatted</span>))) {
-</span><span id="206" class="l">                    <span class="php-var">$symbol</span> = <span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'insertBetween'</span>].<span class="php-var">$symbol</span>;
+</span><span id="203" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$before</span>
+</span><span id="204" class="l">                    &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'currency'</span>], <span class="php-var">$symbol</span>)
+</span><span id="205" class="l">                    &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'surrounding'</span>], <span class="php-keyword2">sprintf</span>(<span class="php-var">$before</span>, <span class="php-var">$formatted</span>))) {
+</span><span id="206" class="l">                    <span class="php-var">$symbol</span> = <span class="php-var">$data</span>[<span class="php-quote">'currencySpacing'</span>][<span class="php-quote">'beforeCurrency'</span>][<span class="php-quote">'insertBetween'</span>] . <span class="php-var">$symbol</span>;
 </span><span id="207" class="l">                }
 </span><span id="208" class="l">
 </span><span id="209" class="l">                <span class="php-var">$result</span> = <span class="php-keyword2">sprintf</span>(<span class="php-var">$format</span>, <span class="php-var">$formatted</span>, <span class="php-var">$symbol</span>);
@@ -359,19 +359,19 @@
 </span><span id="237" class="l">            <span class="php-var">$group</span> = <span class="php-var">$data</span>[<span class="php-quote">'symbols'</span>][<span class="php-quote">'group'</span>];
 </span><span id="238" class="l">            <span class="php-var">$groupQ</span> = <span class="php-keyword2">preg_quote</span>(<span class="php-var">$group</span>);
 </span><span id="239" class="l">            <span class="php-var">$ok</span> = <span class="php-keyword1">true</span>;
-</span><span id="240" class="l">            <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span>.<span class="php-quote">&quot;(</span><span class="php-var">$plusQ</span><span class="php-quote">|</span><span class="php-var">$minusQ</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">$groupQ</span><span class="php-quote">\\d+)*)&quot;</span>.<span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
+</span><span id="240" class="l">            <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span> . <span class="php-quote">&quot;(</span><span class="php-var">{$plusQ}</span><span class="php-quote">|</span><span class="php-var">{$minusQ}</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">{$groupQ}</span><span class="php-quote">\\d+)*)&quot;</span> . <span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
 </span><span id="241" class="l">                <span class="php-var">$sign</span> = <span class="php-var">$m</span>[<span class="php-num">1</span>];
 </span><span id="242" class="l">                <span class="php-var">$int</span> = <span class="php-var">$m</span>[<span class="php-num">2</span>];
 </span><span id="243" class="l">                <span class="php-var">$float</span> = <span class="php-keyword1">null</span>;
-</span><span id="244" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span>.<span class="php-quote">&quot;(</span><span class="php-var">$plusQ</span><span class="php-quote">|</span><span class="php-var">$minusQ</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">$groupQ</span><span class="php-quote">\\d+)*)</span><span class="php-var">$decimalQ</span><span class="php-quote">&quot;</span>.<span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
+</span><span id="244" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span> . <span class="php-quote">&quot;(</span><span class="php-var">{$plusQ}</span><span class="php-quote">|</span><span class="php-var">{$minusQ}</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">{$groupQ}</span><span class="php-quote">\\d+)*)</span><span class="php-var">{$decimalQ}</span><span class="php-quote">&quot;</span> . <span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
 </span><span id="245" class="l">                <span class="php-var">$sign</span> = <span class="php-var">$m</span>[<span class="php-num">1</span>];
 </span><span id="246" class="l">                <span class="php-var">$int</span> = <span class="php-var">$m</span>[<span class="php-num">2</span>];
 </span><span id="247" class="l">                <span class="php-var">$float</span> = <span class="php-quote">''</span>;
-</span><span id="248" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span>.<span class="php-quote">&quot;(</span><span class="php-var">$plusQ</span><span class="php-quote">|</span><span class="php-var">$minusQ</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">$groupQ</span><span class="php-quote">\\d+)*)</span><span class="php-var">$decimalQ</span><span class="php-quote">(\\d+)&quot;</span>.<span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
+</span><span id="248" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span> . <span class="php-quote">&quot;(</span><span class="php-var">{$plusQ}</span><span class="php-quote">|</span><span class="php-var">{$minusQ}</span><span class="php-quote">)?(\\d+(?:</span><span class="php-var">{$groupQ}</span><span class="php-quote">\\d+)*)</span><span class="php-var">{$decimalQ}</span><span class="php-quote">(\\d+)&quot;</span> . <span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
 </span><span id="249" class="l">                <span class="php-var">$sign</span> = <span class="php-var">$m</span>[<span class="php-num">1</span>];
 </span><span id="250" class="l">                <span class="php-var">$int</span> = <span class="php-var">$m</span>[<span class="php-num">2</span>];
 </span><span id="251" class="l">                <span class="php-var">$float</span> = <span class="php-var">$m</span>[<span class="php-num">3</span>];
-</span><span id="252" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span>.<span class="php-quote">&quot;(</span><span class="php-var">$plusQ</span><span class="php-quote">|</span><span class="php-var">$minusQ</span><span class="php-quote">)?</span><span class="php-var">$decimalQ</span><span class="php-quote">(\\d+)&quot;</span>.<span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
+</span><span id="252" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^'</span> . <span class="php-quote">&quot;(</span><span class="php-var">{$plusQ}</span><span class="php-quote">|</span><span class="php-var">{$minusQ}</span><span class="php-quote">)?</span><span class="php-var">{$decimalQ}</span><span class="php-quote">(\\d+)&quot;</span> . <span class="php-quote">'$/'</span>, <span class="php-var">$value</span>, <span class="php-var">$m</span>)) {
 </span><span id="253" class="l">                <span class="php-var">$sign</span> = <span class="php-var">$m</span>[<span class="php-num">1</span>];
 </span><span id="254" class="l">                <span class="php-var">$int</span> = <span class="php-quote">'0'</span>;
 </span><span id="255" class="l">                <span class="php-var">$float</span> = <span class="php-var">$m</span>[<span class="php-num">2</span>];
@@ -387,9 +387,9 @@
 </span><span id="265" class="l">                }
 </span><span id="266" class="l">                <span class="php-var">$int</span> = <span class="php-keyword2">str_replace</span>(<span class="php-var">$group</span>, <span class="php-quote">''</span>, <span class="php-var">$int</span>);
 </span><span id="267" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$float</span> === <span class="php-keyword1">null</span>) {
-</span><span id="268" class="l">                    <span class="php-var">$result</span> = (int) <span class="php-quote">&quot;</span><span class="php-var">$sign$int</span><span class="php-quote">&quot;</span>;
+</span><span id="268" class="l">                    <span class="php-var">$result</span> = (int) <span class="php-quote">&quot;</span><span class="php-var">{$sign}{$int}</span><span class="php-quote">&quot;</span>;
 </span><span id="269" class="l">                } <span class="php-keyword1">else</span> {
-</span><span id="270" class="l">                    <span class="php-var">$result</span> = (float) <span class="php-quote">&quot;</span><span class="php-var">$sign$int</span><span class="php-quote">.</span><span class="php-var">$float</span><span class="php-quote">&quot;</span>;
+</span><span id="270" class="l">                    <span class="php-var">$result</span> = (float) <span class="php-quote">&quot;</span><span class="php-var">{$sign}{$int}</span><span class="php-quote">.</span><span class="php-var">{$float}</span><span class="php-quote">&quot;</span>;
 </span><span id="271" class="l">                }
 </span><span id="272" class="l">            }
 </span><span id="273" class="l">        }
@@ -443,10 +443,10 @@
 </span><span id="321" class="l">
 </span><span id="322" class="l">        <span class="php-keyword1">list</span>(<span class="php-var">$rule</span>, <span class="php-var">$left</span>, <span class="php-var">$right</span>, <span class="php-var">$prevBase</span>) = self::getRbnfRule(<span class="php-var">$value</span>, <span class="php-var">$data</span>, <span class="php-var">$base</span>);
 </span><span id="323" class="l">
-</span><span id="324" class="l">        <span class="php-var">$rule</span> = <span class="php-keyword2">preg_replace_callback</span>(<span class="php-quote">'/([&lt;&gt;=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/'</span>, <span class="php-keyword1">function</span> (<span class="php-var">$match</span>) <span class="php-keyword1">use</span> (<span class="php-var">$value</span>, <span class="php-var">$left</span>, <span class="php-var">$right</span>, <span class="php-var">$type</span>, <span class="php-var">$prevBase</span>, <span class="php-var">$locale</span>) {
+</span><span id="324" class="l">        <span class="php-keyword1">return</span> <span class="php-keyword2">preg_replace_callback</span>(<span class="php-quote">'/([&lt;←&gt;→=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/u'</span>, <span class="php-keyword1">function</span> (<span class="php-var">$match</span>) <span class="php-keyword1">use</span> (<span class="php-var">$value</span>, <span class="php-var">$left</span>, <span class="php-var">$right</span>, <span class="php-var">$type</span>, <span class="php-var">$prevBase</span>, <span class="php-var">$locale</span>) {
 </span><span id="325" class="l">            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$match</span>[<span class="php-num">4</span>])) {
 </span><span id="326" class="l">                <span class="php-var">$rule</span> = Plural::getRuleOfType(<span class="php-var">$left</span>, <span class="php-var">$match</span>[<span class="php-num">3</span>] ? <span class="php-var">$match</span>[<span class="php-num">3</span>] : Plural::RULETYPE_CARDINAL, <span class="php-var">$locale</span>);
-</span><span id="327" class="l">                <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/'</span>.<span class="php-var">$rule</span>.<span class="php-quote">'{(.*?)}/'</span>, <span class="php-var">$match</span>[<span class="php-num">4</span>], <span class="php-var">$match2</span>)) {
+</span><span id="327" class="l">                <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/'</span> . <span class="php-var">$rule</span> . <span class="php-quote">'{(.*?)}/'</span>, <span class="php-var">$match</span>[<span class="php-num">4</span>], <span class="php-var">$match2</span>)) {
 </span><span id="328" class="l">                    <span class="php-keyword1">return</span> <span class="php-var">$match2</span>[<span class="php-num">1</span>];
 </span><span id="329" class="l">                }
 </span><span id="330" class="l">            } <span class="php-keyword1">else</span> {
@@ -471,23 +471,23 @@
 </span><span id="349" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'='</span>:
 </span><span id="350" class="l">                        <span class="php-keyword1">break</span>;
 </span><span id="351" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'&lt;'</span>:
-</span><span id="352" class="l">                        <span class="php-var">$value</span> = <span class="php-var">$left</span>;
-</span><span id="353" class="l">                        <span class="php-keyword1">break</span>;
-</span><span id="354" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'&gt;'</span>:
-</span><span id="355" class="l">                        <span class="php-var">$value</span> = <span class="php-var">$right</span>;
-</span><span id="356" class="l">                        <span class="php-keyword1">if</span> (<span class="php-var">$match</span>[<span class="php-num">0</span>] == <span class="php-quote">'&gt;&gt;&gt;'</span>) {
-</span><span id="357" class="l">                            <span class="php-var">$base</span> = <span class="php-var">$prevBase</span>;
-</span><span id="358" class="l">                        }
-</span><span id="359" class="l">                        <span class="php-keyword1">break</span>;
-</span><span id="360" class="l">                }
-</span><span id="361" class="l">
-</span><span id="362" class="l">                <span class="php-keyword1">return</span> <span class="php-keyword2">implode</span>(<span class="php-quote">' '</span>, <span class="php-keyword2">array_map</span>(<span class="php-keyword1">function</span> (<span class="php-var">$v</span>) <span class="php-keyword1">use</span> (<span class="php-var">$type</span>, <span class="php-var">$base</span>, <span class="php-var">$locale</span>) {
-</span><span id="363" class="l">                    <span class="php-keyword1">return</span> Number::formatRbnf(<span class="php-var">$v</span>, <span class="php-var">$type</span>, <span class="php-var">$base</span>, <span class="php-var">$locale</span>);
-</span><span id="364" class="l">                }, (<span class="php-keyword1">array</span>) <span class="php-var">$value</span>));
-</span><span id="365" class="l">            }
-</span><span id="366" class="l">        }, <span class="php-var">$rule</span>);
-</span><span id="367" class="l">
-</span><span id="368" class="l">        <span class="php-keyword1">return</span> <span class="php-var">$rule</span>;
+</span><span id="352" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'←'</span>:
+</span><span id="353" class="l">                        <span class="php-var">$value</span> = <span class="php-var">$left</span>;
+</span><span id="354" class="l">                        <span class="php-keyword1">break</span>;
+</span><span id="355" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'&gt;'</span>:
+</span><span id="356" class="l">                    <span class="php-keyword1">case</span> <span class="php-quote">'→'</span>:
+</span><span id="357" class="l">                        <span class="php-var">$value</span> = <span class="php-var">$right</span>;
+</span><span id="358" class="l">                        <span class="php-keyword1">if</span> (<span class="php-var">$match</span>[<span class="php-num">0</span>] == <span class="php-quote">'&gt;&gt;&gt;'</span> || <span class="php-var">$match</span>[<span class="php-num">0</span>] == <span class="php-quote">'→→→'</span>) {
+</span><span id="359" class="l">                            <span class="php-var">$base</span> = <span class="php-var">$prevBase</span>;
+</span><span id="360" class="l">                        }
+</span><span id="361" class="l">                        <span class="php-keyword1">break</span>;
+</span><span id="362" class="l">                }
+</span><span id="363" class="l">
+</span><span id="364" class="l">                <span class="php-keyword1">return</span> <span class="php-keyword2">implode</span>(<span class="php-quote">' '</span>, <span class="php-keyword2">array_map</span>(<span class="php-keyword1">function</span> (<span class="php-var">$v</span>) <span class="php-keyword1">use</span> (<span class="php-var">$type</span>, <span class="php-var">$base</span>, <span class="php-var">$locale</span>) {
+</span><span id="365" class="l">                    <span class="php-keyword1">return</span> Number::formatRbnf(<span class="php-var">$v</span>, <span class="php-var">$type</span>, <span class="php-var">$base</span>, <span class="php-var">$locale</span>);
+</span><span id="366" class="l">                }, (<span class="php-keyword1">array</span>) <span class="php-var">$value</span>));
+</span><span id="367" class="l">            }
+</span><span id="368" class="l">        }, <span class="php-var">$rule</span>);
 </span><span id="369" class="l">    }
 </span><span id="370" class="l">
 </span><span id="371" class="l">    <span class="php-keyword1">protected</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getRbnfRule(<span class="php-var">$value</span>, <span class="php-var">$data</span>, <span class="php-var">$base</span> = <span class="php-keyword1">null</span>)
@@ -517,7 +517,7 @@
 </span><span id="395" class="l">            <span class="php-keyword1">if</span> (<span class="php-var">$base</span>) {
 </span><span id="396" class="l">                <span class="php-var">$i</span> = <span class="php-keyword2">array_search</span>(<span class="php-var">$base</span>, <span class="php-var">$bases</span>);
 </span><span id="397" class="l">            } <span class="php-keyword1">else</span> {
-</span><span id="398" class="l">                <span class="php-keyword1">for</span> (<span class="php-var">$i</span> = <span class="php-keyword2">count</span>(<span class="php-var">$bases</span>) - <span class="php-num">1</span>; <span class="php-var">$i</span> &gt;= <span class="php-num">0</span>; --<span class="php-var">$i</span>) {
+</span><span id="398" class="l">                <span class="php-keyword1">for</span> (<span class="php-var">$i</span> = <span class="php-keyword2">count</span>(<span class="php-var">$bases</span>) - <span class="php-num">1</span>; <span class="php-var">$i</span> &gt;= <span class="php-num">0</span>; <span class="php-var">$i</span>--) {
 </span><span id="399" class="l">                    <span class="php-var">$base</span> = <span class="php-var">$bases</span>[<span class="php-var">$i</span>];
 </span><span id="400" class="l">                    <span class="php-keyword1">if</span> (<span class="php-var">$base</span> &lt;= <span class="php-var">$value</span>) {
 </span><span id="401" class="l">                        <span class="php-keyword1">break</span>;
@@ -568,7 +568,7 @@
 		Punic v3.5.1 API documentation generated by <a href="http://apigen.org">ApiGen</a>
 	</div>
 </div>
-<script src="resources/combined.js?1393928f37b14bea36cde409550212fd50aeaa92"></script>
+<script src="resources/combined.js?86c79095babc17df9ae0e8fd0a4f6fb151b858c4"></script>
 <script src="elementlist.js?6bc6c7dbc4380c6900266b9d2727b430b96fcdd1"></script>
 </body>
 </html>
