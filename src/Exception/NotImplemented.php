@@ -13,12 +13,12 @@ class NotImplemented extends \Punic\Exception
      * Initializes the instance.
      *
      * @param string $function The function/method that's not implemented
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($function, $previous = null)
     {
         $this->function = $function;
-        $message = "$function is not implemented";
+        $message = "{$function} is not implemented";
         parent::__construct($message, \Punic\Exception::NOT_IMPLEMENTED, $previous);
     }
 

@@ -100,9 +100,7 @@ class TerritoryTest extends TestCase
      * @dataProvider provideGetByCode
      *
      * @param string $result
-     * @param string $territoryCode
      * @param string $type
-     * @param mixed $code
      */
     public function testGetByCode($result, $code, $type)
     {
@@ -253,13 +251,13 @@ class TerritoryTest extends TestCase
     public function provideGetParentTerritoryCode()
     {
         return array(
-            array(/*World*/'001', /*Nothing*/''),
-            array(/*Europe*/'150', /*World*/'001'),
-            array(/*Southern Europe*/'039', /*Europe*/'150'),
-            array(/*Italy*/'IT', /*Northern Europe*/'039'),
-            array(/*Italy*/'it', /*Northern Europe*/'039'),
-            array(/*Lazio*/'it62', /*Italy*/'IT'),
-            array(/*Rome*/'itrm', /*Lazio*/'it62'),
+            array(/*World*/ '001', /*Nothing*/ ''),
+            array(/*Europe*/ '150', /*World*/ '001'),
+            array(/*Southern Europe*/ '039', /*Europe*/ '150'),
+            array(/*Italy*/ 'IT', /*Northern Europe*/ '039'),
+            array(/*Italy*/ 'it', /*Northern Europe*/ '039'),
+            array(/*Lazio*/ 'it62', /*Italy*/ 'IT'),
+            array(/*Rome*/ 'itrm', /*Lazio*/ 'it62'),
         );
     }
 
@@ -283,22 +281,22 @@ class TerritoryTest extends TestCase
     public function provideGetChildTerritoryCodes()
     {
         return array(
-            array(/*World*/'001', false, false, /*Europe*/'150', true),
-            array(/*World*/'001', false, false, 'IT', false),
-            array(/*World*/'001', true, false, /*Europe*/'150', false),
-            array(/*World*/'001', true, false, 'IT', true),
-            array(/*World*/'001', true, true, 'IT', false),
-            array(/*World*/'001', true, true, 'it62', false),
-            array(/*World*/'001', true, true, 'itrm', true),
-            array(/*Italy*/'IT', false, false, 'it62', false),
-            array(/*Italy*/'IT', false, false, 'itrm', false),
-            array(/*Italy*/'IT', false, true, 'it62', true),
-            array(/*Italy*/'it', false, true, 'it62', true),
-            array(/*Italy*/'IT', false, true, 'itrm', false),
-            array(/*Italy*/'IT', true, true, 'it62', false),
-            array(/*Italy*/'IT', true, true, 'itrm', true),
-            array(/*Lazio*/'it62', true, false, 'itrm', true),
-            array(/*Lazio*/'it62', true, true, 'itrm', true),
+            array(/*World*/ '001', false, false, /*Europe*/ '150', true),
+            array(/*World*/ '001', false, false, 'IT', false),
+            array(/*World*/ '001', true, false, /*Europe*/ '150', false),
+            array(/*World*/ '001', true, false, 'IT', true),
+            array(/*World*/ '001', true, true, 'IT', false),
+            array(/*World*/ '001', true, true, 'it62', false),
+            array(/*World*/ '001', true, true, 'itrm', true),
+            array(/*Italy*/ 'IT', false, false, 'it62', false),
+            array(/*Italy*/ 'IT', false, false, 'itrm', false),
+            array(/*Italy*/ 'IT', false, true, 'it62', true),
+            array(/*Italy*/ 'it', false, true, 'it62', true),
+            array(/*Italy*/ 'IT', false, true, 'itrm', false),
+            array(/*Italy*/ 'IT', true, true, 'it62', false),
+            array(/*Italy*/ 'IT', true, true, 'itrm', true),
+            array(/*Lazio*/ 'it62', true, false, 'itrm', true),
+            array(/*Lazio*/ 'it62', true, true, 'itrm', true),
         );
     }
 

@@ -128,6 +128,20 @@ class PluralTest extends TestCase
         call_user_func_array(array('Punic\Plural', $method), $parameters);
     }
 
+    protected static function sortPluralRules($a, $b)
+    {
+        foreach (array('zero', 'one', 'two', 'few', 'many', 'other') as $pr) {
+            if ($a == $pr) {
+                return -1;
+            }
+            if ($b == $pr) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
     /**
      * @param array $rules
      *
@@ -135,18 +149,7 @@ class PluralTest extends TestCase
      */
     protected static function joinPluralRules($rules)
     {
-        usort($rules, function ($a, $b) {
-            foreach (array('zero', 'one', 'two', 'few', 'many', 'other') as $pr) {
-                if ($a == $pr) {
-                    return -1;
-                }
-                if ($b == $pr) {
-                    return 1;
-                }
-            }
-
-            return 0;
-        });
+        usort($rules, array(__CLASS__, 'sortPluralRules'));
 
         return implode(', ', $rules);
     }
@@ -158,7 +161,7 @@ class PluralTest extends TestCase
      */
     protected static function loadPluralRulesTestData()
     {
-        $testDataFile = dirname(__DIR__).DIRECTORY_SEPARATOR.'dataFiles'.DIRECTORY_SEPARATOR.'plurals.php';
+        $testDataFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'dataFiles' . DIRECTORY_SEPARATOR . 'plurals.php';
         if (!is_file($testDataFile)) {
             throw new Exception('Test data file not found: plurals.php');
         }

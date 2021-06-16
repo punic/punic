@@ -137,7 +137,7 @@ class ConvertIsoToPhpFormatTest extends TestCase
     {
         foreach ($multiplierResults as $index => $result) {
             $isoFormat = str_repeat($letter, 1 + $index);
-            $this->assertSame($result, Calendar::tryConvertIsoToPhpFormat($isoFormat), "ISO '$isoFormat' should give ".(($result === null) ? 'null' : "'$result'"));
+            $this->assertSame($result, Calendar::tryConvertIsoToPhpFormat($isoFormat), "ISO '{$isoFormat}' should give " . (($result === null) ? 'null' : "'{$result}'"));
         }
     }
 
@@ -172,23 +172,20 @@ class ConvertIsoToPhpFormatTest extends TestCase
      * * @dataProvider provideLocaleFormats
      *
      * @param string $localeID
-     * @param array $phpFormatsDate
-     * @param array $phpFormatsTime
-     * @param array $phpFormatsDateTime
      */
     public function testLocaleFormats($localeID, array $phpFormatsDate, array $phpFormatsTime, array $phpFormatsDateTime)
     {
         foreach ($phpFormatsDate as $width => $phpFormat) {
             $isoFormat = Calendar::getDateFormat($width, $localeID);
-            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "$width date format for $localeID: ISO $isoFormat => PHP $phpFormat");
+            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "{$width} date format for {$localeID}: ISO {$isoFormat} => PHP {$phpFormat}");
         }
         foreach ($phpFormatsTime as $width => $phpFormat) {
             $isoFormat = Calendar::getTimeFormat($width, $localeID);
-            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "$width time format for $localeID: ISO $isoFormat => PHP $phpFormat");
+            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "{$width} time format for {$localeID}: ISO {$isoFormat} => PHP {$phpFormat}");
         }
         foreach ($phpFormatsDateTime as $width => $phpFormat) {
             $isoFormat = Calendar::getDatetimeFormat($width, $localeID);
-            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "$width date/time format for $localeID: ISO $isoFormat => PHP $phpFormat");
+            $this->assertSame($phpFormat, Calendar::tryConvertIsoToPhpFormat($isoFormat), "{$width} date/time format for {$localeID}: ISO {$isoFormat} => PHP {$phpFormat}");
         }
     }
 }

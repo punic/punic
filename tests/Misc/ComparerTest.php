@@ -9,9 +9,6 @@ class ComparerTest extends TestCase
 {
     /**
      * @dataProvider provideCompareData
-     *
-     * @param array $input
-     * @param array $expected
      */
     public function testCompare(array $input, array $expected)
     {

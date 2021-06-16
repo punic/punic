@@ -73,7 +73,7 @@ class Number
             if (is_nan($number)) {
                 $result = $data['symbols']['nan'];
             } elseif (is_infinite($number)) {
-                $result = $sign.$data['symbols']['infinity'];
+                $result = $sign . $data['symbols']['infinity'];
             } else {
                 $precision = is_numeric($precision) ? (int) $precision : null;
                 if ($precision !== null) {
@@ -89,15 +89,15 @@ class Number
                     $groupSign = $data['symbols']['group'];
                     $preLength = 1 + (($len - 1) % 3);
                     $pre = substr($intPart, 0, $preLength);
-                    $intPart = $pre.$groupSign.implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
+                    $intPart = $pre . $groupSign . implode($groupSign, str_split(substr($intPart, $preLength), $groupLength));
                 }
-                $result = $sign.$intPart;
+                $result = $sign . $intPart;
                 if ($precision === null) {
                     if ($floatPath !== '') {
-                        $result .= $decimal.$floatPath;
+                        $result .= $decimal . $floatPath;
                     }
                 } elseif ($precision > 0) {
-                    $result .= $decimal.substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
+                    $result .= $decimal . substr(str_pad($floatPath, $precision, '0', STR_PAD_RIGHT), 0, $precision);
                 }
             }
         }
@@ -186,7 +186,7 @@ class Number
             }
 
             if ($which === 'long') {
-                $pluralRule = 'count-'.Plural::getRuleOfType($value, Plural::RULETYPE_CARDINAL, $locale);
+                $pluralRule = 'count-' . Plural::getRuleOfType($value, Plural::RULETYPE_CARDINAL, $locale);
                 if (!isset($data['unitPattern'][$pluralRule])) {
                     $pluralRule = 'count-other';
                 }
@@ -195,15 +195,15 @@ class Number
                 $result = sprintf($unitPattern, $formatted, $symbol);
             } else {
                 list($before, $after) = explode('%2$s', $format);
-                if ($after &&
-                    preg_match($data['currencySpacing']['afterCurrency']['currency'], $symbol) &&
-                    preg_match($data['currencySpacing']['afterCurrency']['surrounding'], sprintf($after, $formatted))) {
+                if ($after
+                    && preg_match($data['currencySpacing']['afterCurrency']['currency'], $symbol)
+                    && preg_match($data['currencySpacing']['afterCurrency']['surrounding'], sprintf($after, $formatted))) {
                     $symbol .= $data['currencySpacing']['afterCurrency']['insertBetween'];
                 }
-                if ($before &&
-                    preg_match($data['currencySpacing']['beforeCurrency']['currency'], $symbol) &&
-                    preg_match($data['currencySpacing']['beforeCurrency']['surrounding'], sprintf($before, $formatted))) {
-                    $symbol = $data['currencySpacing']['beforeCurrency']['insertBetween'].$symbol;
+                if ($before
+                    && preg_match($data['currencySpacing']['beforeCurrency']['currency'], $symbol)
+                    && preg_match($data['currencySpacing']['beforeCurrency']['surrounding'], sprintf($before, $formatted))) {
+                    $symbol = $data['currencySpacing']['beforeCurrency']['insertBetween'] . $symbol;
                 }
 
                 $result = sprintf($format, $formatted, $symbol);
@@ -237,19 +237,19 @@ class Number
             $group = $data['symbols']['group'];
             $groupQ = preg_quote($group);
             $ok = true;
-            if (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)".'$/', $value, $m)) {
+            if (preg_match('/^' . "({$plusQ}|{$minusQ})?(\\d+(?:{$groupQ}\\d+)*)" . '$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = null;
-            } elseif (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ".'$/', $value, $m)) {
+            } elseif (preg_match('/^' . "({$plusQ}|{$minusQ})?(\\d+(?:{$groupQ}\\d+)*){$decimalQ}" . '$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = '';
-            } elseif (preg_match('/^'."($plusQ|$minusQ)?(\\d+(?:$groupQ\\d+)*)$decimalQ(\\d+)".'$/', $value, $m)) {
+            } elseif (preg_match('/^' . "({$plusQ}|{$minusQ})?(\\d+(?:{$groupQ}\\d+)*){$decimalQ}(\\d+)" . '$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
                 $float = $m[3];
-            } elseif (preg_match('/^'."($plusQ|$minusQ)?$decimalQ(\\d+)".'$/', $value, $m)) {
+            } elseif (preg_match('/^' . "({$plusQ}|{$minusQ})?{$decimalQ}(\\d+)" . '$/', $value, $m)) {
                 $sign = $m[1];
                 $int = '0';
                 $float = $m[2];
@@ -265,9 +265,9 @@ class Number
                 }
                 $int = str_replace($group, '', $int);
                 if ($float === null) {
-                    $result = (int) "$sign$int";
+                    $result = (int) "{$sign}{$int}";
                 } else {
-                    $result = (float) "$sign$int.$float";
+                    $result = (float) "{$sign}{$int}.{$float}";
                 }
             }
         }
@@ -321,10 +321,10 @@ class Number
 
         list($rule, $left, $right, $prevBase) = self::getRbnfRule($value, $data, $base);
 
-        $rule = preg_replace_callback('/([<←>→=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/u', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
+        return preg_replace_callback('/([<←>→=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/u', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
             if (isset($match[4])) {
                 $rule = Plural::getRuleOfType($left, $match[3] ? $match[3] : Plural::RULETYPE_CARDINAL, $locale);
-                if (preg_match('/'.$rule.'{(.*?)}/', $match[4], $match2)) {
+                if (preg_match('/' . $rule . '{(.*?)}/', $match[4], $match2)) {
                     return $match2[1];
                 }
             } else {
@@ -366,8 +366,6 @@ class Number
                 }, (array) $value));
             }
         }, $rule);
-
-        return $rule;
     }
 
     protected static function getRbnfRule($value, $data, $base = null)
@@ -397,7 +395,7 @@ class Number
             if ($base) {
                 $i = array_search($base, $bases);
             } else {
-                for ($i = count($bases) - 1; $i >= 0; --$i) {
+                for ($i = count($bases) - 1; $i >= 0; $i--) {
                     $base = $bases[$i];
                     if ($base <= $value) {
                         break;

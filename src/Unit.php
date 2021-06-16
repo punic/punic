@@ -341,7 +341,7 @@ class Unit
                 if (strpos($c, '_') === false) {
                     foreach (array_keys($us) as $u) {
                         if (strpos($c, '_') === false) {
-                            $units[] = "$c/$u";
+                            $units[] = "{$c}/{$u}";
                         }
                     }
                 }

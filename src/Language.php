@@ -64,12 +64,12 @@ class Language
             $lookFor = array();
             if ($script !== '') {
                 if ($allowCompoundNames && $territory !== '') {
-                    $lookFor[] = "$language-$script-$territory";
+                    $lookFor[] = "{$language}-{$script}-{$territory}";
                 }
-                $lookFor[] = "$language-$script";
+                $lookFor[] = "{$language}-{$script}";
             }
             if ($allowCompoundNames && $territory !== '') {
-                $lookFor[] = "$language-$territory";
+                $lookFor[] = "{$language}-{$territory}";
             }
             $lookFor[] = $language;
             $data = Data::get('languages', $locale);

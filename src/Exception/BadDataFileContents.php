@@ -16,13 +16,13 @@ class BadDataFileContents extends \Punic\Exception
      *
      * @param string $dataFilePath The path to the file with bad contents
      * @param string $dataFileContents The malformed of the file
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($dataFilePath, $dataFileContents, $previous = null)
     {
         $this->dataFilePath = $dataFilePath;
         $this->dataFileContents = $dataFileContents;
-        $message = "The file '$dataFilePath' contains malformed data";
+        $message = "The file '{$dataFilePath}' contains malformed data";
         parent::__construct($message, \Punic\Exception::BAD_DATA_FILE_CONTENTS, $previous);
     }
 

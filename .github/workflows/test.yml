@@ -1,0 +1,89 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - "*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  php-coding-style:
+    name: Check PHP coding style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          tools: php-cs-fixer:v3.0.0
+          coverage: none
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check PHP coding style
+        run: >
+          php-cs-fixer fix
+          --path-mode=intersection --config=./.php-cs-fixer.dist.php --dry-run --using-cache=no --diff --show-progress=dots --ansi --no-interaction --verbose
+          -- .
+  phpunit:
+    name: Run PHPUnit tests
+    needs: php-coding-style
+    env:
+      CODE_COVERAGE_TOOL: none
+      PHPUNIT_OPTIONS: ''
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        php-version:
+          - "5.3"
+          - "5.4"
+          - "5.5"
+          - "5.6"
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+          - "8.0"
+        include:
+          - os: windows-latest
+            php-version: "5.5"
+          - os: windows-latest
+            php-version: "7.4"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set code coverage
+        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2'
+        run: |
+          echo "CODE_COVERAGE_TOOL=xdebug" >> $GITHUB_ENV
+          echo "PHPUNIT_OPTIONS=--coverage-clover coverage-clover.xml" >> $GITHUB_ENV
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: ${{ env.CODE_COVERAGE_TOOL }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Composer dependencies
+        run: composer update --ansi --no-interaction --classmap-authoritative --no-cache
+      - name: Run PHPUnit
+        run: composer run-script test --ansi --no-interaction -- $PHPUNIT_OPTIONS
+      - name: Download Coveralls
+        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        run: curl -sSLf -o php-coveralls.phar https://github.com/php-coveralls/php-coveralls/releases/latest/download/php-coveralls.phar
+      - name: Upload Coveralls data
+        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: php php-coveralls.phar --coverage_clover=coverage-clover.xml --json_path=coveralls-upload.json --ansi --no-interaction -vvv
+      - name: Download Scrutinizer
+        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        run: curl -sSLf -o ocular.phar https://scrutinizer-ci.com/ocular.phar
+      - name: Upload Scrutinizer data
+        if: ${{ env.CODE_COVERAGE_TOOL != 'none' }}
+        run: php ocular.phar code-coverage:upload --format=php-clover --ansi --no-interaction coverage-clover.xml

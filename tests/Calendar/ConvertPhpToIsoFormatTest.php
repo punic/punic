@@ -10,9 +10,10 @@ use Punic\Test\TestCase;
 class ConvertPhpToIsoFormatTest extends TestCase
 {
     const TEST_TIMEZONE = 'America/Los_Angeles';
+
     private $previousTimezone;
 
-    protected function setUp()
+    protected function doSetUp()
     {
         $this->previousTimezone = @date_default_timezone_get();
         if (empty($this->previousTimezone)) {
@@ -21,7 +22,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
         date_default_timezone_set(self::TEST_TIMEZONE);
     }
 
-    protected function tearDown()
+    protected function doTearDown()
     {
         date_default_timezone_set($this->previousTimezone);
     }
@@ -66,7 +67,6 @@ class ConvertPhpToIsoFormatTest extends TestCase
      *
      * @param string $phpFormat
      * @param int $timestamp
-     * @param \DateTime $dateTime
      */
     public function testConvertPhpToIsoFormat($phpFormat, $timestamp, DateTime $dateTime)
     {
@@ -74,7 +74,7 @@ class ConvertPhpToIsoFormatTest extends TestCase
         $this->assertSame(
             date($phpFormat, $timestamp),
             Calendar::format($dateTime, $punicFormat, 'en'),
-            "PHP date/time format chunk '$phpFormat' converted as '$punicFormat' and rendered for ".$dateTime->format('c')
+            "PHP date/time format chunk '{$phpFormat}' converted as '{$punicFormat}' and rendered for " . $dateTime->format('c')
         );
     }
 
