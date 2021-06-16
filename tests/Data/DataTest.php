@@ -288,7 +288,6 @@ class DataTest extends TestCase
     /**
      * @dataProvider provideInvalidOverrides
      *
-     * @param array $overrides
      * @param string $message
      */
     public function testInvalidOverrides(array $overrides, $message)

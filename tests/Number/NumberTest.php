@@ -208,9 +208,6 @@ class NumberTest extends TestCase
      * @param string|mixed $value
      * @param int|null $precision
      * @param string $locale
-     * @param mixed $currencyCode
-     * @param mixed $kind
-     * @param mixed $symbol
      */
     public function testFormatCurrency($result, $value, $currencyCode, $kind, $precision, $symbol, $locale)
     {
@@ -339,7 +336,6 @@ class NumberTest extends TestCase
      * @param string $result
      * @param string|number $value
      * @param string $locale
-     * @param mixed $type
      */
     public function testSpellOut($result, $value, $type, $locale)
     {

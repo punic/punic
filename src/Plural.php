@@ -2,6 +2,8 @@
 
 namespace Punic;
 
+use Exception as PHPException;
+
 /**
  * Plural helper stuff.
  */
@@ -97,7 +99,7 @@ class Plural
             throw new Exception\BadArgumentType($number, 'number');
         }
         // 'n' => '%1$s', // absolute value of the source number (integer and decimals).
-        $v1 = $intPartAbs.(strlen($floatPart) ? ".$floatPart" : '');
+        $v1 = $intPartAbs . (strlen($floatPart) ? ".{$floatPart}" : '');
         // 'i' => '%2$s', // integer digits of n
         $v2 = $intPartAbs;
         // 'v' => '%3$s', // number of visible fraction digits in n, with trailing zeros.
@@ -129,7 +131,7 @@ class Plural
             $formula = sprintf($formulaPattern, $v1, $v2, $v3, $v4, $v5, $v6, $v7);
             $check = str_replace(array('static::inRange(', ' and ', ' or ', ', false, ', ', true, ', ', array('), ' , ', $formula);
             if (preg_match('/[a-z]/', $check)) {
-                throw new \Exception('Bad formula!');
+                throw new PHPException('Bad formula!');
             }
             // fix for difference in modulo (%) in the definition and the one implemented in PHP for decimal numbers
             while (preg_match('/(\\d+\\.\\d+) % (\\d+(\\.\\d+)?)/', $formula, $m)) {
@@ -137,18 +139,19 @@ class Plural
                 $decimals = strlen(rtrim($decimalPart, '0'));
                 if ($decimals > 0) {
                     $pow = (int) pow(10, $decimals);
-                    $repl = '('.(string) ((int) ((float) $m[1] * $pow)).' % '.(string) ((int) ((float) ($m[2] * $pow))).') / '.$pow;
+                    $repl = '(' . (string) ((int) ((float) $m[1] * $pow)) . ' % ' . (string) ((int) ((float) ($m[2] * $pow))) . ') / ' . $pow;
                 } else {
-                    $repl = (string) ((int) $m[1]).' % '.$m[2];
+                    $repl = (string) ((int) $m[1]) . ' % ' . $m[2];
                 }
                 $formula = str_replace($m[0], $repl, $formula);
             }
-            $formulaResult = @eval("return ($formula) ? 'yes' : 'no';");
+            $formulaResult = @eval("return ({$formula}) ? 'yes' : 'no';");
             if ($formulaResult === 'yes') {
                 $result = $rule;
                 break;
-            } elseif ($formulaResult !== 'no') {
-                throw new \Exception('There was a problem in the formula '.$formulaPattern);
+            }
+            if ($formulaResult !== 'no') {
+                throw new PHPException('There was a problem in the formula ' . $formulaPattern);
             }
         }
 
@@ -165,7 +168,7 @@ class Plural
     {
         if (is_int($value)) {
             $isInt = true;
-        } elseif ((int) $value == $value) {
+        } elseif ($value == (int) $value) {
             $isInt = true;
         } else {
             $isInt = false;

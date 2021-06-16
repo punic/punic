@@ -51,12 +51,12 @@ class Currency
      * Returns the name of a currency given its code.
      *
      * @param string $currencyCode The currency code
-     * @param null|number|string $quantity The quantity identifier. Allowed values:
-     * <ul>
-     *     <li>`null` to return the standard name, not associated to any quantity</li>
-     *     <li>`number` to return the name following the plural rule for the specified quantity</li>
-     *     <li>string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
-     * </ul>
+     * @param number|string|null $quantity The quantity identifier. Allowed values:
+     *                                     <ul>
+     *                                     <li>`null` to return the standard name, not associated to any quantity</li>
+     *                                     <li>`number` to return the name following the plural rule for the specified quantity</li>
+     *                                     <li>string `'zero'|'one'|'two'|'few'|'many'|'other'` the plural rule
+     *                                     </ul>
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      *
      * @return string Returns an empty string if $currencyCode is not valid, the localized currency name otherwise
@@ -177,12 +177,12 @@ class Currency
      * @param string $territoryCode The territoy code
      *
      * @return array Return a list of items with these keys:
-     * <ul>
-     *     <li>string `currency`: the currency code (always present)</li>
-     *     <li>string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD</li>
-     *     <li>string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD</li>
-     *     <li>bool `tender`: true if the currency was or is legal tender, false otherwise (always present)</li>
-     * </ul>
+     *               <ul>
+     *               <li>string `currency`: the currency code (always present)</li>
+     *               <li>string `from`: start date of the currency validity in the territory (not present if no start date) - Format is YYYY-MM-DD</li>
+     *               <li>string `to`: end date of the currency validity in the territory (not present if no end date) - Format is YYYY-MM-DD</li>
+     *               <li>bool `tender`: true if the currency was or is legal tender, false otherwise (always present)</li>
+     *               </ul>
      */
     public static function getCurrencyHistoryForTerritory($territoryCode)
     {

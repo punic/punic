@@ -13,12 +13,12 @@ class DataFileNotReadable extends \Punic\Exception
      * Initializes the instance.
      *
      * @param string $dataFilePath The path to the unreadable file
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($dataFilePath, $previous = null)
     {
         $this->dataFilePath = $dataFilePath;
-        $message = "Unable to read from the data file '$dataFilePath'";
+        $message = "Unable to read from the data file '{$dataFilePath}'";
         parent::__construct($message, \Punic\Exception::DATA_FILE_NOT_READABLE, $previous);
     }
 

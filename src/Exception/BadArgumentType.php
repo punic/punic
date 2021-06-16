@@ -16,7 +16,7 @@ class BadArgumentType extends \Punic\Exception
      *
      * @param mixed $argumentValue The value of the invalid argument
      * @param string $destinationTypeDescription The description of the destination type
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($argumentValue, $destinationTypeDescription, $previous = null)
     {
@@ -32,7 +32,7 @@ class BadArgumentType extends \Punic\Exception
                 $shownName = (string) $argumentValue;
                 break;
             case 'string':
-                $shownName = "'$argumentValue'";
+                $shownName = "'{$argumentValue}'";
                 break;
             case 'object':
                 $shownName = get_class($argumentValue);
@@ -41,14 +41,12 @@ class BadArgumentType extends \Punic\Exception
                 $shownName = $type;
                 break;
         }
-        $message = "Can't convert $shownName to a $destinationTypeDescription";
+        $message = "Can't convert {$shownName} to a {$destinationTypeDescription}";
         parent::__construct($message, \Punic\Exception::BAD_ARGUMENT_TYPE, $previous);
     }
 
     /**
      * Retrieves the value of the invalid argument.
-     *
-     * @return mixed
      */
     public function getArgumentValue()
     {

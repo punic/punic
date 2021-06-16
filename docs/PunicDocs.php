@@ -41,8 +41,8 @@ class PunicDocs
     {
         $this->rootDir = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__));
         $this->srcDir = "{$this->rootDir}/src";
-        $this->apiDir = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__).'/themes/punic/static/api';
-        $this->apigenBin = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__).'/vendor/bin/apigen';
+        $this->apiDir = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/themes/punic/static/api';
+        $this->apigenBin = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/vendor/bin/apigen';
     }
 
     /**
@@ -75,7 +75,7 @@ class PunicDocs
     public function getPunicVersion()
     {
         if ($this->punicVersion === null) {
-            $changelog = @file_get_contents($this->getRootDir().'/CHANGELOG.md');
+            $changelog = @file_get_contents($this->getRootDir() . '/CHANGELOG.md');
             if ($changelog === false) {
                 throw new Exception('Failed to read the CHANGELOG file.');
             }
@@ -132,8 +132,8 @@ class PunicDocs
         $cmd = implode(' ', array(
             escapeshellarg($instance->getApigenBin()),
             'generate',
-            escapeshellarg('--source='.$instance->getSrcDir()),
-            escapeshellarg('--destination='.$instance->getApiDir()),
+            escapeshellarg('--source=' . $instance->getSrcDir()),
+            escapeshellarg('--destination=' . $instance->getApiDir()),
             '--access-levels=public',
             '--annotation-groups=todo,deprecated',
             escapeshellarg('--exclude=*/data/*'),
@@ -141,7 +141,7 @@ class PunicDocs
             '--main=Punic',
             '--tree',
             '--template-theme=bootstrap',
-            escapeshellarg('--title=Punic v'.$instance->getPunicVersion()),
+            escapeshellarg('--title=Punic v' . $instance->getPunicVersion()),
         ));
         $rc = -1;
         passthru($cmd, $rc);

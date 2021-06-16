@@ -14,7 +14,7 @@ class MeasurementSystemTest extends TestCase
         foreach (Data::getAvailableLocales(true) as $locale) {
             $theseKeys = array_keys(Unit::getMeasurementSystems($locale));
             sort($theseKeys);
-            if (null === $keys) {
+            if ($keys === null) {
                 $keys = $theseKeys;
             } else {
                 $this->assertSame($keys, $theseKeys);

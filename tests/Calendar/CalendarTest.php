@@ -1400,7 +1400,7 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('jmv', 'm')
         );
         $this->assertSame(
-           array('h:mm a v', null),
+            array('h:mm a v', null),
             Calendar::getIntervalFormat('jmv', 's')
         );
         $this->assertSame(
@@ -1408,15 +1408,15 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('jmv', 'd', 'de')
         );
         $this->assertSame(
-           array("HH:mm–HH:mm 'Uhr' v", true),
+            array("HH:mm–HH:mm 'Uhr' v", true),
             Calendar::getIntervalFormat('jmv', 'a', 'de')
         );
         $this->assertSame(
-           array("HH:mm–HH:mm 'Uhr' v", true),
+            array("HH:mm–HH:mm 'Uhr' v", true),
             Calendar::getIntervalFormat('jmv', 'H', 'de')
         );
         $this->assertSame(
-           array("HH:mm–HH:mm 'Uhr' v", true),
+            array("HH:mm–HH:mm 'Uhr' v", true),
             Calendar::getIntervalFormat('jmv', 'm', 'de')
         );
         $this->assertSame(
@@ -2318,23 +2318,23 @@ class CalendarTest extends TestCase
     public function provideGetTimezonesAliases()
     {
         return array(
-          array('Asmara', 'Africa/Asmara'),
-          array('Atikokan', 'America/Atikokan'),
-          array('Ho Chi Minh City', 'Asia/Ho_Chi_Minh'),
-          array('Kathmandu', 'Asia/Kathmandu'),
-          array('Kolkata', 'Asia/Kolkata'),
-          array('Faroe', 'Atlantic/Faroe'),
-          array('Chuuk', 'Pacific/Chuuk'),
-          array('Pohnpei', 'Pacific/Pohnpei'),
-          array('Buenos Aires', 'America/Argentina/Buenos_Aires'),
-          array('Catamarca', 'America/Argentina/Catamarca'),
-          array('Cordoba', 'America/Argentina/Cordoba'),
-          array('Jujuy', 'America/Argentina/Jujuy'),
-          array('Mendoza', 'America/Argentina/Mendoza'),
-          array('Indianapolis', 'America/Indiana/Indianapolis'),
-          array('Louisville', 'America/Kentucky/Louisville'),
-          array('Unknown City', 'America/Not_Existing_TimeZone_Name'),
-       );
+            array('Asmara', 'Africa/Asmara'),
+            array('Atikokan', 'America/Atikokan'),
+            array('Ho Chi Minh City', 'Asia/Ho_Chi_Minh'),
+            array('Kathmandu', 'Asia/Kathmandu'),
+            array('Kolkata', 'Asia/Kolkata'),
+            array('Faroe', 'Atlantic/Faroe'),
+            array('Chuuk', 'Pacific/Chuuk'),
+            array('Pohnpei', 'Pacific/Pohnpei'),
+            array('Buenos Aires', 'America/Argentina/Buenos_Aires'),
+            array('Catamarca', 'America/Argentina/Catamarca'),
+            array('Cordoba', 'America/Argentina/Cordoba'),
+            array('Jujuy', 'America/Argentina/Jujuy'),
+            array('Mendoza', 'America/Argentina/Mendoza'),
+            array('Indianapolis', 'America/Indiana/Indianapolis'),
+            array('Louisville', 'America/Kentucky/Louisville'),
+            array('Unknown City', 'America/Not_Existing_TimeZone_Name'),
+        );
     }
 
     /**

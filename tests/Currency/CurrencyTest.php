@@ -14,7 +14,7 @@ class CurrencyTest extends TestCase
         foreach (Data::getAvailableLocales(true) as $locale) {
             $theseCurrencyCodes = array_keys(Currency::getAllCurrencies(true, true, $locale));
             sort($theseCurrencyCodes);
-            if (null === $allCurrencyCodes) {
+            if ($allCurrencyCodes === null) {
                 $allCurrencyCodes = $theseCurrencyCodes;
             } else {
                 $this->assertSame($allCurrencyCodes, $theseCurrencyCodes);
@@ -51,7 +51,6 @@ class CurrencyTest extends TestCase
      * @param string $currencySymbol
      * @param string $currencySymbolNarrow
      * @param string $currencySymbolAlternative
-     * @param mixed $iso4217
      */
     public function testGetInfo($locale, $currencyCode, $quantity, $currencyName, $currencySymbol, $currencySymbolNarrow, $currencySymbolAlternative, $iso4217)
     {

@@ -16,20 +16,18 @@ class ValueNotInList extends \Punic\Exception
      *
      * @param string|numeric $value The invalid value
      * @param array<string|numeric> $allowedValues The list of valid values
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($value, $allowedValues, $previous = null)
     {
         $this->value = $value;
         $this->allowedValues = $allowedValues;
-        $message = "'$value' is not valid. Acceptable values are: '".implode("', '", $allowedValues)."'";
+        $message = "'{$value}' is not valid. Acceptable values are: '" . implode("', '", $allowedValues) . "'";
         parent::__construct($message, \Punic\Exception::VALUE_NOT_IN_LIST, $previous);
     }
 
     /**
      * Retrieves the invalid value.
-     *
-     * @return mixed
      */
     public function getValue()
     {

@@ -18,7 +18,7 @@ abstract class TestCase extends PHPUnitTestCase
         if (func_num_args() >= 2) {
             if ($message !== null) {
                 if (!is_string($message)) {
-                    throw new Exception('Invalid $exception argument in '.__FUNCTION__);
+                    throw new Exception('Invalid $exception argument in ' . __FUNCTION__);
                 }
                 $this->expectExceptionMessage($message);
             }

@@ -14,14 +14,14 @@ spl_autoload_register(
         if (strpos($class, 'Punic\\Test\\') !== 0) {
             return;
         }
-        $file = __DIR__.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen('Punic\\Test'))).'.php';
+        $file = __DIR__ . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen('Punic\\Test'))) . '.php';
         if (is_file($file)) {
             require_once $file;
         }
     }
 );
 
-require_once dirname(__DIR__).'/punic.php';
+require_once dirname(__DIR__) . '/punic.php';
 $dataDir = (string) getenv('PUNIC_TEST_DATADIR');
 if ($dataDir !== '') {
     if (!is_dir($dataDir)) {

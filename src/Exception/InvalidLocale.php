@@ -13,24 +13,22 @@ class InvalidLocale extends \Punic\Exception
      * Initializes the instance.
      *
      * @param mixed $locale The bad locale
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($locale, $previous = null)
     {
         $this->locale = $locale;
         $type = gettype($locale);
         if ($type === 'string') {
-            $message = "'$locale' is not a valid locale identifier";
+            $message = "'{$locale}' is not a valid locale identifier";
         } else {
-            $message = "A valid locale should be a string, $type received";
+            $message = "A valid locale should be a string, {$type} received";
         }
         parent::__construct($message, \Punic\Exception::INVALID_LOCALE, $previous);
     }
 
     /**
      * Retrieves the bad locale.
-     *
-     * @return mixed
      */
     public function getLocale()
     {

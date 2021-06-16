@@ -192,7 +192,7 @@ class Territory
         $decodedLevels = array();
         $n = is_string($levels) ? strlen($levels) : 0;
         if ($n > 0) {
-            for ($i = 0; $i < $n; ++$i) {
+            for ($i = 0; $i < $n; $i++) {
                 $l = substr($levels, $i, 1);
                 if (!isset($levelMap[$l])) {
                     $decodedLevels = array();
@@ -204,7 +204,7 @@ class Territory
             }
         }
         if (count($decodedLevels) === 0) {
-            throw new \Punic\Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '".implode("', '", array_keys($levelMap))."'");
+            throw new Exception\BadArgumentType($levels, "list of territory kinds: it should be a list of one or more of the codes '" . implode("', '", array_keys($levelMap)) . "'");
         }
         $struct = self::filterStructure(self::getStructure(), $decodedLevels, 0);
         $flatList = (count($decodedLevels) > 1) ? false : true;
@@ -215,7 +215,7 @@ class Territory
         $finalized = self::finalizeWithNames($data, $struct, $flatList);
 
         if ($flatList) {
-            $sorter = new \Punic\Comparer();
+            $sorter = new Comparer();
             $sorter->sort($finalized, true);
         } else {
             $finalized = static::sort($finalized);
@@ -239,21 +239,21 @@ class Territory
      *
      * @param string $territoryCode The territory code
      * @param string $filterStatuses Filter language status.
-     * <ul>
-     *     <li>If empty no filter will be applied</li>
-     *     <li>'o' to include official languages</li>
-     *     <li>'r' to include official regional languages</li>
-     *     <li>'f' to include de facto official languages</li>
-     *     <li>'m' to include official minority languages</li>
-     *     <li>'u' to include unofficial or unknown languages</li>
-     * </ul>
+     *                               <ul>
+     *                               <li>If empty no filter will be applied</li>
+     *                               <li>'o' to include official languages</li>
+     *                               <li>'r' to include official regional languages</li>
+     *                               <li>'f' to include de facto official languages</li>
+     *                               <li>'m' to include official minority languages</li>
+     *                               <li>'u' to include unofficial or unknown languages</li>
+     *                               </ul>
      * @param string $onlyCodes Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
-     * <ul>
-     *     <li>string id: the language identifier</li>
-     *     <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
-     *     <li>number population: the amount of people speaking the language (%)</li>
-     *     <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
-     * </ul>
+     *                          <ul>
+     *                          <li>string id: the language identifier</li>
+     *                          <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
+     *                          <li>number population: the amount of people speaking the language (%)</li>
+     *                          <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
+     *                          </ul>
      *
      * @return array|null Return the languages spoken in the specified territory, as described by the $onlyCodes parameter (or null if $territoryCode is not valid or no data is available)
      */
@@ -351,7 +351,7 @@ class Territory
         foreach (Data::getGeneric('territoryInfo') as $territoryID => $territoryInfo) {
             $percentage = null;
             foreach ($territoryInfo['languages'] as $langID => $langInfo) {
-                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID.'_') === 0)) {
+                if ((strcasecmp($languageID, $langID) === 0) || (stripos($langID, $languageID . '_') === 0)) {
                     if ($percentage === null) {
                         $percentage = $langInfo['population'];
                     } else {
@@ -364,9 +364,7 @@ class Territory
             }
         }
         arsort($peopleInTerritory, SORT_NUMERIC);
-        $territoryIDs = array_keys($peopleInTerritory);
-
-        return $territoryIDs;
+        return array_keys($peopleInTerritory);
     }
 
     /**
@@ -389,7 +387,7 @@ class Territory
             }
             foreach ($data as $parentTerritoryCode => $parentTerritoryInfo) {
                 if (in_array($childTerritoryCode, $parentTerritoryInfo['contains'], false)) {
-                    $result = is_int($parentTerritoryCode) ? substr('00'.$parentTerritoryCode, -3) : $parentTerritoryCode;
+                    $result = is_int($parentTerritoryCode) ? substr('00' . $parentTerritoryCode, -3) : $parentTerritoryCode;
                     if ($result === '001' || static::getParentTerritoryCode($result) !== '') {
                         break;
                     }
