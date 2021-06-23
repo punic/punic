@@ -97,6 +97,7 @@ class Unit
     public static function format($number, $unit, $width = 'short', $locale = '')
     {
         $precision = null;
+        $m = null;
         if (is_int($width)) {
             $precision = $width;
             $width = 'short';

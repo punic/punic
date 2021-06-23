@@ -84,6 +84,7 @@ class Plural
             }
             $intPartAbs = (string) abs((int) $intPart);
         } elseif (is_string($number) && $number !== '') {
+            $m = null;
             if (preg_match('/^[+|\\-]?\\d+\\.?$/', $number)) {
                 $v = (int) $number;
                 $intPartAbs = (string) abs($v);

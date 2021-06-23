@@ -14,7 +14,7 @@ class ValueNotInList extends \Punic\Exception
     /**
      * Initializes the instance.
      *
-     * @param string|numeric $value The invalid value
+     * @param string|int|float $value The invalid value
      * @param array<string|numeric> $allowedValues The list of valid values
      * @param \Exception|null $previous The previous exception used for the exception chaining
      */

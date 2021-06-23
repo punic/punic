@@ -237,6 +237,7 @@ class Number
             $group = $data['symbols']['group'];
             $groupQ = preg_quote($group);
             $ok = true;
+            $m = null;
             if (preg_match('/^' . "({$plusQ}|{$minusQ})?(\\d+(?:{$groupQ}\\d+)*)" . '$/', $value, $m)) {
                 $sign = $m[1];
                 $int = $m[2];
@@ -324,6 +325,7 @@ class Number
         return preg_replace_callback('/([<←>→=])(.*?)\1\1?|\$\((.*?),(.*?)\)\$/u', function ($match) use ($value, $left, $right, $type, $prevBase, $locale) {
             if (isset($match[4])) {
                 $rule = Plural::getRuleOfType($left, $match[3] ? $match[3] : Plural::RULETYPE_CARDINAL, $locale);
+                $match2 = null;
                 if (preg_match('/' . $rule . '{(.*?)}/', $match[4], $match2)) {
                     return $match2[1];
                 }

@@ -13,7 +13,7 @@ class InvalidLocale extends \Punic\Exception
      * Initializes the instance.
      *
      * @param mixed $locale The bad locale
-     * @param Exception|null $previous The previous exception used for the exception chaining
+     * @param \Exception|null $previous The previous exception used for the exception chaining
      */
     public function __construct($locale, $previous = null)
     {
