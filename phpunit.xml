@@ -41,6 +41,9 @@
 		<testsuite name="Exceptions tests">
 			<directory>./tests/Exception/</directory>
 		</testsuite>
+        <testsuite name="Script tests">
+            <directory>./tests/Script/</directory>
+        </testsuite>
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
