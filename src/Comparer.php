@@ -16,6 +16,11 @@ class Comparer
     private $cache;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * @var bool
      */
     private $caseSensitive;
@@ -33,15 +38,14 @@ class Comparer
     /**
      * Initializes the instance.
      *
-     * @param string $locale
+     * @param string|null $locale
      * @param bool $caseSensitive
      */
     public function __construct($locale = null, $caseSensitive = false)
     {
         $this->cache = array();
-        $this->locale = isset($locale) ? $locale : \Punic\Data::getDefaultLocale();
+        $this->locale = (string) $locale !== '' ? $locale : \Punic\Data::getDefaultLocale();
         $this->caseSensitive = (bool) $caseSensitive;
-        $this->collator = null;
         if (class_exists('\Collator')) {
             try {
                 $this->collator = new Collator($this->locale);
