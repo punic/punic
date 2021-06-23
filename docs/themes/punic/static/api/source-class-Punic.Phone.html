@@ -183,7 +183,7 @@
 </span><span id="61" class="l">        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$result</span>)) {
 </span><span id="62" class="l">            <span class="php-var">$maxLen</span> = <span class="php-num">0</span>;
 </span><span id="63" class="l">            <span class="php-var">$data</span> = Data::getGeneric(<span class="php-quote">'telephoneCodeData'</span>);
-</span><span id="64" class="l">            <span class="php-keyword1">foreach</span> (<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$territoryCode</span> =&gt; <span class="php-var">$prefixes</span>) {
+</span><span id="64" class="l">            <span class="php-keyword1">foreach</span> (<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$prefixes</span>) {
 </span><span id="65" class="l">                <span class="php-keyword1">foreach</span> (<span class="php-var">$prefixes</span> <span class="php-keyword1">as</span> <span class="php-var">$prefix</span>) {
 </span><span id="66" class="l">                    <span class="php-var">$len</span> = <span class="php-keyword2">strlen</span>(<span class="php-var">$prefix</span>);
 </span><span id="67" class="l">                    <span class="php-keyword1">if</span> (<span class="php-var">$maxLen</span> &lt; <span class="php-var">$len</span>) {
