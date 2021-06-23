@@ -186,6 +186,7 @@ class Options
         $result = new static();
         $localeOptions = array();
         $n = count($options);
+        $matches = null;
         for ($i = 0; $i < $n; ++$i) {
             if (preg_match('/^(--[^=]+)=(.*)$/', $options[$i], $matches)) {
                 $currentOption = $matches[1];
@@ -862,6 +863,7 @@ class LocaleIdentifier
             $rxRegion = '(?:[a-z]{2})|(?:[0-9]{3})';
             $rxVariant = '(?:[a-z0-9]{5,8})|(?:[0-9][a-z0-9]{3})';
             $rxSep = '[-_]';
+            $matches = null;
             if (is_string($localeIdentifier) && preg_match("/^($rxLanguage)(?:$rxSep($rxScript))?(?:$rxSep($rxRegion))?((?:$rxSep(?:$rxVariant))*)$/i", $localeIdentifier, $matches)) {
                 $result = new static();
                 $result->language = strtolower($matches[1]);
@@ -933,8 +935,10 @@ class Courier
     {
         $fullPath = rtrim($this->options->getSourceLocation(), '/') . '/' . ltrim($relativePath, '/');
         $contents = file_get_contents($fullPath);
+        /** @var array|null $http_response_header */
         if (isset($http_response_header)) {
             foreach($http_response_header as $header) {
+                $matches = null;
                 if (preg_match("/^HTTP\/.+?\s+([0-9]+)(\s+(\S.+)?)$/", $header, $matches)) {
                     $code = (int) $matches[1];
                     if ($code !== 200) {
@@ -994,6 +998,7 @@ function handleError($errno, $errstr, $errfile, $errline)
 set_error_handler('handleError');
 
 try {
+    /** @var array|null $argv */
     if (isset($argv) && is_array($argv) && count($argv) > 1) {
         $optionArray = array_values($argv);
         array_shift($optionArray);

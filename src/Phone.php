@@ -61,7 +61,7 @@ class Phone
         if (!isset($result)) {
             $maxLen = 0;
             $data = Data::getGeneric('telephoneCodeData');
-            foreach ($data as $territoryCode => $prefixes) {
+            foreach ($data as $prefixes) {
                 foreach ($prefixes as $prefix) {
                     $len = strlen($prefix);
                     if ($maxLen < $len) {
