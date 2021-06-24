@@ -66,7 +66,7 @@ class Script
      *
      * @param string|mixed $scriptCode the script code
      * @param string $preferredVariant the preferred variant (valid values are the values of the ALTERNATIVENAME_... constants)
-     * @param bool $fallbackToEnglish some languages may be missing translation for some scritps: should we look for English names in this case?
+     * @param bool $fallbackToEnglish some languages may be missing translation for some scripts: should we look for English names in this case?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return string empty string if $scriptCode is not a valid script code
@@ -96,7 +96,7 @@ class Script
      * Get all the scripts.
      *
      * @param string $preferredVariant the preferred variant (valid values are the values of the ALTERNATIVENAME_... constants)
-     * @param bool $fallbackToEnglish some languages may be missing translation for some scritps: should we look for English names in this case?
+     * @param bool $fallbackToEnglish some languages may be missing translation for some scripts: should we look for English names in this case?
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @return array Array keys are the script codes, array values are the script names (the array is sorted by the values)

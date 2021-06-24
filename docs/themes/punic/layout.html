@@ -148,7 +148,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-      {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
+      {# MOBILE NAV, TRIGGERS SIDE NAV ON TOGGLE #}
       <nav class="wy-nav-top" aria-label="top navigation">
         {% block mobile_nav %}
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
@@ -189,7 +189,7 @@
 
   {% if not embedded %}
 
-    {# XXX Sphinx 1.8.0 made this an external js-file, quick fix until we refactor the template to inherert more blocks directly from sphinx #}
+    {# XXX Sphinx 1.8.0 made this an external js-file, quick fix until we refactor the template to inherent more blocks directly from sphinx #}
     {% if sphinx_version >= "1.8.0" %}
       <script type="text/javascript" id="documentation_options" data-url_root="{{ pathto('', 1) }}" src="{{ pathto('_static/documentation_options.js', 1) }}"></script>
       {%- for scriptfile in script_files %}

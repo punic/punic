@@ -10,7 +10,7 @@ use Traversable;
 class Misc
 {
     /**
-     * Concatenates a list of items returning a localized string using "and" as seperator.
+     * Concatenates a list of items returning a localized string using "and" as separator.
      *
      * For instance, array(1, 2, 3) will result in '1, 2, and 3' for English or '1, 2 e 3' for Italian.
      *
@@ -26,7 +26,7 @@ class Misc
     }
 
     /**
-     * Concatenates a list of items returning a localized string using "or" as seperator.
+     * Concatenates a list of items returning a localized string using "or" as separator.
      *
      * For instance, array(1, 2, 3) will result in '1, 2, or 3' for English or '1, 2 o 3' for Italian.
      *

@@ -47,7 +47,7 @@ class Language
     /**
      * Retrieve the name of a language.
      *
-     * @param string $languageCode The language code. If it contails also a terrotory code (eg: 'en-US'), the result will contain also the territory code (eg 'English (United States)')
+     * @param string $languageCode The language code. If it also contains a territory code (eg: 'en-US'), the result will also contain the territory code (eg 'English (United States)')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      * @param bool $allowCompoundNames Set to true to allow compound names (eg 'American English (United States)' instead of 'English (United States)')
      *

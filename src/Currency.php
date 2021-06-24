@@ -174,7 +174,7 @@ class Currency
     /**
      * Return the history for the currencies used in a territory.
      *
-     * @param string $territoryCode The territoy code
+     * @param string $territoryCode The territory code
      *
      * @return array Return a list of items with these keys:
      *               <ul>
@@ -208,7 +208,7 @@ class Currency
     /**
      * Return the currency to be used in a territory.
      *
-     * @param string $territoryCode The territoy code
+     * @param string $territoryCode The territory code
      *
      * @return string Returns an empty string if $territoryCode is not valid or we don't have info about it, the currency code otherwise
      */
