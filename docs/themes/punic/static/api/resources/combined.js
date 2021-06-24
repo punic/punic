@@ -361,7 +361,7 @@ $.Autocompleter = function(input, options) {
 		if ( options.multiple ) {
 			var words = trimWords($input.val());
 			if ( words.length > 1 ) {
-				var separator = options.multipleSeparator.length;
+				var seperator = options.multipleSeparator.length;
 				var cursorAt = $(input).selection().start;
 				var wordAt, progress = 0;
 				$.each(words, function(i, word) {
@@ -370,10 +370,10 @@ $.Autocompleter = function(input, options) {
 						wordAt = i;
 						return false;
 					}
-					progress += separator;
+					progress += seperator;
 				});
 				words[wordAt] = v;
-				//$.Autocompleter.Selection(input, progress + separator, progress + separator);
+				//$.Autocompleter.Selection(input, progress + seperator, progress + seperator);
 				v = words.join( options.multipleSeparator );
 			}
 			v += options.multipleSeparator;
@@ -494,7 +494,7 @@ $.Autocompleter = function(input, options) {
 		if (!options.matchCase)
 			term = term.toLowerCase();
 		var data = cache.load(term);
-		// receive the cached data
+		// recieve the cached data
 		if (data) {
 			if(data.length)	{
 				success(term, data);
