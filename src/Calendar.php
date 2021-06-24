@@ -657,7 +657,7 @@ class Calendar
     /**
      * Get the name of a week day.
      *
-     * @param number|\DateTime|\DateTimeInterface $value a week day number (from 0-Sunday to 6-Saturnday) or a \DateTimeInterface instance for which you want the name of the day of the week
+     * @param number|\DateTime|\DateTimeInterface $value a week day number (from 0-Sunday to 6-Saturday) or a \DateTimeInterface instance for which you want the name of the day of the week
      * @param string $width the format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S')
      * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
      * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the week day name will be part of a date
@@ -1062,11 +1062,11 @@ class Calendar
     }
 
     /**
-     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturnday).
+     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturday).
      *
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
-     * @return int Returns a number from 0 (Sunday) to 7 (Saturnday)
+     * @return int Returns a number from 0 (Sunday) to 7 (Saturday)
      */
     public static function getFirstWeekday($locale = '')
     {
@@ -1356,7 +1356,7 @@ class Calendar
      *
      * @throws Exception\BadArgumentType
      *
-     * @return int Returns the diffence $dateEnd - $dateStart in days
+     * @return int Returns the difference $dateEnd - $dateStart in days
      */
     public static function getDeltaDays($dateEnd, $dateStart = null)
     {
@@ -1386,7 +1386,7 @@ class Calendar
      *
      * @param \DateTime|\DateTimeInterface $dateEnd The first date
      * @param \DateTime|\DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
-     * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
+     * @param int $maxParts The maximum parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
      * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1592,7 +1592,7 @@ class Calendar
      * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a skeleton pattern prefixed by '~',
      *                      or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
-     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
+     *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
      * @throws \Punic\Exception Throws an exception in case of problems
@@ -1641,7 +1641,7 @@ class Calendar
      *
      * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
-     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
+     *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
      *
@@ -1924,7 +1924,7 @@ class Calendar
      *
      * Limitations:
      * - No matching of different but equivalent fields (e.g. H, k, h, K).
-     * - Distance calculation ignores difference betweeen numeric and text fields.
+     * - Distance calculation ignores difference between numeric and text fields.
      * - No support for appendItems.
      *
      * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons

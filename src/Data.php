@@ -405,7 +405,7 @@ class Data
     }
 
     /**
-     * Return the terrotory associated to the locale (guess it if it's not present in $locale).
+     * Return the territory associated to the locale (guess it if it's not present in $locale).
      *
      * @param string $locale The locale identifier (if empty we'll use the current default locale)
      * @param bool $checkFallbackLocale Set to true to check the fallback locale if $locale (or the default locale) don't have an associated territory, false to don't fallback to fallback locale

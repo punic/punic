@@ -780,7 +780,7 @@
 </span><span id="657" class="l">    <span class="php-comment">/**
 </span></span><span id="658" class="l"><span class="php-comment">     * Get the name of a week day.
 </span></span><span id="659" class="l"><span class="php-comment">     *
-</span></span><span id="660" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface $value a week day number (from 0-Sunday to 6-Saturnday) or a \DateTimeInterface instance for which you want the name of the day of the week
+</span></span><span id="660" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface $value a week day number (from 0-Sunday to 6-Saturday) or a \DateTimeInterface instance for which you want the name of the day of the week
 </span></span><span id="661" class="l"><span class="php-comment">     * @param string $width the format name; it can be 'wide' (eg 'Sunday'), 'abbreviated' (eg 'Sun'), 'short' (eg 'Su') or 'narrow' (eg 'S')
 </span></span><span id="662" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set with {@link \Punic\Data::setDefaultLocale()}.
 </span></span><span id="663" class="l"><span class="php-comment">     * @param bool $standAlone set to true to return the form used independently (such as in calendar header), set to false if the week day name will be part of a date
@@ -1185,11 +1185,11 @@
 </span><span id="1062" class="l">    }
 </span><span id="1063" class="l">
 </span><span id="1064" class="l">    <span class="php-comment">/**
-</span></span><span id="1065" class="l"><span class="php-comment">     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturnday).
+</span></span><span id="1065" class="l"><span class="php-comment">     * Retrieve the first weekday for a specific locale (from 0-Sunday to 6-Saturday).
 </span></span><span id="1066" class="l"><span class="php-comment">     *
 </span></span><span id="1067" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
 </span></span><span id="1068" class="l"><span class="php-comment">     *
-</span></span><span id="1069" class="l"><span class="php-comment">     * @return int Returns a number from 0 (Sunday) to 7 (Saturnday)
+</span></span><span id="1069" class="l"><span class="php-comment">     * @return int Returns a number from 0 (Sunday) to 7 (Saturday)
 </span></span><span id="1070" class="l"><span class="php-comment">     */</span>
 </span><span id="1071" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getFirstWeekday(<span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1072" class="l">    {
@@ -1479,7 +1479,7 @@
 </span></span><span id="1356" class="l"><span class="php-comment">     *
 </span></span><span id="1357" class="l"><span class="php-comment">     * @throws Exception\BadArgumentType
 </span></span><span id="1358" class="l"><span class="php-comment">     *
-</span></span><span id="1359" class="l"><span class="php-comment">     * @return int Returns the diffence $dateEnd - $dateStart in days
+</span></span><span id="1359" class="l"><span class="php-comment">     * @return int Returns the difference $dateEnd - $dateStart in days
 </span></span><span id="1360" class="l"><span class="php-comment">     */</span>
 </span><span id="1361" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getDeltaDays(<span class="php-var">$dateEnd</span>, <span class="php-var">$dateStart</span> = <span class="php-keyword1">null</span>)
 </span><span id="1362" class="l">    {
@@ -1509,7 +1509,7 @@
 </span></span><span id="1386" class="l"><span class="php-comment">     *
 </span></span><span id="1387" class="l"><span class="php-comment">     * @param \DateTime|\DateTimeInterface $dateEnd The first date
 </span></span><span id="1388" class="l"><span class="php-comment">     * @param \DateTime|\DateTimeInterface|null $dateStart The final date (if it has a timezone different than $dateEnd, we'll use the one of $dateEnd)
-</span></span><span id="1389" class="l"><span class="php-comment">     * @param int $maxParts The maximim parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
+</span></span><span id="1389" class="l"><span class="php-comment">     * @param int $maxParts The maximum parts (eg with 2 you may have '2 days and 4 hours', with 3 '2 days, 4 hours and 24 minutes')
 </span></span><span id="1390" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'long' (eg '3 seconds'), 'short' (eg '3 s') or 'narrow' (eg '3s')
 </span></span><span id="1391" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
 </span></span><span id="1392" class="l"><span class="php-comment">     *
@@ -1715,7 +1715,7 @@
 </span></span><span id="1592" class="l"><span class="php-comment">     * @param \DateTime|\DateTimeInterface $value The \DateTimeInterface instance for which you want the localized textual representation
 </span></span><span id="1593" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a skeleton pattern prefixed by '~',
 </span></span><span id="1594" class="l"><span class="php-comment">     *                      or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
-</span></span><span id="1595" class="l"><span class="php-comment">     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
+</span></span><span id="1595" class="l"><span class="php-comment">     *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
 </span></span><span id="1596" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
 </span></span><span id="1597" class="l"><span class="php-comment">     *
 </span></span><span id="1598" class="l"><span class="php-comment">     * @throws \Punic\Exception Throws an exception in case of problems
@@ -1764,7 +1764,7 @@
 </span></span><span id="1641" class="l"><span class="php-comment">     *
 </span></span><span id="1642" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1643" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
-</span></span><span id="1644" class="l"><span class="php-comment">     *                      You can also append an asterisk ('*') to the date parh of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
+</span></span><span id="1644" class="l"><span class="php-comment">     *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
 </span></span><span id="1645" class="l"><span class="php-comment">     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
 </span></span><span id="1646" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data
 </span></span><span id="1647" class="l"><span class="php-comment">     *
@@ -2047,7 +2047,7 @@
 </span></span><span id="1924" class="l"><span class="php-comment">     *
 </span></span><span id="1925" class="l"><span class="php-comment">     * Limitations:
 </span></span><span id="1926" class="l"><span class="php-comment">     * - No matching of different but equivalent fields (e.g. H, k, h, K).
-</span></span><span id="1927" class="l"><span class="php-comment">     * - Distance calculation ignores difference betweeen numeric and text fields.
+</span></span><span id="1927" class="l"><span class="php-comment">     * - Distance calculation ignores difference between numeric and text fields.
 </span></span><span id="1928" class="l"><span class="php-comment">     * - No support for appendItems.
 </span></span><span id="1929" class="l"><span class="php-comment">     *
 </span></span><span id="1930" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
