@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### NEXT (YYYY-MM-DD)
+
+
 ### 3.6.1 (2021-08-18)
 
 - Fix grammatical case of `Calendar::describeInterval()` (#412, @mlocati)
