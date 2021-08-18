@@ -1039,7 +1039,7 @@ try {
     }
     echo "Fetching language files:\n";
     foreach ($locales as $localeID) {
-        echo " - {$localeID}...";
+        echo " - {$localeID}... ";
         $destDir = $options->getOutputDirectory().'/'.str_replace('_', '-', $localeID);
         if (is_dir($destDir)) {
             echo "destination directory exists - SKIPPED.\n";
