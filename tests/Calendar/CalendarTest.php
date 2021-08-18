@@ -2170,6 +2170,8 @@ class CalendarTest extends TestCase
         $nowTZ1->setTimezone(new DateTimeZone('Pacific/Pago_Pago'));
         $nowTZ2 = clone $now;
         $nowTZ2->setTimezone(new DateTimeZone('Pacific/Kiritimati'));
+        $now1YR = clone $now;
+        $now1YR->add(new DateInterval('P1Y'));
 
         return array(
             array('now', $now, $now, 1, 'short', 'en'),
@@ -2187,6 +2189,7 @@ class CalendarTest extends TestCase
             array('2 anni, 3 mesi, 4 giorni e 6 ore', $now, $before2, 4, 'long', 'it'),
             array('2 anni, 3 mesi, 4 giorni, 6 ore, 8 minuti e 59 secondi', $now, $before2, 99, 'long', 'it'),
             array('now', $nowTZ1, $nowTZ2, 1, 'short', 'en'),
+            array('1 Jahr', $now1YR, $now, 1, 'long', 'de'),
         );
     }
 
