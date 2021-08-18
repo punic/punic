@@ -1,5 +1,18 @@
 # CHANGELOG
 
+### 3.6.1 (2021-08-18)
+
+- Fix grammatical case of `Calendar::describeInterval()` (#412, @mlocati)
+- Fix `Calendar::getTimezoneNameNoLocationSpecific()` returning empty arrays instead of empty strings (#413, @mlocati)
+
+
+### 3.6.0 (2021-06-23)
+
+- Fix execution of the `bin/punic-data` script with PHP 8.0 (#405, @ontracker, @mlocati)
+- Upgrade version of CLDR data from 35 to 36 (#404, #406, @c960657, @mlocati)
+- New class to work with Scripts (#409, @mlocati)
+
+
 ### 3.5.1 (2020-01-24)
 
 * Fix sorting strings that start with a digit (#169, @mlocati)
