@@ -806,6 +806,10 @@ class CalendarTest extends TestCase
             'Western European Standard Time',
             Calendar::getTimezoneNameNoLocationSpecific($dt, 'long')
         );
+        $this->assertSame(
+            '',
+            Calendar::getTimezoneNameNoLocationSpecific(new DateTimeZone('Asia/Kathmandu'), 'short', '', 'nl')
+        );
     }
 
     public function testGetTimezoneNameLocationSpecific()
