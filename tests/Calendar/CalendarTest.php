@@ -1735,7 +1735,6 @@ class CalendarTest extends TestCase
         $dtMinute = Calendar::toDateTime('2010-10-12 22:59:00');
         $dtHour = Calendar::toDateTime('2010-10-12 23:57:00');
         $dtDay = Calendar::toDateTime('2010-10-13 21:30:00');
-        $dtMonth = Calendar::toDateTime('2010-11-14 20:30:00');
         $dtYear = Calendar::toDateTime('2011-09-15 19:30:00');
         $dtEra = Calendar::toDateTime('-1000-01-01 15:30:00');
 
