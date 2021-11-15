@@ -168,7 +168,7 @@ class UnitTest extends TestCase
     public function testGetName($locale, $unit, $width, array $expectedNames, array $expectedPers)
     {
         $actual = Unit::getName($unit, $width, $locale);
-        $this->assertContains($actual, $expectedNames, '', false, true, true);
+        $this->assertContains($actual, $expectedNames);
     }
 
     /**
@@ -185,7 +185,7 @@ class UnitTest extends TestCase
     public function testGetPerFormat($locale, $unit, $width, array $expectedNames, array $expectedPers)
     {
         $actual = Unit::getPerFormat($unit, $width, $locale);
-        $this->assertContains($actual, $expectedPers, '', false, true, true);
+        $this->assertContains($actual, $expectedPers);
     }
 
     public function testGetAvailableUnits()
