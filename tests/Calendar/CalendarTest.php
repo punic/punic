@@ -1183,18 +1183,34 @@ class CalendarTest extends TestCase
         );
         $this->assertSame(
             'h:mm:ss a',
+            Calendar::getSkeletonFormat('jms', 'en_US')
+        );
+        $this->assertSame(
+            'HH:mm:ss',
             Calendar::getSkeletonFormat('jms', 'en_CN')
         );
         $this->assertSame(
             'hh:mm:ss a',
+            Calendar::getSkeletonFormat('jjms', 'en_US')
+        );
+        $this->assertSame(
+            'HH:mm:ss',
             Calendar::getSkeletonFormat('jjms', 'en_CN')
         );
         $this->assertSame(
             'h:mm:ss aaaa',
+            Calendar::getSkeletonFormat('jjjms', 'en_US')
+        );
+        $this->assertSame(
+            'HH:mm:ss',
             Calendar::getSkeletonFormat('jjjms', 'en_CN')
         );
         $this->assertSame(
             'hh:mm:ss aaaaa',
+            Calendar::getSkeletonFormat('jjjjjjms', 'en_US')
+        );
+        $this->assertSame(
+            'HH:mm:ss',
             Calendar::getSkeletonFormat('jjjjjjms', 'en_CN')
         );
         $this->assertSame(
@@ -1207,6 +1223,10 @@ class CalendarTest extends TestCase
         );
         $this->assertSame(
             'hh',
+            Calendar::getSkeletonFormat('J', 'en_US')
+        );
+        $this->assertSame(
+            'HH',
             Calendar::getSkeletonFormat('J', 'en_CN')
         );
         $this->assertSame(
@@ -1226,11 +1246,19 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('C', 'de')
         );
         $this->assertSame(
-            'h B',
+            'h a',
+            Calendar::getSkeletonFormat('C', 'en_US')
+        );
+        $this->assertSame(
+            'HH',
             Calendar::getSkeletonFormat('C', 'en_CN')
         );
         $this->assertSame(
-            'hh BBBBB',
+            'hh aaaaa',
+            Calendar::getSkeletonFormat('CCCCCC', 'en_US')
+        );
+        $this->assertSame(
+            'HH',
             Calendar::getSkeletonFormat('CCCCCC', 'en_CN')
         );
 
@@ -1855,7 +1883,7 @@ class CalendarTest extends TestCase
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'de')
         );
         $this->assertSame(
-            '10:58 – 11:57 Fiji Time',
+            '22:58 – 23:57 Fiji Time',
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'en_CN')
         );
         $this->assertSame(
