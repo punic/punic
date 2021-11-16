@@ -29,7 +29,7 @@ jobs:
           --path-mode=intersection --config=./.php-cs-fixer.dist.php --dry-run --using-cache=no --diff --show-progress=dots --ansi --no-interaction --verbose
           -- .
   phpunit:
-    name: Run PHPUnit tests
+    name:  Test with ${{ matrix.php-version }} on ${{ matrix.os }}
     needs: php-coding-style
     env:
       CODE_COVERAGE_TOOL: none
@@ -49,6 +49,7 @@ jobs:
           - "7.3"
           - "7.4"
           - "8.0"
+          - "8.1"
         include:
           - os: windows-latest
             php-version: "5.5"
