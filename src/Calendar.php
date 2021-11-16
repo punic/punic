@@ -9,7 +9,7 @@ use DateTimeZone;
 /*
  * Comments marked as @TZWS have been added because it seems than PHP does
  * not support timezones with seconds.
- * Furthermore: the Unicode specs (http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table) says the following:
+ * Furthermore: the Unicode specs (https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table) says the following:
  * "The ISO8601 basic format with hours, minutes and optional seconds fields. Note: The seconds field is not supported by the
  * ISO8601 specification."
  */
@@ -101,9 +101,9 @@ class Calendar
     private static $tokenizerCache = array();
 
     /**
-     * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
+     * Convert a date/time representation to a {@link https://www.php.net/manual/class.datetime.php \DateTime} instance.
      *
-     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string|\DateTimeZone $toTimezone the timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTimeInterface`)
      * @param string|\DateTimeZone $fromTimezone the original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTimeInterface`)
      *
@@ -156,7 +156,7 @@ class Calendar
                     $result->setTimezone($tzFrom);
                 }
             } elseif ($value instanceof DateTimeInterface || $value instanceof DateTime) {
-                $result = new DateTime(null, $value->getTimezone());
+                $result = new DateTime('now', $value->getTimezone());
                 $result->setTimestamp($value->getTimestamp());
                 if ($tzFrom !== null) {
                     $result->setTimezone($tzFrom);
@@ -195,7 +195,7 @@ class Calendar
     }
 
     /**
-     * Converts a format string from {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
+     * Converts a format string from {@link https://www.php.net/manual/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
      * The following extra format chunks are introduced:
      * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
      * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -305,7 +305,7 @@ class Calendar
     }
 
     /**
-     * Try to convert a date, time or date/time {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format string} to a {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP date/time format}.
+     * Try to convert a date, time or date/time {@link https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format string} to a {@link https://www.php.net/manual/function.date.php#refsect1-function.date-parameters PHP date/time format}.
      *
      * @param string $isoDateTimeFormat The PHP date/time format
      *
@@ -795,7 +795,7 @@ class Calendar
      *
      * @return string returns an empty string if $value is empty, the name of the day period name otherwise
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Variable_periods
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Variable_periods
      */
     public static function getVariableDayperiodName($value, $width = 'wide', $locale = '', $standAlone = false)
     {
@@ -948,7 +948,7 @@ class Calendar
      *
      * @return string returns an empty string if the timezone has not been found, the timezone name otherwise
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Time_Zone_Goals
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Time_Zone_Goals
      */
     public static function getTimezoneNameLocationSpecific($value, $locale = '')
     {
@@ -1128,9 +1128,9 @@ class Calendar
      *
      * @return string Returns the requested ISO format
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function getDateFormat($width, $locale = '')
     {
@@ -1158,9 +1158,9 @@ class Calendar
      *
      * @return string Returns the requested ISO format
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function getTimeFormat($width, $locale = '')
     {
@@ -1188,9 +1188,9 @@ class Calendar
      *
      * @return string Returns the requested ISO format
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function getDatetimeFormat($width, $locale = '')
     {
@@ -1207,8 +1207,8 @@ class Calendar
      *
      * @return string Returns the requested ISO format
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns#TOC-Additional-Date-Time-Formats
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#availableFormats_appendItems
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns#h.j31ghafvbgku
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#availableFormats_appendItems
      */
     public static function getSkeletonFormat($skeleton, $locale = '')
     {
@@ -1265,7 +1265,7 @@ class Calendar
      *               - bool|null: Whether the earliest date is the first of the two dates in the pattern,
      *               or null if the dates are identical within the granularity specified by the skeleton
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
      */
     public static function getIntervalFormat($skeleton, $greatestDifference, $locale = '')
     {
@@ -1484,9 +1484,9 @@ class Calendar
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatDate($value, $width, $locale = '')
     {
@@ -1509,7 +1509,7 @@ class Calendar
     /**
      * Format a date (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
@@ -1521,9 +1521,9 @@ class Calendar
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
      * @see toDateTime()
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatDateEx($value, $width, $toTimezone = '', $locale = '')
     {
@@ -1546,9 +1546,9 @@ class Calendar
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatTime($value, $width, $locale = '')
     {
@@ -1562,7 +1562,7 @@ class Calendar
     /**
      * Format a time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1573,9 +1573,9 @@ class Calendar
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
      * @see toDateTime()
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatTimeEx($value, $width, $toTimezone = '', $locale = '')
     {
@@ -1599,9 +1599,9 @@ class Calendar
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatDatetime($value, $width, $locale = '')
     {
@@ -1639,7 +1639,7 @@ class Calendar
     /**
      * Format a date/time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
      *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1650,9 +1650,9 @@ class Calendar
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
      * @see toDateTime()
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatDatetimeEx($value, $width, $toTimezone = '', $locale = '')
     {
@@ -1673,7 +1673,7 @@ class Calendar
      *
      * @return string Returns the localized textual representation of the interval
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
      */
     public static function formatInterval($earliest, $latest, $skeleton, $locale = '')
     {
@@ -1700,8 +1700,8 @@ class Calendar
     /**
      * Format a date/time interval (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|\DateTimeInterface|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-     * @param number|\DateTime|\DateTimeInterface|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string $skeleton The locale-independent skeleton, e.g. "yMMMd" or "Hm".
      * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
      * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
@@ -1742,9 +1742,9 @@ class Calendar
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function format($value, $format, $locale = '')
     {
@@ -1777,7 +1777,7 @@ class Calendar
     /**
      * Format a date and/or time (extended version: various date/time representations - see toDateTime()).
      *
-     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
      * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
      *                       - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
      *                       - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -1799,9 +1799,9 @@ class Calendar
      *
      * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
      *
-     * @see http://cldr.unicode.org/translation/date-time-patterns
-     * @see http://cldr.unicode.org/translation/date-time
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+     * @see https://cldr.unicode.org/translation/date-time
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
      */
     public static function formatEx($value, $format, $toTimezone = '', $locale = '')
     {
@@ -1927,7 +1927,7 @@ class Calendar
      * - Distance calculation ignores difference between numeric and text fields.
      * - No support for appendItems.
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
      *
      * @param string $requestedSkeleton
      * @param string[] $availableSkeletons
@@ -1986,7 +1986,7 @@ class Calendar
     /**
      * Replace special input skeleton fields (j, J, C) with locale-specific substitutions.
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
      *
      * @param string $skeleton
      * @param string $locale
@@ -2032,8 +2032,8 @@ class Calendar
     /**
      * Replace special input skeleton fields, adjust field widths, and add second fraction to format pattern.
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
      *
      * @param string $format
      * @param array $countAdjustments
@@ -2199,7 +2199,7 @@ class Calendar
      *
      * @return string[] An array containing two entries, each representing a datetime format
      *
-     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
      */
     protected static function splitIntervalFormat($format)
     {
