@@ -156,7 +156,7 @@ class Calendar
                     $result->setTimezone($tzFrom);
                 }
             } elseif ($value instanceof DateTimeInterface || $value instanceof DateTime) {
-                $result = new DateTime(null, $value->getTimezone());
+                $result = new DateTime('now', $value->getTimezone());
                 $result->setTimestamp($value->getTimestamp());
                 if ($tzFrom !== null) {
                     $result->setTimezone($tzFrom);
