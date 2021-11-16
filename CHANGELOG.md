@@ -1,10 +1,13 @@
 # CHANGELOG
 
+### NEXT (YYYY-MM-DD)
+
+
 ### 3.7.0 (2021-11-16)
 
 - Upgrade version of CLDR data from 39 to 40 (#414, https://github.com/punic/data/pull/18, @mlocati)
 - Fix translations of British regions (#414, https://github.com/punic/data/pull/17, @c960657, @mlocati)
-- Fix deprecation warning on PHP 8.1 (#414, https://github.com/punic/data/pull/18, @mlocati)
+- Fix deprecation warning on PHP 8.1 (#414, @mlocati)
 
 
 ### 3.6.1 (2021-08-18)
