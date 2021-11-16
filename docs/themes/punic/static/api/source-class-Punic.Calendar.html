@@ -132,7 +132,7 @@
 </span><span id="9" class="l"><span class="php-comment">/*
 </span></span><span id="10" class="l"><span class="php-comment"> * Comments marked as @TZWS have been added because it seems than PHP does
 </span></span><span id="11" class="l"><span class="php-comment"> * not support timezones with seconds.
-</span></span><span id="12" class="l"><span class="php-comment"> * Furthermore: the Unicode specs (http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table) says the following:
+</span></span><span id="12" class="l"><span class="php-comment"> * Furthermore: the Unicode specs (https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table) says the following:
 </span></span><span id="13" class="l"><span class="php-comment"> * &quot;The ISO8601 basic format with hours, minutes and optional seconds fields. Note: The seconds field is not supported by the
 </span></span><span id="14" class="l"><span class="php-comment"> * ISO8601 specification.&quot;
 </span></span><span id="15" class="l"><span class="php-comment"> */</span>
@@ -224,9 +224,9 @@
 </span><span id="101" class="l">    <span class="php-keyword1">private</span> <span class="php-keyword1">static</span> <span class="php-var">$tokenizerCache</span> = <span class="php-keyword1">array</span>();
 </span><span id="102" class="l">
 </span><span id="103" class="l">    <span class="php-comment">/**
-</span></span><span id="104" class="l"><span class="php-comment">     * Convert a date/time representation to a {@link http://php.net/manual/class.datetime.php \DateTime} instance.
+</span></span><span id="104" class="l"><span class="php-comment">     * Convert a date/time representation to a {@link https://www.php.net/manual/class.datetime.php \DateTime} instance.
 </span></span><span id="105" class="l"><span class="php-comment">     *
-</span></span><span id="106" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="106" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="107" class="l"><span class="php-comment">     * @param string|\DateTimeZone $toTimezone the timezone to set; leave empty to use the value of $fromTimezone (if it's empty we'll use the default timezone or the timezone associated to $value if it's already a `\DateTimeInterface`)
 </span></span><span id="108" class="l"><span class="php-comment">     * @param string|\DateTimeZone $fromTimezone the original timezone of $value; leave empty to use the default timezone (or the timezone associated to $value if it's already a `\DateTimeInterface`)
 </span></span><span id="109" class="l"><span class="php-comment">     *
@@ -279,7 +279,7 @@
 </span><span id="156" class="l">                    <span class="php-var">$result</span>-&gt;setTimezone(<span class="php-var">$tzFrom</span>);
 </span><span id="157" class="l">                }
 </span><span id="158" class="l">            } <span class="php-keyword1">elseif</span> (<span class="php-var">$value</span> <span class="php-keyword1">instanceof</span> DateTimeInterface || <span class="php-var">$value</span> <span class="php-keyword1">instanceof</span> DateTime) {
-</span><span id="159" class="l">                <span class="php-var">$result</span> = <span class="php-keyword1">new</span> DateTime(<span class="php-keyword1">null</span>, <span class="php-var">$value</span>-&gt;getTimezone());
+</span><span id="159" class="l">                <span class="php-var">$result</span> = <span class="php-keyword1">new</span> DateTime(<span class="php-quote">'now'</span>, <span class="php-var">$value</span>-&gt;getTimezone());
 </span><span id="160" class="l">                <span class="php-var">$result</span>-&gt;setTimestamp(<span class="php-var">$value</span>-&gt;getTimestamp());
 </span><span id="161" class="l">                <span class="php-keyword1">if</span> (<span class="php-var">$tzFrom</span> !== <span class="php-keyword1">null</span>) {
 </span><span id="162" class="l">                    <span class="php-var">$result</span>-&gt;setTimezone(<span class="php-var">$tzFrom</span>);
@@ -318,7 +318,7 @@
 </span><span id="195" class="l">    }
 </span><span id="196" class="l">
 </span><span id="197" class="l">    <span class="php-comment">/**
-</span></span><span id="198" class="l"><span class="php-comment">     * Converts a format string from {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
+</span></span><span id="198" class="l"><span class="php-comment">     * Converts a format string from {@link https://www.php.net/manual/function.date.php#refsect1-function.date-parameters PHP's date format} to {@link https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format}.
 </span></span><span id="199" class="l"><span class="php-comment">     * The following extra format chunks are introduced:
 </span></span><span id="200" class="l"><span class="php-comment">     * - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
 </span></span><span id="201" class="l"><span class="php-comment">     * - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -428,7 +428,7 @@
 </span><span id="305" class="l">    }
 </span><span id="306" class="l">
 </span><span id="307" class="l">    <span class="php-comment">/**
-</span></span><span id="308" class="l"><span class="php-comment">     * Try to convert a date, time or date/time {@link http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format string} to a {@link http://php.net/manual/en/function.date.php#refsect1-function.date-parameters PHP date/time format}.
+</span></span><span id="308" class="l"><span class="php-comment">     * Try to convert a date, time or date/time {@link https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table ISO format string} to a {@link https://www.php.net/manual/function.date.php#refsect1-function.date-parameters PHP date/time format}.
 </span></span><span id="309" class="l"><span class="php-comment">     *
 </span></span><span id="310" class="l"><span class="php-comment">     * @param string $isoDateTimeFormat The PHP date/time format
 </span></span><span id="311" class="l"><span class="php-comment">     *
@@ -918,7 +918,7 @@
 </span></span><span id="795" class="l"><span class="php-comment">     *
 </span></span><span id="796" class="l"><span class="php-comment">     * @return string returns an empty string if $value is empty, the name of the day period name otherwise
 </span></span><span id="797" class="l"><span class="php-comment">     *
-</span></span><span id="798" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Variable_periods
+</span></span><span id="798" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Variable_periods
 </span></span><span id="799" class="l"><span class="php-comment">     */</span>
 </span><span id="800" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getVariableDayperiodName(<span class="php-var">$value</span>, <span class="php-var">$width</span> = <span class="php-quote">'wide'</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>, <span class="php-var">$standAlone</span> = <span class="php-keyword1">false</span>)
 </span><span id="801" class="l">    {
@@ -1071,7 +1071,7 @@
 </span></span><span id="948" class="l"><span class="php-comment">     *
 </span></span><span id="949" class="l"><span class="php-comment">     * @return string returns an empty string if the timezone has not been found, the timezone name otherwise
 </span></span><span id="950" class="l"><span class="php-comment">     *
-</span></span><span id="951" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Time_Zone_Goals
+</span></span><span id="951" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Time_Zone_Goals
 </span></span><span id="952" class="l"><span class="php-comment">     */</span>
 </span><span id="953" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getTimezoneNameLocationSpecific(<span class="php-var">$value</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="954" class="l">    {
@@ -1251,9 +1251,9 @@
 </span></span><span id="1128" class="l"><span class="php-comment">     *
 </span></span><span id="1129" class="l"><span class="php-comment">     * @return string Returns the requested ISO format
 </span></span><span id="1130" class="l"><span class="php-comment">     *
-</span></span><span id="1131" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1132" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1133" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1131" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1132" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1133" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1134" class="l"><span class="php-comment">     */</span>
 </span><span id="1135" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getDateFormat(<span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1136" class="l">    {
@@ -1281,9 +1281,9 @@
 </span></span><span id="1158" class="l"><span class="php-comment">     *
 </span></span><span id="1159" class="l"><span class="php-comment">     * @return string Returns the requested ISO format
 </span></span><span id="1160" class="l"><span class="php-comment">     *
-</span></span><span id="1161" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1162" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1163" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1161" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1162" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1163" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1164" class="l"><span class="php-comment">     */</span>
 </span><span id="1165" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getTimeFormat(<span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1166" class="l">    {
@@ -1311,9 +1311,9 @@
 </span></span><span id="1188" class="l"><span class="php-comment">     *
 </span></span><span id="1189" class="l"><span class="php-comment">     * @return string Returns the requested ISO format
 </span></span><span id="1190" class="l"><span class="php-comment">     *
-</span></span><span id="1191" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1192" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1193" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1191" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1192" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1193" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1194" class="l"><span class="php-comment">     */</span>
 </span><span id="1195" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getDatetimeFormat(<span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1196" class="l">    {
@@ -1330,8 +1330,8 @@
 </span></span><span id="1207" class="l"><span class="php-comment">     *
 </span></span><span id="1208" class="l"><span class="php-comment">     * @return string Returns the requested ISO format
 </span></span><span id="1209" class="l"><span class="php-comment">     *
-</span></span><span id="1210" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns#TOC-Additional-Date-Time-Formats
-</span></span><span id="1211" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#availableFormats_appendItems
+</span></span><span id="1210" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns#h.j31ghafvbgku
+</span></span><span id="1211" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#availableFormats_appendItems
 </span></span><span id="1212" class="l"><span class="php-comment">     */</span>
 </span><span id="1213" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getSkeletonFormat(<span class="php-var">$skeleton</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1214" class="l">    {
@@ -1388,7 +1388,7 @@
 </span></span><span id="1265" class="l"><span class="php-comment">     *               - bool|null: Whether the earliest date is the first of the two dates in the pattern,
 </span></span><span id="1266" class="l"><span class="php-comment">     *               or null if the dates are identical within the granularity specified by the skeleton
 </span></span><span id="1267" class="l"><span class="php-comment">     *
-</span></span><span id="1268" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+</span></span><span id="1268" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
 </span></span><span id="1269" class="l"><span class="php-comment">     */</span>
 </span><span id="1270" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> getIntervalFormat(<span class="php-var">$skeleton</span>, <span class="php-var">$greatestDifference</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1271" class="l">    {
@@ -1607,9 +1607,9 @@
 </span></span><span id="1484" class="l"><span class="php-comment">     *
 </span></span><span id="1485" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1486" class="l"><span class="php-comment">     *
-</span></span><span id="1487" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1488" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1489" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1487" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1488" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1489" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1490" class="l"><span class="php-comment">     */</span>
 </span><span id="1491" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatDate(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1492" class="l">    {
@@ -1632,7 +1632,7 @@
 </span><span id="1509" class="l">    <span class="php-comment">/**
 </span></span><span id="1510" class="l"><span class="php-comment">     * Format a date (extended version: various date/time representations - see toDateTime()).
 </span></span><span id="1511" class="l"><span class="php-comment">     *
-</span></span><span id="1512" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1512" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1513" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
 </span></span><span id="1514" class="l"><span class="php-comment">     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
 </span></span><span id="1515" class="l"><span class="php-comment">     *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
@@ -1644,9 +1644,9 @@
 </span></span><span id="1521" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1522" class="l"><span class="php-comment">     *
 </span></span><span id="1523" class="l"><span class="php-comment">     * @see toDateTime()
-</span></span><span id="1524" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1525" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1526" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1524" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1525" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1526" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1527" class="l"><span class="php-comment">     */</span>
 </span><span id="1528" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatDateEx(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$toTimezone</span> = <span class="php-quote">''</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1529" class="l">    {
@@ -1669,9 +1669,9 @@
 </span></span><span id="1546" class="l"><span class="php-comment">     *
 </span></span><span id="1547" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1548" class="l"><span class="php-comment">     *
-</span></span><span id="1549" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1550" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1551" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1549" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1550" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1551" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1552" class="l"><span class="php-comment">     */</span>
 </span><span id="1553" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatTime(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1554" class="l">    {
@@ -1685,7 +1685,7 @@
 </span><span id="1562" class="l">    <span class="php-comment">/**
 </span></span><span id="1563" class="l"><span class="php-comment">     * Format a time (extended version: various date/time representations - see toDateTime()).
 </span></span><span id="1564" class="l"><span class="php-comment">     *
-</span></span><span id="1565" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1565" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1566" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'full' (eg 'h:mm:ss a zzzz' - '11:42:13 AM GMT+2:00'), 'long' (eg 'h:mm:ss a z' - '11:42:13 AM GMT+2:00'), 'medium' (eg 'h:mm:ss a' - '11:42:13 AM') or 'short' (eg 'h:mm a' - '11:42 AM'),
 </span></span><span id="1567" class="l"><span class="php-comment">     *                      or a skeleton pattern prefixed by '~', e.g. '~Hm'.
 </span></span><span id="1568" class="l"><span class="php-comment">     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1696,9 +1696,9 @@
 </span></span><span id="1573" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1574" class="l"><span class="php-comment">     *
 </span></span><span id="1575" class="l"><span class="php-comment">     * @see toDateTime()
-</span></span><span id="1576" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1577" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1578" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1576" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1577" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1578" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1579" class="l"><span class="php-comment">     */</span>
 </span><span id="1580" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatTimeEx(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$toTimezone</span> = <span class="php-quote">''</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1581" class="l">    {
@@ -1722,9 +1722,9 @@
 </span></span><span id="1599" class="l"><span class="php-comment">     *
 </span></span><span id="1600" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1601" class="l"><span class="php-comment">     *
-</span></span><span id="1602" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1603" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1604" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1602" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1603" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1604" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1605" class="l"><span class="php-comment">     */</span>
 </span><span id="1606" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatDatetime(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1607" class="l">    {
@@ -1762,7 +1762,7 @@
 </span><span id="1639" class="l">    <span class="php-comment">/**
 </span></span><span id="1640" class="l"><span class="php-comment">     * Format a date/time (extended version: various date/time representations - see toDateTime()).
 </span></span><span id="1641" class="l"><span class="php-comment">     *
-</span></span><span id="1642" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1642" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1643" class="l"><span class="php-comment">     * @param string $width The format name; it can be 'full', 'long', 'medium', 'short' or a combination for date+time like 'full|short' or a combination for format+date+time like 'full|full|short'
 </span></span><span id="1644" class="l"><span class="php-comment">     *                      You can also append an asterisk ('*') to the date part of $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow') instead of the date part.
 </span></span><span id="1645" class="l"><span class="php-comment">     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
@@ -1773,9 +1773,9 @@
 </span></span><span id="1650" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1651" class="l"><span class="php-comment">     *
 </span></span><span id="1652" class="l"><span class="php-comment">     * @see toDateTime()
-</span></span><span id="1653" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1654" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1655" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1653" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1654" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1655" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1656" class="l"><span class="php-comment">     */</span>
 </span><span id="1657" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatDatetimeEx(<span class="php-var">$value</span>, <span class="php-var">$width</span>, <span class="php-var">$toTimezone</span> = <span class="php-quote">''</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1658" class="l">    {
@@ -1796,7 +1796,7 @@
 </span></span><span id="1673" class="l"><span class="php-comment">     *
 </span></span><span id="1674" class="l"><span class="php-comment">     * @return string Returns the localized textual representation of the interval
 </span></span><span id="1675" class="l"><span class="php-comment">     *
-</span></span><span id="1676" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+</span></span><span id="1676" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
 </span></span><span id="1677" class="l"><span class="php-comment">     */</span>
 </span><span id="1678" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatInterval(<span class="php-var">$earliest</span>, <span class="php-var">$latest</span>, <span class="php-var">$skeleton</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1679" class="l">    {
@@ -1823,8 +1823,8 @@
 </span><span id="1700" class="l">    <span class="php-comment">/**
 </span></span><span id="1701" class="l"><span class="php-comment">     * Format a date/time interval (extended version: various date/time representations - see toDateTime()).
 </span></span><span id="1702" class="l"><span class="php-comment">     *
-</span></span><span id="1703" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
-</span></span><span id="1704" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1703" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $earliest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1704" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $latest An Unix timestamp, a `\DateTime` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1705" class="l"><span class="php-comment">     * @param string $skeleton The locale-independent skeleton, e.g. &quot;yMMMd&quot; or &quot;Hm&quot;.
 </span></span><span id="1706" class="l"><span class="php-comment">     * @param string|\DateTimeZone $toTimezone The timezone to set; leave empty to use the default timezone (or the timezone associated to $value if it's already a \DateTime)
 </span></span><span id="1707" class="l"><span class="php-comment">     * @param string $locale The locale to use. If empty we'll use the default locale set in \Punic\Data.
@@ -1865,9 +1865,9 @@
 </span></span><span id="1742" class="l"><span class="php-comment">     *
 </span></span><span id="1743" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1744" class="l"><span class="php-comment">     *
-</span></span><span id="1745" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1746" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1747" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1745" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1746" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1747" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1748" class="l"><span class="php-comment">     */</span>
 </span><span id="1749" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> format(<span class="php-var">$value</span>, <span class="php-var">$format</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1750" class="l">    {
@@ -1900,7 +1900,7 @@
 </span><span id="1777" class="l">    <span class="php-comment">/**
 </span></span><span id="1778" class="l"><span class="php-comment">     * Format a date and/or time (extended version: various date/time representations - see toDateTime()).
 </span></span><span id="1779" class="l"><span class="php-comment">     *
-</span></span><span id="1780" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link http://php.net/manual/function.strtotime.php strtotime}.
+</span></span><span id="1780" class="l"><span class="php-comment">     * @param number|\DateTime|\DateTimeInterface|string $value A Unix timestamp, a `\DateTimeInterface` instance or a string accepted by {@link https://www.php.net/manual/function.strtotime.php strtotime}.
 </span></span><span id="1781" class="l"><span class="php-comment">     * @param string $format The ISO format that specify how to render the date/time. The following extra format chunks are valid:
 </span></span><span id="1782" class="l"><span class="php-comment">     *                       - 'P': ISO-8601 numeric representation of the day of the week (same as 'e' but not locale dependent)
 </span></span><span id="1783" class="l"><span class="php-comment">     *                       - 'PP': Numeric representation of the day of the week, from 0 (for Sunday) to 6 (for Saturday)
@@ -1922,9 +1922,9 @@
 </span></span><span id="1799" class="l"><span class="php-comment">     *
 </span></span><span id="1800" class="l"><span class="php-comment">     * @return string Returns an empty string if $value is empty, the localized textual representation otherwise
 </span></span><span id="1801" class="l"><span class="php-comment">     *
-</span></span><span id="1802" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time-patterns
-</span></span><span id="1803" class="l"><span class="php-comment">     * @see http://cldr.unicode.org/translation/date-time
-</span></span><span id="1804" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+</span></span><span id="1802" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time/datetime-patterns
+</span></span><span id="1803" class="l"><span class="php-comment">     * @see https://cldr.unicode.org/translation/date-time
+</span></span><span id="1804" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
 </span></span><span id="1805" class="l"><span class="php-comment">     */</span>
 </span><span id="1806" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> formatEx(<span class="php-var">$value</span>, <span class="php-var">$format</span>, <span class="php-var">$toTimezone</span> = <span class="php-quote">''</span>, <span class="php-var">$locale</span> = <span class="php-quote">''</span>)
 </span><span id="1807" class="l">    {
@@ -2050,7 +2050,7 @@
 </span></span><span id="1927" class="l"><span class="php-comment">     * - Distance calculation ignores difference between numeric and text fields.
 </span></span><span id="1928" class="l"><span class="php-comment">     * - No support for appendItems.
 </span></span><span id="1929" class="l"><span class="php-comment">     *
-</span></span><span id="1930" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
+</span></span><span id="1930" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
 </span></span><span id="1931" class="l"><span class="php-comment">     *
 </span></span><span id="1932" class="l"><span class="php-comment">     * @param string $requestedSkeleton
 </span></span><span id="1933" class="l"><span class="php-comment">     * @param string[] $availableSkeletons
@@ -2109,7 +2109,7 @@
 </span><span id="1986" class="l">    <span class="php-comment">/**
 </span></span><span id="1987" class="l"><span class="php-comment">     * Replace special input skeleton fields (j, J, C) with locale-specific substitutions.
 </span></span><span id="1988" class="l"><span class="php-comment">     *
-</span></span><span id="1989" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+</span></span><span id="1989" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
 </span></span><span id="1990" class="l"><span class="php-comment">     *
 </span></span><span id="1991" class="l"><span class="php-comment">     * @param string $skeleton
 </span></span><span id="1992" class="l"><span class="php-comment">     * @param string $locale
@@ -2155,8 +2155,8 @@
 </span><span id="2032" class="l">    <span class="php-comment">/**
 </span></span><span id="2033" class="l"><span class="php-comment">     * Replace special input skeleton fields, adjust field widths, and add second fraction to format pattern.
 </span></span><span id="2034" class="l"><span class="php-comment">     *
-</span></span><span id="2035" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
-</span></span><span id="2036" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
+</span></span><span id="2035" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+</span></span><span id="2036" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#Matching_Skeletons
 </span></span><span id="2037" class="l"><span class="php-comment">     *
 </span></span><span id="2038" class="l"><span class="php-comment">     * @param string $format
 </span></span><span id="2039" class="l"><span class="php-comment">     * @param array $countAdjustments
@@ -2322,7 +2322,7 @@
 </span></span><span id="2199" class="l"><span class="php-comment">     *
 </span></span><span id="2200" class="l"><span class="php-comment">     * @return string[] An array containing two entries, each representing a datetime format
 </span></span><span id="2201" class="l"><span class="php-comment">     *
-</span></span><span id="2202" class="l"><span class="php-comment">     * @see http://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
+</span></span><span id="2202" class="l"><span class="php-comment">     * @see https://www.unicode.org/reports/tr35/tr35-dates.html#intervalFormats
 </span></span><span id="2203" class="l"><span class="php-comment">     */</span>
 </span><span id="2204" class="l">    <span class="php-keyword1">protected</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> splitIntervalFormat(<span class="php-var">$format</span>)
 </span><span id="2205" class="l">    {
