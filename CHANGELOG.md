@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### NEXT (YYYY-MM-DD)
+
+
 ### 3.8.0 (2022-10-19)
 
 - Upgrade version of CLDR data from 40 to 42 (#417, https://github.com/punic/data/pull/19, @mlocati)
