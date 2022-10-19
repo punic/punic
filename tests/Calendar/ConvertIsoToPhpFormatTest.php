@@ -150,14 +150,14 @@ class ConvertIsoToPhpFormatTest extends TestCase
             array(
                 'en_US',
                 array('full' => 'l, F j, Y', 'long' => 'F j, Y', 'medium' => 'M j, Y', 'short' => 'n/j/y'),
-                array('full' => 'g:i:s A \G\M\TP', 'long' => 'g:i:s A T', 'medium' => 'g:i:s A', 'short' => 'g:i A'),
-                array('full' => 'l, F j, Y \a\t g:i:s A \G\M\TP', 'long' => 'F j, Y \a\t g:i:s A T', 'medium' => 'M j, Y, g:i:s A', 'short' => 'n/j/y, g:i A'),
+                array('full' => self::unicodeString('g:i:s<NNBSP>A \G\M\TP'), 'long' => self::unicodeString('g:i:s<NNBSP>A T'), 'medium' => self::unicodeString('g:i:s<NNBSP>A'), 'short' => self::unicodeString('g:i<NNBSP>A')),
+                array('full' => self::unicodeString('l, F j, Y, g:i:s<NNBSP>A \G\M\TP'), 'long' => self::unicodeString('F j, Y, g:i:s<NNBSP>A T'), 'medium' => self::unicodeString('M j, Y, g:i:s<NNBSP>A'), 'short' => self::unicodeString('n/j/y, g:i<NNBSP>A')),
             ),
             array(
                 'en_GB',
                 array('full' => 'l, j F Y', 'long' => 'j F Y', 'medium' => 'j M Y', 'short' => 'd/m/Y'),
                 array('full' => 'H:i:s \G\M\TP', 'long' => 'H:i:s T', 'medium' => 'H:i:s', 'short' => 'H:i'),
-                array('full' => 'l, j F Y \a\t H:i:s \G\M\TP', 'long' => 'j F Y \a\t H:i:s T', 'medium' => 'j M Y, H:i:s', 'short' => 'd/m/Y, H:i'),
+                array('full' => 'l, j F Y, H:i:s \G\M\TP', 'long' => 'j F Y, H:i:s T', 'medium' => 'j M Y, H:i:s', 'short' => 'd/m/Y, H:i'),
             ),
             array(
                 'it',
