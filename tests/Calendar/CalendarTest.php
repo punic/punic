@@ -1020,27 +1020,27 @@ class CalendarTest extends TestCase
     public function testGetTimeFormat()
     {
         $this->assertSame(
-            'h:mm:ss a zzzz',
+            self::unicodeString('h:mm:ss<NNBSP>a zzzz'),
             Calendar::getTimeFormat('full')
         );
         $this->assertSame(
-            'h:mm a',
+            self::unicodeString('h:mm<NNBSP>a'),
             Calendar::getTimeFormat('~hm')
         );
         $this->assertSame(
-            'h:mm:ss a zzzz',
+            self::unicodeString('h:mm:ss<NNBSP>a zzzz'),
             Calendar::getTimeFormat('full', 'en_US')
         );
         $this->assertSame(
-            'h:mm:ss a z',
+            self::unicodeString('h:mm:ss<NNBSP>a z'),
             Calendar::getTimeFormat('long', 'en_US')
         );
         $this->assertSame(
-            'h:mm:ss a',
+            self::unicodeString('h:mm:ss<NNBSP>a'),
             Calendar::getTimeFormat('medium', 'en_US')
         );
         $this->assertSame(
-            'h:mm a',
+            self::unicodeString('h:mm<NNBSP>a'),
             Calendar::getTimeFormat('short', 'en_US')
         );
         $this->assertSame(
@@ -1060,7 +1060,7 @@ class CalendarTest extends TestCase
             Calendar::getTimeFormat('short', 'it_IT')
         );
         $this->assertSame(
-            'a h:mm',
+            self::unicodeString('a<NNBSP>h:mm'),
             Calendar::getTimeFormat('~hm', 'hu')
         );
     }
@@ -1068,19 +1068,19 @@ class CalendarTest extends TestCase
     public function testGetDatetimeFormat()
     {
         $this->assertSame(
-            "EEEE, MMMM d, y 'at' h:mm:ss a zzzz",
+            self::unicodeString('EEEE, MMMM d, y, h:mm:ss<NNBSP>a zzzz'),
             Calendar::getDatetimeFormat('full')
         );
         $this->assertSame(
-            "MMMM d, y 'at' h:mm:ss a z",
+            self::unicodeString('MMMM d, y, h:mm:ss<NNBSP>a z'),
             Calendar::getDatetimeFormat('long')
         );
         $this->assertSame(
-            'MMM d, y, h:mm:ss a',
+            self::unicodeString('MMM d, y, h:mm:ss<NNBSP>a'),
             Calendar::getDatetimeFormat('medium')
         );
         $this->assertSame(
-            'M/d/yy, h:mm a',
+            self::unicodeString('M/d/yy, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('short')
         );
         $this->assertSame(
@@ -1088,39 +1088,39 @@ class CalendarTest extends TestCase
             Calendar::getDatetimeFormat('~GyMMM')
         );
         $this->assertSame(
-            "EEEE, MMMM d, y 'at' h:mm a",
+            self::unicodeString('EEEE, MMMM d, y, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('full|short')
         );
         $this->assertSame(
-            'M/d/yy, h:mm:ss a zzzz',
+            self::unicodeString('M/d/yy, h:mm:ss<NNBSP>a zzzz'),
             Calendar::getDatetimeFormat('short|full')
         );
         $this->assertSame(
-            "MMMM d 'at' h:mm a",
+            self::unicodeString('MMMM d, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('~MMMMd|~hm')
         );
         $this->assertSame(
-            'E, MMM d, y, h:mm:ss a zzzz',
+            self::unicodeString('E, MMM d, y, h:mm:ss<NNBSP>a zzzz'),
             Calendar::getDatetimeFormat('~yMMMEd|full')
         );
         $this->assertSame(
-            "EEE, d 'de' MMMM 'de' y, h:mm a",
+            self::unicodeString("EEE, d 'de' MMMM 'de' y, h:mm<NNBSP>a"),
             Calendar::getDatetimeFormat('~yMMMMEd|~hm', 'es')
         );
         $this->assertSame(
-            "M/d/yy 'at' h:mm a",
+            self::unicodeString('M/d/yy, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('full|short|short')
         );
         $this->assertSame(
-            'EEEE, MMMM d, y, h:mm:ss a zzzz',
+            self::unicodeString('EEEE, MMMM d, y, h:mm:ss<NNBSP>a zzzz'),
             Calendar::getDatetimeFormat('short|full|full')
         );
         $this->assertSame(
-            "MMM y G 'at' h:mm a",
+            self::unicodeString('MMM y G, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('full|~GyMMM|~hm')
         );
         $this->assertSame(
-            'MMM y G, h:mm a',
+            self::unicodeString('MMM y G, h:mm<NNBSP>a'),
             Calendar::getDatetimeFormat('short|~GyMMM|~hm')
         );
     }
@@ -1160,21 +1160,21 @@ class CalendarTest extends TestCase
 
         // Fractional second.
         $this->assertSame(
-            'h:mm:ss.SSS a v',
+            self::unicodeString('h:mm:ss.SSS<NNBSP>a v'),
             Calendar::getSkeletonFormat('hmsSSSv')
         );
         $this->assertSame(
-            'h.mm.ss,SSS a v',
+            self::unicodeString('h.mm.ss,SSS<NNBSP>a v'),
             Calendar::getSkeletonFormat('hmsSSSv', 'da')
         );
 
         // Special input skeleton fields.
         $this->assertSame(
-            'h:mm a',
+            self::unicodeString('h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('jm')
         );
         $this->assertSame(
-            'hh:mm aaaaa',
+            self::unicodeString('hh:mm<NNBSP>aaaaa'),
             Calendar::getSkeletonFormat('jjjjjjm')
         );
         $this->assertSame(
@@ -1182,7 +1182,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('j', 'de')
         );
         $this->assertSame(
-            'h:mm:ss a',
+            self::unicodeString('h:mm:ss<NNBSP>a'),
             Calendar::getSkeletonFormat('jms', 'en_US')
         );
         $this->assertSame(
@@ -1190,7 +1190,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('jms', 'en_CN')
         );
         $this->assertSame(
-            'hh:mm:ss a',
+            self::unicodeString('hh:mm:ss<NNBSP>a'),
             Calendar::getSkeletonFormat('jjms', 'en_US')
         );
         $this->assertSame(
@@ -1198,7 +1198,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('jjms', 'en_CN')
         );
         $this->assertSame(
-            'h:mm:ss aaaa',
+            self::unicodeString('h:mm:ss<NNBSP>aaaa'),
             Calendar::getSkeletonFormat('jjjms', 'en_US')
         );
         $this->assertSame(
@@ -1206,7 +1206,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('jjjms', 'en_CN')
         );
         $this->assertSame(
-            'hh:mm:ss aaaaa',
+            self::unicodeString('hh:mm:ss<NNBSP>aaaaa'),
             Calendar::getSkeletonFormat('jjjjjjms', 'en_US')
         );
         $this->assertSame(
@@ -1230,15 +1230,15 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('J', 'en_CN')
         );
         $this->assertSame(
-            'h a',
+            self::unicodeString('h<NNBSP>a'),
             Calendar::getSkeletonFormat('C')
         );
         $this->assertSame(
-            'hh a',
+            self::unicodeString('hh<NNBSP>a'),
             Calendar::getSkeletonFormat('CC')
         );
         $this->assertSame(
-            'h aaaa',
+            self::unicodeString('h<NNBSP>aaaa'),
             Calendar::getSkeletonFormat('CCC')
         );
         $this->assertSame(
@@ -1246,7 +1246,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('C', 'de')
         );
         $this->assertSame(
-            'h a',
+            self::unicodeString('h<NNBSP>a'),
             Calendar::getSkeletonFormat('C', 'en_US')
         );
         $this->assertSame(
@@ -1254,7 +1254,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('C', 'en_CN')
         );
         $this->assertSame(
-            'hh aaaaa',
+            self::unicodeString('hh<NNBSP>aaaaa'),
             Calendar::getSkeletonFormat('CCCCCC', 'en_US')
         );
         $this->assertSame(
@@ -1264,15 +1264,15 @@ class CalendarTest extends TestCase
 
         // Date and time in same skeleton.
         $this->assertSame(
-            'M/d/y, h:mm a',
+            self::unicodeString('M/d/y, h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('yMdhm')
         );
         $this->assertSame(
-            'd.M.y, h:mm a',
+            self::unicodeString('d.M.y, h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('yMdhm', 'de')
         );
         $this->assertSame(
-            'M/d/y, h:mm a',
+            self::unicodeString('M/d/y, h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('yMdjm')
         );
         $this->assertSame(
@@ -1288,7 +1288,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('yMdJm', 'de')
         );
         $this->assertSame(
-            'M/d/y, h:mm a',
+            self::unicodeString('M/d/y, h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('yMdCm')
         );
         $this->assertSame(
@@ -1296,7 +1296,7 @@ class CalendarTest extends TestCase
             Calendar::getSkeletonFormat('yMdCm', 'de')
         );
         $this->assertSame(
-            "MMMM d, y 'at' h:mm a",
+            self::unicodeString('MMMM d, y, h:mm<NNBSP>a'),
             Calendar::getSkeletonFormat('yMMMMdhm')
         );
     }
@@ -1308,53 +1308,53 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('MMMd', 'H')
         );
         $this->assertSame(
-            array('MMM d – d', true),
+            array(self::unicodeString('MMM d<THINSP><ENDASH><THINSP>d'), true),
             Calendar::getIntervalFormat('MMMd', 'd')
         );
         $this->assertSame(
-            array('MMM d – MMM d', true),
+            array(self::unicodeString('MMM d<THINSP><ENDASH><THINSP>MMM d'), true),
             Calendar::getIntervalFormat('MMMd', 'M')
         );
         $this->assertSame(
-            array('MMM d – MMM d', true),
+            array(self::unicodeString('MMM d<THINSP><ENDASH><THINSP>MMM d'), true),
             Calendar::getIntervalFormat('MMMd', 'y')
         );
 
         $this->assertSame(
-            array('h:mm a v – h:mm a v', true),
+            array(self::unicodeString('h:mm<NNBSP>a v<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('hmv', 'd')
         );
         $this->assertSame(
-            array('h:mm a – h:mm a v', true),
+            array(self::unicodeString('h:mm<NNBSP>a<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('hmv', 'a')
         );
         $this->assertSame(
-            array('h:mm – h:mm a v', true),
+            array(self::unicodeString('h:mm<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('hmv', 'H')
         );
         $this->assertSame(
-            array('h:mm – h:mm a v', true),
+            array(self::unicodeString('h:mm<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('hmv', 'm')
         );
         $this->assertSame(
-            array('h:mm a v', null),
+            array(self::unicodeString('h:mm<NNBSP>a v'), null),
             Calendar::getIntervalFormat('hmv', 's')
         );
 
         $this->assertSame(
-            array('HH:mm v – HH:mm v', true),
+            array(self::unicodeString('HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('Hmv', 'd')
         );
         $this->assertSame(
-            array('HH:mm – HH:mm v', true),
+            array(self::unicodeString('HH:mm<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('Hmv', 'a')
         );
         $this->assertSame(
-            array('HH:mm – HH:mm v', true),
+            array(self::unicodeString('HH:mm<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('Hmv', 'H')
         );
         $this->assertSame(
-            array('HH:mm – HH:mm v', true),
+            array(self::unicodeString('HH:mm<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('Hmv', 'm')
         );
         $this->assertSame(
@@ -1364,23 +1364,23 @@ class CalendarTest extends TestCase
 
         // Non-perfect matches.
         $this->assertSame(
-            array('MMMM d, y – MMMM d, y', true),
+            array(self::unicodeString('MMMM d, y<THINSP><ENDASH><THINSP>MMMM d, y'), true),
             Calendar::getIntervalFormat('yMMMMd', 'G')
         );
         $this->assertSame(
-            array('MMMM d, y – MMMM d, y', true),
+            array(self::unicodeString('MMMM d, y<THINSP><ENDASH><THINSP>MMMM d, y'), true),
             Calendar::getIntervalFormat('yMMMMd', 'y')
         );
         $this->assertSame(
-            array('MMMM d – MMMM d, y', true),
+            array(self::unicodeString('MMMM d<THINSP><ENDASH><THINSP>MMMM d, y'), true),
             Calendar::getIntervalFormat('yMMMMd', 'Q')
         );
         $this->assertSame(
-            array('MMMM d – MMMM d, y', true),
+            array(self::unicodeString('MMMM d<THINSP><ENDASH><THINSP>MMMM d, y'), true),
             Calendar::getIntervalFormat('yMMMMd', 'M')
         );
         $this->assertSame(
-            array('MMMM d – d, y', true),
+            array(self::unicodeString('MMMM d<THINSP><ENDASH><THINSP>d, y'), true),
             Calendar::getIntervalFormat('yMMMMd', 'd')
         );
         $this->assertSame(
@@ -1388,15 +1388,15 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('yMMMMd', 'H')
         );
         $this->assertSame(
-            array('Q y – Q y', true),
+            array(self::unicodeString('Q y<THINSP><ENDASH><THINSP>Q y'), true),
             Calendar::getIntervalFormat('yQ', 'G')
         );
         $this->assertSame(
-            array('Q y – Q y', true),
+            array(self::unicodeString('Q y<THINSP><ENDASH><THINSP>Q y'), true),
             Calendar::getIntervalFormat('yQ', 'y')
         );
         $this->assertSame(
-            array('Q y – Q y', true),
+            array(self::unicodeString('Q y<THINSP><ENDASH><THINSP>Q y'), true),
             Calendar::getIntervalFormat('yQ', 'Q')
         );
         $this->assertSame(
@@ -1406,49 +1406,49 @@ class CalendarTest extends TestCase
 
         // Fractional second.
         $this->assertSame(
-            array('h:mm:ss.SSS a – h:mm:ss.SSS a', true),
+            array(self::unicodeString('h:mm:ss.SSS<NNBSP>a<THINSP><ENDASH><THINSP>h:mm:ss.SSS<NNBSP>a'), true),
             Calendar::getIntervalFormat('hmsSSS', 's')
         );
         $this->assertSame(
-            array('h:mm:ss.SSS a – h:mm:ss.SSS a', true),
+            array(self::unicodeString('h:mm:ss.SSS<NNBSP>a<THINSP><ENDASH><THINSP>h:mm:ss.SSS<NNBSP>a'), true),
             Calendar::getIntervalFormat('hmsSSS', 'S')
         );
 
         // Special input skeleton fields.
         $this->assertSame(
-            array('h:mm a v – h:mm a v', true),
+            array(self::unicodeString('h:mm<NNBSP>a v<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('jmv', 'd')
         );
         $this->assertSame(
-            array('h:mm a – h:mm a v', true),
+            array(self::unicodeString('h:mm<NNBSP>a<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('jmv', 'a')
         );
         $this->assertSame(
-            array('h:mm – h:mm a v', true),
+            array(self::unicodeString('h:mm<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('jmv', 'H')
         );
         $this->assertSame(
-            array('h:mm – h:mm a v', true),
+            array(self::unicodeString('h:mm<THINSP><ENDASH><THINSP>h:mm<NNBSP>a v'), true),
             Calendar::getIntervalFormat('jmv', 'm')
         );
         $this->assertSame(
-            array('h:mm a v', null),
+            array(self::unicodeString('h:mm<NNBSP>a v'), null),
             Calendar::getIntervalFormat('jmv', 's')
         );
         $this->assertSame(
-            array('HH:mm v – HH:mm v', true),
+            array(self::unicodeString('HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('jmv', 'd', 'de')
         );
         $this->assertSame(
-            array("HH:mm–HH:mm 'Uhr' v", true),
+            array(self::unicodeString("HH:mm<ENDASH>HH:mm 'Uhr' v"), true),
             Calendar::getIntervalFormat('jmv', 'a', 'de')
         );
         $this->assertSame(
-            array("HH:mm–HH:mm 'Uhr' v", true),
+            array(self::unicodeString("HH:mm<ENDASH>HH:mm 'Uhr' v"), true),
             Calendar::getIntervalFormat('jmv', 'H', 'de')
         );
         $this->assertSame(
-            array("HH:mm–HH:mm 'Uhr' v", true),
+            array(self::unicodeString("HH:mm<ENDASH>HH:mm 'Uhr' v"), true),
             Calendar::getIntervalFormat('jmv', 'm', 'de')
         );
         $this->assertSame(
@@ -1456,7 +1456,7 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('jmv', 's', 'de')
         );
         $this->assertSame(
-            array('h a', null),
+            array(self::unicodeString('h<NNBSP>a'), null),
             Calendar::getIntervalFormat('C', 's')
         );
         $this->assertSame(
@@ -1464,11 +1464,11 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('C', 's', 'de')
         );
         $this->assertSame(
-            array('QQQQ y – QQQQ y', true),
+            array(self::unicodeString('QQQQ y<THINSP><ENDASH><THINSP>QQQQ y'), true),
             Calendar::getIntervalFormat('yQQQQ', 'y')
         );
         $this->assertSame(
-            array('QQQQ y – QQQQ y', true),
+            array(self::unicodeString('QQQQ y<THINSP><ENDASH><THINSP>QQQQ y'), true),
             Calendar::getIntervalFormat('yQQQQ', 'Q')
         );
         $this->assertSame(
@@ -1478,19 +1478,19 @@ class CalendarTest extends TestCase
 
         // Combined date and time.
         $this->assertSame(
-            array('M/d/y, HH:mm v – M/d/y, HH:mm v', true),
+            array(self::unicodeString('M/d/y, HH:mm v<THINSP><ENDASH><THINSP>M/d/y, HH:mm v'), true),
             Calendar::getIntervalFormat('yMdHmv', 'y')
         );
         $this->assertSame(
-            array('M/d/y, HH:mm v – M/d/y, HH:mm v', true),
+            array(self::unicodeString('M/d/y, HH:mm v<THINSP><ENDASH><THINSP>M/d/y, HH:mm v'), true),
             Calendar::getIntervalFormat('yMdHmv', 'd')
         );
         $this->assertSame(
-            array('M/d/y, HH:mm v – HH:mm v', true),
+            array(self::unicodeString('M/d/y, HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('yMdHmv', 'H')
         );
         $this->assertSame(
-            array('M/d/y, HH:mm v – HH:mm v', true),
+            array(self::unicodeString('M/d/y, HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('yMdHmv', 'm')
         );
         $this->assertSame(
@@ -1498,23 +1498,23 @@ class CalendarTest extends TestCase
             Calendar::getIntervalFormat('yMdHmv', 's')
         );
         $this->assertSame(
-            array("MMMM d, y 'at' HH:mm v – MMMM d, y 'at' HH:mm v", true),
+            array(self::unicodeString('MMMM d, y, HH:mm v<THINSP><ENDASH><THINSP>MMMM d, y, HH:mm v'), true),
             Calendar::getIntervalFormat('yMMMMdHmv', 'y')
         );
         $this->assertSame(
-            array("MMMM d, y 'at' HH:mm v – MMMM d, y 'at' HH:mm v", true),
+            array(self::unicodeString('MMMM d, y, HH:mm v<THINSP><ENDASH><THINSP>MMMM d, y, HH:mm v'), true),
             Calendar::getIntervalFormat('yMMMMdHmv', 'd')
         );
         $this->assertSame(
-            array("MMMM d, y 'at' HH:mm v – HH:mm v", true),
+            array(self::unicodeString('MMMM d, y, HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('yMMMMdHmv', 'H')
         );
         $this->assertSame(
-            array("MMMM d, y 'at' HH:mm v – HH:mm v", true),
+            array(self::unicodeString('MMMM d, y, HH:mm v<THINSP><ENDASH><THINSP>HH:mm v'), true),
             Calendar::getIntervalFormat('yMMMMdHmv', 'm')
         );
         $this->assertSame(
-            array("MMMM d, y 'at' HH:mm v", null),
+            array('MMMM d, y, HH:mm v', null),
             Calendar::getIntervalFormat('yMMMMdHmv', 's')
         );
     }
@@ -1607,23 +1607,23 @@ class CalendarTest extends TestCase
     {
         $dt = Calendar::toDateTime('2010-10-12 23:59');
         $this->assertSame(
-            '11:59:00 PM Fiji Standard Time',
+            self::unicodeString('11:59:00<NNBSP>PM Fiji Standard Time'),
             Calendar::formatTime($dt, 'full')
         );
         $this->assertSame(
-            '11:59:00 PM GMT+12',
+            self::unicodeString('11:59:00<NNBSP>PM GMT+12'),
             Calendar::formatTime($dt, 'long')
         );
         $this->assertSame(
-            '11:59:00 PM',
+            self::unicodeString('11:59:00<NNBSP>PM'),
             Calendar::formatTime($dt, 'medium')
         );
         $this->assertSame(
-            '11:59 PM',
+            self::unicodeString('11:59<NNBSP>PM'),
             Calendar::formatTime($dt, 'short')
         );
         $this->assertSame(
-            '11:59 PM',
+            self::unicodeString('11:59<NNBSP>PM'),
             Calendar::formatTime($dt, '~hm')
         );
         $this->assertSame(
@@ -1655,11 +1655,11 @@ class CalendarTest extends TestCase
     public function testFormatTimeEx()
     {
         $this->assertSame(
-            '1:59:00 PM Central European Summer Time',
+            self::unicodeString('1:59:00<NNBSP>PM Central European Summer Time'),
             Calendar::formatTimeEx('2010-10-12 23:59', 'full', 'Europe/Rome')
         );
         $this->assertSame(
-            '2:00:00 PM Central European Summer Time',
+            self::unicodeString('2:00:00<NNBSP>PM Central European Summer Time'),
             Calendar::formatTimeEx('2010-10-12 00:00', 'full', 'Europe/Rome')
         );
     }
@@ -1670,19 +1670,19 @@ class CalendarTest extends TestCase
         $yesterday->setTime(14, 15, 16);
         $dt = Calendar::toDateTime('2010-10-12 23:59');
         $this->assertSame(
-            'Tuesday, October 12, 2010 at 11:59:00 PM Fiji Standard Time',
+            self::unicodeString('Tuesday, October 12, 2010, 11:59:00<NNBSP>PM Fiji Standard Time'),
             Calendar::formatDateTime($dt, 'full')
         );
         $this->assertSame(
-            'October 12, 2010 at 11:59:00 PM GMT+12',
+            self::unicodeString('October 12, 2010, 11:59:00<NNBSP>PM GMT+12'),
             Calendar::formatDateTime($dt, 'long')
         );
         $this->assertSame(
-            'Oct 12, 2010, 11:59:00 PM',
+            self::unicodeString('Oct 12, 2010, 11:59:00<NNBSP>PM'),
             Calendar::formatDateTime($dt, 'medium')
         );
         $this->assertSame(
-            '10/12/10, 11:59 PM',
+            self::unicodeString('10/12/10, 11:59<NNBSP>PM'),
             Calendar::formatDateTime($dt, 'short')
         );
         $this->assertSame(
@@ -1690,23 +1690,23 @@ class CalendarTest extends TestCase
             Calendar::formatDateTime($dt, '~yMd')
         );
         $this->assertSame(
-            '11:59 PM',
+            self::unicodeString('11:59<NNBSP>PM'),
             Calendar::formatDateTime($dt, '~hm')
         );
         $this->assertSame(
-            'Tuesday, October 12, 2010 at 11:59 PM',
+            self::unicodeString('Tuesday, October 12, 2010, 11:59<NNBSP>PM'),
             Calendar::formatDateTime($dt, 'full|short')
         );
         $this->assertSame(
-            'Tuesday, October 12, 2010 at 23:59',
+            'Tuesday, October 12, 2010, 23:59',
             Calendar::formatDateTime($dt, 'full|~Hm')
         );
         $this->assertSame(
-            '10/12/2010, 11:59 PM',
+            self::unicodeString('10/12/2010, 11:59<NNBSP>PM'),
             Calendar::formatDateTime($dt, '~yMd|short')
         );
         $this->assertSame(
-            'Tuesday, October 12, 2010, 11:59 PM',
+            self::unicodeString('Tuesday, October 12, 2010, 11:59<NNBSP>PM'),
             Calendar::formatDateTime($dt, 'short|full|short')
         );
         $this->assertSame(
@@ -1730,7 +1730,7 @@ class CalendarTest extends TestCase
             Calendar::formatDateTime($dt, '~MMMEd', 'it')
         );
         $this->assertSame(
-            'Yesterday at 2:15 PM',
+            self::unicodeString('Yesterday, 2:15<NNBSP>PM'),
             Calendar::formatDateTime($yesterday, 'full|short^|short', 'en')
         );
         $this->assertSame(
@@ -1738,7 +1738,7 @@ class CalendarTest extends TestCase
             Calendar::formatDateTime($yesterday, 'full|short^|short', 'it')
         );
         $this->assertSame(
-            'October 12, 2010 at 11:59:00 PM UTC',
+            self::unicodeString('October 12, 2010, 11:59:00<NNBSP>PM UTC'),
             Calendar::formatDateTime(Calendar::toDateTime('2010-10-12 23:59 UTC'), 'long')
         );
     }
@@ -1746,11 +1746,11 @@ class CalendarTest extends TestCase
     public function testFormatDateTimeEx()
     {
         $this->assertSame(
-            'Tuesday, October 12, 2010 at 1:59:00 PM Central European Summer Time',
+            self::unicodeString('Tuesday, October 12, 2010, 1:59:00<NNBSP>PM Central European Summer Time'),
             Calendar::formatDateTimeEx('2010-10-12 23:59', 'full', 'Europe/Rome')
         );
         $this->assertSame(
-            'Monday, October 11, 2010 at 2:00:00 PM Central European Summer Time',
+            self::unicodeString('Monday, October 11, 2010, 2:00:00<NNBSP>PM Central European Summer Time'),
             Calendar::formatDateTimeEx('2010-10-12 00:00', 'full', 'Europe/Rome')
         );
     }
@@ -1767,15 +1767,15 @@ class CalendarTest extends TestCase
         $dtEra = Calendar::toDateTime('-1000-01-01 15:30:00');
 
         $this->assertSame(
-            'January 1, -1000 – October 12, 2010',
+            self::unicodeString('January 1, -1000<THINSP><ENDASH><THINSP>October 12, 2010'),
             Calendar::formatInterval($dtEra, $dt, 'yMMMMd')
         );
         $this->assertSame(
-            'October 12, 2010 – September 15, 2011',
+            self::unicodeString('October 12, 2010<THINSP><ENDASH><THINSP>September 15, 2011'),
             Calendar::formatInterval($dt, $dtYear, 'yMMMMd')
         );
         $this->assertSame(
-            'October 12 – 13, 2010',
+            self::unicodeString('October 12<THINSP><ENDASH><THINSP>13, 2010'),
             Calendar::formatInterval($dt, $dtDay, 'yMMMMd')
         );
         $this->assertSame(
@@ -1784,11 +1784,11 @@ class CalendarTest extends TestCase
         );
 
         $this->assertSame(
-            '10/12/2010 – 9/15/2011',
+            self::unicodeString('10/12/2010<THINSP><ENDASH><THINSP>9/15/2011'),
             Calendar::formatInterval($dt, $dtYear, 'yMd')
         );
         $this->assertSame(
-            '10/12/2010 – 10/13/2010',
+            self::unicodeString('10/12/2010<THINSP><ENDASH><THINSP>10/13/2010'),
             Calendar::formatInterval($dt, $dtDay, 'yMd')
         );
         $this->assertSame(
@@ -1797,15 +1797,15 @@ class CalendarTest extends TestCase
         );
 
         $this->assertSame(
-            '22:58:00 – 23:57:00',
+            self::unicodeString('22:58:00<THINSP><ENDASH><THINSP>23:57:00'),
             Calendar::formatInterval($dt, $dtHour, 'Hms')
         );
         $this->assertSame(
-            '22:58:00 – 22:59:00',
+            self::unicodeString('22:58:00<THINSP><ENDASH><THINSP>22:59:00'),
             Calendar::formatInterval($dt, $dtMinute, 'Hms')
         );
         $this->assertSame(
-            '22:58:00 – 22:58:01',
+            self::unicodeString('22:58:00<THINSP><ENDASH><THINSP>22:58:01'),
             Calendar::formatInterval($dt, $dtSecond, 'Hms')
         );
         $this->assertSame(
@@ -1818,11 +1818,11 @@ class CalendarTest extends TestCase
             Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSS')
         );
         $this->assertSame(
-            '22:58:00.000 – 22:58:00.001',
+            self::unicodeString('22:58:00.000<THINSP><ENDASH><THINSP>22:58:00.001'),
             Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSSS')
         );
         $this->assertSame(
-            '22:58:00.000000 – 22:58:00.001000',
+            self::unicodeString('22:58:00.000000<THINSP><ENDASH><THINSP>22:58:00.001000'),
             Calendar::formatInterval($dt, $dtMilliSecond, 'HmsSSSSSS')
         );
         $this->assertSame(
@@ -1831,7 +1831,7 @@ class CalendarTest extends TestCase
         );
 
         $this->assertSame(
-            '12.–13. Oktober 2010',
+            self::unicodeString('12.<ENDASH>13. Oktober 2010'),
             Calendar::formatInterval($dt, $dtDay, 'yMMMMd', 'de')
         );
         $this->assertSame(
@@ -1841,23 +1841,23 @@ class CalendarTest extends TestCase
 
         // Combined date and time.
         $this->assertSame(
-            '10/12/2010, 22:58:00 – 23:57:00',
+            self::unicodeString('10/12/2010, 22:58:00<THINSP><ENDASH><THINSP>23:57:00'),
             Calendar::formatInterval($dt, $dtHour, 'yMdHms')
         );
         $this->assertSame(
-            'October 12, 2010 at 22:58:00 – 23:57:00',
+            self::unicodeString('October 12, 2010, 22:58:00<THINSP><ENDASH><THINSP>23:57:00'),
             Calendar::formatInterval($dt, $dtHour, 'yMMMMdHms')
         );
         $this->assertSame(
-            '10/12/2010, 22:58:00 – 10/13/2010, 21:30:00',
+            self::unicodeString('10/12/2010, 22:58:00<THINSP><ENDASH><THINSP>10/13/2010, 21:30:00'),
             Calendar::formatInterval($dt, $dtDay, 'yMdHms')
         );
         $this->assertSame(
-            'October 12, 2010 at 22:58:00 – October 13, 2010 at 21:30:00',
+            self::unicodeString('October 12, 2010, 22:58:00<THINSP><ENDASH><THINSP>October 13, 2010, 21:30:00'),
             Calendar::formatInterval($dt, $dtDay, 'yMMMMdHms')
         );
         $this->assertSame(
-            '12 ottobre 2010 22:58:00 - 13 ottobre 2010 21:30:00',
+            self::unicodeString('12 ottobre 2010 22:58:00<THINSP><ENDASH><THINSP>13 ottobre 2010 21:30:00'),
             Calendar::formatInterval($dt, $dtDay, 'yMMMMdHms', 'it')
         );
         $this->assertSame(
@@ -1867,31 +1867,31 @@ class CalendarTest extends TestCase
 
         // Special input skeleton fields.
         $this->assertSame(
-            '10:58 – 11:57 PM Fiji Time',
+            self::unicodeString('10:58<THINSP><ENDASH><THINSP>11:57<NNBSP>PM Fiji Time'),
             Calendar::formatInterval($dt, $dtHour, 'jmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr Fidschi Zeit',
+            self::unicodeString('22:58<ENDASH>23:57 Uhr Fidschi (Ortszeit)'),
             Calendar::formatInterval($dt, $dtHour, 'jmv', 'de')
         );
         $this->assertSame(
-            '10:58 – 11:57 Fiji Time',
+            self::unicodeString('10:58<THINSP><ENDASH><THINSP>11:57 Fiji Time'),
             Calendar::formatInterval($dt, $dtHour, 'Jmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr Fidschi Zeit',
+            self::unicodeString('22:58<ENDASH>23:57 Uhr Fidschi (Ortszeit)'),
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'de')
         );
         $this->assertSame(
-            '22:58 – 23:57 Fiji Time',
+            self::unicodeString('22:58<THINSP><ENDASH><THINSP>23:57 Fiji Time'),
             Calendar::formatInterval($dt, $dtHour, 'Jmv', 'en_CN')
         );
         $this->assertSame(
-            '10:58 – 11:57 PM Fiji Time',
+            self::unicodeString('10:58<THINSP><ENDASH><THINSP>11:57<NNBSP>PM Fiji Time'),
             Calendar::formatInterval($dt, $dtHour, 'Cmv')
         );
         $this->assertSame(
-            '22:58–23:57 Uhr Fidschi Zeit',
+            self::unicodeString('22:58<ENDASH>23:57 Uhr Fidschi (Ortszeit)'),
             Calendar::formatInterval($dt, $dtHour, 'Cmv', 'de')
         );
     }
@@ -1903,11 +1903,11 @@ class CalendarTest extends TestCase
         $dtMilliSecond = '2010-10-12 22:58:00.001 Europe/Berlin';
 
         $this->assertSame(
-            'October 12 – November 14, 2010',
+            self::unicodeString('October 12<THINSP><ENDASH><THINSP>November 14, 2010'),
             Calendar::formatIntervalEx($dt, $dtMonth, 'yMMMMd')
         );
         $this->assertSame(
-            '12. Oktober – 14. November 2010',
+            self::unicodeString('12. Oktober<THINSP><ENDASH><THINSP>14. November 2010'),
             Calendar::formatIntervalEx($dt, $dtMonth, 'yMMMMd', null, 'de')
         );
         $this->assertSame(
