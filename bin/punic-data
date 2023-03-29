@@ -984,7 +984,7 @@ class Courier
      *
      * @throws Exception
      *
-     * @return array
+     * @return string
      */
     public function getPhp($relativePath)
     {
