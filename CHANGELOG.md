@@ -1,6 +1,8 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.8.1 (2023-03-29)
+
+- Fix PHP 8.2 deprecation warning in bin/punic-data (#419, @ragulka)
 
 
 ### 3.8.0 (2022-10-19)
