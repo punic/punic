@@ -247,7 +247,7 @@ class Territory
      *                               <li>'m' to include official minority languages</li>
      *                               <li>'u' to include unofficial or unknown languages</li>
      *                               </ul>
-     * @param string $onlyCodes Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
+     * @param bool $onlyCodes Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
      *                          <ul>
      *                          <li>string id: the language identifier</li>
      *                          <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
