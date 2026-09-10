@@ -248,12 +248,12 @@ class Territory
      *                               <li>'u' to include unofficial or unknown languages</li>
      *                               </ul>
      * @param bool $onlyCodes Set to true to retrieve only the language codes. If set to false (default) you'll receive a list of arrays with these keys:
-     *                          <ul>
-     *                          <li>string id: the language identifier</li>
-     *                          <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
-     *                          <li>number population: the amount of people speaking the language (%)</li>
-     *                          <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
-     *                          </ul>
+     *                        <ul>
+     *                        <li>string id: the language identifier</li>
+     *                        <li>string status: 'o' for official; 'r' for official regional; 'f' for de facto official; 'm' for official minority; 'u' for unofficial or unknown</li>
+     *                        <li>number population: the amount of people speaking the language (%)</li>
+     *                        <li>number|null writing: the amount of people able to write (%). May be null if no data is available</li>
+     *                        </ul>
      *
      * @return array|null Return the languages spoken in the specified territory, as described by the $onlyCodes parameter (or null if $territoryCode is not valid or no data is available)
      */

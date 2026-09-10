@@ -169,8 +169,8 @@ class TerritoryTest extends TestCase
                     $enFound = true;
                     break;
                 case 'es':
-                      $esFound = true;
-                      break;
+                    $esFound = true;
+                    break;
             }
         }
         $this->assertTrue($enFound);
