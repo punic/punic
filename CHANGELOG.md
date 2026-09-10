@@ -1,6 +1,8 @@
 # CHANGELOG
 
-### NEXT (YYYY-MM-DD)
+### 3.8.2 (2023-03-29)
+
+- Fix the PHPDoc type of the $onlyCodes parameter of Territory::getLanguages() (#425, @mlocati)
 
 
 ### 3.8.1 (2023-03-29)
