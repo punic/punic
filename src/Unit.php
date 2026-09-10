@@ -336,7 +336,7 @@ class Unit
             || !isset($data[$unitCategory])
             || $unitID === null || $unitID[0] === '_'
             || !isset($data[$unitCategory][$unitID])
-            ) {
+        ) {
             $units = array();
             foreach ($data as $c => $us) {
                 if (strpos($c, '_') === false) {

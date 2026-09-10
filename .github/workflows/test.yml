@@ -63,7 +63,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set code coverage
-        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.2'
+        if: startsWith(matrix.os, 'ubuntu') && matrix.php-version == '7.4'
         run: |
           echo "CODE_COVERAGE_TOOL=xdebug" >> $GITHUB_ENV
           echo "PHPUNIT_OPTIONS=--coverage-clover coverage-clover.xml" >> $GITHUB_ENV
